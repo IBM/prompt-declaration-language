@@ -535,7 +535,7 @@ tools:
   object:
     hello:
       function:
-        arguments: obj
+        arguments: object
       return:
         lang: python
         code: |
@@ -569,7 +569,7 @@ tool_schema:
         type: object
         properties:
           answer:
-            type: str
+            type: string
             description: The answer
           required:
             - answer
@@ -586,7 +586,7 @@ finish_action:
       type: object
       properties:
         answer:
-          type: str
+          type: string
           description: The answer
         required:
           - answer
@@ -916,12 +916,9 @@ some JSON data.
 --8<-- "./examples/tutorial/type_checking.pdl"
 ```
 
-Upon reading the data we use a parser to parse it into a YAML. The `spec` field indicates the expected type for the
-data, which is an object with 2 fields: `questions` and `answers` that are a list of string and a list of objects,
-respectively. When the interpreter is executed, it checks this type dynamically and throws errors if necessary.
+Upon reading the data we use a parser to parse it into a YAML. The `spec` field indicates the expected type for the data, which is an object with 2 fields: `questions` and `answers` that are an array of string and an array of objects, respectively. When the interpreter is executed, it checks this type dynamically and throws errors if necessary.
 
-Similarly, the output of the model call is parsed as YAML, and the `spec` indicates that we expect an object with
-2 fields: `name` of type string, and `age` of type integer.
+Similarly, the output of the model call is parsed as YAML, and the `spec` indicates that we expect an object with two fields: `name` of type string, and `age` of type integer.
 
 When we run this program, we obtain the output:
 
@@ -933,26 +930,27 @@ type_checking.pdl:9 - twentyfive should be of type <class 'int'>
 
 Notice that since we asked the age to be produced in letters, we got a string back and this causes a type error indicated above.
 
-In general, `spec` definitions can be a subset of JSON schema, or use a shorthand notation as illustrated by
-the examples below:
+In general, `spec` definitions can be a subset of JSON schema, or use a shorthand notation as illustrated by the examples below:
 
-- `bool`: boolean
-- `str`: string
-- `int`: integer
-- `float`: float
-- `{str: {pattern: '^[A-Za-z][A-Za-z0-9_]*$'}}`: a string satisfying the indicated pattern
-- `{float: {minimum: 0, exclusiveMaximum: 1}}`: a float satisfying the indicated constraints
-- `{list: int}`: a list of integers
-- `[int]`: a list of integers
-- `{list: {int: {minimum: 0}}}`: a list of integers satisfying the indicated constraints
-- `[{int: {minimum: 0}}]`: same as above
-- `{list: {minItems: 1, int: {}}}`, a list satisfying the indicated constraints
-- `{obj: {latitude: float, longitude: float}}`: an object with fields `latitude` and `longitude`
-- `{latitude: float, longitude: float}`: same as above
-- `{obj: {question: str, answer: str, context: {optional: str}}}`: an object with an optional field
-- `{question: str, answer: str, context: {optional: str}}`: same as above
-- `{list: {obj: {question: str, answer: str}}}`: a list of objects
-- `[{question: str, answer: str}]`: same as above
+- `boolean` or `{type: boolean}`: boolean
+- `string` or `{type: string}`: string
+- `integer` or `{type: integer}`: integer
+- `number` or `{type: number}`: floating point numbers
+- `"null"` or `{type: "null"}`: type of the `null` value
+- `array` or `{type: array}`: array with elements of any type
+- `object` or `{type: object}`: object with any fields
+- `{type: string, pattern: '^[A-Za-z][A-Za-z0-9_]*$'}`: a string satisfying the indicated pattern
+- `{type: number, minimum: 0, exclusiveMaximum: 1}`: a float satisfying the indicated constraints
+- `[integer]`: an array of integers
+- `{type: array, items: { type: integer }}`: same as above
+- `[{ type: integer, minimum: 0}]`: a list of integers satisfying the indicated constraints
+- `{type: array, items: { type: integer, minimum: 0}}`: same as above
+- `{type: array, minItems: 1}`, a list with at least one element
+- `{latitude: number, longitude: number}`: an object with fields `latitude` and `longitude`
+- `{object: {latitude: number, longitude: number}}`: same as above
+- `{question: string, answer: string, context: {optional: string}}`: an object with an optional field `context`
+- `{object: {question: string, answer: string, context: {optional: string}}}`: same as above
+- `[{question: string, answer: string}]`: a list of objects
 - `{enum: [red, green, blue]}`: an enumeration
 
 Another example of type checking a list can be found [here](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_list.pdl).

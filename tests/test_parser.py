@@ -6,7 +6,7 @@ from pdl.pdl_lazy import PdlDict
 
 model_parser = {
     "model": "watsonx_text/ibm/granite-20b-code-instruct",
-    "spec": {"bob": "int", "carol": "int"},
+    "spec": {"bob": "integer", "carol": "integer"},
     "input": {
         "text": [
             "Write a JSON object with 2 fields 'a' and 'b' of type int and set to 0.",
@@ -33,7 +33,7 @@ def test_model_parser():
 
 model_parser1 = {
     "model": "watsonx_text/ibm/granite-34b-code-instruct",
-    "spec": {"bob": "int", "carol": "int"},
+    "spec": {"bob": "integer", "carol": "integer"},
     "input": {
         "text": [
             "Write a JSON object with 2 fields 'bob' and 'carol' set to '20' and '30' respectively. Write 30 in letters",

@@ -3,9 +3,9 @@ defs:
   # Chain of Thought
   cot_block:
     function:
-      question: str
-      reasoning: str
-      answer: str
+      question: string
+      reasoning: string
+      answer: string
     return: |-
       Question: ${ question }
       Answer: Let's think step by step. ${ reasoning }
@@ -13,8 +13,7 @@ defs:
 
   fewshot_cot:
     function:
-      examples:
-        { list: { obj: { question: str, reasoning: str, answer: str } } }
+      examples: [{ question: string, reasoning: string, answer: string }]
     return:
       text:
         - for:
@@ -30,10 +29,9 @@ defs:
 
   chain_of_thought:
     function:
-      question: str
-      model: str
-      examples:
-        { list: { obj: { question: str, reasoning: str, answer: str } } }
+      question: string
+      model: string
+      examples: [{ question: string, reasoning: string, answer: string }]
     return:
       lastOf:
         - call: ${ fewshot_cot }

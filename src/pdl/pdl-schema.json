@@ -1951,7 +1951,7 @@
     },
     "DataBlock": {
       "additionalProperties": false,
-      "description": "Arbitrary value, equivalent to JSON.\n\nExample. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:\n```PDL\ndefs:\n  numbers:\n    data: [1, 2, 3, 4]\n```\n\nExample.  Evaluate `${ TEST.answer }` in\n[Jinja](https://jinja.palletsprojects.com/en/stable/), passing\nthe result to a regex parser with capture groups.  Set\n`EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,\na string, containing the value of the capture group.\n```PDL\n- data: ${ TEST.answer }\n  parser:\n    regex: \"(.|\\n)*#### (?P<answer>([0-9])*)\\n*\"\n    spec:\n      answer: str\n  def: EXTRACTED_GROUND_TRUTH\n```",
+      "description": "Arbitrary value, equivalent to JSON.\n\nExample. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:\n```PDL\ndefs:\n  numbers:\n    data: [1, 2, 3, 4]\n```\n\nExample.  Evaluate `${ TEST.answer }` in\n[Jinja](https://jinja.palletsprojects.com/en/stable/), passing\nthe result to a regex parser with capture groups.  Set\n`EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,\na string, containing the value of the capture group.\n```PDL\n- data: ${ TEST.answer }\n  parser:\n    regex: \"(.|\\n)*#### (?P<answer>([0-9])*)\\n*\"\n    spec:\n      answer: string\n  def: EXTRACTED_GROUND_TRUTH\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -2722,8 +2722,8 @@
       "type": "object"
     },
     "EnumPdlType": {
-      "additionalProperties": false,
-      "description": "Enumerated type.",
+      "additionalProperties": true,
+      "description": "Json Schema with an `enum` field.",
       "properties": {
         "enum": {
           "items": {},
@@ -3203,95 +3203,6 @@
         "program"
       ],
       "title": "ErrorBlock",
-      "type": "object"
-    },
-    "FloatPdlType": {
-      "additionalProperties": false,
-      "description": "Float type.",
-      "properties": {
-        "float": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/FloatPdlTypeConstraints"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "required": [
-        "float"
-      ],
-      "title": "FloatPdlType",
-      "type": "object"
-    },
-    "FloatPdlTypeConstraints": {
-      "additionalProperties": false,
-      "description": "Constraints on float type.",
-      "properties": {
-        "multipleOf": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Multipleof"
-        },
-        "minimum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Minimum"
-        },
-        "exclusiveMinimum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Exclusiveminimum"
-        },
-        "maximum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Maximum"
-        },
-        "exclusiveMaximum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Exclusivemaximum"
-        }
-      },
-      "title": "FloatPdlTypeConstraints",
       "type": "object"
     },
     "FunctionBlock": {
@@ -6272,83 +6183,6 @@
       "title": "IndependentEnum",
       "type": "string"
     },
-    "IntPdlType": {
-      "additionalProperties": false,
-      "description": "Integer type.",
-      "properties": {
-        "int": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/IntPdlTypeConstraints"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "required": [
-        "int"
-      ],
-      "title": "IntPdlType",
-      "type": "object"
-    },
-    "IntPdlTypeConstraints": {
-      "additionalProperties": false,
-      "description": "Constraints on integer type.",
-      "properties": {
-        "minimum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Minimum"
-        },
-        "exclusiveMinimum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Exclusiveminimum"
-        },
-        "maximum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Maximum"
-        },
-        "exclusiveMaximum": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Exclusivemaximum"
-        }
-      },
-      "title": "IntPdlTypeConstraints",
-      "type": "object"
-    },
     "JoinArray": {
       "additionalProperties": false,
       "properties": {
@@ -6419,7 +6253,7 @@
     },
     "JsonSchemaTypePdlType": {
       "additionalProperties": true,
-      "description": "Json Schema type",
+      "description": "Json Schema with a type field.",
       "properties": {
         "type": {
           "anyOf": [
@@ -6909,60 +6743,6 @@
         "lastOf"
       ],
       "title": "LastOfBlock",
-      "type": "object"
-    },
-    "ListPdlType": {
-      "additionalProperties": false,
-      "description": "List type.",
-      "properties": {
-        "list": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTypeType"
-            },
-            {
-              "$ref": "#/$defs/ListPdlTypeConstraints"
-            }
-          ],
-          "title": "List"
-        }
-      },
-      "required": [
-        "list"
-      ],
-      "title": "ListPdlType",
-      "type": "object"
-    },
-    "ListPdlTypeConstraints": {
-      "additionalProperties": true,
-      "description": "Constraints on list type.",
-      "properties": {
-        "minItems": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Minitems"
-        },
-        "maxItems": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Maxitems"
-        }
-      },
-      "title": "ListPdlTypeConstraints",
       "type": "object"
     },
     "LitellmModelBlock": {
@@ -9026,31 +8806,6 @@
       "title": "MessageBlock",
       "type": "object"
     },
-    "ObjPdlType": {
-      "additionalProperties": false,
-      "description": "Object type.",
-      "properties": {
-        "obj": {
-          "anyOf": [
-            {
-              "additionalProperties": {
-                "$ref": "#/$defs/PdlTypeType"
-              },
-              "type": "object"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Obj"
-        }
-      },
-      "required": [
-        "obj"
-      ],
-      "title": "ObjPdlType",
-      "type": "object"
-    },
     "ObjectBlock": {
       "additionalProperties": false,
       "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
@@ -9665,6 +9420,24 @@
       "title": "ObjectPattern",
       "type": "object"
     },
+    "ObjectPdlType": {
+      "additionalProperties": false,
+      "description": "Object type.",
+      "properties": {
+        "object": {
+          "additionalProperties": {
+            "$ref": "#/$defs/PdlTypeType"
+          },
+          "title": "Object",
+          "type": "object"
+        }
+      },
+      "required": [
+        "object"
+      ],
+      "title": "ObjectPdlType",
+      "type": "object"
+    },
     "OptionalPdlType": {
       "additionalProperties": false,
       "description": "Optional type.",
@@ -10020,29 +9793,17 @@
         {
           "enum": [
             "null",
-            "bool",
-            "str",
-            "float",
-            "int",
-            "list",
-            "obj"
+            "boolean",
+            "string",
+            "number",
+            "integer",
+            "array",
+            "object"
           ],
           "type": "string"
         },
         {
           "$ref": "#/$defs/EnumPdlType"
-        },
-        {
-          "$ref": "#/$defs/StrPdlType"
-        },
-        {
-          "$ref": "#/$defs/FloatPdlType"
-        },
-        {
-          "$ref": "#/$defs/IntPdlType"
-        },
-        {
-          "$ref": "#/$defs/ListPdlType"
         },
         {
           "items": {
@@ -10057,7 +9818,7 @@
           "$ref": "#/$defs/JsonSchemaTypePdlType"
         },
         {
-          "$ref": "#/$defs/ObjPdlType"
+          "$ref": "#/$defs/ObjectPdlType"
         },
         {
           "additionalProperties": {
@@ -11311,71 +11072,6 @@
         "repeat"
       ],
       "title": "RepeatBlock",
-      "type": "object"
-    },
-    "StrPdlType": {
-      "additionalProperties": false,
-      "description": "String type.",
-      "properties": {
-        "str": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/StrPdlTypeConstraints"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "required": [
-        "str"
-      ],
-      "title": "StrPdlType",
-      "type": "object"
-    },
-    "StrPdlTypeConstraints": {
-      "additionalProperties": false,
-      "description": "Constraints on string type.",
-      "properties": {
-        "minLength": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Minlength"
-        },
-        "maxLength": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Maxlength"
-        },
-        "pattern": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pattern"
-        }
-      },
-      "title": "StrPdlTypeConstraints",
       "type": "object"
     },
     "TextBlock": {

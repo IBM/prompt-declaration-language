@@ -62,11 +62,11 @@ pub enum PdlParser {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum PdlBaseType {
-    #[serde(rename = "str")]
+    #[serde(rename = "string")]
     Str,
-    #[serde(rename = "bool")]
+    #[serde(rename = "boolean")]
     Bool,
-    #[serde(rename = "int")]
+    #[serde(rename = "integer")]
     Int,
     #[serde(rename = "null")]
     Null,

@@ -10,7 +10,7 @@ defs:
 
   majority_vote:
     function:
-      results: [{ "result": float }]
+      results: [{ "result": number }]
     return:   
       lang: python
       code: |
@@ -21,7 +21,7 @@ defs:
         result = most_frequent
   planning:
     function:
-      problem: str
+      problem: string
     return:
       text:
       - |
@@ -40,7 +40,7 @@ defs:
   
   solve:
     function:
-      plan: str
+      plan: string
     return:
       text:
       - ${ plan }
@@ -56,7 +56,7 @@ defs:
 
   extract_final_answer:
     function:
-      solution: str
+      solution: string
     return:
       lastOf:
       - ${ solution }
@@ -64,22 +64,22 @@ defs:
       - model: ollama/granite3.2:8b
         parser: json
         def: result
-        spec: { "result": float }
+        spec: { "result": number }
         fallback:
           data:
             result: 0
 
   compare_to_ground_truth:
     function:
-      result: float
-      truth: str
+      result: number
+      truth: string
     return:
       lastOf:
       - data: ${ truth }
         parser:
           regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
           spec:
-            answer: str
+            answer: string
         def: ground_truth
       - if: ${ result|float == ground_truth.answer|float}
         then:

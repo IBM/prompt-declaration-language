@@ -71,7 +71,7 @@ from .pdl_ast import (  # noqa: E402
     ModelPlatform,
     ObjectBlock,
     ObjectPattern,
-    ObjPdlType,
+    ObjectPdlType,
     OrPattern,
     ParserType,
     Pattern,
@@ -2061,7 +2061,7 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
             if m is None:
                 return None
             match parser.spec:
-                case ObjPdlType(obj=dict() as spec) | (dict() as spec):
+                case ObjectPdlType(object=dict() as spec) | (dict() as spec):
                     current_group_name = ""
                     try:
                         result = {}

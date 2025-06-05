@@ -1,7 +1,7 @@
 defs:
   get_current_stock:
     function:
-      product_name: str
+      product_name: string
     return:
       "FN::get_current_stock:: '${product_name}'\n"
 text:

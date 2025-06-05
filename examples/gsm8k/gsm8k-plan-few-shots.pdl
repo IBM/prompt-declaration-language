@@ -8,8 +8,8 @@ defs:
 
   planning:
     function:
-      problem: str
-      demos: [str]
+      problem: string
+      demos: [string]
     return:
       lastOf:
       - |
@@ -32,7 +32,7 @@ defs:
   
   solve:
     function:
-      plan: str
+      plan: string
     return:
       text:
       - ${ plan }
@@ -45,7 +45,7 @@ defs:
 
   extract_final_answer:
     function:
-      solution: str
+      solution: string
     return:
       lastOf:
       - ${ solution }
@@ -53,22 +53,22 @@ defs:
       - model: ollama/granite3.2:8b
         parser: json
         def: result
-        spec: { "result": float }
+        spec: { "result": number }
         fallback:
           data:
             result: 0
 
   compare_to_ground_truth:
     function:
-      result: obj
-      truth: str
+      result: object
+      truth: string
     return:
       lastOf:
       - data: ${ truth }
         parser:
           regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
           spec:
-            answer: str
+            answer: string
         def: ground_truth
       - if: ${ result.result|float == ground_truth.answer|float}
         then:

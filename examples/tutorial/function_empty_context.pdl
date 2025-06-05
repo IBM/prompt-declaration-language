@@ -2,7 +2,7 @@ description: Hello world with function definition and call
 text:
 - def: hello
   function:
-    name: str
+    name: string
   return:
     text:
     -  Hello ${ name }!

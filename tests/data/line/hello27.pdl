@@ -4,7 +4,7 @@ text:
   parser: json
   def: data
   contribute: []
-  spec: { "questions": ["str"], "answers": ["obj"] }
+  spec: { questions: [string], answers: [object] }
 - model: watsonx_text/ibm/granite-34b-code-instruct
   def: model_output
   input: 

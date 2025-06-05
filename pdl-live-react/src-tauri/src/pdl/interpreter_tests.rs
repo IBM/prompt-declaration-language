@@ -277,7 +277,7 @@ mod tests {
             "defs": {
                 "foo": {
                     "function": {
-                        "x": "int"
+                        "x": "integer"
                     },
                     "return": {
                         "description": "unary function",
@@ -687,8 +687,8 @@ mod tests {
                 "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
                 "mode": "findall",
                 "spec": {
-                    "answer1": "str",
-                    "answer2": "str"
+                    "answer1": "string",
+                    "answer2": "string"
                 }
             }
         });
@@ -707,8 +707,8 @@ mod tests {
             "parser": {
                 "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
                 "spec": {
-                    "answer1": "str",
-                    "answer2": "str"
+                    "answer1": "string",
+                    "answer2": "string"
                 }
             }
         });
@@ -728,7 +728,7 @@ mod tests {
             "parser": {
                 "regex": "[^0-9]*(?P<answer1>[0-9]+)[^0-9]*(?P<answer2>[0-9]+)$",
                 "spec": {
-                    "answer1": "str",
+                    "answer1": "string",
                 }
             }
         });

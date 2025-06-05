@@ -22,20 +22,16 @@ from .pdl_ast import (
     EnumPdlType,
     ErrorBlock,
     ExpressionType,
-    FloatPdlType,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
     IfBlock,
     ImportBlock,
     IncludeBlock,
-    IntPdlType,
     JoinText,
     JoinType,
     JsonSchemaTypePdlType,
     LastOfBlock,
-    ListPdlType,
-    ListPdlTypeConstraints,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -43,7 +39,7 @@ from .pdl_ast import (
     MessageBlock,
     ObjectBlock,
     ObjectPattern,
-    ObjPdlType,
+    ObjectPdlType,
     OptionalPdlType,
     OrPattern,
     ParserType,
@@ -57,7 +53,6 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
-    StrPdlType,
     StructuredBlock,
     TextBlock,
 )
@@ -323,65 +318,10 @@ def type_to_dict(t: PdlTypeType):
     match t:
         case None:
             d = None
-        case "null" | "bool" | "str" | "float" | "int" | "list" | "obj":
+        case "null" | "boolean" | "string" | "number" | "integer" | "array" | "object":
             d = t
         case EnumPdlType():
-            d = {"enum": t.enum}
-        case StrPdlType():
-            if t.str is None:
-                d = "str"
-            else:
-                cstr: dict = {}
-                if t.str.minLength is not None:
-                    cstr["minLength"] = t.str.minLength
-                if t.str.maxLength is not None:
-                    cstr["maxLength"] = t.str.maxLength
-                if t.str.pattern is not None:
-                    cstr["pattern"] = t.str.pattern
-                d = {"str": cstr}
-        case FloatPdlType():
-            if t.float is None:
-                d = "float"
-            else:
-                cstr = {}
-                if t.float.multipleOf is not None:
-                    cstr["multipleOf"] = t.float.multipleOf
-                if t.float.minimum is not None:
-                    cstr["minimum"] = t.float.minimum
-                if t.float.exclusiveMinimum is not None:
-                    cstr["exclusiveMinimum"] = t.float.exclusiveMinimum
-                if t.float.maximum is not None:
-                    cstr["maximum"] = t.float.maximum
-                if t.float.exclusiveMaximum is not None:
-                    cstr["exclusiveMaximum"] = t.float.exclusiveMaximum
-                d = {"float": cstr}
-        case IntPdlType():
-            if t.int is None:
-                d = "int"
-            else:
-                cstr = {}
-                if t.int.minimum is not None:
-                    cstr["minimum"] = t.int.minimum
-                if t.int.exclusiveMinimum is not None:
-                    cstr["exclusiveMinimum"] = t.int.exclusiveMinimum
-                if t.int.maximum is not None:
-                    cstr["maximum"] = t.int.maximum
-                if t.int.exclusiveMaximum is not None:
-                    cstr["exclusiveMaximum"] = t.int.exclusiveMaximum
-                d = {"int": cstr}
-        case ListPdlType():
-            if t.list is None:
-                d = "list"
-            else:
-                if isinstance(t.list, ListPdlTypeConstraints):
-                    cstr = type_to_dict(t.list.__pydantic_extra__)
-                    if t.list.minItems is not None:
-                        cstr["minItems"] = t.list.minItems
-                    if t.list.maxItems is not None:
-                        cstr["maxItems"] = t.list.maxItems
-                    d = {"list": cstr}
-                else:
-                    d = {"list": type_to_dict(t.list)}
+            d = t.model_dump()
         case [elem]:
             d = [type_to_dict(elem)]  # type:ignore
         case list():
@@ -390,11 +330,8 @@ def type_to_dict(t: PdlTypeType):
             d = {"optional": type_to_dict(t.optional)}
         case JsonSchemaTypePdlType():
             d = t.model_dump()
-        case ObjPdlType():
-            if t.obj is None:
-                d = "obj"
-            else:
-                d = {"obj": {x: type_to_dict(t_x) for x, t_x in t.obj.items()}}
+        case ObjectPdlType():
+            d = {"object": {x: type_to_dict(t_x) for x, t_x in t.object.items()}}
         case dict():
             d = {x: type_to_dict(t_x) for x, t_x in t.items()}
         case _:

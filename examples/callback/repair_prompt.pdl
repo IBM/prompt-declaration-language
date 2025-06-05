@@ -15,13 +15,13 @@ lastOf:
 
 - lang: python
   def: parsed_output
-  spec: {thought: str, code_line: str}
+  spec: {thought: string, code_line: string}
   code: |
     import repair_main
     # (In PDL, set `result` to the output you wish for your code block.)
     result = repair_main.parse_output(raw_output)
 
-- spec: {before: str, after: str}
+- spec: {before: string, after: string}
   object:
     before: ${code_line}
     after: ${parsed_output.code_line}

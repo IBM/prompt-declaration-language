@@ -10,9 +10,9 @@ text:
     mock_response: " World!"
 - def: translate
   function:
-    sentence: str
-    language: str
-  spec: int
+    sentence: string
+    language: string
+  spec: integer
   return:
     lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }\n"
@@ -20,7 +20,7 @@ text:
       parameters:
         mock_response: " World!"
 - call: ${ translate }
-  spec: str
+  spec: string
   args:
     sentence: Hello,${ GEN1 }
     language: ${ GEN2 }

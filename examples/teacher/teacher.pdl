@@ -3,18 +3,18 @@ defs:
   teacher_model: ollama_chat/granite3.2:8b
   teacher_template:
     function:
-      sys_prompt: str
-      prompt: str
+      sys_prompt: string
+      prompt: string
     return: <s> [INST] ${sys_prompt} ${prompt} [/INST]
   teacher_stop_token: </s>
 
 
   question_template_freeform:
     function:
-      num_samples: int
-      task_description: str
-      icl_question: str
-    spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
+      num_samples: integer
+      task_description: string
+      icl_question: string
+    spec: { introduction: string, principles: string, examples: string, generation: string, max_new_tokens: integer }
     return:
       data:
         introduction: |
@@ -40,16 +40,16 @@ defs:
 
   gen_questions_freeform_inner:
     function:
-      num_samples: int
-      task_description: str
-      icl_question: str
-      icl_answer: str
-    spec: [{icl_question: str, icl_answer: str, question: str}]
+      num_samples: integer
+      task_description: string
+      icl_question: string
+      icl_answer: string
+    spec: [{icl_question: string, icl_answer: string, question: string}]
     return:
       defs:
         prompt_data:
           call: ${question_template_freeform}
-          spec: { introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int }
+          spec: { introduction: string, principles: string, examples: string, generation: string, max_new_tokens: integer }
           args:
             num_samples: ${num_samples}
             task_description: ${task_description}
@@ -85,9 +85,9 @@ defs:
 
   gen_questions_freeform:
     function:
-      task_description: str
-      seed_examples: [{question: str, answer: str}]
-    spec: [{icl_question: str, icl_answer: str, question: str}]
+      task_description: string
+      seed_examples: [{question: string, answer: string}]
+    spec: [{icl_question: string, icl_answer: string, question: string}]
     return:
       defs:
         list_of_lists:
@@ -109,9 +109,9 @@ defs:
 
   filter_questions_template:
     function:
-      task_description: str
-      question: str
-    spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
+      task_description: string
+      question: string
+    spec: {introduction: string, principles: string, generation: string, max_new_tokens: integer}
     return:
       data:
         introduction: |
@@ -133,14 +133,14 @@ defs:
   # https://github.com/instruct-lab/datagen-pipeline/blob/main/sdg/filter_questions.py
   filter_questions_inner:
     function:
-      task_description: str
-      question: str
-    spec: float
+      task_description: string
+      question: string
+    spec: number
     return:
       defs:
         prompt_data:
           call: ${filter_questions_template}
-          spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
+          spec: {introduction: string, principles: string, generation: string, max_new_tokens: integer}
           args:
             task_description: ${task_description}
             question: ${question}
@@ -160,7 +160,7 @@ defs:
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
           parser:
-            spec: { "rating": str }
+            spec: { "rating": string }
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
@@ -168,9 +168,9 @@ defs:
 
   filter_questions:
     function:
-      task_description: str
-      questions: [{icl_question: str, icl_answer: str, question: str}]
-    spec: [{icl_question: str, icl_answer: str, question: str}]
+      task_description: string
+      questions: [{icl_question: string, icl_answer: string, question: string}]
+    spec: [{icl_question: string, icl_answer: string, question: string}]
     return:
       defs:
         list_of_pairs:
@@ -197,10 +197,10 @@ defs:
 
   answer_template:
     function:
-      icl_question: str
-      icl_response: str
-      question: str
-    spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
+      icl_question: string
+      icl_response: string
+      question: string
+    spec: {introduction: string, principles: string, examples: string, generation: string, max_new_tokens: integer, additional_stop_tokens: [string]}
     return:
       data:
         introduction: Your task is to faithfully follow the user's prompt and generate a response.
@@ -228,13 +228,13 @@ defs:
 
   gen_answers_inner:
     function:
-      question: {icl_question: str, icl_answer: str, question: str}
-    spec: {question: str, answer: str}
+      question: {icl_question: string, icl_answer: string, question: string}
+    spec: {question: string, answer: string}
     return:
       defs:
         prompt_data:
           call: ${answer_template}
-          spec: {introduction: str, principles: str, examples: str, generation: str, max_new_tokens: int, additional_stop_tokens: [str]}
+          spec: {introduction: string, principles: string, examples: string, generation: string, max_new_tokens: integer, additional_stop_tokens: [string]}
           args:
             icl_question: ${question.icl_question}
             icl_response: ${question.icl_answer}
@@ -269,12 +269,12 @@ defs:
 
   gen_answers:
     function:
-      questions: [{icl_question: str, icl_answer: str, question: str}]
-    spec: [{question: str, answer: str}]
+      questions: [{icl_question: string, icl_answer: string, question: string}]
+    spec: [{question: string, answer: string}]
     return:
       defs:
         all_results:
-          spec: [{question: str, answer: str}]
+          spec: [{question: string, answer: string}]
           for:
             question: ${ questions }
           repeat:
@@ -284,16 +284,16 @@ defs:
           join:
             as: array
       lang: python
-      spec: [{question: str, answer: str}]
+      spec: [{question: string, answer: string}]
       code: | # keep only if answer non-empty
           result = [r for r in ${all_results} if len(r["answer"]) > 0]
 
 
   filter_qa_template:
     function:
-      question: str
-      answer: str
-    spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
+      question: string
+      answer: string
+    spec: {introduction: string, principles: string, generation: string, max_new_tokens: integer}
     return:
       data:
         introduction: |
@@ -316,14 +316,14 @@ defs:
 
   filter_question_answer_pair_inner:
     function:
-      question: str
-      answer: str
-    spec: float
+      question: string
+      answer: string
+    spec: number
     return:
       defs:
         prompt_data:
           call: ${filter_qa_template}
-          spec: {introduction: str, principles: str, generation: str, max_new_tokens: int}
+          spec: {introduction: string, principles: string, generation: string, max_new_tokens: integer}
           args:
             question: ${question}
             answer: ${answer}
@@ -343,15 +343,15 @@ defs:
             max_new_tokens: ${prompt_data.max_new_tokens}
             temperature: 0
           parser:
-            spec: { "rating": str }
+            spec: { "rating": string }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
       data: ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
 
   filter_question_answer_pair:
     function:
-      qa_pairs: [{question: str, answer: str}]
-    spec: [{question: str, answer: str}]
+      qa_pairs: [{question: string, answer: string}]
+    spec: [{question: string, answer: string}]
     return:
       defs:
         ratings:
@@ -361,7 +361,7 @@ defs:
             defs:
               filter_output:
                 call: ${filter_question_answer_pair_inner}
-                spec: float
+                spec: number
                 args:
                   question: ${qa_pair.question}
                   answer: ${qa_pair.answer}
@@ -372,7 +372,7 @@ defs:
             as: array
         filtered:
           lang: python
-          spec: [{question: str, answer: str}]
+          spec: [{question: string, answer: string}]
           code: | # keep only if rating is at least two
               result = [p["qa_pair"] for p in ${ratings} if p["rating"] >= 2]
       data: ${filtered}
@@ -386,14 +386,14 @@ text:
 - "\n\n----- Generating questions -----\n\n"
 - def: generated_questions
   call: ${gen_questions_freeform}
-  spec: [{icl_question: str, icl_answer: str, question: str}]
+  spec: [{icl_question: string, icl_answer: string, question: string}]
   args:
     task_description: ${seed_examples.task_description}
     seed_examples: ${seed_examples.seed_examples}
 - "\n\n----- Filtering questions -----\n\n"
 - def: filtered_questions
   call: ${filter_questions}
-  spec: [{icl_question: str, icl_answer: str, question: str}]
+  spec: [{icl_question: string, icl_answer: string, question: string}]
   args:
     task_description: ${seed_examples.task_description}
     questions: ${generated_questions}

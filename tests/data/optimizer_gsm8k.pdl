@@ -11,10 +11,10 @@ defs:
 
   chain_of_thought:
     function:
-      question: str
-      model: str
+      question: string
+      model: string
       examples:
-        { list: { obj: { question: str, reasoning: str, answer: str } } }
+        [ { question: string, reasoning: string, answer: string } ]
     return:
       lastOf:
         - call: ${ cot.fewshot_cot }

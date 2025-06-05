@@ -57,7 +57,7 @@ fallback: "Exception caught"
 def test_type_checking():
     prog_str = """
 text: "Hello"
-spec: int
+spec: integer
 fallback: 4012
 """
     result = exec_str(prog_str)
@@ -67,7 +67,7 @@ fallback: 4012
 def test_type_checking_in_fallback():
     prog_str = """
 model: "raise an error"
-spec: int
+spec: integer
 fallback: "Error"
 """
     with pytest.raises(PDLRuntimeError) as exc:
