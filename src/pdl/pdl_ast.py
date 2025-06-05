@@ -100,10 +100,11 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
 ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
+"""Expressions are represented Jinja as strings in between `${` and `}`."""
 
 
 class Pattern(BaseModel):
-    """Patterns allowed to match values in a `case` clause."""
+    """Common fields for structured patterns."""
 
     model_config = ConfigDict(extra="forbid")
     def_: Optional[str] = Field(default=None, alias="def")
@@ -112,23 +113,30 @@ class Pattern(BaseModel):
 
 
 class OrPattern(Pattern):
-    anyOf: list["PatternType"]
     """Match any of the patterns."""
+
+    anyOf: list["PatternType"]
+    """List of possible patterns."""
 
 
 class ArrayPattern(Pattern):
-    array: list["PatternType"]
     """Match an array."""
+
+    array: list["PatternType"]
+    """Shape of the array to match."""
 
 
 class ObjectPattern(Pattern):
-    object: dict[str, "PatternType"]
     """Match an object."""
+
+    object: dict[str, "PatternType"]
+    """Shape of the object to match."""
 
 
 class AnyPattern(Pattern):
-    any: Literal[None]
     """Match any value."""
+
+    any: Literal[None]
 
 
 PatternType: TypeAlias = (
@@ -142,11 +150,13 @@ PatternType: TypeAlias = (
     | ObjectPattern
     | AnyPattern
 )
+"""Patterns allowed to match values in a `case` clause."""
 
 
 BasePdlType: TypeAlias = Literal[
     "null", "boolean", "string", "number", "integer", "array", "object"
 ]
+"""Base types."""
 
 
 class PdlType(BaseModel):
@@ -201,6 +211,7 @@ PdlTypeType = TypeAliasType(
         Field(union_mode="left_to_right"),
     ],
 )
+"""Types."""
 
 pdl_type_adapter = TypeAdapter(PdlTypeType)
 
@@ -218,12 +229,14 @@ class Parser(BaseModel):
 
 
 class PdlParser(Parser):
+    """Use a PDL program as a parser specification (experimental)."""
+
     pdl: "BlockType"
-    """Use a PDL program as a parser specification."""
+    """PDL program describing the shape of the expected value."""
 
 
 class RegexParser(Parser):
-    """A regular expression parser"""
+    """A regular expression parser."""
 
     regex: str
     """Regular expression to parse the value."""
@@ -238,16 +251,23 @@ ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexPars
 
 
 RoleType: TypeAlias = Optional[str]
+"""Role name."""
 
 
 class ContributeTarget(StrEnum):
+    """Values allowed in the `contribute` field."""
+
     RESULT = "result"
     CONTEXT = "context"
 
 
 class ContributeValue(BaseModel):
-    value: ExpressionType[list[Any]]
+    """Contribution of a specific value instead of the default one."""
+
     model_config = ConfigDict(extra="forbid")
+
+    value: ExpressionType[list[Any]]
+    """Value to contribute."""
 
 
 class PdlTiming(BaseModel):
@@ -505,9 +525,9 @@ class LitellmModelBlock(ModelBlock):
 
     Example:
     ```PDL
-    - model: ollama/granite-code:8b
-      parameters:
-        stop: ['!']
+    model: ollama/granite-code:8b
+    parameters:
+      stop: ['!']
     ```
     """
 
@@ -771,6 +791,8 @@ class JoinConfig(BaseModel):
 
 
 class JoinText(JoinConfig):
+    """Join loop iterations as a string."""
+
     as_: Literal[IterationType.TEXT] = Field(alias="as", default=IterationType.TEXT)
     """String concatenation of the result of each iteration.
     """
@@ -781,24 +803,31 @@ class JoinText(JoinConfig):
 
 
 class JoinArray(JoinConfig):
+    """Join loop iterations as an array."""
+
     as_: Literal[IterationType.ARRAY] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinObject(JoinConfig):
+    """Join loop iterations as an object."""
+
     as_: Literal[IterationType.OBJECT] = Field(alias="as")
     """Return the union of the objects created at each iteration.
     """
 
 
 class JoinLastOf(JoinConfig):
+    """Join loop iterations as the value of the last iteration."""
+
     as_: Literal[IterationType.LASTOF] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
 
 JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
+"""Different ways to join loop iterations."""
 
 
 class RepeatBlock(StructuredBlock):

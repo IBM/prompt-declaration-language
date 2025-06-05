@@ -158,6 +158,9 @@ export type Description20 = string | null
  *
  */
 export type Def = string | null
+/**
+ * Values allowed in the `contribute` field.
+ */
 export type ContributeTarget = "result" | "context"
 export type Value = LocalizedExpression | unknown[] | string
 export type Path = string[]
@@ -3075,9 +3078,9 @@ export interface Defs1 {
  *
  * Example:
  * ```PDL
- * - model: ollama/granite-code:8b
- *   parameters:
- *     stop: ['!']
+ * model: ollama/granite-code:8b
+ * parameters:
+ *   stop: ['!']
  * ```
  */
 export interface LitellmModelBlock {
@@ -4688,6 +4691,9 @@ export interface Defs20 {
     | EmptyBlock
     | null
 }
+/**
+ * Contribution of a specific value instead of the default one.
+ */
 export interface ContributeValue {
   value: Value
 }
@@ -4710,6 +4716,9 @@ export interface PdlLocationType {
 export interface Table {
   [k: string]: number
 }
+/**
+ * Use a PDL program as a parser specification (experimental).
+ */
 export interface PdlParser {
   description?: Description21
   spec?:
@@ -4734,7 +4743,7 @@ export interface PdlParser {
   pdl: Pdl
 }
 /**
- * A regular expression parser
+ * A regular expression parser.
  */
 export interface RegexParser {
   description?: Description22
@@ -4769,16 +4778,28 @@ export interface PdlTiming {
   first_use_nanos?: FirstUseNanos
   timezone?: Timezone
 }
+/**
+ * Join loop iterations as a string.
+ */
 export interface JoinText {
   as?: As
   with?: With
 }
+/**
+ * Join loop iterations as an array.
+ */
 export interface JoinArray {
   as: As1
 }
+/**
+ * Join loop iterations as an object.
+ */
 export interface JoinObject {
   as: As2
 }
+/**
+ * Join loop iterations as the value of the last iteration.
+ */
 export interface JoinLastOf {
   as: As3
 }
@@ -4793,14 +4814,23 @@ export interface MatchCase {
   pdl__if_result?: PdlIfResult
   pdl__matched?: PdlMatched
 }
+/**
+ * Match any of the patterns.
+ */
 export interface OrPattern {
   def?: Def12
   anyOf: Anyof
 }
+/**
+ * Match an array.
+ */
 export interface ArrayPattern {
   def?: Def13
   array: Array1
 }
+/**
+ * Match an object.
+ */
 export interface ObjectPattern {
   def?: Def14
   object: Object2
@@ -4816,6 +4846,9 @@ export interface Object2 {
     | AnyPattern
     | null
 }
+/**
+ * Match any value.
+ */
 export interface AnyPattern {
   def?: Def15
   any: Any

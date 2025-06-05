@@ -2,6 +2,7 @@
   "$defs": {
     "AnyPattern": {
       "additionalProperties": false,
+      "description": "Match any value.",
       "properties": {
         "def": {
           "anyOf": [
@@ -897,6 +898,7 @@
     },
     "ArrayPattern": {
       "additionalProperties": false,
+      "description": "Match an array.",
       "properties": {
         "def": {
           "anyOf": [
@@ -1917,6 +1919,7 @@
       "type": "object"
     },
     "ContributeTarget": {
+      "description": "Values allowed in the `contribute` field.",
       "enum": [
         "result",
         "context"
@@ -1926,6 +1929,7 @@
     },
     "ContributeValue": {
       "additionalProperties": false,
+      "description": "Contribution of a specific value instead of the default one.",
       "properties": {
         "value": {
           "anyOf": [
@@ -6185,6 +6189,7 @@
     },
     "JoinArray": {
       "additionalProperties": false,
+      "description": "Join loop iterations as an array.",
       "properties": {
         "as": {
           "const": "array",
@@ -6201,6 +6206,7 @@
     },
     "JoinLastOf": {
       "additionalProperties": false,
+      "description": "Join loop iterations as the value of the last iteration.",
       "properties": {
         "as": {
           "const": "lastOf",
@@ -6217,6 +6223,7 @@
     },
     "JoinObject": {
       "additionalProperties": false,
+      "description": "Join loop iterations as an object.",
       "properties": {
         "as": {
           "const": "object",
@@ -6233,6 +6240,7 @@
     },
     "JoinText": {
       "additionalProperties": false,
+      "description": "Join loop iterations as a string.",
       "properties": {
         "as": {
           "const": "text",
@@ -6747,7 +6755,7 @@
     },
     "LitellmModelBlock": {
       "additionalProperties": false,
-      "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\n- model: ollama/granite-code:8b\n  parameters:\n    stop: ['!']\n```",
+      "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\nmodel: ollama/granite-code:8b\nparameters:\n  stop: ['!']\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -9365,6 +9373,7 @@
     },
     "ObjectPattern": {
       "additionalProperties": false,
+      "description": "Match an object.",
       "properties": {
         "def": {
           "anyOf": [
@@ -9454,6 +9463,7 @@
     },
     "OrPattern": {
       "additionalProperties": false,
+      "description": "Match any of the patterns.",
       "properties": {
         "def": {
           "anyOf": [
@@ -9625,6 +9635,7 @@
     },
     "PdlParser": {
       "additionalProperties": false,
+      "description": "Use a PDL program as a parser specification (experimental).",
       "properties": {
         "description": {
           "anyOf": [
@@ -10360,7 +10371,7 @@
     },
     "RegexParser": {
       "additionalProperties": false,
-      "description": "A regular expression parser",
+      "description": "A regular expression parser.",
       "properties": {
         "description": {
           "anyOf": [
