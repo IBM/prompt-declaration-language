@@ -247,7 +247,7 @@ def block_to_dict(  # noqa: C901
                 d["function"] = None
             else:
                 d["function"] = {x: type_to_dict(t) for x, t in block.function.items()}
-            d["return"] = block_to_dict(block.returns, json_compatible)
+            d["return"] = block_to_dict(block.return_, json_compatible)
             # if block.scope is not None:
             #     d["scope"] = scope_to_dict(block.scope, json_compatible)
         case CallBlock():

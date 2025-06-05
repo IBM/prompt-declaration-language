@@ -357,7 +357,7 @@ class FunctionBlock(LeafBlock):
     function: Optional[dict[str, PdlTypeType]]
     """Functions parameters with their types.
     """
-    returns: "BlockType" = Field(..., alias="return")
+    return_: "BlockType" = Field(..., alias="return")
     """Body of the function.
     """
     signature: Optional[Json] = None
