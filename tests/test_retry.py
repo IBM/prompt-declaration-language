@@ -23,7 +23,7 @@ def repeat_retry_data(n: int):
             ],
             "retry": n,
         },
-        "max_iterations": 2,
+        "maxIterations": 2,
     }
 
 

@@ -1510,7 +1510,7 @@ export type Until = LocalizedExpression | boolean | string
  * Maximal number of iterations to perform.
  *
  */
-export type MaxIterations = LocalizedExpression | number | string | null
+export type Maxiterations = LocalizedExpression | number | string | null
 /**
  * Define how to combine the result of each iteration.
  *
@@ -3806,7 +3806,7 @@ export interface Defs9 {
  * Bounded loop:
  * ```PDL
  * index: i
- * max_iterations: 5
+ * maxIterations: 5
  * repeat:
  *     ${ i }
  * join:
@@ -3859,7 +3859,7 @@ export interface RepeatBlock {
   while?: While
   repeat: Repeat
   until?: Until
-  max_iterations?: MaxIterations
+  maxIterations?: Maxiterations
   join?: Join
   pdl__trace?: PdlTrace2
 }

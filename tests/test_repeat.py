@@ -20,7 +20,7 @@ def repeat_data(n):
                 "This is your first prompt descriptor!\n",
             ]
         },
-        "max_iterations": n,
+        "maxIterations": n,
     }
 
 
@@ -32,7 +32,7 @@ def nested_repeat_data(n):
             "This is your first prompt descriptor!\n",
             {
                 "repeat": "This sentence repeats!\n",
-                "max_iterations": n,
+                "maxIterations": n,
             },
         ],
     }
@@ -109,7 +109,7 @@ repeat_data_error = {
             {"model": "watsonx/ibm/granite-20b-code-instruct-v", "def": "NAME"},
         ]
     },
-    "max_iterations": 3,
+    "maxIterations": 3,
     "join": {"as": "lastOf"},
 }
 
@@ -158,7 +158,7 @@ def _for_max_iterations_prog(n):
     for:
       i: [0, 1, 2, 3, 4, 5]
     repeat: {'${i}'}
-    max_iterations: {'${'}{n}{'}'}
+    maxIterations: {'${'}{n}{'}'}
     """
 
 
@@ -178,7 +178,7 @@ def _for_max_iterations_index_prog(n):
     return f"""
     index: i
     repeat: {'${i}'}
-    max_iterations: {'${'}{n}{'}'}
+    maxIterations: {'${'}{n}{'}'}
     """
 
 
@@ -215,7 +215,7 @@ def _for_until_max_iterations_prog(n, m):
       i: [0, 1, 2, 3, 4, 5]
     repeat: {'${i}'}
     until: {'${ i == '}{n}{'}'}
-    max_iterations: {'${'}{m}{'}'}
+    maxIterations: {'${'}{m}{'}'}
     """
 
 

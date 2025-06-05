@@ -816,7 +816,7 @@ class RepeatBlock(StructuredBlock):
     Bounded loop:
     ```PDL
     index: i
-    max_iterations: 5
+    maxIterations: 5
     repeat:
         ${ i }
     join:
@@ -840,7 +840,7 @@ class RepeatBlock(StructuredBlock):
     until: ExpressionType[bool] = False
     """Condition to exit at the end of the loop.
     """
-    max_iterations: Optional[ExpressionType[int]] = None
+    maxIterations: Optional[ExpressionType[int]] = None
     """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()

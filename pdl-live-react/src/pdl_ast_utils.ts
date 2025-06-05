@@ -162,11 +162,11 @@ export function map_block_children(
     .with({ kind: "repeat" }, (block) => {
       const for_ = block?.for ? f_expr(block.for) : undefined
       const until = block?.until ? f_expr(block.until) : undefined
-      const max_iterations = block?.max_iterations
-        ? f_expr(block.max_iterations)
+      const max_iterations = block?.maxIterations
+        ? f_expr(block.maxIterations)
         : undefined
       const repeat = f_block(block.repeat)
-      return { ...block, for: for_, repeat, until, max_iterations }
+      return { ...block, for: for_, repeat, until, maxIterations: max_iterations }
     })
     .with({ kind: "error" }, (block) => {
       const doc = f_block(block.program)

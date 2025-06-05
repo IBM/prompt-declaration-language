@@ -109,10 +109,10 @@ text:
       args:
         pdl_context: []
         problem: ${ problem.question }
-    max_iterations: ${ N }
+    maxIterations: ${ N }
     join:
       as: array
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: plans
   join:
     as: array
@@ -128,12 +128,12 @@ text:
         args:
           pdl_context: []
           plan: ${ plan }
-      max_iterations: ${ N }
+      maxIterations: ${ N }
       join:
         as: array
     join:
       as: array
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: solutions
   join:
     as: array
@@ -151,12 +151,12 @@ text:
         args:
           pdl_context: []
           solution: ${ solution_for_problem }
-      max_iterations: ${ N }
+      maxIterations: ${ N }
       join:
         as: array
     join:
       as: array
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: results
   join:
     as: array
@@ -171,10 +171,10 @@ text:
       args: 
         pdl_context: []
         results: ${ results_for_problem }
-    max_iterations: ${ N }
+    maxIterations: ${ N }
     join:
       as: array
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: per_plan_votes
   join:
     as: array
@@ -186,7 +186,7 @@ text:
     args: 
       pdl_context: []
       numbers: ${ votes }
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   join:
     as: array
   def: results
@@ -200,7 +200,7 @@ text:
       pdl_context: []
       result: ${ result }
       truth: ${ problem.answer }
-  max_iterations: ${ MAX_ITERATIONS }
+  maxIterations: ${ MAX_ITERATIONS }
   def: stats
   join:
     as: array
