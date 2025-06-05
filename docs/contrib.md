@@ -74,7 +74,7 @@ You are all set!
 
 ### Run examples
 
-PDL executes nightly runs for Run Examples, which searches for all the `.pdl` programs in the repo and runs the interpreter against each file. The [config file for Run Examples](../tests/test_examples_run.yaml) describes how to handle each file. There are four conditions:
+PDL executes nightly runs for Run Examples, which searches for all the `.pdl` programs in the repo and runs the interpreter against each file. The [config file for Run Examples](https://github.com/IBM/prompt-declaration-language/blob/main/tests/test_examples_run.yaml) describes how to handle each file. There are four conditions:
 
 1. `skip`: a list of PDL files that are skipped in Run Examples
 2. `with_inputs`: PDL files that require user input. Each file name is mapped to two fields that describe how inputs are patched
