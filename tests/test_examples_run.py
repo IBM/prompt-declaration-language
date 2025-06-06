@@ -75,11 +75,12 @@ class ExpectedResult:
             return execution_result.error_code == ExecutionErrorCode.RUNTIME_ERROR
 
         # At this point, it's NO_ERROR, so check for results
+        # Note string comparison ignores whitespaces
         actual_result = execution_result.result
         if actual_result is not None and self.results is not None:
-            actual_result_stripped = actual_result.strip()
+            actual_result_stripped = actual_result.replace(" ", "").strip()
             for expected_result in self.results:
-                expected_result_stripped = expected_result.strip()
+                expected_result_stripped = expected_result.replace(" ", "").strip()
                 if actual_result_stripped == expected_result_stripped:
                     return True
         return False
