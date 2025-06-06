@@ -104,7 +104,7 @@ def parse_dict(
 #         block.fallback = set_block_location(block.fallback, append(loc, "fallback"))
 #     match block:
 #         case FunctionBlock():
-#             block.returns = set_blocks_location(block.returns, append(loc, "return"))
+#             block.return_ = set_blocks_location(block.return_, append(loc, "return"))
 #         case CallBlock():
 #             block.args = {x: set_expr_location(expr) for x, expr in block.args.items()}
 #         case ModelBlock():

@@ -1859,7 +1859,7 @@ def process_call(
         )
     if "pdl_context" in args:
         args["pdl_context"] = deserialize(args["pdl_context"])
-    f_body = closure.returns
+    f_body = closure.return_
     f_scope = (
         (closure.pdl__scope or PdlDict({}))
         | PdlDict({"pdl_context": scope.data["pdl_context"]})
