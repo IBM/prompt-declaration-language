@@ -103,7 +103,6 @@ from .pdl_context import (  # noqa: E402
     deserialize,
     ensure_context,
 )
-from .pdl_dumper import as_json, block_to_dict  # noqa: E402
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
 from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
@@ -119,6 +118,7 @@ from .pdl_utils import (  # noqa: E402
     replace_contribute_value,
     stringify,
     value_of_expr,
+    write_trace,
 )
 
 empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
@@ -200,25 +200,6 @@ def generate(
             write_trace(trace_file, exc.pdl__trace)
         return 1
     return 0
-
-
-def write_trace(
-    trace_file: str | Path,
-    trace: BlockType,
-):
-    """Write the execution trace into a file.
-
-    Args:
-        trace_file:  File to save the execution trace.
-        trace: Execution trace.
-    """
-    try:
-        d: Any = block_to_dict(trace, json_compatible=True)
-        d = as_json(d)
-        with open(trace_file, "w", encoding="utf-8") as fp:
-            json.dump(d, fp)
-    except Exception as e:
-        print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
 
 
 def process_prog(

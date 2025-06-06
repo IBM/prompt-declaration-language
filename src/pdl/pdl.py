@@ -22,7 +22,10 @@ from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_lazy import PdlDict
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_runner import exec_docker
-from .pdl_utils import validate_scope
+from .pdl_utils import (  # pylint: disable=unused-import # noqa: F401
+    validate_scope,
+    write_trace,
+)
 
 
 class InterpreterConfig(TypedDict, total=False):

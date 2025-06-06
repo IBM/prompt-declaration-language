@@ -1,8 +1,11 @@
 import fnmatch
 import json
+import sys
+from pathlib import Path
 from typing import Any, Generator, Generic, Sequence, TypeVar
 
 from .pdl_ast import (
+    BlockType,
     ContributeTarget,
     ContributeValue,
     ExpressionType,
@@ -10,6 +13,7 @@ from .pdl_ast import (
     LocalizedExpression,
     get_sampling_defaults,
 )
+from .pdl_dumper import as_json, block_to_dict
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -196,3 +200,22 @@ def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]])
                     f"invalid defaults {glob_defaults} for model matcher {model_glob}"
                 )
             assert isinstance(glob_defaults, dict)
+
+
+def write_trace(
+    trace_file: str | Path,
+    trace: BlockType,
+):
+    """Write the execution trace into a file.
+
+    Args:
+        trace_file:  File to save the execution trace.
+        trace: Execution trace.
+    """
+    try:
+        d: Any = block_to_dict(trace, json_compatible=True)
+        d = as_json(d)
+        with open(trace_file, "w", encoding="utf-8") as fp:
+            json.dump(d, fp)
+    except Exception as e:
+        print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
