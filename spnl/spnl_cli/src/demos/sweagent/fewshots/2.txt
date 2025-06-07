@@ -1,0 +1,111 @@
+Example 2 (do not solve this one):
+--- BEGIN ISSUE ---
+PVSystem with single Array generates an error
+**Is your feature request related to a problem? Please describe.**
+
+When a PVSystem has a single Array, you can't assign just the Array instance when constructing the PVSystem.
+
+```
+mount = pvlib.pvsystem.FixedMount(surface_tilt=35, surface_azimuth=180)
+array = pvlib.pvsystem.Array(mount=mount)
+pv = pvlib.pvsystem.PVSystem(arrays=array)
+
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-13-f5424e3db16a> in <module>
+      3 mount = pvlib.pvsystem.FixedMount(surface_tilt=35, surface_azimuth=180)
+      4 array = pvlib.pvsystem.Array(mount=mount)
+----> 5 pv = pvlib.pvsystem.PVSystem(arrays=array)
+
+~\anaconda3\lib\site-packages\pvlib\pvsystem.py in __init__(self, arrays, surface_tilt, surface_azimuth, albedo, surface_type, module, module_type, module_parameters, temperature_model_parameters, modules_per_string, strings_per_inverter, inverter, inverter_parameters, racking_model, losses_parameters, name)
+    251                 array_losses_parameters,
+    252             ),)
+--> 253         elif len(arrays) == 0:
+    254             raise ValueError("PVSystem must have at least one Array. "
+    255                              "If you want to create a PVSystem instance "
+
+TypeError: object of type 'Array' has no len()
+
+```
+
+**Describe alternatives you've considered**
+Status quo - either make the single Array into a list, or use the PVSystem kwargs.""",
+--- END ISSUE ---
+
+Below are some code segments from a relevant file. One or more of these may contain bugs.
+--- BEGIN FILE ---
+### pvlib/pvsystem.py
+...
+    **kwargs
+        Arbitrary keyword arguments.
+        Included for compatibility, but not used.
+
+    Raises
+    ------
+    ValueError
+        If `arrays` is not None and has length 0.
+
+    See also
+    --------
+    pvlib.location.Location
+    """
+
+    ${edit_marker}
+    def __init__(self,
+                 arrays=None,
+                 surface_tilt=0, surface_azimuth=180,
+                 albedo=None, surface_type=None,
+                 module=None, module_type=None,
+                 module_parameters=None,
+                 temperature_model_parameters=None,
+                 modules_per_string=1, strings_per_inverter=1,
+                 inverter=None, inverter_parameters=None,
+                 racking_model=None, losses_parameters=None, name=None):
+
+        if arrays is None:
+            if losses_parameters is None:
+                array_losses_parameters = {}
+            else:
+                array_losses_parameters = _build_kwargs(['dc_ohmic_percent'],
+                                                        losses_parameters)
+            self.arrays = (Array(
+                FixedMount(surface_tilt, surface_azimuth, racking_model),
+                albedo,
+...
+--- END FILE ---
+
+Another developer has proposed the following edit: Add a check to see if `arrays` is an instance of `Array`, and if so, wrap it in a tuple before assigning it to `self.arrays`
+
+--- BEGIN EDIT ---
+Here is my thought process:
+At the start of the `__init__` method, add an if-statement that does the wrapping.
+Here is my response:
+```python
+### pvlib/pvsystem.py
+<<<<<<< SEARCH
+    def __init__(self,
+                 arrays=None,
+                 surface_tilt=0, surface_azimuth=180,
+                 albedo=None, surface_type=None,
+                 module=None, module_type=None,
+                 module_parameters=None,
+                 temperature_model_parameters=None,
+                 modules_per_string=1, strings_per_inverter=1,
+                 inverter=None, inverter_parameters=None,
+                 racking_model=None, losses_parameters=None, name=None):
+=======
+    def __init__(self,
+                 arrays=None,
+                 surface_tilt=0, surface_azimuth=180,
+                 albedo=None, surface_type=None,
+                 module=None, module_type=None,
+                 module_parameters=None,
+                 temperature_model_parameters=None,
+                 modules_per_string=1, strings_per_inverter=1,
+                 inverter=None, inverter_parameters=None,
+                 racking_model=None, losses_parameters=None, name=None):
+        if arrays is not None and not isinstance(arrays, (list, tuple)) and isinstance(arrays, Array):
+            arrays = (arrays,)
+>>>>>>> REPLACE
+```
+--- END EDIT ---

@@ -1,0 +1,4 @@
+[workspace]
+resolver = "2"
+members = [ "spnl_cli", "spnl", "haystack", "spnl_wasm"]
+default-members = [ "spnl_cli" ]

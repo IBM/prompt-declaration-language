@@ -1,0 +1,38 @@
+[package]
+name = "spnl"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["cli_support", "run", "ollama", "openai", "pull", "rag"]
+cli_support = ["dep:ptree","dep:rustyline"]
+run = ["dep:futures","dep:indicatif","dep:async-recursion"]
+ollama = ["run","dep:ollama-rs","dep:tokio","dep:tokio-stream"]
+openai = ["run","dep:async-openai","dep:tokio","dep:tokio-stream"]
+pull = ["dep:duct","dep:fs4","dep:rayon"]
+rag = ["dep:anyhow","dep:lancedb","dep:tracing","dep:arrow-schema","dep:arrow-array","dep:itertools","dep:pdf-extract"]
+
+[dependencies]
+ptree = { version = "0.5.2", default-features = false, features = ["ansi"], optional = true }
+serde = { version = "1.0.219", features = ["derive"] }
+serde-lexpr = "0.1.3"
+async-openai = { version = "0.28.1", optional = true }
+async-recursion = {version = "1.1.1", optional = true }
+duct = { version = "0.13.7", optional = true }
+fs4 = { version = "0.13.1", optional = true }
+futures = { version = "0.3.31", optional = true }
+indicatif = { version = "0.17.11", features = ["rayon"], optional = true }
+ollama-rs = { version = "0.3.1", features = ["stream"], optional = true }
+rayon = { version = "1.10.0", optional = true }
+rustyline = { version = "15.0.0", features = ["with-file-history"], optional = true } 
+tokio = { version = "1.44.1", features = ["io-std"], optional = true }
+tokio-stream = { version = "0.1.17", optional = true }
+anyhow = { version = "1.0.98", optional = true }
+lancedb = { version = "0.19.1", optional = true }
+tracing = { version = "0.1.41", optional = true }
+arrow-schema = { version = "54.1", optional = true }
+arrow-array = { version = "54.1", optional = true }
+itertools = { version = "0.14.0", optional = true }
+pdf-extract = { version = "0.9.0", optional = true }
+serde_json = "1.0.140"
+sha2 = "0.10.9"

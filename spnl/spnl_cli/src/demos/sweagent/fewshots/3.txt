@@ -1,0 +1,87 @@
+Example 3 (do not solve this one):
+--- BEGIN ISSUE ---
+Rule L060 could give a specific error message
+At the moment rule L060 flags something like this:
+
+```
+L:  21 | P:   9 | L060 | Use 'COALESCE' instead of 'IFNULL' or 'NVL'.
+```
+
+Since we likely know the wrong word, it might be nice to actually flag that instead of both `IFNULL` and `NVL` - like most of the other rules do.
+
+That is it should flag this:
+
+```
+L:  21 | P:   9 | L060 | Use 'COALESCE' instead of 'IFNULL'.
+```
+ Or this:
+
+```
+L:  21 | P:   9 | L060 | Use 'COALESCE' instead of 'NVL'.
+```
+
+As appropriate.
+
+What do you think @jpy-git ?
+--- END ISSUE ---
+
+Below are some code segments from a relevant file. One or more of these may contain bugs.
+--- BEGIN FILE ---
+### src/sqlfluff/rules/L060.py
+"""Implementation of Rule L060."""
+
+from typing import Optional
+
+from sqlfluff.core.parser.segments.raw import CodeSegment
+from sqlfluff.core.rules.base import BaseRule, LintFix, LintResult, RuleContext
+from sqlfluff.core.rules.doc_decorators import document_fix_compatible
+
+
+@document_fix_compatible
+class Rule_L060(BaseRule):
+
+    ${edit_marker}
+    def _eval(self, context: RuleContext) -> Optional[LintResult]:
+        """Use ``COALESCE`` instead of ``IFNULL`` or ``NVL``."""
+        # We only care about function names.
+        if context.segment.name != "function_name_identifier":
+            return None
+
+        # Only care if the function is ``IFNULL`` or ``NVL``.
+        if context.segment.raw_upper not in {"IFNULL", "NVL"}:
+            return None
+
+        # Create fix to replace ``IFNULL`` or ``NVL`` with ``COALESCE``.
+        fix = LintFix.replace(
+            context.segment,
+            [
+                CodeSegment(
+                    raw="COALESCE",
+                    name="function_name_identifier",
+                    type="function_name_identifier",
+                )
+            ],
+        )
+
+        return LintResult(context.segment, [fix])
+--- END FILE ---
+
+Another developer has proposed the following edit: Replace `return LintResult(context.segment, [fix])` with `return LintResult(context.segment, [fix], description=f"Use 'COALESCE' instead of '{context.segment.raw_upper}'.")`
+
+--- BEGIN EDIT ---
+Here is my thought process:
+Let's just include the wording proposed by the issue description.
+Here is my response:
+```python
+### src/sqlfluff/rules/L060.py
+<<<<<<< SEARCH
+return LintResult(context.segment, [fix])
+=======
+return LintResult(
+    anchor=context.segment,
+    fixes=[fix],
+    description=f"Use 'COALESCE' instead of '{context.segment.raw_upper}'.",
+)
+>>>>>>> REPLACE
+```
+--- END EDIT ---

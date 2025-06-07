@@ -1,0 +1,35 @@
+Example 1 (do not solve this one):
+--- BEGIN ISSUE ---
+I am getting the following error:
+NameError: name 'math' is not defined
+--- END ISSUE ---
+
+Below are some code segments from a relevant file. One or more of these may contain bugs.
+--- BEGIN FILE ---
+### foo/bar.py
+import argparse
+import difflib
+import json
+${edit_marker}
+from flask import Flask
+import pathlib
+import re
+...
+--- END FILE ---
+
+Another developer has proposed the following edit: Add `import math`.
+
+--- BEGIN EDIT ---
+Here is my thought process:
+I will search for the line `from flask import Flask` and replace it by putting `import math` right in front of it.
+Here is my response:
+```python
+### foo/bar.py
+<<<<<<< SEARCH
+from flask import Flask
+=======
+import math
+from flask import Flask
+>>>>>>> REPLACE
+```
+--- END EDIT ---

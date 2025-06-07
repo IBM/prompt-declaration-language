@@ -1,0 +1,50 @@
+{
+  "name": "SPNL",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:wasm": "wasm-pack build ../spnl_wasm --target bundler",
+    "build": "npm run build:wasm --release && tsc -b && vite build",
+    "lint": "eslint .",
+    "format": "prettier --write 'tests/**/*.ts' 'src/**/*.{ts,tsx,css}'",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.79",
+    "@patternfly/react-code-editor": "^6.2.2",
+    "@patternfly/react-core": "^6.2.2",
+    "@tanstack/react-router": "^1.120.3",
+    "@tanstack/react-router-devtools": "^1.120.3",
+    "@types/react-tree-graph": "^8.0.0",
+    "@xterm/addon-clipboard": "^0.1.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-markdown": "^10.1.0",
+    "react-tree-graph": "^8.0.3",
+    "spnl_wasm": "file:../spnl_wasm/pkg",
+    "ts-pattern": "^5.7.0",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@tanstack/router-plugin": "^1.120.3",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react-swc": "^3.9.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5"
+  },
+  "prettier": {
+    "semi": false
+  }
+}

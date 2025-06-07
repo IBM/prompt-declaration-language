@@ -1,0 +1,16 @@
+[package]
+name = "haystack"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.37", features = ["derive"] }
+indicatif = "0.17.11"
+lipsum = "0.9.1"
+petname = "2.0.2"
+ptree = { version = "0.5.2", default-features = false, features = ["ansi"] }
+rand = {version = "0.8.5", default-features = false, features = ["alloc"]}
+serde = "1.0.219"
+serde_json = "1.0.140"
+spnl = { version = "0.1.0", path = "../spnl" }
+tokio = "1.44.2"

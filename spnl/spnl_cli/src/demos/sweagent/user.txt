@@ -1,0 +1,13 @@
+Your job is to fix an issue by editing code. You will be presented the issue text and some code segments from a relevant file.
+
+Look for lines marked with '${edit_marker}' and make your edits there. Please generate search/replace edits to fix the issue. Every search/replace edit must use this format:
+
+1. The file path
+2. The start of search block: <<<<<<< SEARCH
+3. A contiguous chunk of lines to search for in the existing source code
+4. The dividing line: =======
+5. The lines to replace into the source code
+6. The end of the replace block: >>>>>>> REPLACE
+
+Your response should only include the answer. Do not provide any further explanation.
+Here are some examples, complete the last one:

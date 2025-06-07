@@ -1,0 +1,31 @@
+@import "react-tree-graph/dist/style.css";
+
+.spnl-node > text {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.spnl-node > rect {
+  stroke: #1062fe;
+  stroke-width: 2px;
+}
+
+.spnl-node-G > rect {
+  fill: #e4f6ff;
+}
+
+.spnl-node-plus > rect {
+  fill: #ffd8d9;
+}
+
+.spnl-node-X > rect {
+  fill: #ff8389;
+}
+
+.spnl-node-U > rect {
+  fill: #fddc68;
+}
+
+.spnl-node-S > rect {
+  fill: #d4a104;
+}
