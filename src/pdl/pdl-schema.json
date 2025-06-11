@@ -134,7 +134,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -279,7 +278,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -410,7 +408,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
               },
               {
                 "type": "string"
@@ -533,7 +531,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -678,7 +675,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -803,7 +799,6 @@
           "type": "string"
         },
         "array": {
-          "description": "Elements of the array.",
           "items": {
             "anyOf": [
               {
@@ -1060,7 +1055,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1205,7 +1199,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -1328,7 +1321,7 @@
         "call": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1341,7 +1334,7 @@
         "args": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1549,7 +1542,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -1694,7 +1686,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -1907,7 +1898,6 @@
               "type": "null"
             }
           ],
-          "description": "Code to execute.\n    ",
           "title": "Code"
         }
       },
@@ -1934,7 +1924,7 @@
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "items": {},
@@ -2059,7 +2049,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2204,7 +2193,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -2327,7 +2315,7 @@
         "data": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -2456,7 +2444,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2601,7 +2588,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -2847,7 +2833,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -2992,7 +2977,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -3198,7 +3182,6 @@
               "type": "null"
             }
           ],
-          "description": "Block that raised the error.\n    ",
           "title": "Program"
         }
       },
@@ -3315,7 +3298,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3460,7 +3442,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -3676,7 +3657,6 @@
               "type": "null"
             }
           ],
-          "description": "Body of the function.\n    ",
           "title": "Return"
         },
         "signature": {
@@ -3808,7 +3788,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -3953,7 +3932,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -4191,7 +4169,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4336,7 +4313,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -4459,9 +4435,8 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
-            {},
             {
               "type": "string"
             }
@@ -4551,7 +4526,6 @@
             }
           ],
           "default": "${ pdl_context }",
-          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -4605,7 +4579,7 @@
         "backend": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -4621,11 +4595,12 @@
         "processor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
             },
+            {},
             {
               "type": "null"
             }
@@ -4637,7 +4612,7 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "additionalProperties": true,
@@ -4768,7 +4743,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -4913,7 +4887,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -5040,7 +5013,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -5133,7 +5106,6 @@
               "type": "null"
             }
           ],
-          "description": "Branch to execute if the condition is true.\n    ",
           "title": "Then"
         },
         "else": {
@@ -5218,7 +5190,6 @@
             }
           ],
           "default": null,
-          "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
         },
         "if_result": {
@@ -5347,7 +5318,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5492,7 +5462,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -5814,7 +5783,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -5959,7 +5927,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -6390,7 +6357,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -6535,7 +6501,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -6660,7 +6625,6 @@
           "type": "string"
         },
         "lastOf": {
-          "description": "Sequence of blocks to execute.",
           "items": {
             "anyOf": [
               {
@@ -6859,7 +6823,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7004,7 +6967,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -7127,7 +7089,7 @@
         "model": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -7218,7 +7180,6 @@
             }
           ],
           "default": "${ pdl_context }",
-          "description": "Messages to send to the model.\n    ",
           "title": "Input"
         },
         "modelResponse": {
@@ -7275,7 +7236,7 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "additionalProperties": true,
@@ -7701,7 +7662,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression_TypeVar_": {
+    "LocalizedExpression__ExpressionTypeT_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
@@ -7841,7 +7802,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -7986,7 +7946,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -8113,7 +8072,7 @@
         "match": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -8179,7 +8138,7 @@
         "if": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -8426,7 +8385,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -8571,7 +8529,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -8772,13 +8729,12 @@
               "type": "null"
             }
           ],
-          "description": "Content of the message.",
           "title": "Content"
         },
         "name": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -8794,7 +8750,7 @@
         "tool_call_id": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -8920,7 +8876,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -9065,7 +9020,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -10063,7 +10017,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -10208,7 +10161,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -10331,7 +10283,7 @@
         "read": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -10518,7 +10470,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -10663,7 +10614,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -10793,7 +10743,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
                   },
                   {
                     "items": {},
@@ -10830,7 +10780,7 @@
         "while": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -10924,13 +10874,12 @@
               "type": "null"
             }
           ],
-          "description": "Body of the loop.\n    ",
           "title": "Repeat"
         },
         "until": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -10946,7 +10895,7 @@
         "maxIterations": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "integer"
@@ -11191,7 +11140,6 @@
             ]
           },
           "default": {},
-          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -11336,7 +11284,6 @@
             }
           ],
           "default": null,
-          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
         },
         "retry": {
@@ -11626,7 +11573,6 @@
               "type": "null"
             }
           ],
-          "description": "Body of the text.\n    ",
           "title": "Text"
         }
       },
