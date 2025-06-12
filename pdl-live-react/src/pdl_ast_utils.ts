@@ -74,9 +74,7 @@ export function map_block_children(
           : undefined
         // @ts-expect-error: f_expr does not preserve the type of the expression
         const backend: Backend = f_expr(block.backend)
-        const processor = block.processor
-          ? f_expr(block.processor)
-          : undefined
+        const processor = block.processor ? f_expr(block.processor) : undefined
         return {
           ...block,
           model,
