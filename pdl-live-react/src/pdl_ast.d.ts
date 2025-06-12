@@ -213,6 +213,10 @@ export type Pdl =
 export type Description22 = string | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback =
   | boolean
   | number
@@ -298,6 +302,10 @@ export type Parser1 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback1 =
   | boolean
   | number
@@ -361,6 +369,10 @@ export type Kind1 = "error"
  *
  */
 export type Msg = string
+/**
+ * Block that raised the error.
+ *
+ */
 export type Program1 =
   | boolean
   | number
@@ -410,6 +422,10 @@ export type Parser2 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback2 =
   | boolean
   | number
@@ -522,6 +538,10 @@ export type Parser3 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback3 =
   | boolean
   | number
@@ -635,6 +655,10 @@ export type Parser4 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback4 =
   | boolean
   | number
@@ -731,6 +755,10 @@ export type Parser5 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback5 =
   | boolean
   | number
@@ -789,6 +817,9 @@ export type PdlContext5 =
 export type PdlId5 = string | null
 export type PdlIsLeaf5 = true
 export type Kind5 = "message"
+/**
+ * Content of the message.
+ */
 export type Content =
   | boolean
   | number
@@ -846,6 +877,10 @@ export type Parser6 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback6 =
   | boolean
   | number
@@ -984,6 +1019,10 @@ export type Parser7 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback7 =
   | boolean
   | number
@@ -1043,6 +1082,9 @@ export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
 export type IndependentEnum2 = "independent" | "dependent"
 export type Kind7 = "array"
+/**
+ * Elements of the array.
+ */
 export type Array = (
   | boolean
   | number
@@ -1093,6 +1135,10 @@ export type Parser8 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback8 =
   | boolean
   | number
@@ -1152,6 +1198,9 @@ export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
 export type IndependentEnum3 = "independent" | "dependent"
 export type Kind8 = "lastOf"
+/**
+ * Sequence of blocks to execute.
+ */
 export type Lastof = (
   | boolean
   | number
@@ -1202,6 +1251,10 @@ export type Parser9 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback9 =
   | boolean
   | number
@@ -1261,6 +1314,10 @@ export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
 export type IndependentEnum4 = "independent" | "dependent"
 export type Kind9 = "text"
+/**
+ * Body of the text.
+ *
+ */
 export type Text =
   | boolean
   | number
@@ -1337,6 +1394,10 @@ export type Parser10 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback10 =
   | boolean
   | number
@@ -1413,6 +1474,10 @@ export type Index = string | null
  *
  */
 export type While = LocalizedExpression | boolean | string
+/**
+ * Body of the loop.
+ *
+ */
 export type Repeat =
   | boolean
   | number
@@ -1531,6 +1596,10 @@ export type Parser11 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback11 =
   | boolean
   | number
@@ -1682,6 +1751,10 @@ export type Parser12 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback12 =
   | boolean
   | number
@@ -1746,6 +1819,10 @@ export type Kind12 = "if"
  *
  */
 export type If1 = LocalizedExpression | boolean | string
+/**
+ * Branch to execute if the condition is true.
+ *
+ */
 export type Then1 =
   | boolean
   | number
@@ -1772,6 +1849,10 @@ export type Then1 =
   | ErrorBlock
   | EmptyBlock
   | null
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
 export type Else =
   | boolean
   | number
@@ -1822,6 +1903,10 @@ export type Parser13 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback13 =
   | boolean
   | number
@@ -1907,6 +1992,10 @@ export type Parser14 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback14 =
   | boolean
   | number
@@ -1992,6 +2081,10 @@ export type Parser15 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback15 =
   | boolean
   | number
@@ -2079,6 +2172,10 @@ export type Parser16 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback16 =
   | boolean
   | number
@@ -2142,6 +2239,10 @@ export type Kind16 = "code"
  *
  */
 export type Lang1 = "python" | "command" | "jinja" | "pdl" | "ipython"
+/**
+ * Code to execute.
+ *
+ */
 export type Code =
   | boolean
   | number
@@ -2191,6 +2292,10 @@ export type Parser17 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback17 =
   | boolean
   | number
@@ -2254,6 +2359,10 @@ export type Kind17 = "model"
  *
  */
 export type Model = LocalizedExpression | string
+/**
+ * Messages to send to the model.
+ *
+ */
 export type Input =
   | boolean
   | number
@@ -2341,6 +2450,10 @@ export type Parser18 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback18 =
   | boolean
   | number
@@ -2404,6 +2517,10 @@ export type Kind18 = "model"
  *
  */
 export type Model1 = LocalizedExpression | string
+/**
+ * Messages to send to the model.
+ *
+ */
 export type Input1 =
   | boolean
   | number
@@ -2527,6 +2644,10 @@ export type Parser19 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback19 =
   | boolean
   | number
@@ -2634,6 +2755,10 @@ export type Parser20 =
   | PdlParser
   | RegexParser
   | null
+/**
+ * Block to execute in case of error.
+ *
+ */
 export type Fallback20 =
   | boolean
   | number
@@ -2699,6 +2824,10 @@ export type Kind20 = "function"
 export type Function = {
   [k: string]: PdlTypeType
 } | null
+/**
+ * Body of the function.
+ *
+ */
 export type Return =
   | boolean
   | number
@@ -2833,6 +2962,10 @@ export interface ObjectPdlType {
 export interface Object {
   [k: string]: PdlTypeType
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs {
   [k: string]:
     | boolean
@@ -2908,6 +3041,10 @@ export interface CallBlock {
   args?: unknown
   pdl__trace?: PdlTrace3
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs1 {
   [k: string]:
     | boolean
@@ -2998,6 +3135,10 @@ export interface LitellmModelBlock {
   platform?: Platform1
   parameters?: Parameters1
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs2 {
   [k: string]:
     | boolean
@@ -3083,6 +3224,10 @@ export interface GraniteioModelBlock {
   processor?: unknown
   parameters?: Parameters
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs3 {
   [k: string]:
     | boolean
@@ -3166,6 +3311,10 @@ export interface CodeBlock {
   lang: Lang1
   code: Code
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs4 {
   [k: string]:
     | boolean
@@ -3248,6 +3397,10 @@ export interface ArgsBlock {
   lang?: Lang
   args: Args
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs5 {
   [k: string]:
     | boolean
@@ -3323,6 +3476,10 @@ export interface GetBlock {
   kind?: Kind14
   get: Get
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs6 {
   [k: string]:
     | boolean
@@ -3418,6 +3575,10 @@ export interface DataBlock {
   data: unknown
   raw?: Raw
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs7 {
   [k: string]:
     | boolean
@@ -3505,6 +3666,10 @@ export interface IfBlock {
   else?: Else
   if_result?: IfResult
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs8 {
   [k: string]:
     | boolean
@@ -3597,6 +3762,10 @@ export interface MatchBlock {
   match: unknown
   with: With1
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs9 {
   [k: string]:
     | boolean
@@ -3697,6 +3866,10 @@ export interface RepeatBlock {
   join?: Join
   pdl__trace?: PdlTrace2
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs10 {
   [k: string]:
     | boolean
@@ -3771,6 +3944,10 @@ export interface TextBlock {
   kind?: Kind9
   text: Text
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs11 {
   [k: string]:
     | boolean
@@ -3845,6 +4022,10 @@ export interface LastOfBlock {
   kind?: Kind8
   lastOf: Lastof
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs12 {
   [k: string]:
     | boolean
@@ -3919,6 +4100,10 @@ export interface ArrayBlock {
   kind?: Kind7
   array: Array
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs13 {
   [k: string]:
     | boolean
@@ -3993,6 +4178,10 @@ export interface ObjectBlock {
   kind?: Kind6
   object: Object1
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs14 {
   [k: string]:
     | boolean
@@ -4068,6 +4257,10 @@ export interface MessageBlock {
   name?: Name
   tool_call_id?: ToolCallId
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs15 {
   [k: string]:
     | boolean
@@ -4155,6 +4348,10 @@ export interface ReadBlock {
   message?: Message
   multiline?: Multiline
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs16 {
   [k: string]:
     | boolean
@@ -4230,6 +4427,10 @@ export interface IncludeBlock {
   include: Include
   pdl__trace?: PdlTrace1
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs17 {
   [k: string]:
     | boolean
@@ -4304,6 +4505,10 @@ export interface ImportBlock {
   import: Import
   pdl__trace?: PdlTrace
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs18 {
   [k: string]:
     | boolean
@@ -4378,6 +4583,10 @@ export interface ErrorBlock {
   msg: Msg
   program: Program1
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs19 {
   [k: string]:
     | boolean
@@ -4450,6 +4659,10 @@ export interface EmptyBlock {
   pdl__is_leaf?: PdlIsLeaf
   kind?: Kind
 }
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
 export interface Defs20 {
   [k: string]:
     | boolean
