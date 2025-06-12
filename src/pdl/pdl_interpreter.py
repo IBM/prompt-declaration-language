@@ -96,6 +96,7 @@ from .pdl_ast import (  # noqa: E402
 )
 from .pdl_context import (  # noqa: E402
     DependentContext,
+    IndependentContext,
     PDLContext,
     SerializeMode,
     SingletonContext,
@@ -359,7 +360,11 @@ def set_error_to_scope_for_retry(
         "content": error,
         "defsite": block_id,
     }
-    scope = scope | {"pdl_context": pdl_context * SingletonContext(PdlDict(err_msg))}
+    scope = scope | {
+        "pdl_context": DependentContext(
+            [pdl_context, SingletonContext(PdlDict(err_msg))]
+        )
+    }
     return scope
 
 
@@ -605,9 +610,13 @@ def process_block_body(
                             append(obj_loc, k),
                         )
                         if block.context == IndependentEnum.DEPENDENT:
-                            background = background * value_background
+                            background = DependentContext(
+                                [background, value_background]
+                            )
                         else:
-                            background = background + value_background
+                            background = IndependentContext(
+                                [background, value_background]
+                            )
                         if (
                             block.context is IndependentEnum.INDEPENDENT
                         ):  # reset pdl_context
@@ -829,7 +838,9 @@ def process_block_body(
                                     }
                                 ]
                             )
-                    scope = scope | {"pdl_context": pdl_context_init * background}
+                    scope = scope | {
+                        "pdl_context": DependentContext([pdl_context_init, background])
+                    }
                     if items is not None:
                         for k in items.keys():
                             scope = scope | {k: items[k][iidx]}
@@ -845,9 +856,13 @@ def process_block_body(
                         repeat_loc,
                     )
                     if block.context is IndependentEnum.DEPENDENT:
-                        saved_background = saved_background * iteration_background
+                        saved_background = DependentContext(
+                            [saved_background, iteration_background]
+                        )
                     else:
-                        saved_background = saved_background + iteration_background
+                        saved_background = IndependentContext(
+                            [saved_background, iteration_background]
+                        )
 
                     if block.context is IndependentEnum.DEPENDENT:
                         background = saved_background
@@ -1088,7 +1103,9 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         try:
             for i, block in enumerate(blocks):
                 iteration_state = iteration_state.with_iter(i)
-                scope = scope | {"pdl_context": pdl_context_init * background}
+                scope = scope | {
+                    "pdl_context": DependentContext([pdl_context_init, background])
+                }
                 new_loc = append(loc, "[" + str(i) + "]")
                 if iteration_type == IterationType.LASTOF and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
@@ -1100,9 +1117,13 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 ) = process_block(iteration_state, scope, block, new_loc)
                 results.append(iteration_result)
                 if context == IndependentEnum.DEPENDENT:
-                    saved_background = saved_background * iteration_background
+                    saved_background = DependentContext(
+                        [saved_background, iteration_background]
+                    )
                 else:
-                    saved_background = saved_background + iteration_background
+                    saved_background = IndependentContext(
+                        [saved_background, iteration_background]
+                    )
 
                 if context == IndependentEnum.DEPENDENT:
                     background = saved_background

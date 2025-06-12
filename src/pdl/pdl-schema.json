@@ -4461,7 +4461,6 @@
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
-            {},
             {
               "type": "string"
             }
@@ -4626,6 +4625,7 @@
             {
               "type": "string"
             },
+            {},
             {
               "type": "null"
             }

@@ -26,7 +26,7 @@ class GraniteioModel:
         processor = value_of_expr(block.processor)
         if isinstance(processor, InputOutputProcessor):
             return processor
-        model = value_of_expr(block.model)
+        model: str = value_of_expr(block.model)
         backend = value_of_expr(block.backend)
         assert isinstance(model, str), f"The model should be a string: {model}"
         match backend:
