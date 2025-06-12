@@ -114,7 +114,7 @@ def test_code_var():
     text = result["result"]
     scope = result["scope"]
     assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": text, "defsite": "text.0.code"}
+        {"role": "user", "content": text, "pdl__defsite": "text.0.code"}
     ]
     assert scope["I"] == 0
     assert text == "0"
