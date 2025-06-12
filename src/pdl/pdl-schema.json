@@ -4612,7 +4612,8 @@
             {
               "additionalProperties": true,
               "type": "object"
-            }
+            },
+            {}
           ],
           "description": "Backend name and configuration.\n    ",
           "title": "Backend"

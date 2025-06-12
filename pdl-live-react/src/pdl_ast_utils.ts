@@ -1,6 +1,6 @@
 import { match, P } from "ts-pattern"
 
-import { Backend, PdlBlock } from "./pdl_ast"
+import { PdlBlock } from "./pdl_ast"
 import { ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
@@ -72,8 +72,7 @@ export function map_block_children(
         const parameters: Parameters = block.parameters
           ? f_expr(block.parameters)
           : undefined
-        // @ts-expect-error: f_expr does not preserve the type of the expression
-        const backend: Backend = f_expr(block.backend)
+        const backend = f_expr(block.backend)
         const processor = block.processor ? f_expr(block.processor) : undefined
         return {
           ...block,
