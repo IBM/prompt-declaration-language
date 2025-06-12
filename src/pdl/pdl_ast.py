@@ -548,13 +548,13 @@ class GraniteioModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
     """Optional field to ensure that the block is using granite-io.
     """
-    model: ExpressionType[object]
+    model: ExpressionType[str]
     """Model name used by the backend.
     """
-    backend: ExpressionType[str | dict[str, Any]]
+    backend: ExpressionType[str | dict[str, Any | object]]
     """Backend name and configuration.
     """
-    processor: Optional[ExpressionType[str]] = None
+    processor: Optional[ExpressionType[str | object]] = None
     """IO Processor name.
     """
     parameters: Optional[ExpressionType[dict[str, Any]]] = None

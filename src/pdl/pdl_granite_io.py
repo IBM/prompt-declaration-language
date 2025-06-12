@@ -19,17 +19,18 @@ from .pdl_utils import value_of_expr
 class GraniteioModel:
     @staticmethod
     def processor_of_block(block: GraniteioModelBlock):
-        model = value_of_expr(block.model)
+        from granite_io import make_backend, make_io_processor
+        from granite_io.backend.base import Backend
+        from granite_io.io import InputOutputProcessor
+
+        processor = value_of_expr(block.processor)
+        if isinstance(processor, InputOutputProcessor):
+            return processor
+        model: str = value_of_expr(block.model)
         backend = value_of_expr(block.backend)
         assert isinstance(model, str), f"The model should be a string: {model}"
-        assert isinstance(
-            backend, (dict, str)
-        ), f"The backend should be a string or a dictionary: {backend}"
         match backend:
             case {"transformers": device}:
-                assert isinstance(backend, dict)
-                from granite_io import make_backend
-
                 backend = make_backend(
                     "transformers",
                     {
@@ -37,26 +38,27 @@ class GraniteioModel:
                         "device": device,
                     },
                 )
-            case backend_name if isinstance(backend_name, str):
-                from granite_io import make_backend
-
+            case str():
                 backend = make_backend(
-                    backend_name,
+                    backend,
                     {
                         "model_name": model,
                     },
                 )
+            case Backend():
+                pass
             case _:
                 assert False, f"Unexpected backend: {backend}"
-        if block.processor is None:
+        if processor is None:
             processor_name = model
         else:
-            processor_name = value_of_expr(block.processor)
+            assert isinstance(
+                processor, str
+            ), f"The processor should be a string: {processor}"
+            processor_name = value_of_expr(processor)
         assert isinstance(
             processor_name, str
         ), f"The processor should be a string: {processor_name}"
-        from granite_io import make_io_processor
-
         io_processor = make_io_processor(processor_name, backend=backend)
         return io_processor
 
@@ -87,7 +89,7 @@ class GraniteioModel:
                 inputs
             )
             try:  # TODO: update when new version of granite-io is released
-                message = result.next_message.model_dump()
+                message = result.next_message.model_dump()  # pyright: ignore
             except AttributeError:
                 message = result.results[0].next_message.model_dump()
             raw_result = result.model_dump()

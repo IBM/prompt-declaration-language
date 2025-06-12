@@ -2355,6 +2355,11 @@ export type PdlId17 = string | null
 export type PdlIsLeaf17 = true
 export type Kind17 = "model"
 /**
+ * Model name used by the backend.
+ *
+ */
+export type Model = LocalizedExpression | string
+/**
  * Messages to send to the model.
  *
  */
@@ -2411,11 +2416,6 @@ export type Backend =
   | {
       [k: string]: unknown
     }
-/**
- * IO Processor name.
- *
- */
-export type Processor = LocalizedExpression | string | null
 /**
  * Parameters sent to the model.
  *
@@ -3210,7 +3210,7 @@ export interface GraniteioModelBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf17
   kind?: Kind17
-  model: unknown
+  model: Model
   input?: Input
   modelResponse?: Modelresponse
   /**
@@ -3221,7 +3221,7 @@ export interface GraniteioModelBlock {
   pdl__model_input?: PdlModelInput
   platform?: Platform
   backend: Backend
-  processor?: Processor
+  processor?: unknown
   parameters?: Parameters
 }
 /**
