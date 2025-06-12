@@ -2407,16 +2407,6 @@ export type PdlModelInput =
  */
 export type Platform = "granite-io"
 /**
- * Backend name and configuration.
- *
- */
-export type Backend =
-  | LocalizedExpression
-  | string
-  | {
-      [k: string]: unknown
-    }
-/**
  * Parameters sent to the model.
  *
  */
@@ -3220,7 +3210,7 @@ export interface GraniteioModelBlock {
   pdl__usage?: PdlUsage | null
   pdl__model_input?: PdlModelInput
   platform?: Platform
-  backend: Backend
+  backend: unknown
   processor?: unknown
   parameters?: Parameters
 }

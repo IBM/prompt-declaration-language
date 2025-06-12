@@ -7,8 +7,9 @@ from IPython.display import HTML, display_html
 
 from .pdl import InterpreterConfig, exec_str
 from .pdl_ast import get_default_model_parameters
+from .pdl_context import DependentContext
 from .pdl_dumper import block_to_dict
-from .pdl_lazy import PdlDict, PdlList
+from .pdl_lazy import PdlDict
 
 
 @magics_class
@@ -33,10 +34,12 @@ class PDLMagics(Magics):
         line = line.strip()
         args = parse_argstring(self.pdl, line)
         if args.reset_context:
-            scope = local_ns | {"pdl_context": PdlList([])}
+            scope = local_ns | {"pdl_context": DependentContext([])}
         else:
             # local_ns won't be lazy; make it lazy again
-            scope = local_ns | {"pdl_context": PdlList(local_ns.get("pdl_context", []))}
+            scope = local_ns | {
+                "pdl_context": local_ns.get("pdl_context", DependentContext([]))
+            }
 
         if "pdl_model_default_parameters" not in scope:
             scope["pdl_model_default_parameters"] = get_default_model_parameters()
