@@ -4456,18 +4456,6 @@
           "title": "Kind",
           "type": "string"
         },
-        "model": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "Model name used by the backend.\n    ",
-          "title": "Model"
-        },
         "input": {
           "anyOf": [
             {
@@ -4601,38 +4589,20 @@
           "title": "Platform",
           "type": "string"
         },
-        "backend": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            {}
-          ],
-          "description": "Backend name and configuration.\n    ",
-          "title": "Backend"
-        },
         "processor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/GraniteioProcessor"
             },
             {
-              "type": "string"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
-              "type": "null"
+              "type": "string"
             }
           ],
-          "default": null,
-          "description": "IO Processor name.\n    ",
+          "description": "IO Processor configuration or object.\n    ",
           "title": "Processor"
         },
         "parameters": {
@@ -4657,10 +4627,64 @@
         }
       },
       "required": [
-        "model",
-        "backend"
+        "processor"
       ],
       "title": "GraniteioModelBlock",
+      "type": "object"
+    },
+    "GraniteioProcessor": {
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Type"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "backend": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {}
+          ],
+          "title": "Backend"
+        }
+      },
+      "required": [
+        "backend"
+      ],
+      "title": "GraniteioProcessor",
       "type": "object"
     },
     "IfBlock": {
@@ -7125,18 +7149,6 @@
           "title": "Kind",
           "type": "string"
         },
-        "model": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "Name of the model following the LiteLLM convention.\n    ",
-          "title": "Model"
-        },
         "input": {
           "anyOf": [
             {
@@ -7269,6 +7281,18 @@
           "description": "Optional field to ensure that the block is using LiteLLM.\n    ",
           "title": "Platform",
           "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Name of the model following the LiteLLM convention.\n    ",
+          "title": "Model"
         },
         "parameters": {
           "anyOf": [

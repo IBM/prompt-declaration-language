@@ -39,8 +39,9 @@ defs:
 
 text:
 - Did Faith Hill take a break from recording after releasing her second album, It Matters to Me?
-- model: "granite3.2:2b"
-  backend: openai
+- processor:
+    model: "granite3.2:2b"
+    backend: openai
   parameters:
     documents:
     - ${ doc }

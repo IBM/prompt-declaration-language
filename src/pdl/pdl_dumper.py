@@ -25,6 +25,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
+    GraniteioProcessor,
     IfBlock,
     ImportBlock,
     IncludeBlock,
@@ -148,11 +149,19 @@ def block_to_dict(  # noqa: C901
             if block.pdl__model_input is not None:
                 d["pdl__model_input"] = block.pdl__model_input
         case GraniteioModelBlock():
-            d["model"] = expr_to_dict(block.model, json_compatible)
             d["platform"] = str(block.platform)
-            d["backend"] = expr_to_dict(block.backend, json_compatible)
-            if block.processor is not None:
-                d["processor"] = expr_to_dict(block.processor, json_compatible)
+            match block.processor:
+                case GraniteioProcessor():
+                    processor = block.processor
+                    p = {}
+                    if processor.type is not None:
+                        p["type"] = expr_to_dict(processor.type, json_compatible)
+                    if processor.model is not None:
+                        p["model"] = expr_to_dict(processor.model, json_compatible)
+                    p["backend"] = expr_to_dict(processor.backend, json_compatible)
+                    d["processor"] = p
+                case _:
+                    d["processor"] = expr_to_dict(block.processor, json_compatible)
             d["input"] = block_to_dict(block.input, json_compatible)
             if block.parameters is not None:
                 d["parameters"] = expr_to_dict(block.parameters, json_compatible)

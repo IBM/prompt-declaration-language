@@ -503,9 +503,6 @@ class ModelBlock(LeafBlock):
     """Common fields for the `model` blocks."""
 
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: ExpressionType
-    """Model to use.
-    """
     input: "BlockType" = "${ pdl_context }"
     """Messages to send to the model.
     """
@@ -542,20 +539,26 @@ class LitellmModelBlock(ModelBlock):
     """
 
 
+class GraniteioProcessor(BaseModel):
+    type: Optional[ExpressionType[str]] = None
+    """Type of IO processor.
+    """
+    model: Optional[ExpressionType[str]] = None
+    """Model name used by the backend.
+    """
+    backend: ExpressionType[str | dict[str, Any] | object]
+    """Backend object or name and configuration.
+    """
+
+
 class GraniteioModelBlock(ModelBlock):
     """Call an LLM through the granite-io API."""
 
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
     """Optional field to ensure that the block is using granite-io.
     """
-    model: ExpressionType[str]
-    """Model name used by the backend.
-    """
-    backend: ExpressionType[str | dict[str, Any] | object]
-    """Backend name and configuration.
-    """
-    processor: Optional[ExpressionType[str | object]] = None
-    """IO Processor name.
+    processor: GraniteioProcessor | ExpressionType[object]
+    """IO Processor configuration or object.
     """
     parameters: Optional[ExpressionType[dict[str, Any]]] = None
     """Parameters sent to the model.
