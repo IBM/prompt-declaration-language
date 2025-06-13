@@ -1,6 +1,7 @@
 text:
 - "Hello!\n"
-- model: ibm-granite/granite-3.2-2b-instruct
-  backend:
-    transformers: cpu
-  processor: granite3.2
+- processor:
+    type: granite3.2
+    model: ibm-granite/granite-3.2-2b-instruct
+    backend:
+      transformers: cpu

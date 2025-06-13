@@ -1,3 +1,4 @@
+description: GraniteIO hallucination example
 defs:
   doc:
     data:
@@ -39,14 +40,16 @@ defs:
 
 text:
 - Did Faith Hill take a break from recording after releasing her second album, It Matters to Me?
-- model: "granite3.2:2b"
-  backend: openai
+- processor:
+    model: "granite3.2:2b"
+    backend: openai
   parameters:
     documents:
     - ${ doc }
     controls:
       hallucinations: true
-      citations: true
+    generate_inputs:
+      temperature: 0.0
   modelResponse: output
 - "\nHallucinations:\n"
 - for:  
@@ -56,13 +59,4 @@ text:
     - "Hallucination Risk: ${ hallucination.risk }"
     - "\nSentence: ${ hallucination.response_text }"
   join: 
-    with: "\n"
-- "\n\nCitations:\n"
-- for:
-    citation: ${ output.results[0].next_message.citations }
-  repeat:
-    text: 
-    - "Citation: ${ citation.context_text }"
-    - "\nSentence: ${ citation.response_text }"
-  join:
     with: "\n"

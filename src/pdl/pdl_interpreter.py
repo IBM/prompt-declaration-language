@@ -53,6 +53,7 @@ from .pdl_ast import (  # noqa: E402
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
+    GraniteioProcessor,
     IfBlock,
     ImportBlock,
     IncludeBlock,
@@ -773,7 +774,7 @@ def process_block_body(
                 lengths = []
                 for idx, lst in items.items():
                     if not isinstance(lst, list):
-                        msg = "Values inside the For block must be lists."
+                        msg = f"Values inside the For block must be lists but got {type(lst)}."
                         lst_loc = append(
                             append(block.pdl__location or empty_block_location, "for"),
                             idx,
@@ -1379,13 +1380,13 @@ def process_call_model(
     ScopeType,
     BlockTypeTVarProcessCallModel,
 ]:
-    # evaluate model name
-    model_id, concrete_block = process_expr_of(
-        block, "model", scope, loc  # pyright: ignore
-    )  # pyright: ignore
     # evaluate model params
-    match concrete_block:
+    match block:
         case LitellmModelBlock():
+            # evaluate model name
+            model_id, concrete_block = process_expr_of(
+                block, "model", scope, loc  # pyright: ignore
+            )  # pyright: ignore
             if isinstance(concrete_block.parameters, LitellmParameters):
                 concrete_block = concrete_block.model_copy(
                     update={"parameters": concrete_block.parameters.model_dump()}
@@ -1396,11 +1397,26 @@ def process_call_model(
             )
 
         case GraniteioModelBlock():
-            _, concrete_block = process_expr_of(concrete_block, "backend", scope, loc)
-            if concrete_block.processor is not None:
-                _, concrete_block = process_expr_of(
-                    concrete_block, "processor", scope, loc
-                )
+            match block.processor:
+                case GraniteioProcessor():
+                    proc_loc = append(loc, "processor")
+                    processor = block.processor.model_copy()
+                    model_id, processor.backend = process_expr(
+                        scope, processor.backend, append(proc_loc, "backend")
+                    )
+                    if processor.type is not None:
+                        _, processor.type = process_expr(
+                            scope, processor.type, append(proc_loc, "type")
+                        )
+                    if processor.model is not None:
+                        model_id, processor.model = process_expr(
+                            scope, processor.model, append(proc_loc, "model")
+                        )
+                    concrete_block = block.model_copy(update={"processor": processor})
+                case _:
+                    model_id, concrete_block = process_expr_of(
+                        block, "processor", scope, loc
+                    )
             if concrete_block.parameters is not None:
                 _, concrete_block = process_expr_of(
                     concrete_block, "parameters", scope, loc

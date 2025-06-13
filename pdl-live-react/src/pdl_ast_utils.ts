@@ -62,29 +62,42 @@ export function map_block_children(
       {
         kind: "model",
         platform: "granite-io",
-        backend: P.nonNullable,
         processor: P._,
       },
       (block) => {
-        const model = f_expr(block.model)
+        const processor = match(block.processor)
+          .with(
+            {
+              type: P.union(P._, P.nullish),
+              model: P.union(P._, P.nullish),
+              backend: P.nonNullable,
+            },
+            (proc) => {
+              const type = proc.type ? f_expr(proc.type) : undefined
+              const model = proc.model ? f_expr(proc.model) : undefined
+              const backend = f_expr(proc.backend)
+              return {
+                ...proc,
+                type,
+                model,
+                backend,
+              }
+            },
+          )
+          .otherwise((proc) => f_expr(proc))
         const input = block.input ? f_block(block.input) : undefined
-        // @ts-expect-error: f_expr does not preserve the type of the expression
-        const parameters: Parameters = block.parameters
+        const parameters = block.parameters
           ? f_expr(block.parameters)
           : undefined
-        const backend = f_expr(block.backend)
-        const processor = block.processor ? f_expr(block.processor) : undefined
         return {
           ...block,
-          model,
+          processor,
           input,
           parameters,
-          backend,
-          processor,
         }
       },
     )
-    .with({ kind: "model" }, (block) => {
+    .with({ kind: "model", model: P._ }, (block) => {
       const model = f_expr(block.model)
       const input = block.input ? f_block(block.input) : undefined
       const parameters = block.parameters ? f_expr(block.parameters) : undefined
@@ -92,6 +105,15 @@ export function map_block_children(
         ...block,
         platform: "litellm",
         model,
+        input,
+        parameters,
+      }
+    })
+    .with({ kind: "model" }, (block) => {
+      const input = block.input ? f_block(block.input) : undefined
+      const parameters = block.parameters ? f_expr(block.parameters) : undefined
+      return {
+        ...block,
         input,
         parameters,
       }
