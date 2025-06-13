@@ -109,7 +109,7 @@ export function map_block_children(
         parameters,
       }
     })
-    .with({ kind: "model",  }, (block) => {
+    .with({ kind: "model" }, (block) => {
       const input = block.input ? f_block(block.input) : undefined
       const parameters = block.parameters ? f_expr(block.parameters) : undefined
       return {

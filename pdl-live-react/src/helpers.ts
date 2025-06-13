@@ -340,9 +340,13 @@ function getValue<T>(expr: ExpressionT<T>) {
 
 export function extractModel(block: ModelBlock): string {
   return match(block)
-  .with({ model: P._ }, (block) => stringify(getValue(block.model)))
-  .with({processor: {model: P._}}, (block) => stringify(getValue(block.processor.model)))
-  .with({processor: {type: P._}}, (block) => stringify(getValue(block.processor.type)))
-  .with({processor: P._}, (block) => stringify(getValue(block.processor)))
-  .exhaustive()
+    .with({ model: P._ }, (block) => stringify(getValue(block.model)))
+    .with({ processor: { model: P._ } }, (block) =>
+      stringify(getValue(block.processor.model)),
+    )
+    .with({ processor: { type: P._ } }, (block) =>
+      stringify(getValue(block.processor.type)),
+    )
+    .with({ processor: P._ }, (block) => stringify(getValue(block.processor)))
+    .exhaustive()
 }
