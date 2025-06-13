@@ -6,6 +6,8 @@ text:
     backend: openai
   parameters: 
     thinking: true
+    generate_inputs:
+      temperature: 0.0
   modelResponse: outputs
   contribute: []
 - |

@@ -1,4 +1,4 @@
-description: GraniteIO halluncination example
+description: GraniteIO hallucination example
 defs:
   doc:
     data:
@@ -48,6 +48,8 @@ text:
     - ${ doc }
     controls:
       hallucinations: true
+    generate_inputs:
+      temperature: 0.0
   modelResponse: output
 - "\nHallucinations:\n"
 - for:  
