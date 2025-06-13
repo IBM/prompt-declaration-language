@@ -9,6 +9,7 @@ import type {
   PdlModelInput,
   LocalizedExpression,
 } from "./pdl_ast"
+import { match, P } from "ts-pattern"
 
 /** Re-export for convenience */
 export type { PdlBlock } from "./pdl_ast"
@@ -325,10 +326,23 @@ function isExpr(e: unknown): e is LocalizedExpression {
   )
 }
 
-export function extractModel({ model }: ModelBlock): string {
-  return typeof model === "string"
-    ? model
-    : isExpr(model)
-      ? String(model.pdl__result)
-      : "unknown"
+function getValue<T>(expr: ExpressionT<T>) {
+  if (isExpr(expr)) {
+    if (expr.pdl__result === undefined) {
+      return expr.pdl__expr
+    } else {
+      return expr.pdl__result
+    }
+  } else {
+    return expr
+  }
+}
+
+export function extractModel(block: ModelBlock): string {
+  return match(block)
+  .with({ model: P._ }, (block) => stringify(getValue(block.model)))
+  .with({processor: {model: P._}}, (block) => stringify(getValue(block.processor.model)))
+  .with({processor: {type: P._}}, (block) => stringify(getValue(block.processor.type)))
+  .with({processor: P._}, (block) => stringify(getValue(block.processor)))
+  .exhaustive()
 }
