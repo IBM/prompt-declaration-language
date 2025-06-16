@@ -58,6 +58,7 @@ from .pdl_ast import (
     TextBlock,
 )
 from .pdl_lazy import PdlLazy
+from .pdl_schema_utils import OLD_PDLTYPE_TO_JSONSCHEMA_NAME
 
 yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str  # type: ignore
 
@@ -327,6 +328,20 @@ def type_to_dict(t: PdlTypeType):
             d = None
         case "null" | "boolean" | "string" | "number" | "integer" | "array" | "object":
             d = t
+        case "bool" | "str" | "float" | "int" | "list" | "obj":
+            d = OLD_PDLTYPE_TO_JSONSCHEMA_NAME[t]
+        case "bool":
+            d = "boolean"
+        case "str":
+            d = "string"
+        case "float":
+            d = "number"
+        case "int":
+            d = "integer"
+        case "list":
+            d = "array"
+        case "obj":
+            d = "object"
         case EnumPdlType():
             d = t.model_dump()
         case [elem]:

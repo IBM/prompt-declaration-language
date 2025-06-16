@@ -1,3 +1,4 @@
+import sys
 import warnings
 from typing import Any, Optional
 
@@ -10,12 +11,19 @@ from .pdl_ast import (
 )
 
 json_types_convert = {
+    "null": None,
     "string": str,
     "boolean": bool,
     "integer": int,
     "number": float,
     "array": list,
     "object": dict,
+    "str": str,
+    "bool": bool,
+    "int": int,
+    "float": float,
+    "list": list,
+    "obj": dict,
 }
 
 
@@ -24,6 +32,16 @@ def convert_to_json_type(a_type):
         if a_type == v:
             return k
     return None
+
+
+OLD_PDLTYPE_TO_JSONSCHEMA_NAME = {
+    "bool": "boolean",
+    "str": "string",
+    "float": "number",
+    "int": "integer",
+    "list": "array",
+    "obj": "object",
+}
 
 
 def pdltype_to_jsonschema(
@@ -35,6 +53,12 @@ def pdltype_to_jsonschema(
             schema = {}  # Any type
         case "null" | "boolean" | "string" | "number" | "integer" | "array" | "object":
             schema = {"type": pdl_type}
+        case "bool" | "str" | "float" | "int" | "list" | "obj":
+            print(
+                f"Deprecated type syntax: use {OLD_PDLTYPE_TO_JSONSCHEMA_NAME[pdl_type]} instead of {pdl_type}.",
+                file=sys.stderr,
+            )
+            schema = {"type": OLD_PDLTYPE_TO_JSONSCHEMA_NAME[pdl_type]}
         case EnumPdlType(enum=choices):
             if pdl_type.__pydantic_extra__ is None:
                 extra = {}
