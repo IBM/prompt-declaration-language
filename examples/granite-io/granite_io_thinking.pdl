@@ -1,13 +1,18 @@
 text:
-- |
-  Find the fastest way for a seller to visit all the cities in their region
-  >> Response:
-- model: "granite3.2:2b"
-  backend: openai
+- Find the fastest way for a seller to visit all the cities in their region
+- def: response
+  processor:
+    model: "granite3.2:2b"
+    backend: openai
   parameters: 
     thinking: true
+    generate_inputs:
+      temperature: 0.0
   modelResponse: outputs
-- "\n"
-- | 
-  >> Thoughts:
-  ${ outputs.results[0].next_message.reasoning_content }
+  contribute: []
+- |
+
+    >> Thoughts:
+    ${ outputs.results[0].next_message.reasoning_content }
+    >> Response:
+    ${ response }

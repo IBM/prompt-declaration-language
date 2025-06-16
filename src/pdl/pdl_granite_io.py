@@ -7,6 +7,7 @@ from granite_io.types import ChatCompletionInputs
 from .pdl_ast import (
     ErrorBlock,
     GraniteioModelBlock,
+    GraniteioProcessor,
     LazyMessage,
     ModelInput,
     PDLRuntimeError,
@@ -19,47 +20,49 @@ from .pdl_utils import value_of_expr
 class GraniteioModel:
     @staticmethod
     def processor_of_block(block: GraniteioModelBlock):
-        from granite_io import make_backend, make_io_processor
-        from granite_io.backend.base import Backend
-        from granite_io.io import InputOutputProcessor
+        processor = block.processor
+        match processor:
+            case GraniteioProcessor():
+                from granite_io import make_backend, make_io_processor
+                from granite_io.backend.base import Backend
 
-        processor = value_of_expr(block.processor)
-        if isinstance(processor, InputOutputProcessor):
-            return processor
-        model: str = value_of_expr(block.model)
-        backend = value_of_expr(block.backend)
-        assert isinstance(model, str), f"The model should be a string: {model}"
-        match backend:
-            case {"transformers": device}:
-                backend = make_backend(
-                    "transformers",
-                    {
-                        "model_name": model,
-                        "device": device,
-                    },
-                )
-            case str():
-                backend = make_backend(
-                    backend,
-                    {
-                        "model_name": model,
-                    },
-                )
-            case Backend():
-                pass
+                model: Optional[str] = None
+                if processor.model is not None:
+                    model = value_of_expr(processor.model)
+                backend = value_of_expr(processor.backend)
+                match backend:
+                    case {"transformers": device}:
+                        assert model is not None, "The model name is required."
+                        backend = make_backend(
+                            "transformers",
+                            {
+                                "model_name": model,
+                                "device": device,
+                            },
+                        )
+                    case str():
+                        assert model is not None, "The model name is required."
+                        backend = make_backend(
+                            backend,
+                            {
+                                "model_name": model,
+                            },
+                        )
+                    case Backend():
+                        pass
+                    case _:
+                        assert False, f"Unexpected backend: {backend}"
+                if processor.type is None:
+                    processor_type = model
+                else:
+                    processor_type = value_of_expr(processor)
+
+                assert isinstance(
+                    processor_type, str
+                ), f"The processor type should be a string: {processor_type}"
+                io_processor = make_io_processor(processor_type, backend=backend)
             case _:
-                assert False, f"Unexpected backend: {backend}"
-        if processor is None:
-            processor_name = model
-        else:
-            assert isinstance(
-                processor, str
-            ), f"The processor should be a string: {processor}"
-            processor_name = value_of_expr(processor)
-        assert isinstance(
-            processor_name, str
-        ), f"The processor should be a string: {processor_name}"
-        io_processor = make_io_processor(processor_name, backend=backend)
+                io_processor = value_of_expr(processor)
         return io_processor
 
     @staticmethod
@@ -70,7 +73,7 @@ class GraniteioModel:
         if parameters is None:
             parameters = {}
         inputs = {"messages": messages} | parameters
-        return ChatCompletionInputs.model_validate(inputs)
+        return ChatCompletionInputs(**inputs)  # pyright: ignore
 
     @staticmethod
     async def async_generate_text(
@@ -99,7 +102,7 @@ class GraniteioModel:
             )
         except Exception as exc:
             message = (
-                f"Error during '{value_of_expr(block.model)}' model call: {repr(exc)}"
+                f"Error during processor ({block.processor}) execution: {repr(exc)}"
             )
             loc = block.pdl__location
             raise PDLRuntimeError(

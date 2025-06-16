@@ -2355,11 +2355,6 @@ export type PdlId17 = string | null
 export type PdlIsLeaf17 = true
 export type Kind17 = "model"
 /**
- * Model name used by the backend.
- *
- */
-export type Model = LocalizedExpression | string
-/**
  * Messages to send to the model.
  *
  */
@@ -2503,11 +2498,6 @@ export type PdlId18 = string | null
 export type PdlIsLeaf18 = true
 export type Kind18 = "model"
 /**
- * Name of the model following the LiteLLM convention.
- *
- */
-export type Model1 = LocalizedExpression | string
-/**
  * Messages to send to the model.
  *
  */
@@ -2552,6 +2542,11 @@ export type PdlModelInput1 =
  *
  */
 export type Platform1 = "litellm"
+/**
+ * Name of the model following the LiteLLM convention.
+ *
+ */
+export type Model1 = LocalizedExpression | string
 /**
  * Parameters to send to the model.
  *
@@ -3113,7 +3108,6 @@ export interface LitellmModelBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf18
   kind?: Kind18
-  model: Model1
   input?: Input1
   modelResponse?: Modelresponse1
   /**
@@ -3123,6 +3117,7 @@ export interface LitellmModelBlock {
   pdl__usage?: PdlUsage | null
   pdl__model_input?: PdlModelInput1
   platform?: Platform1
+  model: Model1
   parameters?: Parameters1
 }
 /**
@@ -3200,7 +3195,6 @@ export interface GraniteioModelBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf17
   kind?: Kind17
-  model: Model
   input?: Input
   modelResponse?: Modelresponse
   /**
@@ -3210,8 +3204,7 @@ export interface GraniteioModelBlock {
   pdl__usage?: PdlUsage | null
   pdl__model_input?: PdlModelInput
   platform?: Platform
-  backend: unknown
-  processor?: unknown
+  processor: unknown
   parameters?: Parameters
 }
 /**
