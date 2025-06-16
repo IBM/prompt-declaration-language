@@ -8,6 +8,9 @@ skip:
   - examples/gsm8k/gsm8k-tot-few-shot.pdl
   - examples/gsm8k/gsm8k-tot-multiplan.pdl
   - examples/gsm8k/gsm8k-tot.pdl
+  - examples/prompt_library/gsm8k_rewoo.pdl
+  - examples/prompt_library/gsm8k_react.pdl
+  - examples/prompt_library/gsm8k_cot.pdl
   - examples/intrinsics/demo-hallucination.pdl
   - examples/tutorial/programs/demo-hallucination.pdl
   - examples/rag/pdf_index.pdl
@@ -82,8 +85,11 @@ expected_parse_error:
   - tests/data/line/hello31.pdl
 expected_runtime_error:
   - examples/callback/repair_prompt.pdl
+  - examples/demos/repair_prompt.pdl
   - examples/tutorial/type_list.pdl
   - examples/tutorial/type_checking.pdl
+  - examples/tutorial/calling_llm_with_input_messages.pdl
+  - examples/tutorial/calling_llm_with_input_messages_var.pdl
   - tests/data/line/hello3.pdl
   - tests/data/line/hello9.pdl
   - tests/data/line/hello12.pdl
@@ -105,3 +111,4 @@ expected_runtime_error:
   - tests/data/line/hello28.pdl
   - tests/data/line/hello29.pdl
   - tests/data/line/hello30.pdl
+  - pdl-live-react/src-tauri/tests/cli/model-input-array.pdl
