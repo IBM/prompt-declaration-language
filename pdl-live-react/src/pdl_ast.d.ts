@@ -42,7 +42,21 @@ export type Program =
 export type Description = string | null
 export type Enum = unknown[]
 export type PdlTypeType =
-  | ("null" | "boolean" | "string" | "number" | "integer" | "array" | "object")
+  | (
+      | "null"
+      | "boolean"
+      | "string"
+      | "number"
+      | "integer"
+      | "array"
+      | "object"
+      | "bool"
+      | "str"
+      | "float"
+      | "int"
+      | "list"
+      | "obj"
+    )
   | EnumPdlType
   | PdlTypeType[]
   | OptionalPdlType
@@ -2889,6 +2903,12 @@ export interface FunctionBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -2997,6 +3017,12 @@ export interface CallBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3083,6 +3109,12 @@ export interface LitellmModelBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3170,6 +3202,12 @@ export interface GraniteioModelBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3266,6 +3304,12 @@ export interface CodeBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3352,6 +3396,12 @@ export interface ArgsBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3432,6 +3482,12 @@ export interface GetBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3530,6 +3586,12 @@ export interface DataBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3618,6 +3680,12 @@ export interface IfBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3716,6 +3784,12 @@ export interface MatchBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3814,6 +3888,12 @@ export interface RepeatBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3899,6 +3979,12 @@ export interface TextBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -3977,6 +4063,12 @@ export interface LastOfBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4055,6 +4147,12 @@ export interface ArrayBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4133,6 +4231,12 @@ export interface ObjectBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4211,6 +4315,12 @@ export interface MessageBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4302,6 +4412,12 @@ export interface ReadBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4381,6 +4497,12 @@ export interface IncludeBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4460,6 +4582,12 @@ export interface ImportBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4538,6 +4666,12 @@ export interface ErrorBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4616,6 +4750,12 @@ export interface EmptyBlock {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4713,6 +4853,12 @@ export interface PdlParser {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]
@@ -4739,6 +4885,12 @@ export interface RegexParser {
         | "integer"
         | "array"
         | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
       )
     | EnumPdlType
     | PdlTypeType[]

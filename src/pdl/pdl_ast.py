@@ -154,7 +154,20 @@ PatternType: TypeAlias = (
 
 
 BasePdlType: TypeAlias = Literal[
-    "null", "boolean", "string", "number", "integer", "array", "object"
+    "null",
+    "boolean",
+    "string",
+    "number",
+    "integer",
+    "array",
+    "object",
+    # deprecated syntax below
+    "bool",
+    "str",
+    "float",
+    "int",
+    "list",
+    "obj",
 ]
 """Base types."""
 

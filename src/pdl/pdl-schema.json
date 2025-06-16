@@ -9834,7 +9834,13 @@
             "number",
             "integer",
             "array",
-            "object"
+            "object",
+            "bool",
+            "str",
+            "float",
+            "int",
+            "list",
+            "obj"
           ],
           "type": "string"
         },

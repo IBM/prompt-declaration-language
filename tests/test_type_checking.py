@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from pdl.pdl import exec_dict
+from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_ast import pdl_type_adapter
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
@@ -587,3 +587,21 @@ hello2 = {
 def test_hello2():
     with pytest.raises(PDLRuntimeError):
         exec_dict(hello2)
+
+
+def do_test_stderr(capsys, prog, err):
+    exec_str(prog)
+    captured = capsys.readouterr()
+    output = captured.err.split("\n")
+    print(output)
+    assert set(output) == set(err)
+
+
+def test_deprecated(capsys: pytest.CaptureFixture[str]):
+    prog = """
+        data: 1
+        spec: int
+    """
+    do_test_stderr(
+        capsys, prog, ["Deprecated type syntax: use integer instead of int.", ""]
+    )
