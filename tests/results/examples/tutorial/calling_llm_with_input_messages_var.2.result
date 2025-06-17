@@ -1,0 +1,47 @@
+Here is a Python implementation of the Merge Sort algorithm:
+
+```python
+def merge_sort(arr):
+    # Base case: if array has 1 or no elements, it's already sorted
+    if len(arr) <= 1:
+        return arr
+
+    # Divide the array into two halves
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+
+    # Recursively sort both halves
+    left_sorted = merge_sort(left_half)
+    right_sorted = merge_sort(right_half)
+
+    # Merge the sorted halves back together
+    return merge(left_sorted, right_sorted)
+
+def merge(left, right):
+    """
+    Merge two sorted lists into a single sorted list.
+    """
+    merged = []  # Initialize an empty list for the result
+    left_index = 0  # Index for the left list
+    right_index = 0  # Index for the right list
+
+    # Continue until we've exhausted both lists
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] <= right[right_index]:
+            merged.append(left[left_index])
+            left_index += 1
+        else:
+            merged.append(right[right_index])
+            right_index += 1
+
+    # If there are any remaining elements in either list, append them to the result
+    merged.extend(left[left_index:])
+    merged.extend(right[right_index:])
+
+    return merged
+```
+
+This code first checks if the array is already sorted (i.e., has one or zero elements). If so, it returns the array as is. Otherwise, it divides the array into two halves and recursively sorts each half. The `merge` function then combines these sorted halves back together to produce a single sorted list.
+
+The time complexity of Merge Sort is O(n log n) for all cases (best, average, worst), making it efficient even for large lists.
