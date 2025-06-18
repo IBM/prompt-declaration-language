@@ -216,7 +216,7 @@ fn call_tools(model: &String, parameters: &HashMap<String, Value>) -> PdlBlock {
                                         metadata: None,
                                         body: Message(MessageBlock {
                                             role: Role::Tool,
-                                            defsite: None,
+                                            pdl__defsite: None,
                                             name: Some("${ tool.function.name }".to_string()),
                                             tool_call_id: Some("${ tool.id }".to_string()),
                                             content: Box::new(Advanced(Block {

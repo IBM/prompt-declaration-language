@@ -40,7 +40,7 @@ export type WithTiming = Required<
 export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
 export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "pdl__context"> & {
-  pdl__context: { role: string; content: string; defsite?: string }[]
+  pdl__context: { role: string; content: string; pdl__defsite?: string }[]
 }
 
 /** Does the given block have a `pdl__result` field? */

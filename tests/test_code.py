@@ -45,7 +45,7 @@ def test_contribute_context():
         {
             "role": "user",
             "content": "How can I help you?: ",
-            "defsite": "text.0.text.code",
+            "pdl__defsite": "text.0.text.code",
         }
     ]
 

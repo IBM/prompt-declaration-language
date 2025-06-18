@@ -17,14 +17,14 @@ array:
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
-            "defsite": "array.0.message",
+            "pdl__defsite": "array.0.message",
         }
     ]
     assert result["result"][1].serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": "Write a Python function that implement merge sort.",
-            "defsite": "array.1.message",
+            "pdl__defsite": "array.1.message",
         }
     ]
 
@@ -32,12 +32,12 @@ array:
         {
             "role": "system",
             "content": "You are a helpful software engineer. You write clear, concise, well-commented code.",
-            "defsite": "array.0.message",
+            "pdl__defsite": "array.0.message",
         },
         {
             "role": "user",
             "content": "Write a Python function that implement merge sort.",
-            "defsite": "array.1.message",
+            "pdl__defsite": "array.1.message",
         },
     ]
 
@@ -57,14 +57,14 @@ content:
         {
             "role": "user",
             "content": ["Hello", "Bye"],
-            "defsite": "message",
+            "pdl__defsite": "message",
         }
     ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": ["Hello", "Bye"],
-            "defsite": "message",
+            "pdl__defsite": "message",
         },
     ]
 
@@ -81,14 +81,14 @@ content:
         {
             "role": "user",
             "content": {"a": 1},
-            "defsite": "message",
+            "pdl__defsite": "message",
         }
     ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": {"a": 1},
-            "defsite": "message",
+            "pdl__defsite": "message",
         },
     ]
 
@@ -106,14 +106,14 @@ content:
         {
             "role": "user",
             "content": '{"a": 1}',
-            "defsite": "message",
+            "pdl__defsite": "message",
         }
     ]
     assert context.serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": '{"a": 1}',
-            "defsite": "message",
+            "pdl__defsite": "message",
         },
     ]
 
@@ -135,7 +135,7 @@ array:
             "content": 42,
             "name": "f",
             "tool_call_id": "id",
-            "defsite": "array.0.message",
+            "pdl__defsite": "array.0.message",
         },
     ]
     assert context.serialize(SerializeMode.LITELLM) == [
@@ -144,6 +144,6 @@ array:
             "content": 42,
             "name": "f",
             "tool_call_id": "id",
-            "defsite": "array.0.message",
+            "pdl__defsite": "array.0.message",
         }
     ]

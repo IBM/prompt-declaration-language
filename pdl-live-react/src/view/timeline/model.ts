@@ -69,8 +69,8 @@ function squashProximateModelInputs(model: TimelineModel): TimelineModel {
       if (isLLMBlock(block) && hasInput(block)) {
         const lastInput =
           block.pdl__model_input[block.pdl__model_input.length - 1]
-        if (lastInput && typeof lastInput.defsite === "string") {
-          M[lastInput.defsite] = true
+        if (lastInput && typeof lastInput.pdl__defsite === "string") {
+          M[lastInput.pdl__defsite] = true
         }
       }
       return M

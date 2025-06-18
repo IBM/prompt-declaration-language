@@ -22,16 +22,16 @@ independent_data = {
 def test_independent_data():
     result = exec_dict(independent_data, output="all")
     assert result["scope"]["a_post"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": "pre", "defsite": "text.0"}
+        {"role": "user", "content": "pre", "pdl__defsite": "text.0"}
     ]
     assert result["scope"]["b_post"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": "pre", "defsite": "text.0"}
+        {"role": "user", "content": "pre", "pdl__defsite": "text.0"}
     ]
     assert result["scope"]["post_post"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": "pre", "defsite": "text.0"},
-        {"role": "user", "content": "a", "defsite": "text.1.text.0"},
-        {"role": "user", "content": "b", "defsite": "text.1.text.2"},
-        {"role": "user", "content": "post", "defsite": "text.2"},
+        {"role": "user", "content": "pre", "pdl__defsite": "text.0"},
+        {"role": "user", "content": "a", "pdl__defsite": "text.1.text.0"},
+        {"role": "user", "content": "b", "pdl__defsite": "text.1.text.2"},
+        {"role": "user", "content": "post", "pdl__defsite": "text.2"},
     ]
 
 
@@ -53,7 +53,7 @@ def test_for_data():
     assert result["scope"]["context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "b",
-            "defsite": "repeat.1.text.0",
+            "pdl__defsite": "repeat.1.text.0",
             "role": "user",
         },
     ]
@@ -77,12 +77,12 @@ def test_for_dependent_data():
     assert result["scope"]["context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
-            "defsite": "repeat.0.text.0",
+            "pdl__defsite": "repeat.0.text.0",
             "role": "user",
         },
         {
             "content": "b",
-            "defsite": "repeat.1.text.0",
+            "pdl__defsite": "repeat.1.text.0",
             "role": "user",
         },
     ]
@@ -109,17 +109,17 @@ def test_lastof_independent_data():
     assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
-            "defsite": "lastOf.0",
+            "pdl__defsite": "lastOf.0",
             "role": "user",
         },
         {
             "content": "b",
-            "defsite": "lastOf.2",
+            "pdl__defsite": "lastOf.2",
             "role": "user",
         },
         {
             "content": "c",
-            "defsite": "lastOf.4",
+            "pdl__defsite": "lastOf.4",
             "role": "user",
         },
     ]
@@ -146,17 +146,17 @@ def test_array_independent_data():
     assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "content": "a",
-            "defsite": "array.0",
+            "pdl__defsite": "array.0",
             "role": "user",
         },
         {
             "content": "b",
-            "defsite": "array.2",
+            "pdl__defsite": "array.2",
             "role": "user",
         },
         {
             "content": "c",
-            "defsite": "array.4",
+            "pdl__defsite": "array.4",
             "role": "user",
         },
     ]
