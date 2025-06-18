@@ -2009,6 +2009,8 @@ def process_import(
             prog.root,
             new_loc,
         )
+        if state.yield_result:
+            yield_result(new_scope, block.kind)
         import_trace = block.model_copy(update={"pdl__trace": trace})
         return new_scope, DependentContext([]), scope, import_trace
     except PDLParseError as exc:
