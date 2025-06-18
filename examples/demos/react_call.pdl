@@ -1,10 +1,8 @@
 description: Wikipedia example using the react_fun function definition
-text:
-  - import: react_fun
-    def: lib
-  - call: ${ lib.react }
-    args:
-      question: "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching avoid using the words discovery or birthday.\n"
-      model: ollama_chat/granite3.3:8b
-
-
+defs:
+  lib:
+    import: react_fun
+call: ${ lib.react }
+args:
+  question: "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching avoid using the words discovery or birthday.\n"
+  model: ollama_chat/granite3.3:8b

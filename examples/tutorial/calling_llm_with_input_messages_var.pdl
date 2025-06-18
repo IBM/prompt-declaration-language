@@ -1,12 +1,10 @@
 description: Model call with explicit messages input
-text:
-- def: prompt
-  array:
-  - role: system
-    content: You are a helpful software engineer. You write clear, concise, well-commented code.
-  - role: user
-    content: Write a Python function that implement merge sort.
-  contribute: []
-- model: ollama_chat/granite3.2:2b
-  input: ${ prompt }
-
+defs:
+  prompt:
+    array:
+    - role: system
+      content: You are a helpful software engineer. You write clear, concise, well-commented code.
+    - role: user
+      content: Write a Python function that implement merge sort.
+model: ollama_chat/granite3.2:2b
+input: ${ prompt }
