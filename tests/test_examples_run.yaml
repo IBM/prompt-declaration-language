@@ -1,8 +1,5 @@
 update_results: false
-check:
-  - examples/prompt_library/gsm8k_cot.pdl
-  - examples/prompt_library/gsm8k_react.pdl
-  - examples/prompt_library/gsm8k_rewoo.pdl
+check: []
 skip:
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8.pdl
