@@ -4,7 +4,7 @@ defs:
     import: ../../contrib/prompt_library/ReWoo
   tools:
     import: ../../contrib/prompt_library/tools
-  model: watsonx_text/ibm/granite-3-8b-instruct
+  model: ollama/granite3.2:8b
   demonstrations:
     data:
       - - question: Noah charges $60 for a large painting and $30 for a small painting. Last month he sold eight large paintings and four small paintings. If he sold twice as much this month, how much is his sales for this month?
