@@ -218,8 +218,6 @@ def block_to_dict(  # noqa: C901
             d["then"] = block_to_dict(block.then, json_compatible)
             if block.else_ is not None:
                 d["else"] = block_to_dict(block.else_, json_compatible)
-            if block.if_result is not None:
-                d["if_result"] = block.if_result
         case MatchBlock():
             d["match"] = expr_to_dict(block.match_, json_compatible)
             d["with"] = [

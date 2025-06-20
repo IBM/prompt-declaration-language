@@ -355,10 +355,10 @@ class Block(BaseModel):
     Typical roles are `system`, `user`, and `assistant`,
     but there may be other roles such as `available_tools`.
     """
+    # Fields for internal use
     pdl__context: Optional[ModelInput] = []
     """Current context
     """
-    # Fields for internal use
     pdl__id: Optional[str] = ""
     """Unique identifier for this block
     """
@@ -406,7 +406,7 @@ class CallBlock(LeafBlock):
     """Calling a function."""
 
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
-    call: ExpressionType
+    call: ExpressionType[FunctionBlock]
     """Function to call.
     """
     args: ExpressionType = {}
@@ -740,8 +740,6 @@ class IfBlock(StructuredBlock):
     else_: Optional["BlockType"] = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
-    # Field for internal use
-    if_result: Optional[bool] = None
 
 
 class MatchCase(BaseModel):

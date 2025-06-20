@@ -688,7 +688,6 @@ def process_block_body(
             trace = trace.model_copy(
                 update={
                     "condition": if_trace,
-                    "if_result": b,
                 }
             )
         case MatchBlock():

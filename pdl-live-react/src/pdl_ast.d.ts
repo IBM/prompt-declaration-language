@@ -1893,7 +1893,6 @@ export type Else =
   | ErrorBlock
   | EmptyBlock
   | null
-export type IfResult = boolean | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2705,6 +2704,11 @@ export type PdlContext19 =
 export type PdlId19 = string | null
 export type PdlIsLeaf19 = true
 export type Kind19 = "call"
+/**
+ * Function to call.
+ *
+ */
+export type Call = LocalizedExpression | FunctionBlock | string
 export type PdlTrace3 =
   | boolean
   | number
@@ -3048,7 +3052,7 @@ export interface CallBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf19
   kind?: Kind19
-  call: unknown
+  call: Call
   args?: unknown
   pdl__trace?: PdlTrace3
 }
@@ -3715,7 +3719,6 @@ export interface IfBlock {
   if: If1
   then: Then1
   else?: Else
-  if_result?: IfResult
 }
 /**
  * Set of definitions executed before the execution of the block.

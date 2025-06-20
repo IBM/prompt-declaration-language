@@ -1081,7 +1081,7 @@ impl<'a> Interpreter<'a> {
                     content: Box::new(PdlBlock::String(m.content.clone())),
                     name: None,
                     tool_call_id: None,
-                    pdl__defsite: None,
+                    pdl_defsite: None,
                 })
                 .collect(),
         );
@@ -1094,7 +1094,7 @@ impl<'a> Interpreter<'a> {
                     content: Box::new(PdlBlock::String(m.content.clone())),
                     name: None,
                     tool_call_id: None,
-                    pdl__defsite: None,
+                    pdl_defsite: None,
                 })
                 .collect(),
         );
@@ -1476,7 +1476,7 @@ impl<'a> Interpreter<'a> {
                 role: block.role.clone(),
                 content: Box::new(content_trace),
                 name: name,
-                pdl__defsite: None,
+                pdl_defsite: None,
                 tool_call_id: tool_call_id,
             }),
         ))

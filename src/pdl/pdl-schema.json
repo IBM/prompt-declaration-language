@@ -1330,7 +1330,9 @@
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
-            {},
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
             {
               "type": "string"
             }
@@ -5245,18 +5247,6 @@
           "default": null,
           "description": "Branch to execute if the condition is false.\n    ",
           "title": "Else"
-        },
-        "if_result": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "If Result"
         }
       },
       "required": [
