@@ -414,8 +414,8 @@ pub struct MessageBlock {
     pub content: Box<PdlBlock>,
 
     /// pdl_id of block that defined the `content of this message
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pdl__defsite: Option<String>,
+    #[serde(rename = "pdl__defsite", skip_serializing_if = "Option::is_none")]
+    pub pdl_defsite: Option<String>,
 
     /// For example, the name of the tool that was invoked, for which this message is the tool response
     #[serde(skip_serializing_if = "Option::is_none")]
