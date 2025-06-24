@@ -374,10 +374,10 @@ In this program, we first define a query about the weather in some location (ass
 
 ## Data Block
 
-PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](https://ibm.github.io/prompt-declaration-language/#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be generalized to read jsonl files to generate data en masse by piping into another jsonl file ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/programs/code-json.pdl)).
+PDL offers the ability to create JSON data as illustrated by the following example (described in detail in the [Overview](https://ibm.github.io/prompt-declaration-language/#overview) section). The `data` block can gather previously defined variables into a JSON structure. This feature is useful for data generation. Programs such as this one can be generalized to read jsonl files to generate data en masse by piping into another jsonl file ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/programs/code/code-json.pdl)).
 
 ```yaml
---8<-- "./examples/tutorial/programs/code-json.pdl"
+--8<-- "./examples/tutorial/programs/code/code-json.pdl"
 ```
 
 Notice that in the `data` block the values are interpreted as Jinja expressions. If values need to be PDL programs to be interpreted, then you need to use

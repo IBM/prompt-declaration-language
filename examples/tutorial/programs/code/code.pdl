@@ -21,5 +21,4 @@ text:
     ```
     ${ CODE.source_code }```
   parameters:
-    # Use no LLM creativity.  (Note that 0 is the default; this line has no effect)
     temperature: 0
