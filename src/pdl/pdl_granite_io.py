@@ -55,7 +55,7 @@ class GraniteioModel:
                 if processor.type is None:
                     processor_type = model
                 else:
-                    processor_type = value_of_expr(processor)
+                    processor_type = value_of_expr(processor.type)
 
                 assert isinstance(
                     processor_type, str
