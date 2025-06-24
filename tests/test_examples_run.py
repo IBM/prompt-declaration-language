@@ -228,7 +228,7 @@ class ExamplesRun:
 
             exec_result.result = str(output["result"])
             exec_result.error_code = ExecutionErrorCode.NO_ERROR
-
+            pdl.write_trace("/dev/null", output["trace"])
         except PDLParseError:
             exec_result.error_code = ExecutionErrorCode.PARSE_ERROR
         except Exception:
