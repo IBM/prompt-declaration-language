@@ -22,7 +22,9 @@ skip:
   - examples/granite-io/granite_io_transformers.pdl
   - examples/granite-io/granite_io_thinking.pdl
   - examples/granite-io/granite_io_object.pdl
+  - examples/granite-io/granite_io_openai.pdl
   - examples/granite-io/granite_io_hallucinations.pdl
+  - examples/demos/granite_io_hallucinations.pdl
   - examples/optimizer/mbpp.pdl
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
