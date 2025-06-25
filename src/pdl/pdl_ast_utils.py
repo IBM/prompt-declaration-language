@@ -14,6 +14,7 @@ from .pdl_ast import (
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
+    GraniteioProcessor,
     IfBlock,
     ImportBlock,
     IncludeBlock,
@@ -39,7 +40,7 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         f(blocks)
     match block:
         case FunctionBlock():
-            f(block.returns)
+            f(block.return_)
         case CallBlock():
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
@@ -127,7 +128,7 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
     block = block.model_copy(update={"defs": defs})
     match block:
         case FunctionBlock():
-            block.returns = f.f_block(block.returns)
+            block.return_ = f.f_block(block.return_)
         case CallBlock():
             block.call = f.f_expr(block.call)
             block.args = f.f_expr(block.args)
@@ -136,8 +137,21 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case LitellmModelBlock():
             block.model = f.f_expr(block.model)
             block.input = f.f_block(block.input)
+            if block.parameters is not None:
+                block.parameters = f.f_expr(block.parameters)
         case GraniteioModelBlock():
-            block.model = f.f_expr(block.model)
+            match block.processor:
+                case GraniteioProcessor():
+                    processor = block.processor.model_copy()
+                    if processor.type is not None:
+                        processor.type = f.f_expr(processor.type)
+                    if processor.model is not None:
+                        processor.model = f.f_expr(processor.model)
+                    if processor.backend is not None:
+                        processor.backend = f.f_expr(processor.backend)
+                case _:
+                    processor = f.f_expr(block.processor)
+            block.processor = processor
             block.input = f.f_block(block.input)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)

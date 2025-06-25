@@ -1,0 +1,38 @@
+name: Rust Interpreter Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# cancel any prior runs for this workflow and this PR (or branch)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust-interpreter:
+    name: Test Rust interpreter
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pdl-live-react
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        # sleep 2 to wait for ollama to be running... hack warning
+        run: |
+          npm ci & sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core &
+            (curl -fsSL https://ollama.com/install.sh | sudo -E sh && sleep 2)
+          wait
+      - name: Run interpreter tests
+        run: |
+          python3.12 -mvenv venv
+          source venv/bin/activate
+          pip install nested-diff
+          npm run test:interpreter

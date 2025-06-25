@@ -1,0 +1,15 @@
+description: test
+defs:
+  m1: 
+    content: doc1
+  m2: 
+    content: doc2
+  m3:
+    content: Compare the docs
+  
+  mycontext: ${ (m1 + m2) * m3 }
+
+text:
+- model: ollama_chat/granite3.2:2b
+  input: ${ mycontext }
+- ${ mycontext }

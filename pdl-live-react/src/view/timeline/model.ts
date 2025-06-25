@@ -1,4 +1,4 @@
-import { match } from "ts-pattern"
+import { match, P } from "ts-pattern"
 
 import { type PdlBlock } from "../../pdl_ast"
 import {
@@ -69,8 +69,8 @@ function squashProximateModelInputs(model: TimelineModel): TimelineModel {
       if (isLLMBlock(block) && hasInput(block)) {
         const lastInput =
           block.pdl__model_input[block.pdl__model_input.length - 1]
-        if (lastInput && typeof lastInput.defsite === "string") {
-          M[lastInput.defsite] = true
+        if (lastInput && typeof lastInput.pdl__defsite === "string") {
+          M[lastInput.pdl__defsite] = true
         }
       }
       return M
@@ -127,9 +127,10 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "code" }, (data) => [data.pdl__result])
     .with({ kind: "get" }, (data) => [data.pdl__result])
     .with({ kind: "data" }, (data) => [data.pdl__result])
-    .with({ kind: "if" }, (data) =>
-      data.if_result ? [data.then] : [data.else],
+    .with({ kind: "if", if: { pdl__result: P._ } }, (data) =>
+      data.if.pdl__result ? [data.then] : [data.else],
     )
+    .with({ kind: "if" }, (data) => [data.then, data.else])
     .with({ kind: "match" }, (data) => [data.with]) // TODO
     .with({ kind: "read" }, (data) => [data.pdl__result])
     .with({ kind: "include" }, (data) => [data.pdl__trace ?? data.pdl__result])

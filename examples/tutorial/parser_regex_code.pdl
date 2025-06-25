@@ -7,6 +7,6 @@ defs:
     input: Write a Python function that perform the addition of two numbers.
     parser:
       spec:
-        code: str
+        code: string
       regex: (.|\n)*```python\n(?P<code>(.|\n)*)```(.|\n)*
 text: ${ output.code }

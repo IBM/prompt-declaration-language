@@ -1,0 +1,9 @@
+defs:
+  foo:
+    function: {}
+    return:
+      description: nullary function
+      text:
+        - hello world
+text:
+  - call: ${ foo}

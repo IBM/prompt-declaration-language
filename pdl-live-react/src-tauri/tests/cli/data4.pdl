@@ -1,0 +1,16 @@
+defs:
+  x:
+    description: Outer x
+    text:
+      - xxxx
+  y:
+    data:
+      n: 3
+      x: ${x}
+      b: true
+lastOf:
+  - defs:
+      x: yyyy
+    description: Inner x
+    text:
+      - ${x~y.x~y.n~y.b}

@@ -1,0 +1,7 @@
+model: ollama/granite3.2:2b
+input:
+  array:
+    - role: user
+      content: answer as if you live in europe
+    - role: user
+      content: what is the fastest animal where i live?

@@ -2,272 +2,335 @@ import io
 import os
 import pathlib
 import random
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Dict, List, Optional
 
+import yaml
 from pytest import CaptureFixture, MonkeyPatch
 
 from pdl import pdl
 from pdl.pdl_ast import ScopeType
-from pdl.pdl_dumper import block_to_dict
 from pdl.pdl_lazy import PdlDict
 from pdl.pdl_parser import PDLParseError
 
-# test_examples_run.py runs the examples and compares the results
-# to the expected results in tests/results/examples
-
-UPDATE_RESULTS = False
-RESULTS_VERSION = 1
-OLLAMA_GHACTIONS_RESULTS_ENV_VAR = os.getenv("OLLAMA_GHACTIONS_RESULTS", "")
-OLLAMA_GHACTIONS_RESULTS = False
-if OLLAMA_GHACTIONS_RESULTS_ENV_VAR.lower().strip() == "true":
-    OLLAMA_GHACTIONS_RESULTS = True
-
-TO_SKIP = {
-    str(name)
-    for name in [
-        # Requires dataset dependency
-        pathlib.Path("examples") / "cldk" / "cldk-assistant.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsm8.pdl",
-        pathlib.Path("examples") / "gsm8k" / "gsm8k-plan.pdl",
-        # Requires installation dependencies
-        pathlib.Path("examples") / "intrinsics" / "demo-hallucination.pdl",
-        pathlib.Path("examples") / "tutorial" / "programs" / "demo-hallucination.pdl",
-        # Skip RAG examples
-        pathlib.Path("examples") / "rag" / "pdf_index.pdl",
-        pathlib.Path("examples") / "rag" / "pdf_query.pdl",
-        pathlib.Path("examples")
-        / "rag"
-        / "rag_library1.pdl",  # (This is glue to Python, it doesn't "run" alone)
-        # Skip structure decoding example (Jing doesn't have WATSONX API KEY)
-        pathlib.Path("examples") / "tutorial" / "structured_decoding.pdl",
-        # OUtput result include trace (and thus timing) for some reason. Investigate why
-        pathlib.Path("examples") / "react" / "react_call.pdl",
-        pathlib.Path("pdl-live-react") / "demos" / "error.pdl",
-        pathlib.Path("pdl-live-react") / "demos" / "demo1.pdl",
-        pathlib.Path("pdl-live-react") / "demos" / "demo2.pdl",
-        # For now, skip the granite-io examples
-        pathlib.Path("examples") / "granite-io" / "granite_io_hallucinations.pdl",
-        pathlib.Path("examples") / "granite-io" / "granite_io_openai.pdl",
-        pathlib.Path("examples") / "granite-io" / "granite_io_thinking.pdl",
-        pathlib.Path("examples") / "granite-io" / "granite_io_transformers.pdl",
-    ]
-}
+EXAMPLES_RUN_CONFIG_FILE = os.getenv(
+    "EXAMPLES_RUN_FILE", "tests/test_examples_run.yaml"
+)
 
 
 @dataclass
 class InputsType:
+    """
+    Inputs to the PDL program for testing
+    """
+
     stdin: Optional[str] = None
     scope: Optional[ScopeType] = None
 
 
-TESTS_WITH_INPUT: dict[str, InputsType] = {
-    str(name): inputs
-    for name, inputs in {
-        pathlib.Path("examples")
-        / "tutorial"
-        / "programs"
-        / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
-        pathlib.Path("examples")
-        / "tutorial"
-        / "input_stdin.pdl": InputsType(stdin="Hello\n"),
-        pathlib.Path("examples")
-        / "tutorial"
-        / "input_stdin_multiline.pdl": InputsType(stdin="Hello\nBye\n"),
-        pathlib.Path("examples")
-        / "input"
-        / "input_test1.pdl": InputsType(stdin="Hello\n"),
-        pathlib.Path("examples")
-        / "input"
-        / "input_test2.pdl": InputsType(stdin="Hello\n"),
-        pathlib.Path("examples")
-        / "chatbot"
-        / "chatbot.pdl": InputsType(stdin="What is APR?\nyes\n"),
-        pathlib.Path("examples")
-        / "demo"
-        / "7-chatbot-roles.pdl": InputsType(stdin="What is APR?\nquit\n"),
-        pathlib.Path("examples")
-        / "tutorial"
-        / "free_variables.pdl": InputsType(scope=PdlDict({"something": "ABC"})),
-    }.items()
-}
-
-
-EXPECTED_PARSE_ERROR = [
-    pathlib.Path("tests") / "data" / "line" / "hello.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello1.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello4.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello7.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello8.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello10.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello11.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello31.pdl",
-]
-
-EXPECTED_RUNTIME_ERROR = [
-    pathlib.Path("examples") / "callback" / "repair_prompt.pdl",
-    pathlib.Path("examples") / "tutorial" / "type_list.pdl",
-    pathlib.Path("examples") / "tutorial" / "type_checking.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello12.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello13.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello14.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello15.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello16.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello17.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello18.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello19.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello20.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello21.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello22.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello23.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello24.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello25.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello26.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello27.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello28.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello29.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello3.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello30.pdl",
-    pathlib.Path("tests") / "data" / "line" / "hello9.pdl",
-]
-
-
-def __write_to_results_file(
-    dir_name: pathlib.Path, filename: str, content: str
-) -> None:
+class ExecutionErrorCode(Enum):
     """
-    Write to results file
+    PDLExecutionErrorCode describes the execution result of the PDL file
     """
 
-    dir_name.mkdir(parents=True, exist_ok=True)
-    with open(dir_name / filename, "w", encoding="utf-8") as result_file:
-        result_file.write(content)
+    NO_ERROR = 1
+    PARSE_ERROR = 2
+    RUNTIME_ERROR = 3
 
 
-def __find_and_compare_results(
-    test_file_name: pathlib.Path, actual_result: str
-) -> bool:
+@dataclass
+class ExecutionResult:
     """
-    Look through test_file_name's parent directory and see if any of *.result
-    matches the actual output
+    ExecutionResult captures the execution result of a PDL file
     """
 
-    result_dir_name = pathlib.Path(".") / "tests" / "results" / test_file_name.parent
-    expected_files = result_dir_name.glob(test_file_name.stem + ".*.result")
-
-    for expected_file in expected_files:
-        with open(expected_file, "r", encoding="utf-8") as truth_file:
-            expected_result = str(truth_file.read())
-            if str(actual_result).strip() == expected_result.strip():
-                return True
-    return False
+    result: str | None = None
+    error_code: ExecutionErrorCode | None = None
 
 
-def test_valid_programs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
-    actual_parse_error: set[str] = set()
-    actual_runtime_error: set[str] = set()
-    wrong_results = {}
+@dataclass
+class ExpectedResult:
+    """
+    ExpectedResult captures the expected result of a PDL file.
+    Non-deterministic programs contain more than one valid result
+    """
 
-    files = pathlib.Path(".").glob("**/*.pdl")
+    results: List[str] | None = None
+    error_code: ExecutionErrorCode | None = None
 
-    for pdl_file_name in files:
+    def compare_to_execution(self, execution_result: ExecutionResult) -> bool:
+        """
+        Returns true if execution matches to expected results and false otherwise
+        """
 
-        scope: ScopeType = PdlDict({})
-        if str(pdl_file_name) in TO_SKIP:
-            continue
-        if str(pdl_file_name) in TESTS_WITH_INPUT:
-            inputs = TESTS_WITH_INPUT[str(pdl_file_name)]
-            if inputs.stdin is not None:
-                monkeypatch.setattr(
-                    "sys.stdin",
-                    io.StringIO(inputs.stdin),
+        # ExecutionErrorCode codes must match
+        if execution_result.error_code != self.error_code:
+            return False
+
+        # Check if parse or runtime error
+        if self.error_code == ExecutionErrorCode.PARSE_ERROR:
+            return execution_result.error_code == ExecutionErrorCode.PARSE_ERROR
+        if self.error_code == ExecutionErrorCode.RUNTIME_ERROR:
+            return execution_result.error_code == ExecutionErrorCode.RUNTIME_ERROR
+
+        # At this point, it's NO_ERROR, so check for results
+        # Note string comparison ignores whitespaces
+        actual_result = execution_result.result
+        if actual_result is not None and self.results is not None:
+            actual_result_stripped = actual_result.replace(" ", "").strip()
+            for expected_result in self.results:
+                expected_result_stripped = expected_result.replace(" ", "").strip()
+                if actual_result_stripped == expected_result_stripped:
+                    return True
+        return False
+
+    def get_next_results_version(self) -> int:
+        """
+        Returns the next results version for this file
+        """
+
+        if self.results is None:
+            return 0
+        return len(self.results)
+
+
+@dataclass
+class FailedResults:
+    """
+    FailedResults are all the files that failed
+    """
+
+    wrong_results: Dict[str, str] = field(default_factory=lambda: {})
+    unexpected_parse_error: List[str] = field(default_factory=lambda: [])
+    unexpected_runtime_error: List[str] = field(default_factory=lambda: [])
+
+
+# pylint: disable=too-many-instance-attributes
+class ExamplesRun:
+    """
+    ExamplesRun outlines PDL files
+    - to skip
+    - requires inputs
+    - expects parse error
+    - expects runtime error
+    by loading the configuration from EXAMPLES_RUN_FILE
+    and runs the test
+    """
+
+    def __init__(self, monkeypatch: MonkeyPatch) -> None:
+        # Pytest
+        self.monkeypatch = monkeypatch
+
+        # Configuration
+        self.update_results: bool = False
+
+        # File manipulation
+        self.check = [str(f) for f in pathlib.Path(".").glob("**/*.pdl")]
+        self.skip: List[str] = []
+        self.with_inputs: Dict[str, InputsType] = {}
+        self.expected_parse_error: List[str] = []
+        self.expected_runtime_error: List[str] = []
+
+        # Load content from EXAMPLES_RUN_FILE
+        with open(EXAMPLES_RUN_CONFIG_FILE, "r", encoding="utf-8") as file:
+            content = yaml.safe_load(file)
+            self.update_results = content["update_results"]
+
+            # Update files to check iff check is specified
+            if content["check"] is not None:
+                if len(content["check"]) > 0:
+                    self.check = content["check"]
+
+            self.skip = content["skip"]
+            self.expected_parse_error = content["expected_parse_error"]
+            self.expected_runtime_error = content["expected_runtime_error"]
+
+            for filename, inputs_type in content["with_inputs"].items():
+                stdin, scope = None, None
+                if "stdin" in inputs_type:
+                    stdin = inputs_type["stdin"]
+                if "scope" in inputs_type:
+                    scope = inputs_type["scope"]
+                self.with_inputs[filename] = InputsType(
+                    stdin=stdin, scope=PdlDict(scope) if scope is not None else None
                 )
+
+        # Inits expected results
+        self.expected_results: Dict[str, ExpectedResult] = {}
+        self.__collect_expected_results()
+
+        # Inits execution results for each PDL file
+        self.execution_results: Dict[str, ExecutionResult] = {}
+
+        # Init failed results
+        self.failed_results = FailedResults()
+
+    def __get_results_dir(self) -> pathlib.Path:
+        return pathlib.Path(".") / "tests" / "results"
+
+    def __collect_expected_results(self) -> None:
+        """
+        Collects possible results for programs in self.check
+        """
+
+        for file in self.check:
+            expected_result = ExpectedResult()
+
+            if file in self.expected_parse_error:
+                expected_result.error_code = ExecutionErrorCode.PARSE_ERROR
+            elif file in self.expected_runtime_error:
+                expected_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
+            else:
+
+                # Collect possible results
+                res_list = []
+                file_path: pathlib.Path = pathlib.Path(file)
+                result_dir_name = self.__get_results_dir() / file_path.parent
+                expected_files = result_dir_name.glob(file_path.stem + ".*.result")
+
+                for expected_file in expected_files:
+                    with open(expected_file, "r", encoding="utf-8") as truth_file:
+                        content = truth_file.read()
+                        res_list.append(content)
+
+                expected_result.error_code = ExecutionErrorCode.NO_ERROR
+                expected_result.results = res_list
+
+            self.expected_results[file] = expected_result
+
+    def __execute_file(self, pdl_file_name: str) -> None:
+        """
+        Tests the result of a single file and returns the result output and the error code
+        """
+
+        exec_result = ExecutionResult()
+
+        pdl_file_path = pathlib.Path(pdl_file_name)
+        scope: ScopeType = PdlDict({})
+
+        # Patch with inputs
+        if pdl_file_name in self.with_inputs:
+            inputs = self.with_inputs[pdl_file_name]
+            if inputs.stdin is not None:
+                self.monkeypatch.setattr("sys.stdin", io.StringIO(inputs.stdin))
             if inputs.scope is not None:
                 scope = inputs.scope
+
         try:
-            random.seed(11)
+            # Execute file
             output = pdl.exec_file(
-                pdl_file_name,
+                pdl_file_path,
                 scope=scope,
                 output="all",
                 config=pdl.InterpreterConfig(batch=0),
             )
-            actual_result = output["result"]
 
-            block_to_dict(output["trace"], json_compatible=True)
-            result_dir_name = (
-                pathlib.Path(".") / "tests" / "results" / pdl_file_name.parent
-            )
-
-            if not __find_and_compare_results(pdl_file_name, str(actual_result)):
-
-                if OLLAMA_GHACTIONS_RESULTS:
-                    print(
-                        f"Program {str(pdl_file_name)} requries updating its result on GitHub Actions"
-                    )
-                    print(f"Actual results: {str(actual_result)}")
-                    result_file_name = f"{pdl_file_name.stem}.ollama_ghactions.result"
-                    __write_to_results_file(
-                        result_dir_name, result_file_name, str(actual_result)
-                    )
-
-                    # Evaluate the results again. If fails again, then consider this program as failing
-                    if not __find_and_compare_results(
-                        pdl_file_name, str(actual_result)
-                    ):
-                        print(
-                            f"Program {str(pdl_file_name)} failed second time even after generating results from Github Actions. Consider this failing!"
-                        )
-                        wrong_results[str(pdl_file_name)] = {
-                            "actual": str(actual_result),
-                        }
-                    # If evaluating results produces correct result, then this is considered passing
-                    else:
-                        continue
-
-                if UPDATE_RESULTS:
-                    result_file_name = (
-                        f"{pdl_file_name.stem}.{str(RESULTS_VERSION)}.result"
-                    )
-                    __write_to_results_file(
-                        result_dir_name, result_file_name, str(actual_result)
-                    )
-
-                wrong_results[str(pdl_file_name)] = {
-                    "actual": str(actual_result),
-                }
+            exec_result.result = str(output["result"])
+            exec_result.error_code = ExecutionErrorCode.NO_ERROR
+            pdl.write_trace("/dev/null", output["trace"])
         except PDLParseError:
-            actual_parse_error |= {str(pdl_file_name)}
-        except Exception as exc:
-            if str(pdl_file_name) not in set(str(p) for p in EXPECTED_RUNTIME_ERROR):
-                print(f"{pdl_file_name}: {exc}")  # unexpected error: breakpoint
-            actual_runtime_error |= {str(pdl_file_name)}
-            print(exc)
+            exec_result.error_code = ExecutionErrorCode.PARSE_ERROR
+        except Exception:
+            exec_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
 
-    # Parse errors
-    expected_parse_error = set(str(p) for p in EXPECTED_PARSE_ERROR)
-    unexpected_parse_error = sorted(list(actual_parse_error - expected_parse_error))
-    assert (
-        len(unexpected_parse_error) == 0
-    ), f"Unexpected parse error: {unexpected_parse_error}"
+        self.execution_results[pdl_file_name] = exec_result
 
-    # Runtime errors
-    expected_runtime_error = set(str(p) for p in EXPECTED_RUNTIME_ERROR)
-    unexpected_runtime_error = sorted(
-        list(actual_runtime_error - expected_runtime_error)
-    )
-    assert (
-        len(unexpected_runtime_error) == 0
-    ), f"Unexpected runtime error: {unexpected_runtime_error}"
+    def populate_exec_result_for_checks(self) -> None:
+        """
+        Populates the execution result for all files in self.checks
+        """
 
-    # Unexpected valid
-    unexpected_valid = sorted(
-        list(
-            (expected_parse_error - actual_parse_error).union(
-                expected_runtime_error - actual_runtime_error
+        for file in self.check:
+            if file not in self.skip:
+                self.__execute_file(file)
+
+    def validate_expected_and_actual(self) -> None:
+        """
+        Validates the expected result to actual result
+        Must be run after populate_exec_result_for_checks
+        """
+
+        wrong_result: Dict[str, str] = {}
+        unexpected_parse_error: List[str] = []
+        unexpected_runtime_error: List[str] = []
+
+        for file in self.check:
+            if file not in self.skip:
+                expected_result = self.expected_results[file]
+                actual_result = self.execution_results[file]
+                match = expected_result.compare_to_execution(actual_result)
+
+                if not match:
+                    # Check if actual results caused any error
+                    if actual_result.error_code == ExecutionErrorCode.PARSE_ERROR:
+                        unexpected_parse_error.append(file)
+                    elif actual_result.error_code == ExecutionErrorCode.RUNTIME_ERROR:
+                        unexpected_runtime_error.append(file)
+                    # If no error, then the results are wrong
+                    else:
+                        if actual_result.result is not None:
+                            wrong_result[file] = actual_result.result
+
+        self.failed_results.wrong_results = wrong_result
+        self.failed_results.unexpected_parse_error = unexpected_parse_error
+        self.failed_results.unexpected_runtime_error = unexpected_runtime_error
+
+    def write_results(self) -> None:
+        """
+        Writes new results for failed files
+        """
+
+        results_dir = self.__get_results_dir()
+        for file in self.failed_results.wrong_results:
+            next_results_version = str(
+                self.expected_results[file].get_next_results_version()
             )
+            # Mkdir if not exist
+            file_path = pathlib.Path(file)
+            write_file_dir = results_dir / file_path.parent
+            write_file_dir.mkdir(parents=True, exist_ok=True)
+
+            # Write to new file
+            write_file_name = (
+                write_file_dir / f"{file_path.stem}.{next_results_version}.result"
+            )
+            actual_result = self.failed_results.wrong_results[file]
+
+            with open(write_file_name, "w", encoding="utf-8") as f:
+                f.write(actual_result)
+
+
+def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> None:
+    """
+    Runs the test
+    """
+
+    random.seed(11)
+    background = ExamplesRun(monkeypatch)
+
+    background.populate_exec_result_for_checks()
+    background.validate_expected_and_actual()
+
+    if background.update_results:
+        background.write_results()
+
+    # Print the actual results for wrong results
+    for file, actual in background.failed_results.wrong_results.items():
+        print(
+            "\n============================================================================"
         )
-    )
-    assert len(unexpected_valid) == 0, f"Unexpected valid: {unexpected_valid}"
-    # Unexpected results
-    assert len(wrong_results) == 0, f"Wrong results: {wrong_results}"
+        print(f"File that produced wrong result: {file}")
+        print(
+            f"Actual result (copy everything below this line):\n✂️ ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+        )
+
+    assert (
+        len(background.failed_results.unexpected_parse_error) == 0
+    ), f"Unexpected parse error: {background.failed_results.unexpected_parse_error}"
+    assert (
+        len(background.failed_results.unexpected_runtime_error) == 0
+    ), f"Unexpected runtime error: {background.failed_results.unexpected_runtime_error}"
+    assert (
+        len(background.failed_results.wrong_results) == 0
+    ), f"Wrong results: {background.failed_results.wrong_results}"

@@ -2,9 +2,9 @@ description: Function definition
 defs:
   template:
     function:
-      preamble: str
-      question: str
-      notes: str
+      preamble: string
+      question: string
+      notes: string
     return: |
       ${ preamble }
       ### Question: ${ question }

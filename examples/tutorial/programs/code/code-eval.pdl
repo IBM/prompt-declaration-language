@@ -1,0 +1,42 @@
+description: Code explanation example
+defs:
+  CODE:
+    read: ./data.yaml
+    parser: yaml
+  TRUTH:
+    read: ./ground_truth.txt
+text:
+- "\n${ CODE.source_code }\n"
+- model: ollama_chat/granite3.2:2b
+  def: EXPLANATION
+  input: |
+      Here is some info about the location of the function in the repo.
+      repo:
+      ${ CODE.repo_info.repo }
+      path: ${ CODE.repo_info.path }
+      Function_name: ${ CODE.repo_info.function_name }
+
+
+      Explain the following code:
+      ```
+      ${ CODE.source_code }```
+  parameters:
+    temperature: 0
+- |
+
+
+  EVALUATION:
+  The similarity (Levenshtein) between this answer and the ground truth is:
+- def: EVAL
+  lang: python
+  # (Use `pip install textdistance` if needed to install the textdistance package)
+  code: |
+    import textdistance
+    expl = """
+    ${ EXPLANATION }
+    """
+    truth = """
+    ${ TRUTH }
+    """
+    # (In PDL, set `result` to the output you wish for your code block.)
+    result = textdistance.levenshtein.normalized_similarity(expl, truth)

@@ -1,4 +1,5 @@
 from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_context import SerializeMode
 
 python_data = {
     "description": "Hello world showing call out to python code",
@@ -40,11 +41,11 @@ def test_contribute_result():
 
 def test_contribute_context():
     result = exec_dict(show_result_data(["context"]), output="all")
-    assert result["scope"]["pdl_context"] == [
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
         {
             "role": "user",
             "content": "How can I help you?: ",
-            "defsite": "text.0.text.code",
+            "pdl__defsite": "text.0.text.code",
         }
     ]
 

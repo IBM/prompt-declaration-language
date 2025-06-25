@@ -19,6 +19,8 @@ import {
 
 import type Tile from "./Tile"
 import { hasStabilityMetrics, type StabilityMetric } from "./stability"
+import { match, P } from "ts-pattern"
+import { block_code_cleanup } from "../../pdl_code_cleanup"
 
 /** The final result of the block */
 /* function result(block: import("../../pdl_ast").PdlBlock) {
@@ -60,14 +62,18 @@ export default function computeModel(block: import("../../pdl_ast").PdlBlock) {
         const { resultForDisplay, meta, lang } = isLLMBlock(block)
           ? extractStructuredModelResponse(block)
           : {
-              resultForDisplay:
-                typeof block.pdl__result === "object"
-                  ? stringify(block.pdl__result)
-                  : typeof block.pdl__result === "string" ||
-                      typeof block.pdl__result === "number" ||
-                      typeof block.pdl__result === "boolean"
-                    ? block.pdl__result
-                    : String(block.pdl__result),
+              resultForDisplay: match(block.pdl__result)
+                .with(
+                  { kind: "function", function: P._, return: P._ },
+                  // @ts-expect-error: unable to check that it is a function block
+                  (closure) => stringify(block_code_cleanup(closure)),
+                )
+                .with({}, (result) => stringify(result))
+                .with(
+                  P.union(P.string, P.number, P.boolean),
+                  (result) => result,
+                )
+                .otherwise((result) => String(result)),
               meta: undefined,
               lang:
                 typeof block.pdl__result === "object"

@@ -1,57 +1,63 @@
 import pytest
 import yaml
 
-from pdl.pdl import exec_dict
+from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_ast import pdl_type_adapter
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_parser import PDLParseError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema
 
 _PDLTYPE_TO_JSONSCHEMA_TESTS = [
     {
         "pdl_type": "null",
+        "json_schema": {},
+    },
+    {
+        "pdl_type": '"null"',
         "json_schema": {"type": "null"},
     },
     {
-        "pdl_type": "bool",
+        "pdl_type": "boolean",
         "json_schema": {"type": "boolean"},
     },
     {
-        "pdl_type": "{str: {pattern: '^[A-Za-z][A-Za-z0-9_]*$'}}",
+        "pdl_type": "{type: string, pattern: '^[A-Za-z][A-Za-z0-9_]*$'}",
         "json_schema": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"},
     },
     {
-        "pdl_type": "float",
+        "pdl_type": "number",
         "json_schema": {"type": "number"},
     },
     {
-        "pdl_type": "{float: {minimum: 0, exclusiveMaximum: 1}}",
+        "pdl_type": "{type: number, minimum: 0, exclusiveMaximum: 1}",
         "json_schema": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
     },
     {
-        "pdl_type": "int",
+        "pdl_type": "integer",
         "json_schema": {"type": "integer"},
     },
     {
-        "pdl_type": "{list: int}",
+        "pdl_type": "[integer]",
         "json_schema": {"type": "array", "items": {"type": "integer"}},
     },
     {
-        "pdl_type": "[int]",
+        "pdl_type": "{type: array, items: {type: integer}}",
         "json_schema": {"type": "array", "items": {"type": "integer"}},
     },
     {
-        "pdl_type": "{list: {int: {minimum: 0}}}",
+        "pdl_type": "{type: array, items: {type: integer, minimum: 0}}",
         "json_schema": {"type": "array", "items": {"type": "integer", "minimum": 0}},
     },
     {
-        "pdl_type": "[{int: {minimum: 0}}]",
+        "pdl_type": "[{type: integer, minimum: 0}]",
         "json_schema": {"type": "array", "items": {"type": "integer", "minimum": 0}},
     },
     {
-        "pdl_type": "{list: {minItems: 1, int: {}}}",
+        "pdl_type": "{type: array, minItems: 1, items: {type: integer}}",
         "json_schema": {"type": "array", "items": {"type": "integer"}, "minItems": 1},
     },
     {
-        "pdl_type": "{obj: {latitude: float, longitude: float}}",
+        "pdl_type": "{object: {latitude: number, longitude: number}}",
         "json_schema": {
             "type": "object",
             "properties": {
@@ -63,7 +69,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
-        "pdl_type": "{latitude: float, longitude: float}",
+        "pdl_type": "{latitude: number, longitude: number}",
         "json_schema": {
             "type": "object",
             "properties": {
@@ -75,7 +81,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
-        "pdl_type": "{obj: {question: str, answer: str, context: {optional: str}}}",
+        "pdl_type": "{object: {question: string, answer: string, context: {optional: string}}}",
         "json_schema": {
             "type": "object",
             "properties": {
@@ -88,7 +94,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
-        "pdl_type": "{question: str, answer: str, context: {optional: str}}",
+        "pdl_type": "{question: string, answer: string, context: {optional: string}}",
         "json_schema": {
             "type": "object",
             "properties": {
@@ -101,7 +107,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
-        "pdl_type": "{list: {obj: {question: str, answer: str}}}",
+        "pdl_type": "{type: array, items: {type: object, properties: {question: {type: string}, answer: {type: string}}, required: [question, answer], additionalProperties: false }}",
         "json_schema": {
             "type": "array",
             "items": {
@@ -116,7 +122,7 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         },
     },
     {
-        "pdl_type": "[{question: str, answer: str}]",
+        "pdl_type": "[{question: string, answer: string}]",
         "json_schema": {
             "type": "array",
             "items": {
@@ -134,12 +140,36 @@ _PDLTYPE_TO_JSONSCHEMA_TESTS = [
         "pdl_type": "{enum: [red, green, blue]}",
         "json_schema": {"enum": ["red", "green", "blue"]},
     },
+    {
+        "pdl_type": "{ type: string }",
+        "json_schema": {"type": "string"},
+    },
+    {
+        "pdl_type": "{ type: [number, string] }",
+        "json_schema": {"type": ["number", "string"]},
+    },
+    {
+        "pdl_type": "{ type: array,  prefixItems: [ { type: number }, { type: string }, { enum: [Street, Avenue, Boulevard] }, { enum: [NW, NE, SW, SE] } ]}",
+        "json_schema": {
+            "type": "array",
+            "prefixItems": [
+                {"type": "number"},
+                {"type": "string"},
+                {"enum": ["Street", "Avenue", "Boulevard"]},
+                {"enum": ["NW", "NE", "SW", "SE"]},
+            ],
+        },
+    },
 ]
 
 
 def test_pdltype_to_jsonschema():
     for t in _PDLTYPE_TO_JSONSCHEMA_TESTS:
-        pdl_type = yaml.safe_load(t["pdl_type"])
+        t_data = yaml.safe_load(t["pdl_type"])
+        if t_data is None:
+            pdl_type = None
+        else:
+            pdl_type = pdl_type_adapter.validate_python(t_data)
         json_schema = pdltype_to_jsonschema(pdl_type, False)
         assert json_schema == t["json_schema"]
 
@@ -172,7 +202,7 @@ function_call1 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "str"},
+            "function": {"name": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": "Bob"}},
@@ -191,7 +221,7 @@ function_call2 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "int"},
+            "function": {"name": "integer"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": 42}},
@@ -210,7 +240,7 @@ function_call3 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "list"},
+            "function": {"name": "array"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": ["Bob", "Carrol"]}},
@@ -229,7 +259,7 @@ function_call4 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "obj"},
+            "function": {"name": "object"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": {"bob": "caroll"}}},
@@ -248,7 +278,7 @@ function_call5 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "bool"},
+            "function": {"name": "boolean"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": True}},
@@ -267,7 +297,7 @@ function_call6 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float"},
+            "function": {"name": "number"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6}},
@@ -286,7 +316,7 @@ function_call7 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float"},
+            "function": {"name": "number"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": 7.6}},
@@ -305,7 +335,7 @@ function_call8 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "floats"},
+            "function": {"name": "numbers"},
             "return": {"text": ["Hello ", {"get": "name"}, "!"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6}},
@@ -314,7 +344,7 @@ function_call8 = {
 
 
 def test_function_call8():
-    with pytest.raises(PDLRuntimeError):
+    with pytest.raises(PDLParseError):
         exec_dict(function_call8)
 
 
@@ -324,7 +354,7 @@ function_call9 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
+            "function": {"name": "number", "address": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
@@ -343,7 +373,7 @@ function_call10 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
+            "function": {"name": "number", "address": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {
@@ -387,7 +417,7 @@ function_call12 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
+            "function": {"name": "number", "address": "string"},
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "${ hello }", "args": {}},
@@ -406,7 +436,7 @@ function_call13 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str", "extra": "int"},
+            "function": {"name": "number", "address": "string", "extra": "integer"},
             "return": {"text": ["Hello ", "!"]},
         },
         {"call": "${ hello }", "args": {"name": "Bob", "extra": 2}},
@@ -444,8 +474,8 @@ function_call15 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
-            "spec": "str",
+            "function": {"name": "number", "address": "string"},
+            "spec": "string",
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
@@ -464,8 +494,8 @@ function_call16 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
-            "spec": "int",
+            "function": {"name": "number", "address": "string"},
+            "spec": "integer",
             "return": {"text": ["Hello ", {"get": "name"}, " ${ address}", "!"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
@@ -484,8 +514,8 @@ function_call17 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
-            "spec": {"list": "int"},
+            "function": {"name": "number", "address": "string"},
+            "spec": ["integer"],
             "return": {"data": [1, 2, 3]},
         },
         {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
@@ -504,8 +534,8 @@ function_call18 = {
         {
             "description": "Define hello",
             "def": "hello",
-            "function": {"name": "float", "address": "str"},
-            "spec": {"list": "int"},
+            "function": {"name": "number", "address": "string"},
+            "spec": ["integer"],
             "return": {"data": [1, 2, "foo"]},
         },
         {"call": "${ hello }", "args": {"name": 6.6, "address": "street"}},
@@ -520,7 +550,7 @@ def test_function_call18():
 
 hello = {
     "description": "Hello world!",
-    "spec": "str",
+    "spec": "string",
     "text": ["Hello, world!"],
 }
 
@@ -532,7 +562,7 @@ def test_hello():
 
 hello1 = {
     "description": "Hello world!",
-    "spec": {"obj": {"a": "str", "b": "str"}},
+    "spec": {"object": {"a": "string", "b": "string"}},
     "data": {"a": "Hello", "b": "World"},
 }
 
@@ -544,7 +574,12 @@ def test_hello1():
 
 hello2 = {
     "description": "Hello world!",
-    "spec": {"list": {"minItems": 0, "maxItems": 0, "str": {}}},
+    "spec": {
+        "type": "array",
+        "minItems": 0,
+        "maxItems": 0,
+        "items": {"type": "string"},
+    },
     "data": ["Hello", "World"],
 }
 
@@ -552,3 +587,21 @@ hello2 = {
 def test_hello2():
     with pytest.raises(PDLRuntimeError):
         exec_dict(hello2)
+
+
+def do_test_stderr(capsys, prog, err):
+    exec_str(prog)
+    captured = capsys.readouterr()
+    output = captured.err.split("\n")
+    print(output)
+    assert set(output) == set(err)
+
+
+def test_deprecated(capsys: pytest.CaptureFixture[str]):
+    prog = """
+        data: 1
+        spec: int
+    """
+    do_test_stderr(
+        capsys, prog, ["Deprecated type syntax: use integer instead of int.", ""]
+    )

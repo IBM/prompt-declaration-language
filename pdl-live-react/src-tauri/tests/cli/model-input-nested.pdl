@@ -1,0 +1,8 @@
+description: Nesting inputs to model calls
+text:
+  - role: user
+    content: answer as if you live in europe
+  - text:
+      - role: user
+        content: what is the fastest animal where i live?
+  - model: ollama/granite3.2:2b

@@ -6,7 +6,19 @@ from .pdl_schema_utils import convert_to_json_type, json_types_convert
 def is_base_type(schema):
     if "type" in schema:
         the_type = schema["type"]
-        if the_type in set(["string", "boolean", "integer", "number"]):
+        if the_type in set(
+            [
+                "null",
+                "string",
+                "boolean",
+                "integer",
+                "number",
+                "str",
+                "bool",
+                "int",
+                "float",
+            ]
+        ):
             return True
     if "enum" in schema:
         return True
@@ -61,7 +73,11 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
     if is_base_type(schema):
         if "type" in schema:
             the_type = json_types_convert[schema["type"]]
-            if not isinstance(data, the_type):  # pyright: ignore
+            if (
+                the_type is None
+                and data is not None
+                or not isinstance(data, the_type)  # type: ignore
+            ):
                 ret.append(
                     get_loc_string(loc)
                     + str(data)

@@ -21,7 +21,7 @@ text:
   contribute: []
 - def: RETRIEVED
   lang: python
-  spec: {prompt: [str], code: [str]}
+  spec: {prompt: [string], code: [string]}
   code: |
     key = PDL_SESSION.embed("${ TEST_PROMPT }")
     nearest = PDL_SESSION.vec_db.get_nearest_examples("embeddings", key, 5)

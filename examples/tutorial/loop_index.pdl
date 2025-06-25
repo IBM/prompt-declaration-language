@@ -1,0 +1,4 @@
+index: i
+repeat:
+  text: ${i + 1}
+maxIterations: 3

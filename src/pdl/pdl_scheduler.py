@@ -1,14 +1,13 @@
 from typing import Any, Optional
 
 from termcolor import colored
-from termcolor._types import Color
 
 from .pdl_ast import BlockKind
 from .pdl_utils import stringify
 
 
 def color_of(kind: BlockKind):
-    color: Optional[Color]
+    color: Optional[str]
     match kind:
         case BlockKind.FUNCTION:
             color = None
@@ -54,7 +53,7 @@ def color_of(kind: BlockKind):
 
 
 def color_of_role(role: str):
-    color: Optional[Color] = None
+    color: Optional[str] = None
     match role:
         case "assistant":
             color = "green"

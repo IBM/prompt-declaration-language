@@ -1,18 +1,20 @@
 import fnmatch
 import json
+import sys
+from pathlib import Path
 from typing import Any, Generator, Generic, Sequence, TypeVar
 
 from .pdl_ast import (
+    BlockType,
     ContributeElement,
     ContributeTarget,
     ContributeValue,
     ExpressionType,
     FunctionBlock,
-    LazyMessages,
     LocalizedExpression,
     get_sampling_defaults,
 )
-from .pdl_lazy import lazy_apply2
+from .pdl_dumper import as_json, block_to_dict
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -107,22 +109,6 @@ def get_contribute_value(  # TODO: remove
     return None
 
 
-def _messages_concat(
-    messages1: list[dict[str, Any]], messages2: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
-    return messages1 + messages2
-
-
-def lazy_messages_concat(
-    messages1: LazyMessages, messages2: LazyMessages
-) -> LazyMessages:
-    return lazy_apply2(_messages_concat, messages1, messages2)
-
-
-def messages_to_str(messages: LazyMessages) -> str:
-    return "\n".join([str(msg) for msg in messages.result()])
-
-
 def remove_none_values_from_message(message: dict) -> dict[str, Any]:
     ret = {}
     for key, value in message.items():
@@ -215,3 +201,22 @@ def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]])
                     f"invalid defaults {glob_defaults} for model matcher {model_glob}"
                 )
             assert isinstance(glob_defaults, dict)
+
+
+def write_trace(
+    trace_file: str | Path,
+    trace: BlockType,
+):
+    """Write the execution trace into a file.
+
+    Args:
+        trace_file:  File to save the execution trace.
+        trace: Execution trace.
+    """
+    try:
+        d: Any = block_to_dict(trace, json_compatible=True)
+        d = as_json(d)
+        with open(trace_file, "w", encoding="utf-8") as fp:
+            json.dump(d, fp)
+    except Exception as e:
+        print(f"Failure generating the trace: {str(e)}", file=sys.stderr)

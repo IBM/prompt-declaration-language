@@ -4,35 +4,35 @@ description: RAG library for PDL
 text:
 - def: pdf_parse
   function:
-    filename: str
-    chunk_size: int
-    chunk_overlap: int
+    filename: string
+    chunk_size: integer
+    chunk_overlap: integer
   return:
     lang: python
     code: |
-        from examples.rag.rag import parse
-        result = parse(filename, chunk_size, chunk_overlap)
+        import rag
+        result = rag.parse(filename, chunk_size, chunk_overlap)
 - def: rag_index
   function:
-    inp: list # This is a list[str], but PDL doesn't allow that type
-    encoder_model: str
-    embed_dimension: int
-    database_name: str # optional, could also be URL?
-    collection_name: str
+    inp: [string]
+    encoder_model: string
+    embed_dimension: integer
+    database_name: string # optional, could also be URL?
+    collection_name: string
   return:
     lang: python
     code: |
-        from examples.rag.rag import rag_index
-        result = rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
+        import rag
+        result = rag.rag_index(inp, encoder_model, embed_dimension, database_name, collection_name)
 - def: rag_retrieve
   function:
-    inp: str
-    encoder_model: str
-    limit: int
-    collection_name: str
-    database_name: str # optional, could also be URL?
+    inp: string
+    encoder_model: string
+    limit: integer
+    collection_name: string
+    database_name: string # optional, could also be URL?
   return:
     lang: python
     code: |
-        from examples.rag.rag import rag_retrieve
-        result = rag_retrieve(inp, encoder_model, limit, database_name, collection_name)
+        import rag
+        result = rag.rag_retrieve(inp, encoder_model, limit, database_name, collection_name)

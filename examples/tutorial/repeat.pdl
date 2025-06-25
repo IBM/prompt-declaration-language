@@ -1,13 +1,14 @@
 description: repeat loop with multiple conditions
 defs:
   numbers:
-    data: [1, 2, 3, 4]
+    data: [42, 2, 4012, 27]
   names:
     data: ["Bob", "Carol", "David", "Ernest"]
 for:
   number: ${ numbers }
   name: ${ names }
+index: i
 repeat:
-  "${ name }'s number is ${ number }\n"
+  "${i}: ${ name }'s number is ${ number }\n"
 until: ${ name == "Carol"}
-max_iterations: 1
+maxIterations: 3

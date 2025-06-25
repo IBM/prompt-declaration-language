@@ -2,8 +2,8 @@ description: Hello world with function definition and call
 text:
 - def: hello
   function:
-    name: str
-    lastName: {optional: str} # optional parameter
+    name: string
+    lastName: {optional: string} # optional parameter
   return:
     if: ${ lastName is defined }
     then: Hello ${ name } ${ lastName }!

@@ -1,0 +1,2 @@
+model: ollama/granite3.2:2b
+input: what is the fastest animal?

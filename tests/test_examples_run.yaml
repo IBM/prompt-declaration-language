@@ -1,0 +1,112 @@
+update_results: false
+check: []
+skip:
+  - examples/cldk/cldk-assistant.pdl
+  - examples/gsm8k/gsm8.pdl
+  - examples/gsm8k/gsm8k-plan.pdl
+  - examples/gsm8k/gsm8k-plan-few-shots.pdl
+  - examples/gsm8k/gsm8k-tot-few-shot.pdl
+  - examples/gsm8k/gsm8k-tot-multiplan.pdl
+  - examples/gsm8k/gsm8k-tot.pdl
+  - examples/intrinsics/demo-hallucination.pdl
+  - examples/tutorial/programs/demo-hallucination.pdl
+  - examples/rag/pdf_index.pdl
+  - examples/rag/pdf_query.pdl
+  - examples/rag/rag_library1.pdl
+  - examples/tutorial/structured_decoding.pdl
+  - pdl-live-react/src-tauri/tests/cli/code-python.pdl
+  - pdl-live-react/demos/error.pdl
+  - pdl-live-react/demos/demo1.pdl
+  - pdl-live-react/demos/demo2.pdl
+  - pdl-live-react/src-tauri/tests/cli/read-stdin.pdl
+  - examples/granite-io/granite_io_transformers.pdl
+  - examples/granite-io/granite_io_thinking.pdl
+  - examples/granite-io/granite_io_object.pdl
+  - examples/granite-io/granite_io_openai.pdl
+  - examples/granite-io/granite_io_hallucinations.pdl
+  - examples/demos/granite_io_hallucinations.pdl
+  - examples/optimizer/mbpp.pdl
+  - examples/optimizer/fever.pdl
+  - examples/optimizer/gsm8k.pdl
+with_inputs:
+  examples/tutorial/programs/chatbot.pdl:
+    stdin: |
+      What is APR?
+      yes
+    scope: null
+  examples/chatbot/chatbot.pdl:
+    stdin: |
+      What is APR?
+      yes
+    scope: null
+  examples/demo/7-chatbot-roles.pdl:
+    stdin: |
+      What is APR?
+      quit
+    scope: null
+  examples/tutorial/input_stdin.pdl:
+    stdin: |
+      What is APR?
+      yes
+    scope: null
+  examples/tutorial/input_stdin_multiline.pdl:
+    stdin: |
+      Hello
+      Bye
+    scope: null
+  examples/input/input_test1.pdl:
+    stdin: |
+      Hello
+    scope: null
+  examples/input/input_test2.pdl:
+    stdin: |
+      Hello
+    scope: null
+  examples/tutorial/free_variables.pdl:
+    stdin: null
+    scope:
+      something: ABC
+  tests/data/optimizer_gsm8k.pdl:
+    stdin: null
+    scope: 
+      model: watsonx_text/ibm/granite-3-8b-instruct
+      prompt_pattern: cot
+      num_demonstrations: 0
+      demonstrations: []
+      question: "The sky currently has 4 times as many cirrus clouds as cumulus clouds, and 12 times as many cumulus clouds as cumulonimbus clouds. If the sky currently has 3 cumulonimbus clouds, how many cirrus clouds are in the sky at this moment?"
+      
+expected_parse_error:
+  - tests/data/line/hello.pdl
+  - tests/data/line/hello1.pdl
+  - tests/data/line/hello4.pdl
+  - tests/data/line/hello7.pdl
+  - tests/data/line/hello8.pdl
+  - tests/data/line/hello10.pdl
+  - tests/data/line/hello11.pdl
+  - tests/data/line/hello31.pdl
+expected_runtime_error:
+  - examples/callback/repair_prompt.pdl
+  - examples/demos/repair_prompt.pdl
+  - examples/tutorial/type_list.pdl
+  - examples/tutorial/type_checking.pdl
+  - tests/data/line/hello3.pdl
+  - tests/data/line/hello9.pdl
+  - tests/data/line/hello12.pdl
+  - tests/data/line/hello13.pdl
+  - tests/data/line/hello14.pdl
+  - tests/data/line/hello15.pdl
+  - tests/data/line/hello16.pdl
+  - tests/data/line/hello17.pdl
+  - tests/data/line/hello18.pdl
+  - tests/data/line/hello19.pdl
+  - tests/data/line/hello20.pdl
+  - tests/data/line/hello21.pdl
+  - tests/data/line/hello22.pdl
+  - tests/data/line/hello23.pdl
+  - tests/data/line/hello24.pdl
+  - tests/data/line/hello25.pdl
+  - tests/data/line/hello26.pdl
+  - tests/data/line/hello27.pdl
+  - tests/data/line/hello28.pdl
+  - tests/data/line/hello29.pdl
+  - tests/data/line/hello30.pdl

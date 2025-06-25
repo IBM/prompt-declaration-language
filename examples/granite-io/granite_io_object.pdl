@@ -1,0 +1,14 @@
+defs:
+  io_proc:
+    lang: python
+    code: |
+      from granite_io import make_backend, make_io_processor
+      model_name = "granite3.2:2b"
+      backend = make_backend("openai", { "model_name": model_name })
+      result = make_io_processor(model_name, backend=backend)
+text:
+- "Hello!\n"
+- processor: ${ io_proc }
+  parameters:
+    generate_inputs:
+      temperature: 0.0

@@ -84,7 +84,7 @@ text:
         parser:
           regex: "[^0-9]*(?P<answer>[0-9]+).*$"
           spec:
-             answer: str
+             answer: string
         def: EXTRACTED_SIMPLIFIED_LLM_ANSWER
       # (In case the simplified answer did not contain digits.)
       - if: ${ EXTRACTED_SIMPLIFIED_LLM_ANSWER == None }
@@ -104,7 +104,7 @@ text:
         parser:
           regex: "(.|\n)*#### (?P<answer>([0-9])*)\n*"
           spec:
-            answer: str
+            answer: string
         def: EXTRACTED_GROUND_TRUTH
       #- lang: python
       #  code: |

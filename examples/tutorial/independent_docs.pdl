@@ -1,0 +1,11 @@
+description: Independent documents
+defs:
+  doc1: "Hello world!"
+  doc2: "Goodbye world!"
+text:
+  - context: independent
+    text:
+    - ${ doc1 }
+    - ${ doc2 }
+  - Compare and contrast the above documents.
+  - model: ollama_chat/granite3.2:2b

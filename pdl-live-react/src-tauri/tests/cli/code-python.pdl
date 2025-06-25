@@ -1,0 +1,15 @@
+lang: python
+code: |
+  import sys # test import stdlib
+  import os # test import stdlib
+  print(f"!!! {sys.path}")
+  #import textdistance # test import from venv
+  from nested_diff import diff # test import from venv
+  #from typing import Self
+  from pydantic import BaseModel, Field, ValidationError
+  from pydantic_settings import BaseSettings, SettingsConfigDict
+  # import beeai_framework
+  # from beeai_framework.tools.search.wikipedia import WikipediaTool # type: ignore
+  a = {'one': 1, 'two': 2, 'three': 3}
+  b = {'one': 1, 'two': 3, 'three': 3}
+  result = {"foo": os.getenv("FOO999999999999999999999999"), "diff": diff(a, b, O=False, U=False)}

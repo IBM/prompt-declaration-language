@@ -1,6 +1,6 @@
 import { match, P } from "ts-pattern"
 
-import { Backend, PdlBlock, Processor } from "./pdl_ast"
+import { PdlBlock } from "./pdl_ast"
 import { ExpressionT, isArgs } from "./helpers"
 
 export function map_block_children(
@@ -62,33 +62,42 @@ export function map_block_children(
       {
         kind: "model",
         platform: "granite-io",
-        backend: P.nonNullable,
         processor: P._,
       },
       (block) => {
-        const model = f_expr(block.model)
+        const processor = match(block.processor)
+          .with(
+            {
+              type: P.union(P._, P.nullish),
+              model: P.union(P._, P.nullish),
+              backend: P.nonNullable,
+            },
+            (proc) => {
+              const type = proc.type ? f_expr(proc.type) : undefined
+              const model = proc.model ? f_expr(proc.model) : undefined
+              const backend = f_expr(proc.backend)
+              return {
+                ...proc,
+                type,
+                model,
+                backend,
+              }
+            },
+          )
+          .otherwise((proc) => f_expr(proc))
         const input = block.input ? f_block(block.input) : undefined
-        // @ts-expect-error: f_expr does not preserve the type of the expression
-        const parameters: Parameters = block.parameters
+        const parameters = block.parameters
           ? f_expr(block.parameters)
-          : undefined
-        // @ts-expect-error: f_expr does not preserve the type of the expression
-        const backend: Backend = f_expr(block.backend)
-        // @ts-expect-error: f_expr does not preserve the type of the expression
-        const processor: Processor = block.processor
-          ? f_expr(block.processor)
           : undefined
         return {
           ...block,
-          model,
+          processor,
           input,
           parameters,
-          backend,
-          processor,
         }
       },
     )
-    .with({ kind: "model" }, (block) => {
+    .with({ kind: "model", model: P._ }, (block) => {
       const model = f_expr(block.model)
       const input = block.input ? f_block(block.input) : undefined
       const parameters = block.parameters ? f_expr(block.parameters) : undefined
@@ -96,6 +105,15 @@ export function map_block_children(
         ...block,
         platform: "litellm",
         model,
+        input,
+        parameters,
+      }
+    })
+    .with({ kind: "model" }, (block) => {
+      const input = block.input ? f_block(block.input) : undefined
+      const parameters = block.parameters ? f_expr(block.parameters) : undefined
+      return {
+        ...block,
         input,
         parameters,
       }
@@ -162,11 +180,17 @@ export function map_block_children(
     .with({ kind: "repeat" }, (block) => {
       const for_ = block?.for ? f_expr(block.for) : undefined
       const until = block?.until ? f_expr(block.until) : undefined
-      const max_iterations = block?.max_iterations
-        ? f_expr(block.max_iterations)
+      const max_iterations = block?.maxIterations
+        ? f_expr(block.maxIterations)
         : undefined
       const repeat = f_block(block.repeat)
-      return { ...block, for: for_, repeat, until, max_iterations }
+      return {
+        ...block,
+        for: for_,
+        repeat,
+        until,
+        maxIterations: max_iterations,
+      }
     })
     .with({ kind: "error" }, (block) => {
       const doc = f_block(block.program)
