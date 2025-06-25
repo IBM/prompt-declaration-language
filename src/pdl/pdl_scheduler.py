@@ -1,9 +1,23 @@
+from asyncio import AbstractEventLoop, new_event_loop, set_event_loop
+from threading import Thread
 from typing import Any, Optional
 
 from termcolor import colored
 
 from .pdl_ast import BlockKind
 from .pdl_utils import stringify
+
+
+def _start_background_loop(loop):
+    set_event_loop(loop)
+    loop.run_forever()
+
+
+def create_event_loop_thread() -> AbstractEventLoop:
+    loop = new_event_loop()
+    loop_thread = Thread(target=_start_background_loop, args=(loop,), daemon=True)
+    loop_thread.start()
+    return loop
 
 
 def color_of(kind: BlockKind):

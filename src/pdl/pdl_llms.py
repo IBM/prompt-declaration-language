@@ -1,10 +1,8 @@
 # pylint: disable=import-outside-toplevel
-import asyncio
-import threading
-from concurrent.futures import Future
+from asyncio import AbstractEventLoop, run_coroutine_threadsafe
 from os import environ
 from sys import stderr
-from typing import Any, Callable, Generator, Optional, TypeVar
+from typing import Any, Generator, Optional, TypeVar
 
 import httpx
 from dotenv import load_dotenv
@@ -23,19 +21,6 @@ from .pdl_utils import remove_none_values_from_message
 
 # Load environment variables
 load_dotenv()
-
-
-def _start_background_loop(loop):
-    asyncio.set_event_loop(loop)
-    loop.run_forever()
-
-
-_LOOP = asyncio.new_event_loop()
-_LOOP_THREAD = threading.Thread(
-    target=_start_background_loop, args=(_LOOP,), daemon=True
-)
-_LOOP_THREAD.start()
-# _BACKGROUND_TASKS = set()
 
 
 class LitellmModel:
@@ -88,21 +73,19 @@ class LitellmModel:
         model_id: str,
         messages: ModelInput,
         parameters: dict[str, Any],
+        event_loop: AbstractEventLoop,
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
         if "PDL_VERBOSE_ASYNC" in environ:
             print(f"Asynchronous model call started to {model_id}", file=stderr)
-        # global _BACKGROUND_TASKS
-        future = asyncio.run_coroutine_threadsafe(
+        future = run_coroutine_threadsafe(
             LitellmModel.async_generate_text(
                 block,
                 model_id,
                 messages,
                 parameters,
             ),
-            _LOOP,
+            event_loop,
         )
-        # _BACKGROUND_TASKS.add(future)
-        # future.add_done_callback(_BACKGROUND_TASKS.discard)
         pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
         response = lazy_apply((lambda x: x[1]), pdl_future)
@@ -213,13 +196,13 @@ MapInputT = TypeVar("MapInputT")
 MapOutputT = TypeVar("MapOutputT")
 
 
-def map_future(
-    f: Callable[[MapInputT], MapOutputT], x: Future[MapInputT]
-) -> Future[MapOutputT]:
-    future = asyncio.run_coroutine_threadsafe(_async_call(f, x), _LOOP)
-    return future
+# def map_future(
+#     f: Callable[[MapInputT], MapOutputT], x: Future[MapInputT]
+# ) -> Future[MapOutputT]:
+#     future = asyncio.run_coroutine_threadsafe(_async_call(f, x), _LOOP)
+#     return future
 
 
-async def _async_call(f, x):
-    v = x.result()
-    return f(v)
+# async def _async_call(f, x):
+#     v = x.result()
+#     return f(v)

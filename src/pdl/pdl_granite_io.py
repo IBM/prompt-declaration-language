@@ -1,5 +1,5 @@
 # pylint: disable=import-outside-toplevel
-from asyncio import run_coroutine_threadsafe
+from asyncio import AbstractEventLoop, run_coroutine_threadsafe
 from typing import Any, Optional
 
 from granite_io.types import ChatCompletionInputs
@@ -13,7 +13,6 @@ from .pdl_ast import (
     PDLRuntimeError,
 )
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
-from .pdl_llms import _LOOP
 from .pdl_utils import value_of_expr
 
 
@@ -113,15 +112,14 @@ class GraniteioModel:
 
     @staticmethod
     def generate_text(
-        block: GraniteioModelBlock,
-        messages: ModelInput,
+        block: GraniteioModelBlock, messages: ModelInput, event_loop: AbstractEventLoop
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
         future = run_coroutine_threadsafe(
             GraniteioModel.async_generate_text(
                 block,
                 messages,
             ),
-            _LOOP,
+            event_loop,
         )
         pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
