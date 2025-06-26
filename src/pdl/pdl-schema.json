@@ -18,9 +18,9 @@
           "title": "Description"
         },
         "spec": {
+          "$ref": "#/$defs/PdlTypeType",
           "default": null,
-          "description": "Type specification of the result of the block.\n    ",
-          "title": "Spec"
+          "description": "Type specification of the result of the block.\n    "
         },
         "defs": {
           "additionalProperties": {
@@ -109,6 +109,7 @@
             ]
           },
           "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
           "title": "Defs",
           "type": "object"
         },
@@ -259,7 +260,37 @@
             }
           ],
           "default": null,
+          "description": "Block to execute in case of error.\n    ",
           "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
         },
         "role": {
           "anyOf": [
@@ -274,7 +305,7 @@
           "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
           "title": "Role"
         },
-        "context": {
+        "pdl__context": {
           "anyOf": [
             {
               "items": {
@@ -289,7 +320,7 @@
           ],
           "default": [],
           "description": "Current context\n    ",
-          "title": "Context"
+          "title": "Pdl  Context"
         },
         "pdl__id": {
           "anyOf": [

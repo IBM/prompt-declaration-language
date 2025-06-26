@@ -11,6 +11,7 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from abc import ABC, abstractmethod
+from asyncio import AbstractEventLoop
 from functools import partial
 from os import getenv
 
@@ -32,7 +33,7 @@ from jinja2 import (  # noqa: E402
 )
 from jinja2.nodes import TemplateData  # noqa: E402
 from jinja2.runtime import Undefined  # noqa: E402
-from pydantic import BaseModel  # noqa: E402
+from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
 
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
@@ -115,7 +116,11 @@ from .pdl_llms import LitellmModel  # noqa: E402
 from .pdl_location_utils import append, get_loc_string  # noqa: E402
 from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
 from .pdl_python_repl import PythonREPL  # noqa: E402
-from .pdl_scheduler import yield_background, yield_result  # noqa: E402
+from .pdl_scheduler import (  # noqa: E402
+    create_event_loop_thread,
+    yield_background,
+    yield_result,
+)
 from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
@@ -132,6 +137,8 @@ empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
 
 
 class InterpreterState(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     yield_result: bool = False
     yield_background: bool = False
     batch: int = 1
@@ -141,6 +148,7 @@ class InterpreterState(BaseModel):
     cwd: Path = Path.cwd()
     # background_tasks = {}
     id_stack: list[str] = []
+    event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -1724,6 +1732,7 @@ def generate_client_response_single(
                 model_id=value_of_expr(block.model),
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(parameters),
+                event_loop=state.event_loop,
             )
         case GraniteioModelBlock():
             from .pdl_granite_io import GraniteioModel
@@ -1731,6 +1740,7 @@ def generate_client_response_single(
             message, response = GraniteioModel.generate_text(
                 block=block,
                 messages=model_input,
+                event_loop=state.event_loop,
             )
         case _:
             assert False
