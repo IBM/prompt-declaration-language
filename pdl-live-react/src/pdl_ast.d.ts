@@ -32,6 +32,7 @@ export type Program =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -168,6 +169,11 @@ export type Description19 = string | null
  */
 export type Description20 = string | null
 /**
+ * Documentation associated to the block.
+ *
+ */
+export type Description21 = string | null
+/**
  * Name of the variable used to store the result of the execution of the block.
  *
  */
@@ -176,15 +182,13 @@ export type Def = string | null
  * Values allowed in the `contribute` field.
  */
 export type ContributeTarget = "result" | "context"
-export type Value = LocalizedExpression | unknown[] | string
-export type Path = string[]
-export type File = string
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
 export type Contribute = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -197,7 +201,7 @@ export type Parser =
   | PdlParser
   | RegexParser
   | null
-export type Description21 = string | null
+export type Description22 = string | null
 export type Pdl =
   | boolean
   | number
@@ -221,10 +225,11 @@ export type Pdl =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
-export type Description22 = string | null
+export type Description23 = string | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
@@ -254,6 +259,7 @@ export type Fallback =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -287,6 +293,8 @@ export type PdlContext =
  *
  */
 export type PdlId = string | null
+export type Path = string[]
+export type File = string
 export type StartNanos = number | null
 export type EndNanos = number | null
 export type FirstUseNanos = number | null
@@ -304,6 +312,7 @@ export type Def1 = string | null
  */
 export type Contribute1 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -343,6 +352,7 @@ export type Fallback1 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -410,6 +420,7 @@ export type Program1 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -424,6 +435,7 @@ export type Def2 = string | null
  */
 export type Contribute2 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -463,6 +475,7 @@ export type Fallback2 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -497,38 +510,39 @@ export type PdlContext2 =
  */
 export type PdlId2 = string | null
 export type PdlIsLeaf2 = true
-export type Kind2 = "import"
+export type Kind2 = "aggregator"
+export type Aggregator =
+  | ("messages" | "stdout" | "stderr")
+  | FileAggregatorConfig
 /**
- * Name of the file to import.
+ * Documentation associated to the aggregator config.
  *
  */
-export type Import = string
-export type PdlTrace =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
+export type Description24 = string | null
+/**
+ * Name of the file to which contribute.
+ */
+export type File1 = LocalizedExpression | string
+/**
+ * File opening mode.
+ */
+export type Mode1 = LocalizedExpression | string
+/**
+ * File encoding.
+ */
+export type Encoding = LocalizedExpression | string | null
+/**
+ * Prefix to the contributed value.
+ */
+export type Prefix = LocalizedExpression | string
+/**
+ * Suffix to the contributed value.
+ */
+export type Suffix = LocalizedExpression | string
+/**
+ * Whether to forcibly flush the stream.
+ */
+export type Flush = LocalizedExpression | boolean | string
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -540,6 +554,7 @@ export type Def3 = string | null
  */
 export type Contribute3 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -579,6 +594,7 @@ export type Fallback3 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -612,15 +628,14 @@ export type PdlContext3 =
  *
  */
 export type PdlId3 = string | null
-export type PdlIsLeaf3 = false
-export type IndependentEnum = "independent" | "dependent"
-export type Kind3 = "include"
+export type PdlIsLeaf3 = true
+export type Kind3 = "import"
 /**
- * Name of the file to include.
+ * Name of the file to import.
  *
  */
-export type Include = string
-export type PdlTrace1 =
+export type Import = string
+export type PdlTrace =
   | boolean
   | number
   | string
@@ -643,6 +658,7 @@ export type PdlTrace1 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -657,6 +673,7 @@ export type Def4 = string | null
  */
 export type Contribute4 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -696,6 +713,7 @@ export type Fallback4 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -729,23 +747,41 @@ export type PdlContext4 =
  *
  */
 export type PdlId4 = string | null
-export type PdlIsLeaf4 = true
-export type Kind4 = "read"
+export type PdlIsLeaf4 = false
+export type IndependentEnum = "independent" | "dependent"
+export type Kind4 = "include"
 /**
- * Name of the file to read. If `None`, read the standard input.
+ * Name of the file to include.
  *
  */
-export type Read = LocalizedExpression | string | null
-/**
- * Message to prompt the user to enter a value.
- *
- */
-export type Message = string | null
-/**
- * Indicate if one or multiple lines should be read.
- *
- */
-export type Multiline = boolean
+export type Include = string
+export type PdlTrace1 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -757,6 +793,7 @@ export type Def5 = string | null
  */
 export type Contribute5 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -796,6 +833,7 @@ export type Fallback5 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -830,44 +868,22 @@ export type PdlContext5 =
  */
 export type PdlId5 = string | null
 export type PdlIsLeaf5 = true
-export type Kind5 = "message"
+export type Kind5 = "read"
 /**
- * Content of the message.
+ * Name of the file to read. If `None`, read the standard input.
+ *
  */
-export type Content =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
+export type Read = LocalizedExpression | string | null
 /**
- * For example, the name of the tool that was invoked, for which this message is the tool response.
+ * Message to prompt the user to enter a value.
+ *
  */
-export type Name = LocalizedExpression | string | null
+export type Message = string | null
 /**
- * The id of the tool invocation for which this message is the tool response.
+ * Indicate if one or multiple lines should be read.
+ *
  */
-export type ToolCallId = LocalizedExpression | string | null
+export type Multiline = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -879,6 +895,7 @@ export type Def6 = string | null
  */
 export type Contribute6 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -918,6 +935,7 @@ export type Fallback6 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -951,65 +969,46 @@ export type PdlContext6 =
  *
  */
 export type PdlId6 = string | null
-export type PdlIsLeaf6 = false
-export type IndependentEnum1 = "independent" | "dependent"
-export type Kind6 = "object"
-export type Object1 =
-  | {
-      [k: string]:
-        | boolean
-        | number
-        | string
-        | FunctionBlock
-        | CallBlock
-        | LitellmModelBlock
-        | GraniteioModelBlock
-        | CodeBlock
-        | ArgsBlock
-        | GetBlock
-        | DataBlock
-        | IfBlock
-        | MatchBlock
-        | RepeatBlock
-        | TextBlock
-        | LastOfBlock
-        | ArrayBlock
-        | ObjectBlock
-        | MessageBlock
-        | ReadBlock
-        | IncludeBlock
-        | ImportBlock
-        | ErrorBlock
-        | EmptyBlock
-        | null
-    }
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | GraniteioModelBlock
-      | CodeBlock
-      | ArgsBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | MatchBlock
-      | RepeatBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ImportBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
+export type PdlIsLeaf6 = true
+export type Kind6 = "message"
+/**
+ * Content of the message.
+ */
+export type Content =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * For example, the name of the tool that was invoked, for which this message is the tool response.
+ */
+export type Name = LocalizedExpression | string | null
+/**
+ * The id of the tool invocation for which this message is the tool response.
+ */
+export type ToolCallId = LocalizedExpression | string | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1021,6 +1020,7 @@ export type Def7 = string | null
  */
 export type Contribute7 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1060,6 +1060,7 @@ export type Fallback7 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1094,38 +1095,66 @@ export type PdlContext7 =
  */
 export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
-export type IndependentEnum2 = "independent" | "dependent"
-export type Kind7 = "array"
-/**
- * Elements of the array.
- */
-export type Array = (
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-)[]
+export type IndependentEnum1 = "independent" | "dependent"
+export type Kind7 = "object"
+export type Object1 =
+  | {
+      [k: string]:
+        | boolean
+        | number
+        | string
+        | FunctionBlock
+        | CallBlock
+        | LitellmModelBlock
+        | GraniteioModelBlock
+        | CodeBlock
+        | ArgsBlock
+        | GetBlock
+        | DataBlock
+        | IfBlock
+        | MatchBlock
+        | RepeatBlock
+        | TextBlock
+        | LastOfBlock
+        | ArrayBlock
+        | ObjectBlock
+        | MessageBlock
+        | ReadBlock
+        | IncludeBlock
+        | ImportBlock
+        | AggregatorBlock
+        | ErrorBlock
+        | EmptyBlock
+        | null
+    }
+  | (
+      | boolean
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | GraniteioModelBlock
+      | CodeBlock
+      | ArgsBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | MatchBlock
+      | RepeatBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ImportBlock
+      | AggregatorBlock
+      | ErrorBlock
+      | EmptyBlock
+      | null
+    )[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1137,6 +1166,7 @@ export type Def8 = string | null
  */
 export type Contribute8 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1176,6 +1206,7 @@ export type Fallback8 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1210,12 +1241,12 @@ export type PdlContext8 =
  */
 export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
-export type IndependentEnum3 = "independent" | "dependent"
-export type Kind8 = "lastOf"
+export type IndependentEnum2 = "independent" | "dependent"
+export type Kind8 = "array"
 /**
- * Sequence of blocks to execute.
+ * Elements of the array.
  */
-export type Lastof = (
+export type Array = (
   | boolean
   | number
   | string
@@ -1238,6 +1269,7 @@ export type Lastof = (
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1253,6 +1285,7 @@ export type Def9 = string | null
  */
 export type Contribute9 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1292,6 +1325,7 @@ export type Fallback9 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1326,13 +1360,12 @@ export type PdlContext9 =
  */
 export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
-export type IndependentEnum4 = "independent" | "dependent"
-export type Kind9 = "text"
+export type IndependentEnum3 = "independent" | "dependent"
+export type Kind9 = "lastOf"
 /**
- * Body of the text.
- *
+ * Sequence of blocks to execute.
  */
-export type Text =
+export type Lastof = (
   | boolean
   | number
   | string
@@ -1355,36 +1388,11 @@ export type Text =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
-  | (
-      | boolean
-      | number
-      | string
-      | FunctionBlock
-      | CallBlock
-      | LitellmModelBlock
-      | GraniteioModelBlock
-      | CodeBlock
-      | ArgsBlock
-      | GetBlock
-      | DataBlock
-      | IfBlock
-      | MatchBlock
-      | RepeatBlock
-      | TextBlock
-      | LastOfBlock
-      | ArrayBlock
-      | ObjectBlock
-      | MessageBlock
-      | ReadBlock
-      | IncludeBlock
-      | ImportBlock
-      | ErrorBlock
-      | EmptyBlock
-      | null
-    )[]
   | null
+)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1396,6 +1404,7 @@ export type Def10 = string | null
  */
 export type Contribute10 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1435,6 +1444,7 @@ export type Fallback10 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1469,8 +1479,155 @@ export type PdlContext10 =
  */
 export type PdlId10 = string | null
 export type PdlIsLeaf10 = false
+export type IndependentEnum4 = "independent" | "dependent"
+export type Kind10 = "text"
+/**
+ * Body of the text.
+ *
+ */
+export type Text =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | (
+      | boolean
+      | number
+      | string
+      | FunctionBlock
+      | CallBlock
+      | LitellmModelBlock
+      | GraniteioModelBlock
+      | CodeBlock
+      | ArgsBlock
+      | GetBlock
+      | DataBlock
+      | IfBlock
+      | MatchBlock
+      | RepeatBlock
+      | TextBlock
+      | LastOfBlock
+      | ArrayBlock
+      | ObjectBlock
+      | MessageBlock
+      | ReadBlock
+      | IncludeBlock
+      | ImportBlock
+      | AggregatorBlock
+      | ErrorBlock
+      | EmptyBlock
+      | null
+    )[]
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def11 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute11 = (
+  | ContributeTarget
+  | string
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser11 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback11 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry11 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry11 = boolean | string | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role11 = string | null
+/**
+ * Current context
+ *
+ */
+export type PdlContext11 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId11 = string | null
+export type PdlIsLeaf11 = false
 export type IndependentEnum5 = "independent" | "dependent"
-export type Kind10 = "repeat"
+export type Kind11 = "repeat"
 /**
  * Arrays to iterate over.
  *
@@ -1515,6 +1672,7 @@ export type Repeat =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1582,6 +1740,7 @@ export type PdlTrace2 =
       | ReadBlock
       | IncludeBlock
       | ImportBlock
+      | AggregatorBlock
       | ErrorBlock
       | EmptyBlock
       | null
@@ -1591,13 +1750,14 @@ export type PdlTrace2 =
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def11 = string | null
+export type Def12 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute11 = (
+export type Contribute12 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1605,7 +1765,7 @@ export type Contribute11 = (
 /**
  * Parser to use to construct a value out of a string result.
  */
-export type Parser11 =
+export type Parser12 =
   | ("json" | "jsonl" | "yaml")
   | PdlParser
   | RegexParser
@@ -1614,7 +1774,7 @@ export type Parser11 =
  * Block to execute in case of error.
  *
  */
-export type Fallback11 =
+export type Fallback12 =
   | boolean
   | number
   | string
@@ -1637,6 +1797,7 @@ export type Fallback11 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1644,23 +1805,23 @@ export type Fallback11 =
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
-export type Retry11 = number | null
+export type Retry12 = number | null
 /**
  * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
  *
  */
-export type TraceErrorOnRetry11 = boolean | string | null
+export type TraceErrorOnRetry12 = boolean | string | null
 /**
  * Role associated to the block and sub-blocks.
  * Typical roles are `system`, `user`, and `assistant`,
  * but there may be other roles such as `available_tools`.
  */
-export type Role11 = string | null
+export type Role12 = string | null
 /**
  * Current context
  *
  */
-export type PdlContext11 =
+export type PdlContext12 =
   | {
       [k: string]: unknown
     }[]
@@ -1669,10 +1830,10 @@ export type PdlContext11 =
  * Unique identifier for this block
  *
  */
-export type PdlId11 = string | null
-export type PdlIsLeaf11 = false
+export type PdlId12 = string | null
+export type PdlIsLeaf12 = false
 export type IndependentEnum6 = "independent" | "dependent"
-export type Kind11 = "match"
+export type Kind12 = "match"
 export type Case =
   | boolean
   | number
@@ -1682,10 +1843,10 @@ export type Case =
   | ObjectPattern
   | AnyPattern
   | null
-export type Def12 = string | null
 export type Def13 = string | null
 export type Def14 = string | null
 export type Def15 = string | null
+export type Def16 = string | null
 export type Any = null
 export type Array1 = (
   | boolean
@@ -1731,6 +1892,7 @@ export type Then =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1746,157 +1908,6 @@ export type With1 = MatchCase[]
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def16 = string | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute12 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser12 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback12 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry12 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry12 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role12 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext12 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId12 = string | null
-export type PdlIsLeaf12 = false
-export type IndependentEnum7 = "independent" | "dependent"
-export type Kind12 = "if"
-/**
- * Condition.
- *
- */
-export type If1 = LocalizedExpression | boolean | string
-/**
- * Branch to execute if the condition is true.
- *
- */
-export type Then1 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Branch to execute if the condition is false.
- *
- */
-export type Else =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def17 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
@@ -1904,6 +1915,7 @@ export type Def17 = string | null
  */
 export type Contribute13 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -1943,6 +1955,7 @@ export type Fallback13 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -1976,12 +1989,76 @@ export type PdlContext13 =
  *
  */
 export type PdlId13 = string | null
-export type PdlIsLeaf13 = true
-export type Kind13 = "data"
+export type PdlIsLeaf13 = false
+export type IndependentEnum7 = "independent" | "dependent"
+export type Kind13 = "if"
 /**
- * Do not evaluate expressions inside strings.
+ * Condition.
+ *
  */
-export type Raw = boolean
+export type If1 = LocalizedExpression | boolean | string
+/**
+ * Branch to execute if the condition is true.
+ *
+ */
+export type Then1 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Branch to execute if the condition is false.
+ *
+ */
+export type Else =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -1993,6 +2070,7 @@ export type Def18 = string | null
  */
 export type Contribute14 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2032,6 +2110,7 @@ export type Fallback14 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2066,11 +2145,11 @@ export type PdlContext14 =
  */
 export type PdlId14 = string | null
 export type PdlIsLeaf14 = true
-export type Kind14 = "get"
+export type Kind14 = "data"
 /**
- * Name of the variable to access.
+ * Do not evaluate expressions inside strings.
  */
-export type Get = string
+export type Raw = boolean
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2082,6 +2161,7 @@ export type Def19 = string | null
  */
 export type Contribute15 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2121,6 +2201,7 @@ export type Fallback15 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2155,13 +2236,11 @@ export type PdlContext15 =
  */
 export type PdlId15 = string | null
 export type PdlIsLeaf15 = true
-export type Kind15 = "code"
-export type Lang = "command"
+export type Kind15 = "get"
 /**
- * The argument vector to spawn.
- *
+ * Name of the variable to access.
  */
-export type Args = (LocalizedExpression | string)[]
+export type Get = string
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2173,6 +2252,7 @@ export type Def20 = string | null
  */
 export type Contribute16 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2212,6 +2292,7 @@ export type Fallback16 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2247,41 +2328,12 @@ export type PdlContext16 =
 export type PdlId16 = string | null
 export type PdlIsLeaf16 = true
 export type Kind16 = "code"
+export type Lang = "command"
 /**
- * Programming language of the code.
+ * The argument vector to spawn.
  *
  */
-export type Lang1 = "python" | "command" | "jinja" | "pdl" | "ipython"
-/**
- * Code to execute.
- *
- */
-export type Code =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
+export type Args = (LocalizedExpression | string)[]
 /**
  * Name of the variable used to store the result of the execution of the block.
  *
@@ -2293,6 +2345,7 @@ export type Def21 = string | null
  */
 export type Contribute17 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2332,6 +2385,7 @@ export type Fallback17 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2366,12 +2420,17 @@ export type PdlContext17 =
  */
 export type PdlId17 = string | null
 export type PdlIsLeaf17 = true
-export type Kind17 = "model"
+export type Kind17 = "code"
 /**
- * Messages to send to the model.
+ * Programming language of the code.
  *
  */
-export type Input =
+export type Lang1 = "python" | "command" | "jinja" | "pdl" | "ipython"
+/**
+ * Code to execute.
+ *
+ */
+export type Code =
   | boolean
   | number
   | string
@@ -2394,36 +2453,9 @@ export type Input =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
-  | null
-/**
- * Variable where to store the raw response of the model.
- *
- */
-export type Modelresponse = string | null
-export type CompletionTokens = number | null
-export type PromptTokens = number | null
-export type PdlModelInput =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Optional field to ensure that the block is using granite-io.
- *
- */
-export type Platform = "granite-io"
-/**
- * Parameters sent to the model.
- *
- */
-export type Parameters =
-  | LocalizedExpression
-  | {
-      [k: string]: unknown
-    }
-  | string
   | null
 /**
  * Name of the variable used to store the result of the execution of the block.
@@ -2436,6 +2468,7 @@ export type Def22 = string | null
  */
 export type Contribute18 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2475,6 +2508,7 @@ export type Fallback18 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2514,6 +2548,152 @@ export type Kind18 = "model"
  * Messages to send to the model.
  *
  */
+export type Input =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Variable where to store the raw response of the model.
+ *
+ */
+export type Modelresponse = string | null
+export type CompletionTokens = number | null
+export type PromptTokens = number | null
+export type PdlModelInput =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Optional field to ensure that the block is using granite-io.
+ *
+ */
+export type Platform = "granite-io"
+/**
+ * Parameters sent to the model.
+ *
+ */
+export type Parameters =
+  | LocalizedExpression
+  | {
+      [k: string]: unknown
+    }
+  | string
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def23 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute19 = (
+  | ContributeTarget
+  | string
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser19 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback19 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry19 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry19 = boolean | string | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role19 = string | null
+/**
+ * Current context
+ *
+ */
+export type PdlContext19 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId19 = string | null
+export type PdlIsLeaf19 = true
+export type Kind19 = "model"
+/**
+ * Messages to send to the model.
+ *
+ */
 export type Input1 =
   | boolean
   | number
@@ -2537,6 +2717,7 @@ export type Input1 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2623,122 +2804,6 @@ export type MaxRetries = number | string | null
  * Name of the variable used to store the result of the execution of the block.
  *
  */
-export type Def23 = string | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute19 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser19 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
- * Block to execute in case of error.
- *
- */
-export type Fallback19 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry19 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry19 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role19 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext19 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId19 = string | null
-export type PdlIsLeaf19 = true
-export type Kind19 = "call"
-/**
- * Function to call.
- *
- */
-export type Call = LocalizedExpression | FunctionBlock | string
-export type PdlTrace3 =
-  | boolean
-  | number
-  | string
-  | FunctionBlock
-  | CallBlock
-  | LitellmModelBlock
-  | GraniteioModelBlock
-  | CodeBlock
-  | ArgsBlock
-  | GetBlock
-  | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | TextBlock
-  | LastOfBlock
-  | ArrayBlock
-  | ObjectBlock
-  | MessageBlock
-  | ReadBlock
-  | IncludeBlock
-  | ImportBlock
-  | ErrorBlock
-  | EmptyBlock
-  | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
 export type Def24 = string | null
 /**
  * Indicate if the block contributes to the result and background context.
@@ -2746,6 +2811,7 @@ export type Def24 = string | null
  */
 export type Contribute20 = (
   | ContributeTarget
+  | string
   | {
       [k: string]: ContributeValue
     }
@@ -2785,6 +2851,7 @@ export type Fallback20 =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2819,7 +2886,126 @@ export type PdlContext20 =
  */
 export type PdlId20 = string | null
 export type PdlIsLeaf20 = true
-export type Kind20 = "function"
+export type Kind20 = "call"
+/**
+ * Function to call.
+ *
+ */
+export type Call = LocalizedExpression | FunctionBlock | string
+export type PdlTrace3 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * Name of the variable used to store the result of the execution of the block.
+ *
+ */
+export type Def25 = string | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute21 = (
+  | ContributeTarget
+  | string
+  | {
+      [k: string]: ContributeValue
+    }
+)[]
+/**
+ * Parser to use to construct a value out of a string result.
+ */
+export type Parser21 =
+  | ("json" | "jsonl" | "yaml")
+  | PdlParser
+  | RegexParser
+  | null
+/**
+ * Block to execute in case of error.
+ *
+ */
+export type Fallback21 =
+  | boolean
+  | number
+  | string
+  | FunctionBlock
+  | CallBlock
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | CodeBlock
+  | ArgsBlock
+  | GetBlock
+  | DataBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | TextBlock
+  | LastOfBlock
+  | ArrayBlock
+  | ObjectBlock
+  | MessageBlock
+  | ReadBlock
+  | IncludeBlock
+  | ImportBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
+  | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry21 = number | null
+/**
+ * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+ *
+ */
+export type TraceErrorOnRetry21 = boolean | string | null
+/**
+ * Role associated to the block and sub-blocks.
+ * Typical roles are `system`, `user`, and `assistant`,
+ * but there may be other roles such as `available_tools`.
+ */
+export type Role21 = string | null
+/**
+ * Current context
+ *
+ */
+export type PdlContext21 =
+  | {
+      [k: string]: unknown
+    }[]
+  | null
+/**
+ * Unique identifier for this block
+ *
+ */
+export type PdlId21 = string | null
+export type PdlIsLeaf21 = true
+export type Kind21 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -2854,6 +3040,7 @@ export type Return =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2885,6 +3072,7 @@ export type PdlBlock =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -2924,20 +3112,20 @@ export interface FunctionBlock {
       }
     | null
   defs?: Defs
-  def?: Def24
-  contribute?: Contribute20
-  parser?: Parser20
-  fallback?: Fallback20
-  retry?: Retry20
-  trace_error_on_retry?: TraceErrorOnRetry20
-  role?: Role20
-  pdl__context?: PdlContext20
-  pdl__id?: PdlId20
+  def?: Def25
+  contribute?: Contribute21
+  parser?: Parser21
+  fallback?: Fallback21
+  retry?: Retry21
+  trace_error_on_retry?: TraceErrorOnRetry21
+  role?: Role21
+  pdl__context?: PdlContext21
+  pdl__id?: PdlId21
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf20
-  kind?: Kind20
+  pdl__is_leaf?: PdlIsLeaf21
+  kind?: Kind21
   function: Function
   return: Return
   signature?: Signature
@@ -2999,6 +3187,7 @@ export interface Defs {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3038,20 +3227,20 @@ export interface CallBlock {
       }
     | null
   defs?: Defs1
-  def?: Def23
-  contribute?: Contribute19
-  parser?: Parser19
-  fallback?: Fallback19
-  retry?: Retry19
-  trace_error_on_retry?: TraceErrorOnRetry19
-  role?: Role19
-  pdl__context?: PdlContext19
-  pdl__id?: PdlId19
+  def?: Def24
+  contribute?: Contribute20
+  parser?: Parser20
+  fallback?: Fallback20
+  retry?: Retry20
+  trace_error_on_retry?: TraceErrorOnRetry20
+  role?: Role20
+  pdl__context?: PdlContext20
+  pdl__id?: PdlId20
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf19
-  kind?: Kind19
+  pdl__is_leaf?: PdlIsLeaf20
+  kind?: Kind20
   call: Call
   args?: unknown
   pdl__trace?: PdlTrace3
@@ -3084,6 +3273,7 @@ export interface Defs1 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3130,20 +3320,20 @@ export interface LitellmModelBlock {
       }
     | null
   defs?: Defs2
-  def?: Def22
-  contribute?: Contribute18
-  parser?: Parser18
-  fallback?: Fallback18
-  retry?: Retry18
-  trace_error_on_retry?: TraceErrorOnRetry18
-  role?: Role18
-  pdl__context?: PdlContext18
-  pdl__id?: PdlId18
+  def?: Def23
+  contribute?: Contribute19
+  parser?: Parser19
+  fallback?: Fallback19
+  retry?: Retry19
+  trace_error_on_retry?: TraceErrorOnRetry19
+  role?: Role19
+  pdl__context?: PdlContext19
+  pdl__id?: PdlId19
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf18
-  kind?: Kind18
+  pdl__is_leaf?: PdlIsLeaf19
+  kind?: Kind19
   input?: Input1
   modelResponse?: Modelresponse1
   /**
@@ -3184,6 +3374,7 @@ export interface Defs2 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3223,20 +3414,20 @@ export interface GraniteioModelBlock {
       }
     | null
   defs?: Defs3
-  def?: Def21
-  contribute?: Contribute17
-  parser?: Parser17
-  fallback?: Fallback17
-  retry?: Retry17
-  trace_error_on_retry?: TraceErrorOnRetry17
-  role?: Role17
-  pdl__context?: PdlContext17
-  pdl__id?: PdlId17
+  def?: Def22
+  contribute?: Contribute18
+  parser?: Parser18
+  fallback?: Fallback18
+  retry?: Retry18
+  trace_error_on_retry?: TraceErrorOnRetry18
+  role?: Role18
+  pdl__context?: PdlContext18
+  pdl__id?: PdlId18
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf17
-  kind?: Kind17
+  pdl__is_leaf?: PdlIsLeaf18
+  kind?: Kind18
   input?: Input
   modelResponse?: Modelresponse
   /**
@@ -3277,6 +3468,7 @@ export interface Defs3 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3325,20 +3517,20 @@ export interface CodeBlock {
       }
     | null
   defs?: Defs4
-  def?: Def20
-  contribute?: Contribute16
-  parser?: Parser16
-  fallback?: Fallback16
-  retry?: Retry16
-  trace_error_on_retry?: TraceErrorOnRetry16
-  role?: Role16
-  pdl__context?: PdlContext16
-  pdl__id?: PdlId16
+  def?: Def21
+  contribute?: Contribute17
+  parser?: Parser17
+  fallback?: Fallback17
+  retry?: Retry17
+  trace_error_on_retry?: TraceErrorOnRetry17
+  role?: Role17
+  pdl__context?: PdlContext17
+  pdl__id?: PdlId17
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf16
-  kind?: Kind16
+  pdl__is_leaf?: PdlIsLeaf17
+  kind?: Kind17
   lang: Lang1
   code: Code
 }
@@ -3370,6 +3562,7 @@ export interface Defs4 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3417,20 +3610,20 @@ export interface ArgsBlock {
       }
     | null
   defs?: Defs5
-  def?: Def19
-  contribute?: Contribute15
-  parser?: Parser15
-  fallback?: Fallback15
-  retry?: Retry15
-  trace_error_on_retry?: TraceErrorOnRetry15
-  role?: Role15
-  pdl__context?: PdlContext15
-  pdl__id?: PdlId15
+  def?: Def20
+  contribute?: Contribute16
+  parser?: Parser16
+  fallback?: Fallback16
+  retry?: Retry16
+  trace_error_on_retry?: TraceErrorOnRetry16
+  role?: Role16
+  pdl__context?: PdlContext16
+  pdl__id?: PdlId16
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf15
-  kind?: Kind15
+  pdl__is_leaf?: PdlIsLeaf16
+  kind?: Kind16
   lang?: Lang
   args: Args
 }
@@ -3462,6 +3655,7 @@ export interface Defs5 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3503,20 +3697,20 @@ export interface GetBlock {
       }
     | null
   defs?: Defs6
-  def?: Def18
-  contribute?: Contribute14
-  parser?: Parser14
-  fallback?: Fallback14
-  retry?: Retry14
-  trace_error_on_retry?: TraceErrorOnRetry14
-  role?: Role14
-  pdl__context?: PdlContext14
-  pdl__id?: PdlId14
+  def?: Def19
+  contribute?: Contribute15
+  parser?: Parser15
+  fallback?: Fallback15
+  retry?: Retry15
+  trace_error_on_retry?: TraceErrorOnRetry15
+  role?: Role15
+  pdl__context?: PdlContext15
+  pdl__id?: PdlId15
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf14
-  kind?: Kind14
+  pdl__is_leaf?: PdlIsLeaf15
+  kind?: Kind15
   get: Get
 }
 /**
@@ -3547,6 +3741,7 @@ export interface Defs6 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3607,20 +3802,20 @@ export interface DataBlock {
       }
     | null
   defs?: Defs7
-  def?: Def17
-  contribute?: Contribute13
-  parser?: Parser13
-  fallback?: Fallback13
-  retry?: Retry13
-  trace_error_on_retry?: TraceErrorOnRetry13
-  role?: Role13
-  pdl__context?: PdlContext13
-  pdl__id?: PdlId13
+  def?: Def18
+  contribute?: Contribute14
+  parser?: Parser14
+  fallback?: Fallback14
+  retry?: Retry14
+  trace_error_on_retry?: TraceErrorOnRetry14
+  role?: Role14
+  pdl__context?: PdlContext14
+  pdl__id?: PdlId14
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf13
-  kind?: Kind13
+  pdl__is_leaf?: PdlIsLeaf14
+  kind?: Kind14
   data: unknown
   raw?: Raw
 }
@@ -3652,6 +3847,7 @@ export interface Defs7 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3701,21 +3897,21 @@ export interface IfBlock {
       }
     | null
   defs?: Defs8
-  def?: Def16
-  contribute?: Contribute12
-  parser?: Parser12
-  fallback?: Fallback12
-  retry?: Retry12
-  trace_error_on_retry?: TraceErrorOnRetry12
-  role?: Role12
-  pdl__context?: PdlContext12
-  pdl__id?: PdlId12
+  def?: Def17
+  contribute?: Contribute13
+  parser?: Parser13
+  fallback?: Fallback13
+  retry?: Retry13
+  trace_error_on_retry?: TraceErrorOnRetry13
+  role?: Role13
+  pdl__context?: PdlContext13
+  pdl__id?: PdlId13
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf12
+  pdl__is_leaf?: PdlIsLeaf13
   context?: IndependentEnum7
-  kind?: Kind12
+  kind?: Kind13
   if: If1
   then: Then1
   else?: Else
@@ -3748,6 +3944,7 @@ export interface Defs8 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3804,21 +4001,21 @@ export interface MatchBlock {
       }
     | null
   defs?: Defs9
-  def?: Def11
-  contribute?: Contribute11
-  parser?: Parser11
-  fallback?: Fallback11
-  retry?: Retry11
-  trace_error_on_retry?: TraceErrorOnRetry11
-  role?: Role11
-  pdl__context?: PdlContext11
-  pdl__id?: PdlId11
+  def?: Def12
+  contribute?: Contribute12
+  parser?: Parser12
+  fallback?: Fallback12
+  retry?: Retry12
+  trace_error_on_retry?: TraceErrorOnRetry12
+  role?: Role12
+  pdl__context?: PdlContext12
+  pdl__id?: PdlId12
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf11
+  pdl__is_leaf?: PdlIsLeaf12
   context?: IndependentEnum6
-  kind?: Kind11
+  kind?: Kind12
   match: unknown
   with: With1
 }
@@ -3850,6 +4047,7 @@ export interface Defs9 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3908,21 +4106,21 @@ export interface RepeatBlock {
       }
     | null
   defs?: Defs10
-  def?: Def10
-  contribute?: Contribute10
-  parser?: Parser10
-  fallback?: Fallback10
-  retry?: Retry10
-  trace_error_on_retry?: TraceErrorOnRetry10
-  role?: Role10
-  pdl__context?: PdlContext10
-  pdl__id?: PdlId10
+  def?: Def11
+  contribute?: Contribute11
+  parser?: Parser11
+  fallback?: Fallback11
+  retry?: Retry11
+  trace_error_on_retry?: TraceErrorOnRetry11
+  role?: Role11
+  pdl__context?: PdlContext11
+  pdl__id?: PdlId11
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf10
+  pdl__is_leaf?: PdlIsLeaf11
   context?: IndependentEnum5
-  kind?: Kind10
+  kind?: Kind11
   for?: For
   index?: Index
   while?: While
@@ -3960,6 +4158,7 @@ export interface Defs10 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3999,21 +4198,21 @@ export interface TextBlock {
       }
     | null
   defs?: Defs11
-  def?: Def9
-  contribute?: Contribute9
-  parser?: Parser9
-  fallback?: Fallback9
-  retry?: Retry9
-  trace_error_on_retry?: TraceErrorOnRetry9
-  role?: Role9
-  pdl__context?: PdlContext9
-  pdl__id?: PdlId9
+  def?: Def10
+  contribute?: Contribute10
+  parser?: Parser10
+  fallback?: Fallback10
+  retry?: Retry10
+  trace_error_on_retry?: TraceErrorOnRetry10
+  role?: Role10
+  pdl__context?: PdlContext10
+  pdl__id?: PdlId10
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf9
+  pdl__is_leaf?: PdlIsLeaf10
   context?: IndependentEnum4
-  kind?: Kind9
+  kind?: Kind10
   text: Text
 }
 /**
@@ -4044,6 +4243,7 @@ export interface Defs11 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4083,21 +4283,21 @@ export interface LastOfBlock {
       }
     | null
   defs?: Defs12
-  def?: Def8
-  contribute?: Contribute8
-  parser?: Parser8
-  fallback?: Fallback8
-  retry?: Retry8
-  trace_error_on_retry?: TraceErrorOnRetry8
-  role?: Role8
-  pdl__context?: PdlContext8
-  pdl__id?: PdlId8
+  def?: Def9
+  contribute?: Contribute9
+  parser?: Parser9
+  fallback?: Fallback9
+  retry?: Retry9
+  trace_error_on_retry?: TraceErrorOnRetry9
+  role?: Role9
+  pdl__context?: PdlContext9
+  pdl__id?: PdlId9
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf8
+  pdl__is_leaf?: PdlIsLeaf9
   context?: IndependentEnum3
-  kind?: Kind8
+  kind?: Kind9
   lastOf: Lastof
 }
 /**
@@ -4128,6 +4328,7 @@ export interface Defs12 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4167,21 +4368,21 @@ export interface ArrayBlock {
       }
     | null
   defs?: Defs13
-  def?: Def7
-  contribute?: Contribute7
-  parser?: Parser7
-  fallback?: Fallback7
-  retry?: Retry7
-  trace_error_on_retry?: TraceErrorOnRetry7
-  role?: Role7
-  pdl__context?: PdlContext7
-  pdl__id?: PdlId7
+  def?: Def8
+  contribute?: Contribute8
+  parser?: Parser8
+  fallback?: Fallback8
+  retry?: Retry8
+  trace_error_on_retry?: TraceErrorOnRetry8
+  role?: Role8
+  pdl__context?: PdlContext8
+  pdl__id?: PdlId8
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf7
+  pdl__is_leaf?: PdlIsLeaf8
   context?: IndependentEnum2
-  kind?: Kind7
+  kind?: Kind8
   array: Array
 }
 /**
@@ -4212,6 +4413,7 @@ export interface Defs13 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4251,21 +4453,21 @@ export interface ObjectBlock {
       }
     | null
   defs?: Defs14
-  def?: Def6
-  contribute?: Contribute6
-  parser?: Parser6
-  fallback?: Fallback6
-  retry?: Retry6
-  trace_error_on_retry?: TraceErrorOnRetry6
-  role?: Role6
-  pdl__context?: PdlContext6
-  pdl__id?: PdlId6
+  def?: Def7
+  contribute?: Contribute7
+  parser?: Parser7
+  fallback?: Fallback7
+  retry?: Retry7
+  trace_error_on_retry?: TraceErrorOnRetry7
+  role?: Role7
+  pdl__context?: PdlContext7
+  pdl__id?: PdlId7
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf6
+  pdl__is_leaf?: PdlIsLeaf7
   context?: IndependentEnum1
-  kind?: Kind6
+  kind?: Kind7
   object: Object1
 }
 /**
@@ -4296,6 +4498,7 @@ export interface Defs14 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4335,20 +4538,20 @@ export interface MessageBlock {
       }
     | null
   defs?: Defs15
-  def?: Def5
-  contribute?: Contribute5
-  parser?: Parser5
-  fallback?: Fallback5
-  retry?: Retry5
-  trace_error_on_retry?: TraceErrorOnRetry5
-  role?: Role5
-  pdl__context?: PdlContext5
-  pdl__id?: PdlId5
+  def?: Def6
+  contribute?: Contribute6
+  parser?: Parser6
+  fallback?: Fallback6
+  retry?: Retry6
+  trace_error_on_retry?: TraceErrorOnRetry6
+  role?: Role6
+  pdl__context?: PdlContext6
+  pdl__id?: PdlId6
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf5
-  kind?: Kind5
+  pdl__is_leaf?: PdlIsLeaf6
+  kind?: Kind6
   content: Content
   name?: Name
   tool_call_id?: ToolCallId
@@ -4381,6 +4584,7 @@ export interface Defs15 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4432,20 +4636,20 @@ export interface ReadBlock {
       }
     | null
   defs?: Defs16
-  def?: Def4
-  contribute?: Contribute4
-  parser?: Parser4
-  fallback?: Fallback4
-  retry?: Retry4
-  trace_error_on_retry?: TraceErrorOnRetry4
-  role?: Role4
-  pdl__context?: PdlContext4
-  pdl__id?: PdlId4
+  def?: Def5
+  contribute?: Contribute5
+  parser?: Parser5
+  fallback?: Fallback5
+  retry?: Retry5
+  trace_error_on_retry?: TraceErrorOnRetry5
+  role?: Role5
+  pdl__context?: PdlContext5
+  pdl__id?: PdlId5
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf4
-  kind?: Kind4
+  pdl__is_leaf?: PdlIsLeaf5
+  kind?: Kind5
   read: Read
   message?: Message
   multiline?: Multiline
@@ -4478,6 +4682,7 @@ export interface Defs16 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4517,21 +4722,21 @@ export interface IncludeBlock {
       }
     | null
   defs?: Defs17
-  def?: Def3
-  contribute?: Contribute3
-  parser?: Parser3
-  fallback?: Fallback3
-  retry?: Retry3
-  trace_error_on_retry?: TraceErrorOnRetry3
-  role?: Role3
-  pdl__context?: PdlContext3
-  pdl__id?: PdlId3
+  def?: Def4
+  contribute?: Contribute4
+  parser?: Parser4
+  fallback?: Fallback4
+  retry?: Retry4
+  trace_error_on_retry?: TraceErrorOnRetry4
+  role?: Role4
+  pdl__context?: PdlContext4
+  pdl__id?: PdlId4
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf3
+  pdl__is_leaf?: PdlIsLeaf4
   context?: IndependentEnum
-  kind?: Kind3
+  kind?: Kind4
   include: Include
   pdl__trace?: PdlTrace1
 }
@@ -4563,6 +4768,7 @@ export interface Defs17 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4602,20 +4808,20 @@ export interface ImportBlock {
       }
     | null
   defs?: Defs18
-  def?: Def2
-  contribute?: Contribute2
-  parser?: Parser2
-  fallback?: Fallback2
-  retry?: Retry2
-  trace_error_on_retry?: TraceErrorOnRetry2
-  role?: Role2
-  pdl__context?: PdlContext2
-  pdl__id?: PdlId2
+  def?: Def3
+  contribute?: Contribute3
+  parser?: Parser3
+  fallback?: Fallback3
+  retry?: Retry3
+  trace_error_on_retry?: TraceErrorOnRetry3
+  role?: Role3
+  pdl__context?: PdlContext3
+  pdl__id?: PdlId3
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf2
-  kind?: Kind2
+  pdl__is_leaf?: PdlIsLeaf3
+  kind?: Kind3
   import: Import
   pdl__trace?: PdlTrace
 }
@@ -4647,14 +4853,15 @@ export interface Defs18 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
 }
 /**
- * Block representing an error generated at runtime.
+ * Create a new aggregator that can be use in the `contribute` field.
  */
-export interface ErrorBlock {
+export interface AggregatorBlock {
   description?: Description19
   /**
    * Type specification of the result of the block.
@@ -4686,22 +4893,21 @@ export interface ErrorBlock {
       }
     | null
   defs?: Defs19
-  def?: Def1
-  contribute?: Contribute1
-  parser?: Parser1
-  fallback?: Fallback1
-  retry?: Retry1
-  trace_error_on_retry?: TraceErrorOnRetry1
-  role?: Role1
-  pdl__context?: PdlContext1
-  pdl__id?: PdlId1
+  def?: Def2
+  contribute?: Contribute2
+  parser?: Parser2
+  fallback?: Fallback2
+  retry?: Retry2
+  trace_error_on_retry?: TraceErrorOnRetry2
+  role?: Role2
+  pdl__context?: PdlContext2
+  pdl__id?: PdlId2
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf1
-  kind?: Kind1
-  msg: Msg
-  program: Program1
+  pdl__is_leaf?: PdlIsLeaf2
+  kind?: Kind2
+  aggregator: Aggregator
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4731,14 +4937,15 @@ export interface Defs19 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
 }
 /**
- * Block without an action. It can contain definitions.
+ * Block representing an error generated at runtime.
  */
-export interface EmptyBlock {
+export interface ErrorBlock {
   description?: Description20
   /**
    * Type specification of the result of the block.
@@ -4770,20 +4977,22 @@ export interface EmptyBlock {
       }
     | null
   defs?: Defs20
-  def?: Def
-  contribute?: Contribute
-  parser?: Parser
-  fallback?: Fallback
-  retry?: Retry
-  trace_error_on_retry?: TraceErrorOnRetry
-  role?: Role
-  pdl__context?: PdlContext
-  pdl__id?: PdlId
+  def?: Def1
+  contribute?: Contribute1
+  parser?: Parser1
+  fallback?: Fallback1
+  retry?: Retry1
+  trace_error_on_retry?: TraceErrorOnRetry1
+  role?: Role1
+  pdl__context?: PdlContext1
+  pdl__id?: PdlId1
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf
-  kind?: Kind
+  pdl__is_leaf?: PdlIsLeaf1
+  kind?: Kind1
+  msg: Msg
+  program: Program1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4813,6 +5022,90 @@ export interface Defs20 {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
+}
+/**
+ * Block without an action. It can contain definitions.
+ */
+export interface EmptyBlock {
+  description?: Description21
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
+      )
+    | EnumPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjectPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
+  defs?: Defs21
+  def?: Def
+  contribute?: Contribute
+  parser?: Parser
+  fallback?: Fallback
+  retry?: Retry
+  trace_error_on_retry?: TraceErrorOnRetry
+  role?: Role
+  pdl__context?: PdlContext
+  pdl__id?: PdlId
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf
+  kind?: Kind
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs21 {
+  [k: string]:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -4821,32 +5114,13 @@ export interface Defs20 {
  * Contribution of a specific value instead of the default one.
  */
 export interface ContributeValue {
-  value: Value
-}
-export interface LocalizedExpression {
-  pdl__expr: PdlExpr
-  pdl__result?: unknown
-  pdl__location?: PdlLocationType | null
-}
-export interface PdlExpr {
-  [k: string]: unknown
-}
-/**
- * Internal data structure to keep track of the source location information.
- */
-export interface PdlLocationType {
-  path: Path
-  file: File
-  table: Table
-}
-export interface Table {
-  [k: string]: number
+  value: unknown
 }
 /**
  * Use a PDL program as a parser specification (experimental).
  */
 export interface PdlParser {
-  description?: Description21
+  description?: Description22
   spec?:
     | (
         | "null"
@@ -4878,7 +5152,7 @@ export interface PdlParser {
  * A regular expression parser.
  */
 export interface RegexParser {
-  description?: Description22
+  description?: Description23
   spec?:
     | (
         | "null"
@@ -4908,6 +5182,17 @@ export interface RegexParser {
   mode?: Mode
 }
 /**
+ * Internal data structure to keep track of the source location information.
+ */
+export interface PdlLocationType {
+  path: Path
+  file: File
+  table: Table
+}
+export interface Table {
+  [k: string]: number
+}
+/**
  * Internal data structure to record timing information in the trace.
  */
 export interface PdlTiming {
@@ -4915,6 +5200,23 @@ export interface PdlTiming {
   end_nanos?: EndNanos
   first_use_nanos?: FirstUseNanos
   timezone?: Timezone
+}
+export interface FileAggregatorConfig {
+  description?: Description24
+  file: File1
+  mode?: Mode1
+  encoding?: Encoding
+  prefix?: Prefix
+  suffix?: Suffix
+  flush?: Flush
+}
+export interface LocalizedExpression {
+  pdl__expr: PdlExpr
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+}
+export interface PdlExpr {
+  [k: string]: unknown
 }
 /**
  * Join loop iterations as a string.
@@ -4956,21 +5258,21 @@ export interface MatchCase {
  * Match any of the patterns.
  */
 export interface OrPattern {
-  def?: Def12
+  def?: Def13
   anyOf: Anyof
 }
 /**
  * Match an array.
  */
 export interface ArrayPattern {
-  def?: Def13
+  def?: Def14
   array: Array1
 }
 /**
  * Match an object.
  */
 export interface ObjectPattern {
-  def?: Def14
+  def?: Def15
   object: Object2
 }
 export interface Object2 {
@@ -4988,7 +5290,7 @@ export interface Object2 {
  * Match any value.
  */
 export interface AnyPattern {
-  def?: Def15
+  def?: Def16
   any: Any
 }
 /**
