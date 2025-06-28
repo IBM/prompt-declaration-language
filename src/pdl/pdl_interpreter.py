@@ -485,7 +485,7 @@ def process_advanced_block(
         background = DependentContext([])
     contribute_value, trace = process_contribute(trace, new_scope, loc)
     if contribute_value is not None:
-        background = DependentContext([contribute_value])
+        background = DependentContext(contribute_value)
 
     return result, background, new_scope, trace
 
