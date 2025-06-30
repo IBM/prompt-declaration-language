@@ -233,9 +233,9 @@ train_df = df[(~df.index.isin(bigbench.index)) & (df["evidence_sentence_count"] 
 
 test_df = df[
     (df.index.isin(bigbench.index)) & (df["evidence_sentence_count"] > 0)
-].drop(
+].drop(  # pyright: ignore[reportAttributeAccessIssue]
     columns=["verifiable", "claim_in_bigbench", "evidence"]
-)  # pyright: ignore[reportAttributeAccessIssue]
+)
 test_df["unique_evidence"] = test_df[
     "unique_evidence"
 ].map(  # pyright: ignore[reportAttributeAccessIssue]
