@@ -7,9 +7,13 @@ text:
 - model: ollama_chat/granite3.2:2b
   modelResponse: raw_response
   contribute:
-    # - pdl_context
+    - result
+    - context
     - debug:
-        value: ${raw_response}
+        value: ${raw_response.object}
 - nice to meet you.
-# - model: ollama_chat/granite3.2:2b
-# contribute: [pdl_context, debug]
+- model: ollama_chat/granite3.2:2b
+  contribute:
+    - result
+    - debug
+- Bye
