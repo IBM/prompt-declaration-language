@@ -174,7 +174,11 @@ def evidence_mapper(evidence: list[tuple]):
     return list(evidences)
 
 
-df["unique_evidence"] = df["evidence"].progress_apply(evidence_mapper)
+df["unique_evidence"] = df[
+    "evidence"
+].progress_apply(  # pyright: ignore[reportAttributeAccessIssue]
+    evidence_mapper
+)
 
 
 def evidence_mapper_sentence(evidences: list[tuple[str, int]]):
@@ -202,30 +206,44 @@ def evidence_mapper_sentence(evidences: list[tuple[str, int]]):
     return list(lines)
 
 
-df["evidence_sentences"] = df["unique_evidence"].progress_apply(
+df["evidence_sentences"] = df[
+    "unique_evidence"
+].progress_apply(  # pyright: ignore[reportAttributeAccessIssue]
     evidence_mapper_sentence
 )
 
 bigbench = pd.DataFrame.from_records(bigbench_fever["examples"]).set_index("id")
 
 tqdm.pandas(desc="Mapping claims to (in) bigbench")
-df["claim_in_bigbench"] = df["claim"].progress_apply(
+df["claim_in_bigbench"] = df[
+    "claim"
+].progress_apply(  # pyright: ignore[reportAttributeAccessIssue]
     lambda x: bigbench.input.str.contains(x).any()
 )
 tqdm.pandas()
 
-df["evidence_sentence_count"] = df["evidence_sentences"].map(len)
+df["evidence_sentence_count"] = df[
+    "evidence_sentences"
+].map(  # pyright: ignore[reportAttributeAccessIssue]
+    len
+)
 print("Mapped bigbench")
 
 train_df = df[(~df.index.isin(bigbench.index)) & (df["evidence_sentence_count"] > 0)]
 
 test_df = df[
     (df.index.isin(bigbench.index)) & (df["evidence_sentence_count"] > 0)
-].drop(columns=["verifiable", "claim_in_bigbench", "evidence"])
-test_df["unique_evidence"] = test_df["unique_evidence"].map(
+].drop(
+    columns=["verifiable", "claim_in_bigbench", "evidence"]
+)  # pyright: ignore[reportAttributeAccessIssue]
+test_df["unique_evidence"] = test_df[
+    "unique_evidence"
+].map(  # pyright: ignore[reportAttributeAccessIssue]
     lambda x: [[str(title), str(sent_id)] for title, sent_id in x]
 )
-test_df["evidence_sentences"] = test_df["evidence_sentences"].map(
+test_df["evidence_sentences"] = test_df[
+    "evidence_sentences"
+].map(  # pyright: ignore[reportAttributeAccessIssue]
     lambda x: [[str(title), str(sent_id), str(sent)] for title, sent_id, sent in x]
 )
 test_df["label"] = test_df["label"] == "SUPPORTS"
@@ -238,11 +256,17 @@ print("Saved fever test df")
 
 train_df = df[
     (~df.index.isin(bigbench.index)) & (df["evidence_sentence_count"] > 0)
-].drop(columns=["verifiable", "claim_in_bigbench", "evidence"])
-train_df["unique_evidence"] = train_df["unique_evidence"].map(
+].drop(  # pyright: ignore[reportAttributeAccessIssue]
+    columns=["verifiable", "claim_in_bigbench", "evidence"]
+)
+train_df["unique_evidence"] = train_df[
+    "unique_evidence"
+].map(  # pyright: ignore[reportAttributeAccessIssue]
     lambda x: [[str(title), str(sent_id)] for title, sent_id in x]
 )
-train_df["evidence_sentences"] = train_df["evidence_sentences"].map(
+train_df["evidence_sentences"] = train_df[
+    "evidence_sentences"
+].map(  # pyright: ignore[reportAttributeAccessIssue]
     lambda x: [[str(title), str(sent_id), str(sent)] for title, sent_id, sent in x]
 )
 train_df["label"] = train_df["label"] == "SUPPORTS"
