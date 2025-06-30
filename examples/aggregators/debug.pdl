@@ -4,7 +4,9 @@ defs:
       file: /tmp/log.txt
 text:
 - Hello
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite3.3:2b
+  parameters:
+    temperature: 0
   modelResponse: raw_response
   contribute:
     - result
@@ -12,7 +14,9 @@ text:
     - debug:
         value: ${raw_response}
 - nice to meet you.
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite3.3:2b
+  parameters:
+    temperature: 0
   contribute:
     - result
     - debug
