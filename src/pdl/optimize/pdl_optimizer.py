@@ -11,7 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from datasets import Dataset, DatasetDict
+from datasets.arrow_dataset import Dataset
+from datasets.dataset_dict import DatasetDict
 from duration_parser import parse as parse_duration
 from numpy.random import default_rng
 from rich.logging import RichHandler

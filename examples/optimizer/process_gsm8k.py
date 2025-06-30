@@ -14,8 +14,9 @@ var_dir.mkdir(parents=True, exist_ok=True)
 
 gsm8k_orig = load_dataset("openai/gsm8k", "main")
 if not isinstance(gsm8k_orig, DatasetDict):
-    msg = f"Expected gsm8k_orig to be a DatasetDict, but got: {type(gsm8k_orig)}"
-    raise TypeError(msg)
+    raise TypeError(
+        f"Expected gsm8k_orig to be a DatasetDict, but got: {type(gsm8k_orig)}"
+    )
 new_split = gsm8k_orig["train"].train_test_split(test_size=1024)
 gsm8k_orig["validation"] = new_split["test"]
 gsm8k_orig["train"] = new_split["train"]
@@ -24,8 +25,7 @@ gsm8k_orig.save_to_disk("var/gsm8k_split")
 # Make sure the saved dataset is loaded correctly
 gsm8k = load_from_disk("var/gsm8k_split")
 if not isinstance(gsm8k, DatasetDict):
-    msg = f"Expected gsm8k to be a DatasetDict, but got: {type(gsm8k)}"
-    raise TypeError(msg)
+    raise TypeError(f"Expected gsm8k to be a DatasetDict, but got: {type(gsm8k)}")
 
 
 def parse_answers(row: dict[str, Any]) -> dict[str, Any]:
@@ -82,9 +82,9 @@ def react_trajectory(row: dict[str, Any]) -> dict[str, list[str]]:
     if next(iter(trajectory[-1].keys())) == "observation":
         trajectory.append({"thought": f"The answer is {answer}"})
 
-    trajectory.append({
-        "action": '{"name": "Finish", "arguments": {"answer": "' + f"{answer}" + '"}}'
-    })
+    trajectory.append(
+        {"action": '{"name": "Finish", "arguments": {"answer": "' + f"{answer}" + '"}}'}
+    )
 
     traj_keys = [next(iter(t.keys())) for t in trajectory]
     traj_values = [next(iter(t.values())) for t in trajectory]
@@ -132,8 +132,7 @@ def rewoo_trajectory(row: dict[str, Any]) -> dict[str, list[str]]:
             ]
 
     evidence_counter = 0
-    for i in range(len(trajectory)):
-        outer = trajectory[i]
+    for i, outer in enumerate(trajectory):
         type_event = next(iter(outer.keys()))
         value = next(iter(outer.values()))
 

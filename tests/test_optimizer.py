@@ -2,7 +2,8 @@ from pathlib import Path
 from pprint import pprint
 
 import pytest
-from datasets import Dataset, DatasetDict
+from datasets.arrow_dataset import Dataset
+from datasets.dataset_dict import DatasetDict
 
 from examples.optimizer.fever_evaluator import FEVEREvaluator
 from examples.optimizer.gsm8k_evaluator import Gsm8kEvaluator

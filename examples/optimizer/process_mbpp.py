@@ -16,8 +16,7 @@ mbpp_plus = get_mbpp_plus()
 
 mbpp = load_dataset("google-research-datasets/mbpp", name="full")
 if not isinstance(mbpp, DatasetDict):
-    msg = f"Expected mbpp to be a DatasetDict, but got: {type(mbpp)}"
-    raise TypeError(msg)
+    raise TypeError(f"Expected mbpp to be a DatasetDict, but got: {type(mbpp)}")
 
 mbpp["test"] = mbpp["test"].filter(
     lambda x: f"Mbpp/{x['task_id']}" in mbpp_plus,

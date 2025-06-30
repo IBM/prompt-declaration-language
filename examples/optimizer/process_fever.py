@@ -109,8 +109,7 @@ def remove_accents(x: str) -> str:
 
 fever = load_dataset("fever/fever", "v1.0")
 if not isinstance(fever, DatasetDict):
-    msg = f"Expected fever to be a DatasetDict, but got: {type(fever)}"
-    raise TypeError(msg)
+    raise TypeError(f"Expected fever to be a DatasetDict, but got: {type(fever)}")
 
 bigbench_fever = json.loads(Path("var/fever/task.json").read_text(encoding="utf-8"))
 
@@ -123,14 +122,15 @@ wikipages = load_dataset(
     encoding="utf-8",
 )
 if not isinstance(wikipages, DatasetDict):
-    msg = f"Expected wikipages to be a DatasetDict, but got: {type(wikipages)}"
-    raise TypeError(msg)
+    raise TypeError(
+        f"Expected wikipages to be a DatasetDict, but got: {type(wikipages)}"
+    )
 
 print("Loaded wikipages:", wikipages)
 print("Mapping wikipages...")
 wikipages["train"] = wikipages["train"].map(
     lambda x: {
-        "lines_split": list(filter(lambda x: x != "", re.split(r"\d+\t", x["lines"])))
+        "lines_split": [x for x in re.split(r"\d+\t", x["lines"]) if x],
     },
     num_proc=32,
 )
@@ -139,8 +139,9 @@ print("Mapping wikipages done.")
 print("Converting wikipages to DataFrame...")
 wiki_pages_df = wikipages["train"].to_pandas()
 if not isinstance(wiki_pages_df, pd.DataFrame):
-    msg = f"Expected wiki_pages_df to be a DataFrame, but got: {type(wiki_pages_df)}"
-    raise TypeError(msg)
+    raise TypeError(
+        f"Expected wiki_pages_df to be a DataFrame, but got: {type(wiki_pages_df)}"
+    )
 wiki_pages_df = wiki_pages_df.set_index("id")
 wiki_pages_df.index = wiki_pages_df.index.map(remove_accents)
 print("Wikipages converted to DataFrame.")
@@ -155,8 +156,9 @@ if isinstance(wiki_pages_df, pd.DataFrame):
         compression_level=10,
     )
 else:
-    msg = f"Expected wiki_pages_df to be a DataFrame, but got: {type(wiki_pages_df)}"
-    raise TypeError(msg)
+    raise TypeError(
+        f"Expected wiki_pages_df to be a DataFrame, but got: {type(wiki_pages_df)}"
+    )
 
 
 df = pd.read_json(
@@ -177,10 +179,9 @@ df["unique_evidence"] = df["evidence"].progress_apply(evidence_mapper)
 
 def evidence_mapper_sentence(evidences: list[tuple[str, int]]):
     if not isinstance(wiki_pages_df, pd.DataFrame):
-        msg = (
+        raise TypeError(
             f"Expected wiki_pages_df to be a DataFrame, but got: {type(wiki_pages_df)}"
         )
-        raise TypeError(msg)
 
     lines = []
     for title, line in evidences:
@@ -256,8 +257,7 @@ fever_ds = load_dataset(
     "json", data_files={"train": "fever_train_df.json", "test": "fever_test_df.json"}
 )
 if not isinstance(fever_ds, DatasetDict):
-    msg = f"Expected fever_ds to be a DatasetDict, but got: {type(fever_ds)}"
-    raise TypeError(msg)
+    raise TypeError(f"Expected fever_ds to be a DatasetDict, but got: {type(fever_ds)}")
 fever_ds.save_to_disk("var/fever/fever_reprocessed")
 print(fever_ds)
 
@@ -273,8 +273,9 @@ article_ds = article_ds.map(lambda x: searcher(x, True), num_proc=4)
 article_ds = article_ds.map(lambda x: searcher(x, False), num_proc=1)
 article_df = article_ds.to_pandas()
 if not isinstance(article_df, pd.DataFrame):
-    msg = f"Expected article_df to be a DataFrame, but got: {type(article_df)}"
-    raise TypeError(msg)
+    raise TypeError(
+        f"Expected article_df to be a DataFrame, but got: {type(article_df)}"
+    )
 article_df = article_df.set_index("article")
 print("Articles that did not return a successful response:")
 print(article_df[article_df.msg != "success"])
@@ -290,8 +291,9 @@ article_df.to_parquet(
 
 def search(query: str) -> tuple:
     if not isinstance(article_df, pd.DataFrame):
-        msg = f"Expected article_df to be a DataFrame, but got: {type(article_df)}"
-        raise TypeError(msg)
+        raise TypeError(
+            f"Expected article_df to be a DataFrame, but got: {type(article_df)}"
+        )
     row = article_df.loc[query]
     return row["wiki"], row["msg"]
 
@@ -307,7 +309,7 @@ def trajectorize(row: dict[str, Any]) -> dict[str, Any]:
         k: list(v) for k, v in groupby(evidence_sentences, operator.itemgetter(0))
     }
 
-    articles = {}
+    sample_articles = {}
     statuses = []
     wiki_worked = True
     for article in article_sentence_group:
@@ -317,7 +319,7 @@ def trajectorize(row: dict[str, Any]) -> dict[str, Any]:
         if worked != "success":
             wiki_worked = False
 
-        articles[cleaned_article] = wiki
+        sample_articles[cleaned_article] = wiki
         statuses.append(worked)
     all_wiki_success = all(x in {"success", "fallback"} for x in statuses)
 
@@ -325,23 +327,29 @@ def trajectorize(row: dict[str, Any]) -> dict[str, Any]:
 
     for article, evidences in article_sentence_group.items():
         cleaned_article = clean_fever(article)
-        trajectory.extend([
-            {"thought": f"I need to search {cleaned_article}."},
-            {
-                "action": '{"name": "Search", "arguments": {"topic": "'
-                + cleaned_article
-                + '"}}'
-            },
-            {"observation": f"[Document]\n{articles[cleaned_article]}\n[End]"},
-        ])
+        trajectory.extend(
+            [
+                {"thought": f"I need to search {cleaned_article}."},
+                {
+                    "action": '{"name": "Search", "arguments": {"topic": "'
+                    + cleaned_article
+                    + '"}}'
+                },
+                {
+                    "observation": f"[Document]\n{sample_articles[cleaned_article]}\n[End]"
+                },
+            ]
+        )
 
         for _title, _line, sent in evidences:
             trajectory.append({"observation": clean_fever(sent.split("\t")[0])})
 
-    trajectory.extend([
-        {"thought": f"The claim is {answer}."},
-        {"action": '{"name": "Finish", "arguments": {"topic": "' + answer + '"}}'},
-    ])
+    trajectory.extend(
+        [
+            {"thought": f"The claim is {answer}."},
+            {"action": '{"name": "Finish", "arguments": {"topic": "' + answer + '"}}'},
+        ]
+    )
 
     traj_keys = [next(iter(t.keys())) for t in trajectory]
     traj_values = [next(iter(t.values())) for t in trajectory]
@@ -350,15 +358,19 @@ def trajectorize(row: dict[str, Any]) -> dict[str, Any]:
 
     for article, evidences in article_sentence_group.items():
         cleaned_article = clean_fever(article)
-        rewoo_trajectory.extend([
-            {"thought": f"Search for more information about {cleaned_article}."},
-            {
-                "action": '{"name": "Search", "arguments": {"topic": "'
-                + cleaned_article
-                + '"}}'
-            },
-            {"observation": f"[Document]\n{articles[cleaned_article]}\n[End]"},
-        ])
+        rewoo_trajectory.extend(
+            [
+                {"thought": f"Search for more information about {cleaned_article}."},
+                {
+                    "action": '{"name": "Search", "arguments": {"topic": "'
+                    + cleaned_article
+                    + '"}}'
+                },
+                {
+                    "observation": f"[Document]\n{sample_articles[cleaned_article]}\n[End]"
+                },
+            ]
+        )
 
         for _title, _line, sent in evidences:
             rewoo_trajectory.append({"observation": clean_fever(sent.split("\t")[0])})
@@ -373,7 +385,7 @@ def trajectorize(row: dict[str, Any]) -> dict[str, Any]:
         "rewoo_traj_values": rewoo_traj_values,
         "all_wiki_success": all_wiki_success,
         "wiki_worked": wiki_worked,
-        "articles": list(articles.values()),
+        "articles": list(sample_articles.values()),
         "statuses": statuses,
     }
 
