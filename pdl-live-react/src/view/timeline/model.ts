@@ -135,6 +135,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
     .with({ kind: "read" }, (data) => [data.pdl__result])
     .with({ kind: "include" }, (data) => [data.pdl__trace ?? data.pdl__result])
     .with({ kind: "import" }, (data) => [data.pdl__trace ?? data.pdl__result])
+    .with({ kind: "aggregator" }, () => [])
     .with({ kind: "function" }, () => [])
     .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
     .with({ kind: "text" }, (data) => [data.text])
