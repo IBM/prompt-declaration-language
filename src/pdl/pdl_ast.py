@@ -65,6 +65,7 @@ class BlockKind(StrEnum):
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
+    AGGREGATOR = "aggregator"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -279,8 +280,11 @@ class ContributeValue(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    value: ExpressionType[list[Any]]
+    value: ExpressionType[Any]
     """Value to contribute."""
+
+
+ContributeElement: TypeAlias = ContributeTarget | str | dict[str, ContributeValue]
 
 
 class PdlTiming(BaseModel):
@@ -333,7 +337,7 @@ class Block(BaseModel):
     def_: Optional[str] = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
+    contribute: Sequence[ContributeElement] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -944,6 +948,47 @@ class ImportBlock(LeafBlock):
     pdl__trace: Optional["BlockType"] = None
 
 
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: Optional[str] = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregatorConfig(AggregatorConfig):
+    file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: ExpressionType[str] = "w"
+    """File opening mode."""
+    encoding: ExpressionType[Optional[str]] = "utf-8"
+    """File encoding."""
+    prefix: ExpressionType[str] = ""
+    """Prefix to the contributed value."""
+    suffix: ExpressionType[str] = "\n"
+    """Suffix to the contributed value."""
+    flush: ExpressionType[bool] = False
+    """Whether to forcibly flush the stream."""
+
+
+AggregatorType: TypeAlias = (
+    Literal["context", "stdout", "stderr"] | FileAggregatorConfig
+)
+
+
+class AggregatorBlock(LeafBlock):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
+
+
 class ErrorBlock(LeafBlock):
     """Block representing an error generated at runtime."""
 
@@ -982,6 +1027,7 @@ AdvancedBlockType: TypeAlias = (
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
 )

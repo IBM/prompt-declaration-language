@@ -10,6 +10,7 @@ import types
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
+from abc import ABC, abstractmethod
 from asyncio import AbstractEventLoop
 from functools import partial
 from os import getenv
@@ -17,7 +18,7 @@ from os import getenv
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+from typing import IO, Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -36,6 +37,7 @@ from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
 
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
+    AggregatorBlock,
     AnyPattern,
     ArgsBlock,
     ArrayBlock,
@@ -45,12 +47,14 @@ from .pdl_ast import (  # noqa: E402
     BlockType,
     CallBlock,
     CodeBlock,
+    ContributeElement,
     ContributeTarget,
     ContributeValue,
     DataBlock,
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -63,6 +67,7 @@ from .pdl_ast import (  # noqa: E402
     LastOfBlock,
     LazyMessage,
     LazyMessages,
+    LeafBlock,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -483,7 +488,8 @@ def process_advanced_block(
         result = PdlConst("")
     if ContributeTarget.CONTEXT not in block.contribute:
         background = DependentContext([])
-    contribute_value, trace = process_contribute(trace, new_scope, loc)
+    contribute_value, trace = process_contribute_old(trace, new_scope, loc)
+    new_scope, trace = process_contribute(trace, result, new_scope, loc)
     if contribute_value is not None:
         background = DependentContext(contribute_value)
 
@@ -908,6 +914,11 @@ def process_block_body(
         case ImportBlock():
             result, background, scope, trace = process_import(state, scope, block, loc)
 
+        case AggregatorBlock():
+            result, background, scope, trace = process_aggregator(
+                state, scope, block, loc
+            )
+
         case FunctionBlock():
             closure = block.model_copy()
             if block.def_ is not None:
@@ -1182,18 +1193,16 @@ def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
     return result
 
 
-BlockTypeTVarProcessContribute = TypeVar(
-    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
+BlockTypeTVarProcessContributeOld = TypeVar(
+    "BlockTypeTVarProcessContributeOld", bound=AdvancedBlockType
 )
 
 
-def process_contribute(
-    block: BlockTypeTVarProcessContribute, scope: ScopeType, loc: PdlLocationType
-) -> tuple[Any, BlockTypeTVarProcessContribute]:
-    result: list[ContributeTarget | dict[str, ContributeValue]]
-    value_trace: LocalizedExpression[
-        list[ContributeTarget | dict[str, ContributeValue]]
-    ]
+def process_contribute_old(
+    block: BlockTypeTVarProcessContributeOld, scope: ScopeType, loc: PdlLocationType
+) -> tuple[Any, BlockTypeTVarProcessContributeOld]:
+    result: list[ContributeElement]
+    value_trace: LocalizedExpression[list[ContributeElement]]
     value = get_contribute_value(block.contribute)
     if value is None:
         return None, block
@@ -1211,6 +1220,83 @@ def process_contribute(
     )
     trace = block.model_copy(update={"contribute": replace})
     return result, trace
+
+
+BlockTypeTVarProcessContribute = TypeVar(
+    "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
+)
+
+
+def process_contribute(
+    block: BlockTypeTVarProcessContribute,
+    result: Any,
+    scope: ScopeType,
+    loc: PdlLocationType,
+) -> tuple[ScopeType, BlockTypeTVarProcessContribute]:
+    loc = append(loc, "contribute")
+    contribute = []
+    for i, elem in enumerate(block.contribute):
+        scope, elem = process_contribution(
+            block, elem, result, scope, append(loc, "[" + str(i) + "]")
+        )
+        contribute.append(elem)
+    trace = block.model_copy(update={"contribute": contribute})
+    return scope, trace
+
+
+def process_contribution(
+    block: AdvancedBlockType,
+    elem: ContributeElement,
+    result: Any,
+    scope: ScopeType,
+    loc: PdlLocationType,
+) -> tuple[ScopeType, ContributeElement]:
+    if isinstance(elem, str):
+        if elem in set(ContributeTarget):
+            return scope, elem
+        target = elem
+        aggregator = get_var(elem, scope, loc)
+    elif isinstance(elem, dict):
+        if len(elem) != 1:
+            msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
+            raise PDLRuntimeError(
+                msg,
+                loc=loc,
+                trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+                fallback=[],
+            )
+        target, contribute_value = list(elem.items()).pop()
+        aggregator = get_var(target, scope, loc)
+        try:
+            result, value_trace = process_expr(scope, contribute_value.value, loc)
+        except PDLRuntimeExpressionError as exc:
+            raise PDLRuntimeError(
+                exc.message,
+                loc=exc.loc or loc,
+                trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            ) from exc
+        elem = {target: ContributeValue(value=value_trace)}
+    else:
+        msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
+        raise PDLRuntimeError(
+            msg,
+            loc=loc,
+            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+            fallback=[],
+        )
+    if isinstance(aggregator, PdlLazy):
+        aggregator = aggregator.result()
+    if not isinstance(aggregator, Aggregator):
+        msg = f"An aggregator was expected but got a value of type {type(aggregator)}."
+        raise PDLRuntimeError(
+            msg,
+            loc=loc,
+            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+            fallback=[],
+        )
+    aggregator = aggregator.contribute(result, block.role, loc, block)
+    scope = scope | {target: aggregator}
+    return scope, elem
 
 
 BlockTypeTVarProcessExprOf = TypeVar(
@@ -2036,6 +2122,138 @@ def process_import(
             loc=exc.loc or loc,
             trace=trace,
         ) from exc
+
+
+class Aggregator(ABC):
+    @abstractmethod
+    def contribute(
+        self,
+        result: PdlLazy[Any],
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ) -> "Aggregator":
+        """Function executed at the end of each block that contain the aggregator.
+
+        Args:
+            result: value computed by the block
+            role: role associated to the block. Defaults to None.
+            loc: source code location of the block. Defaults to None.
+            block: block contributing the value. Defaults to None.
+
+        Returns:
+            Aggregator: new aggregator with the contributed value.
+        """
+
+
+class ContextAggregator(Aggregator):
+    def __init__(self, messages: Optional[LazyMessages] = None):
+        if messages is None:
+            self.messages: LazyMessages = DependentContext([])
+        else:
+            self.messages = messages
+
+    def contribute(
+        self,
+        result: PdlLazy[Any],
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ) -> "ContextAggregator":
+        match block:
+            case None | StructuredBlock():
+                return self
+            case LeafBlock():
+                block_id = ".".join(block.pdl__id or [])
+                msg = {"role": role, "content": result, "pdl__defsite": block_id}
+            case _:
+                msg = {"role": role, "content": result}
+        new_messages: LazyMessages = SingletonContext(PdlDict(msg))
+        messages = DependentContext([self.messages, new_messages])
+        return ContextAggregator(messages)
+
+
+class FileAggregator(Aggregator):
+    def __init__(
+        self, fp: IO, prefix: str = "", suffix: str = "\n", flush: bool = False
+    ):
+        self.fp = fp
+        self.prefix = prefix
+        self.suffix = suffix
+        self.flush = flush
+
+    def contribute(
+        self,
+        result: PdlLazy[Any],
+        role: Optional[RoleType] = None,
+        loc: Optional[PdlLocationType] = None,
+        block: Optional[BlockType] = None,
+    ) -> "FileAggregator":
+        print(f"{self.prefix}{result}", file=self.fp, end=self.suffix, flush=self.flush)
+        return self
+
+
+def process_aggregator(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AggregatorBlock,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Aggregator], LazyMessages, ScopeType, AggregatorBlock]:
+    aggregator: Aggregator
+    match block.aggregator:
+        case "context":
+            aggregator = ContextAggregator()
+        case "stdout":
+            aggregator = FileAggregator(sys.stdout)
+        case "stderr":
+            aggregator = FileAggregator(sys.stderr)
+        case FileAggregatorConfig():
+            try:
+                cfg = block.aggregator
+                file: str
+                file_trace: ExpressionType[str]
+                file, file_trace = process_expr(scope, cfg.file, loc)
+                mode: str
+                mode_trace: ExpressionType[str]
+                mode, mode_trace = process_expr(scope, cfg.mode, loc)
+                encoding: Optional[str]
+                encoding_trace: ExpressionType[Optional[str]]
+                encoding, encoding_trace = process_expr(scope, cfg.encoding, loc)
+                prefix: str
+                prefix_trace: ExpressionType[str]
+                prefix, prefix_trace = process_expr(scope, cfg.prefix, loc)
+                suffix: str
+                suffix_trace: ExpressionType[str]
+                suffix, suffix_trace = process_expr(scope, cfg.suffix, loc)
+                flush: bool
+                flush_trace: ExpressionType[bool]
+                flush, flush_trace = process_expr(scope, cfg.flush, loc)
+                cfg = block.aggregator.model_copy(
+                    update={
+                        "file": file_trace,
+                        "mode": mode_trace,
+                        "encoding": encoding_trace,
+                        "prefix": prefix_trace,
+                        "suffix": suffix_trace,
+                        "flush": flush_trace,
+                    }
+                )
+                trace = block.model_copy(update={"aggregator": cfg})
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                ) from exc
+            fp = open(  # pylint: disable=consider-using-with
+                file, mode=mode, encoding=encoding
+            )
+            aggregator = FileAggregator(fp, prefix=prefix, suffix=suffix, flush=flush)
+        case _:
+            assert False, "Unexpected aggregator"
+    background: LazyMessages = DependentContext([])
+    trace = block.model_copy()
+    return PdlConst(aggregator), background, scope, trace
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None
