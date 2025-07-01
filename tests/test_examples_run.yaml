@@ -1,5 +1,5 @@
 update_results: false
-check: []
+check: [examples/aggregators/debug.pdl]
 skip:
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8.pdl

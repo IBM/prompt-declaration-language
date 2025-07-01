@@ -384,7 +384,7 @@
           "anyOf": [
             {
               "enum": [
-                "messages",
+                "context",
                 "stdout",
                 "stderr"
               ],

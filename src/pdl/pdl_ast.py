@@ -978,7 +978,7 @@ class FileAggregatorConfig(AggregatorConfig):
 
 
 AggregatorType: TypeAlias = (
-    Literal["messages", "stdout", "stderr"] | FileAggregatorConfig
+    Literal["context", "stdout", "stderr"] | FileAggregatorConfig
 )
 
 

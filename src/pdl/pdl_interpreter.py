@@ -2146,7 +2146,7 @@ class Aggregator(ABC):
         """
 
 
-class MessagesAggregator(Aggregator):
+class ContextAggregator(Aggregator):
     def __init__(self, messages: Optional[LazyMessages] = None):
         if messages is None:
             self.messages: LazyMessages = DependentContext([])
@@ -2159,7 +2159,7 @@ class MessagesAggregator(Aggregator):
         role: Optional[RoleType] = None,
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
-    ) -> "MessagesAggregator":
+    ) -> "ContextAggregator":
         match block:
             case None | StructuredBlock():
                 return self
@@ -2170,7 +2170,7 @@ class MessagesAggregator(Aggregator):
                 msg = {"role": role, "content": result}
         new_messages: LazyMessages = SingletonContext(PdlDict(msg))
         messages = DependentContext([self.messages, new_messages])
-        return MessagesAggregator(messages)
+        return ContextAggregator(messages)
 
 
 class FileAggregator(Aggregator):
@@ -2201,8 +2201,8 @@ def process_aggregator(
 ) -> tuple[PdlLazy[Aggregator], LazyMessages, ScopeType, AggregatorBlock]:
     aggregator: Aggregator
     match block.aggregator:
-        case "messages":
-            aggregator = MessagesAggregator()
+        case "context":
+            aggregator = ContextAggregator()
         case "stdout":
             aggregator = FileAggregator(sys.stdout)
         case "stderr":

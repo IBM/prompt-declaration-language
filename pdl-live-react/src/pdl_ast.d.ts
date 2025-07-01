@@ -512,7 +512,7 @@ export type PdlId2 = string | null
 export type PdlIsLeaf2 = true
 export type Kind2 = "aggregator"
 export type Aggregator =
-  | ("messages" | "stdout" | "stderr")
+  | ("context" | "stdout" | "stderr")
   | FileAggregatorConfig
 /**
  * Documentation associated to the aggregator config.
