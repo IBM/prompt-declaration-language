@@ -1,5 +1,5 @@
 defs:
-  debug:
+  log:
     aggregator: 
       file: /tmp/log.txt
 text:
@@ -11,7 +11,7 @@ text:
   contribute:
     - result
     - context
-    - debug:
+    - log:
         value: ${raw_response}
 - nice to meet you.
 - model: ollama_chat/granite3.3:2b
@@ -19,5 +19,5 @@ text:
     temperature: 0
   contribute:
     - result
-    - debug
+    - log
 - Bye

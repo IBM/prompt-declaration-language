@@ -273,6 +273,8 @@ class ContributeTarget(StrEnum):
 
     RESULT = "result"
     CONTEXT = "context"
+    STDOUT = "stdout"
+    STDERR = "stderr"
 
 
 class ContributeValue(BaseModel):
@@ -977,9 +979,7 @@ class FileAggregatorConfig(AggregatorConfig):
     """Whether to forcibly flush the stream."""
 
 
-AggregatorType: TypeAlias = (
-    Literal["context", "stdout", "stderr"] | FileAggregatorConfig
-)
+AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
 
 
 class AggregatorBlock(LeafBlock):

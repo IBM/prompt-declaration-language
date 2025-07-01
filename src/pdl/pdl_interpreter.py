@@ -126,7 +126,7 @@ from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
     apply_defaults,
-    get_contribute_value,
+    get_contribute_context_value,
     replace_contribute_value,
     stringify,
     value_of_expr,
@@ -309,7 +309,7 @@ def process_block(
 def context_in_contribute(block: AdvancedBlockType) -> bool:
     if ContributeTarget.CONTEXT.value in block.contribute:
         return True
-    if get_contribute_value(block.contribute) is not None:
+    if get_contribute_context_value(block.contribute) is not None:
         return True
     return False
 
@@ -396,7 +396,7 @@ def process_advanced_block(
     init_state = state
     state = state.with_yield_result(
         state.yield_result
-        and ContributeTarget.RESULT in block.contribute
+        and ContributeTarget.RESULT.value in block.contribute
         and block.parser is None
     )
     state = state.with_yield_background(
@@ -422,13 +422,11 @@ def process_advanced_block(
             )
             trace = trace.model_copy(update={"pdl__result": result})
             if block.parser is not None:
-                # Use partial to create a function with fixed arguments
                 parser_func = partial(parse_result, block.parser)
                 result = lazy_apply(parser_func, result)
-                if init_state.yield_result and ContributeTarget.RESULT:
+                if init_state.yield_result:
                     yield_result(result, block.kind)
             if block.spec is not None and not isinstance(block, FunctionBlock):
-                # Use partial to create a function with fixed arguments
                 checker = partial(
                     result_with_type_checking,
                     spec=block.spec,
@@ -484,15 +482,15 @@ def process_advanced_block(
     if block.def_ is not None:
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
-    if ContributeTarget.RESULT not in block.contribute:
-        result = PdlConst("")
-    if ContributeTarget.CONTEXT not in block.contribute:
-        background = DependentContext([])
-    contribute_value, trace = process_contribute_old(trace, new_scope, loc)
     new_scope, trace = process_contribute(trace, result, new_scope, loc)
-    if contribute_value is not None:
-        background = DependentContext([contribute_value])
-
+    if ContributeTarget.CONTEXT.value not in block.contribute:
+        background = DependentContext([])
+    else:
+        contribute_value, trace = process_contribute_context(trace, new_scope, loc)
+        if contribute_value is not None:
+            background = DependentContext([contribute_value])
+    if ContributeTarget.RESULT.value not in block.contribute:
+        result = PdlConst("")
     return result, background, new_scope, trace
 
 
@@ -1198,12 +1196,12 @@ BlockTypeTVarProcessContributeOld = TypeVar(
 )
 
 
-def process_contribute_old(
+def process_contribute_context(
     block: BlockTypeTVarProcessContributeOld, scope: ScopeType, loc: PdlLocationType
 ) -> tuple[Any, BlockTypeTVarProcessContributeOld]:
     result: list[ContributeElement]
     value_trace: LocalizedExpression[list[ContributeElement]]
-    value = get_contribute_value(block.contribute)
+    value = get_contribute_context_value(block.contribute)
     if value is None:
         return None, block
     loc = append(loc, "contribute")
@@ -1251,13 +1249,32 @@ def process_contribution(
     scope: ScopeType,
     loc: PdlLocationType,
 ) -> tuple[ScopeType, ContributeElement]:
-    if isinstance(elem, str):
-        if elem in set(ContributeTarget):
+    target: ContributeTarget | str
+    match elem:
+        case ContributeTarget.RESULT | "result" | ContributeTarget.CONTEXT | "context":
             return scope, elem
-        target = elem
-        aggregator = get_var(elem, scope, loc)
-    elif isinstance(elem, dict):
-        if len(elem) != 1:
+        case ContributeTarget() | str():
+            target = elem
+        case dict():
+            if len(elem) != 1:
+                msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
+                raise PDLRuntimeError(
+                    msg,
+                    loc=loc,
+                    trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+                    fallback=[],
+                )
+            target, contribute_value = list(elem.items()).pop()
+            try:
+                result, value_trace = process_expr(scope, contribute_value.value, loc)
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or loc,
+                    trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                ) from exc
+            elem = {target: ContributeValue(value=value_trace)}
+        case _:
             msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
             raise PDLRuntimeError(
                 msg,
@@ -1265,35 +1282,7 @@ def process_contribution(
                 trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
                 fallback=[],
             )
-        target, contribute_value = list(elem.items()).pop()
-        aggregator = get_var(target, scope, loc)
-        try:
-            result, value_trace = process_expr(scope, contribute_value.value, loc)
-        except PDLRuntimeExpressionError as exc:
-            raise PDLRuntimeError(
-                exc.message,
-                loc=exc.loc or loc,
-                trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
-            ) from exc
-        elem = {target: ContributeValue(value=value_trace)}
-    else:
-        msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
-        raise PDLRuntimeError(
-            msg,
-            loc=loc,
-            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
-            fallback=[],
-        )
-    if isinstance(aggregator, PdlLazy):
-        aggregator = aggregator.result()
-    if not isinstance(aggregator, Aggregator):
-        msg = f"An aggregator was expected but got a value of type {type(aggregator)}."
-        raise PDLRuntimeError(
-            msg,
-            loc=loc,
-            trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
-            fallback=[],
-        )
+    aggregator = get_contribute_aggregator(block, target, scope, loc)
     aggregator = aggregator.contribute(result, block.role, loc, block)
     scope = scope | {target: aggregator}
     return scope, elem
@@ -2203,10 +2192,6 @@ def process_aggregator(
     match block.aggregator:
         case "context":
             aggregator = ContextAggregator()
-        case "stdout":
-            aggregator = FileAggregator(sys.stdout)
-        case "stderr":
-            aggregator = FileAggregator(sys.stderr)
         case FileAggregatorConfig():
             try:
                 cfg = block.aggregator
@@ -2254,6 +2239,35 @@ def process_aggregator(
     background: LazyMessages = DependentContext([])
     trace = block.model_copy()
     return PdlConst(aggregator), background, scope, trace
+
+
+def get_contribute_aggregator(
+    block: AdvancedBlockType,
+    target: ContributeTarget | str,
+    scope: ScopeType,
+    loc: PdlLocationType,
+) -> Aggregator:
+    match target:
+        case ContributeTarget.STDOUT | "stdout":
+            aggregator = FileAggregator(sys.stdout, flush=True)
+        case ContributeTarget.STDERR | "stderr":
+            aggregator = FileAggregator(sys.stderr, flush=True)
+        case str():
+            aggregator = get_var(target, scope, loc)
+            if isinstance(aggregator, PdlLazy):
+                aggregator = aggregator.result()
+            if not isinstance(aggregator, Aggregator):
+                msg = f"An aggregator was expected but got a value of type {type(aggregator)}."
+                raise PDLRuntimeError(
+                    msg,
+                    loc=loc,
+                    trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
+                    fallback=[],
+                )
+
+        case _:
+            assert False, f"Unexpected target type: {type(target)}"
+    return aggregator
 
 
 JSONReturnType = dict[str, Any] | list[Any] | str | float | int | bool | None

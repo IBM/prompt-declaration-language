@@ -96,7 +96,7 @@ def replace_contribute_value(  # TODO: remove
     return ret
 
 
-def get_contribute_value(  # TODO: remove
+def get_contribute_context_value(
     contribute: Sequence[ContributeElement] | None,
 ):
     if contribute is None:
