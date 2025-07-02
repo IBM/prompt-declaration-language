@@ -23,7 +23,7 @@ PDL provides the following features:
 
 The PDL interpreter takes a PDL program as input and generates data by executing its instructions (calling out to models, code, etc...).
 
-See below for a quick reference, followed by [installation notes](#interpreter_installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+See below for a quick reference, followed by [installation notes](#interpreter-installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
 
 
 ## Quick Reference
@@ -50,13 +50,13 @@ pip install 'prompt-declaration-language[examples]'
 
 The Live Explorer can be installed as follows (MacOS):
 ```
-brew install pdl 
+brew install pdl
 ```
 
 For other platforms, see installation notes.
 
 You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
-See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for
 instructions on how to install an Ollama model locally.
 
 Most examples in this repository use IBM Granite models on [Ollama](https://ollama.com) and some are on [Replicate](https://replicate.com/). In order to run these examples, you need to create a free account
@@ -172,7 +172,7 @@ text:
     temperature: 0
 ```
 
-Notice the syntactic differences. Model ids on watsonx start with `watsonx`. 
+Notice the syntactic differences. Model ids on watsonx start with `watsonx`.
 
 Watsonx also provides a text completion endpoint as shown in the following example. A text completion endpoint does not take chat
 templates into account:
@@ -299,10 +299,10 @@ When we execute this program with the PDL interpreter, we obtain the following t
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }
@@ -364,10 +364,10 @@ When we execute this new program, we obtain the following:
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }

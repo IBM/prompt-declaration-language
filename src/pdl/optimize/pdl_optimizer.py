@@ -160,10 +160,13 @@ class PDLOptimizer:
         demo_name = self.config.demonstrations_variable_name
         candidates = []
 
+        num_demonstrations_set = {
+            int(x) for x in self.config.variables.get("num_demonstrations", set())
+        }
+
         if (
-            "prompt_pattern" in self.config.variables
-            and "cot" in self.config.variables.get("prompt_pattern", [])
-            and 0 in self.config.variables.get("num_demonstrations", [])
+            "cot" in self.config.variables.get("prompt_pattern", [])
+            and 0 in num_demonstrations_set
         ):
             cot_candidate = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
@@ -179,18 +182,18 @@ class PDLOptimizer:
 
             candidates.append(cot_candidate)
 
-        zero_shots_seen = ["cot"]
+        zero_shots_seen = {"cot"}
         while len(candidates) < num_candidates:
             variable_instance = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
             }
             if (
                 variable_instance.get("num_demonstrations") == 0
-                and variable_instance.get("prompt_pattern") == "cot"
+                and variable_instance.get("prompt_pattern") is not None
             ):
                 if variable_instance["prompt_pattern"] in zero_shots_seen:
                     continue
-                zero_shots_seen.append(variable_instance["prompt_pattern"])
+                zero_shots_seen.add(variable_instance["prompt_pattern"])
 
             num_demonstrations = int(
                 variable_instance.get("num_demonstrations", self.num_demonstrations),
@@ -215,16 +218,26 @@ class PDLOptimizer:
             candidates.append(candidate)
 
         if (
-            "num_demonstrations"
-            in self.config.variables  # check if is variable in config
-            and len(self.config.variables["num_demonstrations"])
-            > 1  # check more than 1 option
-            and 0 in [int(x) for x in self.config.variables["num_demonstrations"]]
-            # check zeroshot is an option
+            len(num_demonstrations_set) > 1  # check more than 1 option
+            and 0 in num_demonstrations_set  # check zeroshot is an option
         ):
-            zero_shotters = [x for x in candidates if x["num_demonstrations"] == 0]
+            zero_shotters = [
+                x.get("uuid") for x in candidates if x.get("num_demonstrations") == 0
+            ]
+            variables_zs = self.config.variables.copy()
+            variables_zs.pop("num_demonstrations", None)
 
-            assert len(zero_shotters) <= 3
+            max_zs = len(list(itertools.product(*variables_zs.values())))
+
+            if len(zero_shotters) > max_zs:
+                logger.warning(
+                    "More zero-shot candidates (%d) than expected (%d; "
+                    "product of all variables). "
+                    "Identical duplicated candidates may waste compute.",
+                    len(zero_shotters),
+                    max_zs,
+                )
+
         assert len(candidates) == num_candidates
         return candidates
 

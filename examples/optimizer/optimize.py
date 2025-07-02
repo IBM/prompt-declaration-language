@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from datasets import load_from_disk
+from datasets.load import load_from_disk
 from fever_evaluator import FEVEREvaluator
 from gsm8k_evaluator import Gsm8kEvaluator
 from gsmhard_evaluator import GsmHardEvaluator
