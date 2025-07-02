@@ -383,11 +383,7 @@
         "aggregator": {
           "anyOf": [
             {
-              "enum": [
-                "context",
-                "stdout",
-                "stderr"
-              ],
+              "const": "context",
               "type": "string"
             },
             {
@@ -2372,7 +2368,9 @@
       "description": "Values allowed in the `contribute` field.",
       "enum": [
         "result",
-        "context"
+        "context",
+        "stdout",
+        "stderr"
       ],
       "title": "ContributeTarget",
       "type": "string"

@@ -181,7 +181,7 @@ export type Def = string | null
 /**
  * Values allowed in the `contribute` field.
  */
-export type ContributeTarget = "result" | "context"
+export type ContributeTarget = "result" | "context" | "stdout" | "stderr"
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -511,9 +511,7 @@ export type PdlContext2 =
 export type PdlId2 = string | null
 export type PdlIsLeaf2 = true
 export type Kind2 = "aggregator"
-export type Aggregator =
-  | ("context" | "stdout" | "stderr")
-  | FileAggregatorConfig
+export type Aggregator = "context" | FileAggregatorConfig
 /**
  * Documentation associated to the aggregator config.
  *
