@@ -471,7 +471,7 @@ def contribute_to_list(
 
 def aggregator_to_dict(aggregator: AggregatorType):
     match aggregator:
-        case "context" | "stdout" | "stderr":
+        case "context":
             result = aggregator
         case FileAggregatorConfig():
             result = aggregator.model_dump()
