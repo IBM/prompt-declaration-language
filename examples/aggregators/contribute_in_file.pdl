@@ -7,17 +7,14 @@ text:
 - model: ollama_chat/granite3.3:2b
   parameters:
     temperature: 0
-  modelResponse: raw_response
-  contribute:
-    - result
-    - context
-    - log:
-        value: ${raw_response}
+  contribute: [ result, context, log ]
 - nice to meet you.
 - model: ollama_chat/granite3.3:2b
   parameters:
     temperature: 0
+  modelResponse: raw_response
   contribute:
     - result
-    - log
+    - log:
+        value: ${raw_response}
 - Bye
