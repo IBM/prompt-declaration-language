@@ -3,7 +3,7 @@
 
 from copy import deepcopy
 
-from datasets import load_from_disk
+from datasets.load import load_from_disk
 from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
 from evalplus.evaluate import MBPP_OUTPUT_NOT_NONE_TASKS, get_groundtruth
 
