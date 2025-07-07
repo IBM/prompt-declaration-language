@@ -64,12 +64,11 @@ Let's go through an example for `GSM8K`. Our PDL program uses different prompt p
 --8<-- "./examples/optimizer/gsm8k.pdl"
 ```
 
-We write a configuration file for the optimizer, and save it as `gsm8k_optimizer_config.yml`. See `src/pdl/optimize/config_parser.py` for all fields.
+We write a configuration file for the optimizer, and save it as `gsm8k_optimizer_config.yml`. See `src/pdl/optimize/config_parser.py` for all fields. Please note that this example uses the `watsonx` inference service, so an API key is required, although you can also use a local model or any other inference service.
 
 ``` { .yaml .copy .annotate title="examples/optimizer/gsm8k_optimizer_config.yml" linenums="1" }
 --8<-- "./examples/optimizer/gsm8k_optimizer_config.yml"
 ```
-
 
 ```python title="examples/optimizer/gsm8k_evaluator.py" linenums="1"
 --8<-- "./examples/optimizer/gsm8k_evaluator.py"
@@ -172,5 +171,18 @@ This will report details about the optimization process, such as the number of c
            Running without parallelism                                                              util.py:74
    0% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0/1,200  [ 0:00:01 < -:--:-- , ? it/s ]
 ```
+
+Note that it is not unusual to observe PDL exceptions during the optimization process.
+
+```text
+[15:44:14] Type errors during spec checking:
+../../contrib/prompt_library/ReAct.pdl:0 -  should be an object
+../../contrib/prompt_library/ReAct.pdl:0 - Type errors during spec checking:
+../../contrib/prompt_library/ReAct.pdl:0 -  should be an object
+Retrying:  False
+Runtime FAILED and took seconds: 10.21
+```
+
+Such exceptions, here for example in `ReAct.pdl`, are caused by the _typed_ model call in `ReAct.pdl:98`. If the model output does not result in a parsable JSON that matches the expected type `{ name: string, arguments: object }`, the PDL interpreter raises an exception.
 
 Once the process is complete, a file `optimized_gsm8k.pdl` is written in same directory as the source PDL file. This file contains the optimal configuration and is directly executable by the standard PDL interpreter. A log of the optimization process is written to `experiments/` by default.
