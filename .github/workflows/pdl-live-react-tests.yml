@@ -20,6 +20,8 @@ jobs:
         working-directory: ./pdl-live-react
     steps:
       - uses: actions/checkout@v4
+      - name: Fix to Rust 1.87 https://github.com/RustPython/RustPython/issues/5768
+        run: rustup override set 1.87
       - name: Set up node
         uses: actions/setup-node@v4
         with:
