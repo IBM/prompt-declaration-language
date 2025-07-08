@@ -33,6 +33,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::read_trace::read_trace,
             commands::replay_prep::replay_prep,
+            #[cfg(feature = "interpreter")]
             commands::interpreter::run_pdl_program,
         ])
         .run(tauri::generate_context!())

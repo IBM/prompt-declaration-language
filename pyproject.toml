@@ -47,10 +47,12 @@ examples = [
   "pypdf~=5.2",
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "datasets>2,<4",
+  "datasets>3,<4",
   "sympy~=1.0",
   "scikit-learn>=1.6.1,<1.8.0",
-  "faiss-cpu>=1.10,<1.12"
+  "faiss-cpu>=1.10,<1.12",
+  "funcy>=2",
+  "evalplus>=0.3.1",
 ]
 docs = [
   "mkdocs~=1.0",

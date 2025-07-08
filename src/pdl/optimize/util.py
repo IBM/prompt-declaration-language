@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 import yaml
-from datasets import Dataset
+from datasets.arrow_dataset import Dataset
 from rich.console import Console
 
 from pdl.pdl_ast import Program, ScopeType

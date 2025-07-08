@@ -14,6 +14,9 @@ edition = "2024"
 name = "tauri_app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+[features]
+interpreter = ["dep:rustpython-vm", "dep:rustpython-stdlib", "dep:rustpython-pylib"]
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
@@ -37,13 +40,13 @@ serde_norway = "0.9.42"
 minijinja = { version = "2.9.0", features = ["custom_syntax"] }
 ollama-rs = { version = "0.3.1", features = ["stream"] }
 owo-colors = "4.2.0"
-rustpython-vm = { git="https://github.com/RustPython/RustPython.git", features= ["importlib", "threading", "encodings"] } # "0.4.0"
+rustpython-vm = { git="https://github.com/RustPython/RustPython.git", features= ["importlib", "threading", "encodings"], optional = true } # "0.4.0"
 async-recursion = "1.1.1"
 tokio-stream = "0.1.17"
 tokio = { version = "1.44.1", features = ["io-std"] }
 indexmap = { version = "2.9.0", features = ["serde"] }
-rustpython-stdlib = { git="https://github.com/RustPython/RustPython.git", features = ["ssl-vendor"] } # 0.4.0
-rustpython-pylib = { git="https://github.com/RustPython/RustPython.git", features = ["freeze-stdlib"] } # 0.4.0
+rustpython-stdlib = { git="https://github.com/RustPython/RustPython.git", features = ["ssl-vendor"], optional = true } # 0.4.0
+rustpython-pylib = { git="https://github.com/RustPython/RustPython.git", features = ["freeze-stdlib"], optional = true } # 0.4.0
 schemars = "0.8.22"
 fs4 = "0.13.1"
 derive_builder = "0.20.2"
