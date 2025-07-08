@@ -54,6 +54,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    MapBlock,
     StructuredBlock,
     TextBlock,
 )
@@ -241,6 +242,19 @@ def block_to_dict(  # noqa: C901
             d["repeat"] = block_to_dict(block.repeat, json_compatible)
             if block.until is not None:
                 d["until"] = expr_to_dict(block.until, json_compatible)
+            if block.maxIterations is not None:
+                d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
+            d["join"] = join_to_dict(block.join)
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = [
+                    block_to_dict(b, json_compatible) for b in block.pdl__trace
+                ]
+        case MapBlock():
+            if block.for_ is not None:
+                d["for"] = expr_to_dict(block.for_, json_compatible)
+            if block.index is not None:
+                d["index"] = block.index
+            d["map"] = block_to_dict(block.map, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
             d["join"] = join_to_dict(block.join)

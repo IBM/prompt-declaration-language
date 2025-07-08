@@ -90,6 +90,7 @@ from .pdl_ast import (  # noqa: E402
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    MapBlock,
     RoleType,
     ScopeType,
     StructuredBlock,

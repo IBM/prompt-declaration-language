@@ -62,6 +62,7 @@ class BlockKind(StrEnum):
     IF = "if"
     MATCH = "match"
     REPEAT = "repeat"
+    MAP = "map"
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
@@ -846,7 +847,8 @@ JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
 
 class RepeatBlock(StructuredBlock):
     """
-    Repeat the execution of a block.
+    Repeat the execution of a block sequentially.
+    The scope and `pdl_context` are accumulated in between iterations.
 
     For loop example:
     ```PDL
@@ -857,12 +859,15 @@ class RepeatBlock(StructuredBlock):
         "${ name }'s number is ${ number }\\n"
     ```
 
-    Bounded loop:
+    While loop:
     ```PDL
-    index: i
-    maxIterations: 5
+    defs:
+      i: 0
+    while: ${i < 5}
     repeat:
-        ${ i }
+        defs:
+          i: ${ i + 1}
+        data: ${ i }
     join:
       as: array
     ```
@@ -883,6 +888,52 @@ class RepeatBlock(StructuredBlock):
     """
     until: ExpressionType[bool] = False
     """Condition to exit at the end of the loop.
+    """
+    maxIterations: Optional[ExpressionType[int]] = None
+    """Maximal number of iterations to perform.
+    """
+    join: JoinType = JoinText()
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
+    pdl__trace: Optional[list["BlockType"]] = None
+
+
+class MapBlock(StructuredBlock):
+    """
+    Independent executions of  a block.
+    Repeat the execution of a block starting from the initial scope
+    and `pdl_context`.
+
+    For loop example:
+    ```PDL
+    for:
+        number: [1, 2, 3, 4]
+        name: ["Bob", "Carol", "David", "Ernest"]
+    map:
+        "${ name }'s number is ${ number }\\n"
+    ```
+
+    Bounded loop:
+    ```PDL
+    index: i
+    maxIterations: 5
+    map:
+        ${ i }
+    join:
+      as: array
+    ```
+    """
+
+    kind: Literal[BlockKind.MAP] = BlockKind.MAP
+    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    """Arrays to iterate over.
+    """
+    index: Optional[str] = None
+    """Name of the variable containing the loop iteration.
+    """
+    map: "BlockType"
+    """Body of the iterator.
     """
     maxIterations: Optional[ExpressionType[int]] = None
     """Maximal number of iterations to perform.
@@ -974,6 +1025,7 @@ AdvancedBlockType: TypeAlias = (
     | IfBlock
     | MatchBlock
     | RepeatBlock
+    | MapBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
