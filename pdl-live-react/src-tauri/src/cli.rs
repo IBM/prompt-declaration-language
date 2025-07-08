@@ -5,6 +5,7 @@ use urlencoding::encode;
 
 use crate::compile;
 use crate::gui::new_window;
+#[cfg(feature = "interpreter")]
 use crate::pdl::interpreter::{RunOptions, load_scope, run_file_sync};
 
 #[cfg(desktop)]
@@ -49,6 +50,7 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 _ => Err(Box::from("Unsupported compile command")),
             }
         }
+        #[cfg(feature = "interpreter")]
         "run" => run_file_sync(
             subcommand_args
                 .get("source")
