@@ -102,14 +102,14 @@ function computeModelIter(
 
   const childrenModel = childrenOf(block)
     .filter(nonNullable)
-    .flatMap((child) => computeModelIter(child, root))
+    .flatMap((child: PdlBlock) => computeModelIter(child, root))
 
   // Correct for anomalies in the trace where a child may have an
   // earlier end timestamp than its children. See
   // https://github.com/IBM/prompt-declaration-language/pull/683
   if (root) {
     const maxEnd = childrenModel.reduce(
-      (maxEnd, child) => Math.max(maxEnd, child.block.pdl__timing.end_nanos),
+      (maxEnd: number, child: TimelineRow) => Math.max(maxEnd, child.block.pdl__timing.end_nanos),
       0,
     )
     root.block.pdl__timing.end_nanos = Math.max(
@@ -148,6 +148,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
     )
     .with({ kind: "error" }, () => []) // TODO show errors in trace
     .with({ kind: undefined }, () => [])
+    // @ts-expect-error: TODO
     .exhaustive()
     .flat()
     .filter(nonNullable)

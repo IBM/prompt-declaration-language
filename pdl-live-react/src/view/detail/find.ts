@@ -21,7 +21,7 @@ export default function find(
   } else {
     return (
       childrenOf(block)
-        .map((child) => find(child, id))
+        .map((child: Block) => find(child, id))
         .filter(nonNullable)[0] || null
     )
   }
