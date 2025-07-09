@@ -45,7 +45,6 @@ export function map_block_children(
     )
     new_block = { ...new_block, contribute }
   }
-  // @ts-expect-error: TODO
   new_block = match(new_block)
     // .with(P.string, s => s)
     .with({ kind: "empty" }, (block) => block)
@@ -202,7 +201,8 @@ export function map_block_children(
     })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
-    .with({ kind: undefined }, (block) => block)
+    .with({ kind: P.nullish }, (block) => block)
+    // @ts-expect-error: TODO
     .exhaustive()
   match(new_block)
     .with({ parser: { pdl: P._ } }, (block) => {
@@ -294,6 +294,7 @@ export function iter_block_children(
     .with({ kind: "include" }, () => {})
     .with({ kind: "import" }, () => {})
     .with({ kind: undefined }, () => {})
+    // @ts-expect-error: TODO
     .exhaustive()
   match(block)
     .with({ parser: { pdl: P._ } }, (block) => {
