@@ -19,6 +19,7 @@ from .pdl_ast import (
     IncludeBlock,
     LastOfBlock,
     LitellmModelBlock,
+    MapBlock,
     MatchBlock,
     MatchCase,
     MessageBlock,
@@ -28,7 +29,6 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
-    MapBlock,
     TextBlock,
 )
 

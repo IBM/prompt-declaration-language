@@ -36,6 +36,7 @@ from .pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
+    MapBlock,
     MatchBlock,
     MessageBlock,
     ObjectBlock,
@@ -54,7 +55,6 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
-    MapBlock,
     StructuredBlock,
     TextBlock,
 )

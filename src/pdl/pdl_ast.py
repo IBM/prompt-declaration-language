@@ -802,7 +802,9 @@ class IterationType(StrEnum):
 class JoinConfig(BaseModel):
     """Configure how loop iterations should be combined."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, populate_by_name=True
+    )
 
 
 class JoinText(JoinConfig):
