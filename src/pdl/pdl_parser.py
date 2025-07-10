@@ -139,6 +139,11 @@ def parse_dict(
 #             if block.pdl__trace is not None:
 #                 for trace in block.pdl__trace:
 #                     iter_blocks(f, trace)
+#         case MapBlock():
+#             iter_blocks(f, block.map)
+#             if block.pdl__trace is not None:
+#                 for trace in block.pdl__trace:
+#                     iter_blocks(f, trace)
 #         case ErrorBlock():
 #             iter_blocks(f, block.program)
 #         case ReadBlock():
