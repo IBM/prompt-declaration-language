@@ -1,3 +1,4 @@
+description: Demonstrating a React program
 defs:
   Calc:
     description: Calculator function
