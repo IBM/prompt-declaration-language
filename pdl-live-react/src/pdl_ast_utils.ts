@@ -216,7 +216,7 @@ export function map_block_children(
     })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
-    .with({ kind: undefined }, (block) => block)
+    .with({ kind: P.nullish }, (block) => block)
     // @ts-expect-error: TODO
     .exhaustive()
   match(new_block)
