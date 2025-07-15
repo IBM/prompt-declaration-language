@@ -1242,7 +1242,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         case IterationType.OBJECT:
             join_type = JoinObject(**{"as": IterationType.OBJECT})  # pyright: ignore
         case IterationType.LASTOF:
-            join_type = JoinObject(**{"as": IterationType.LASTOF})  # pyright: ignore
+            join_type = JoinLastOf(**{"as": IterationType.LASTOF})  # pyright: ignore
         case _:
             assert False
     result = combine_results(join_type, results)
