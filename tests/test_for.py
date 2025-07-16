@@ -232,7 +232,13 @@ def for_context(loop_kind):
         "lastOf": [
             "Hello",
             {
-                "for": {"i": [1, 2, 3,]},
+                "for": {
+                    "i": [
+                        1,
+                        2,
+                        3,
+                    ]
+                },
                 loop_kind: "${ pdl_context[0] }",
                 "join": {"as": "array"},
             },
@@ -248,7 +254,7 @@ def test_for_context():
                 assert result["result"] == [
                     {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
                     {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
-                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}
+                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
                 ]
             case "map":
                 assert result["result"] == []
