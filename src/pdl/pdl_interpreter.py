@@ -882,25 +882,25 @@ def process_block_body(
             try:
                 saved_background = IndependentContext([])
                 while True:
+                    iteration_scope = scope_init
                     if block.index is not None:
-                        scope = scope | {block.index: iidx}
+                        iteration_scope = iteration_scope | {block.index: iidx}
                     if max_iterations is not None and iidx >= max_iterations:
                         break
                     if length is not None and iidx >= length:
                         break
                     iteration_state = iteration_state.with_iter(iidx)
-                    scope = scope_init
                     if items is not None:
                         for k in items.keys():
-                            scope = scope | {k: items[k][iidx]}
+                            iteration_scope = iteration_scope | {k: items[k][iidx]}
                     (
                         iteration_result,
                         iteration_background,
-                        scope,
+                        iteration_scope,
                         body_trace,
                     ) = process_block(
                         iteration_state,
-                        scope,
+                        iteration_scope,
                         block.map,
                         map_loc,
                     )
