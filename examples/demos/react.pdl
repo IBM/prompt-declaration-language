@@ -89,5 +89,7 @@ text:
             call: ${ Calc }
             args:
               expr: ${ action[0].arguments.expr }
+        - case: Finish
+          then: ${ action[0].arguments.topic }
     - "\n"
   until: ${ action[0].name == "Finish" }
