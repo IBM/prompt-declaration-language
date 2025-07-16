@@ -3,160 +3,252 @@ import pytest
 from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_interpreter import PDLRuntimeError
 
-for_data = {
-    "description": "For block example",
-    "text": [
-        {
-            "for": {
-                "i": [1, 2, 3, 4],
-            },
-            "repeat": "${ i }\n",
-        }
-    ],
-}
+
+def for_data(loop_kind):
+    return {
+        "description": "For block example",
+        "text": [
+            {
+                "for": {
+                    "i": [1, 2, 3, 4],
+                },
+                loop_kind: "${ i }\n",
+            }
+        ],
+    }
 
 
 def test_for_data():
-    text = exec_dict(for_data)
-    assert text == "1\n2\n3\n4\n"
+    for loop_kind in ["repeat", "map"]:
+        text = exec_dict(for_data(loop_kind))
+        assert text == "1\n2\n3\n4\n"
 
 
-for_data1 = {
-    "description": "For block example",
-    "text": [
-        {
-            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"]},
-            "repeat": "${ i }: ${ name }\n",
-        }
-    ],
-}
+def for_data1(loop_kind):
+    return {
+        "description": "For block example",
+        "text": [
+            {
+                "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"]},
+                loop_kind: "${ i }: ${ name }\n",
+            }
+        ],
+    }
 
 
 def test_for_data1():
-    text = exec_dict(for_data1)
-    assert text == "1: A\n2: B\n3: C\n4: D\n"
+    for loop_kind in ["repeat", "map"]:
+        text = exec_dict(for_data1(loop_kind))
+        assert text == "1: A\n2: B\n3: C\n4: D\n"
 
 
-for_data2 = {
-    "description": "For block example",
-    "defs": {"ids": {"data": [5, 6, 7, 8]}},
-    "text": [
-        {
-            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
-            "repeat": "${ i }: ${ name }: ${ id }\n",
-        }
-    ],
-}
+def for_data2(loop_kind):
+    return {
+        "description": "For block example",
+        "defs": {"ids": {"data": [5, 6, 7, 8]}},
+        "text": [
+            {
+                "for": {
+                    "i": [1, 2, 3, 4],
+                    "name": ["A", "B", "C", "D"],
+                    "id": "${ ids }",
+                },
+                loop_kind: "${ i }: ${ name }: ${ id }\n",
+            }
+        ],
+    }
 
 
 def test_for_data2():
-    text = exec_dict(for_data2)
-    assert text == "1: A: 5\n2: B: 6\n3: C: 7\n4: D: 8\n"
+    for loop_kind in ["repeat", "map"]:
+        text = exec_dict(for_data2(loop_kind))
+        assert text == "1: A: 5\n2: B: 6\n3: C: 7\n4: D: 8\n"
 
 
-for_data3 = {
-    "description": "For block example",
-    "defs": {"ids": {"data": [5, 6]}},
-    "text": [
-        {
-            "for": {"i": [1, 2, 3, 4], "name": ["A", "B", "C", "D"], "id": "${ ids }"},
-            "repeat": "${ i }: ${ name }: ${ id }\n",
-            "join": {"as": "array"},
-        }
-    ],
-}
+def for_data3(loop_kind):
+    return {
+        "description": "For block example",
+        "defs": {"ids": {"data": [5, 6]}},
+        "text": [
+            {
+                "for": {
+                    "i": [1, 2, 3, 4],
+                    "name": ["A", "B", "C", "D"],
+                    "id": "${ ids }",
+                },
+                loop_kind: "${ i }: ${ name }: ${ id }\n",
+                "join": {"as": "array"},
+            }
+        ],
+    }
 
 
 def test_for_data3():
     with pytest.raises(PDLRuntimeError):
-        exec_dict(for_data3)
+        for loop_kind in ["repeat", "map"]:
+            exec_dict(for_data3(loop_kind))
 
 
-for_data4 = {
-    "description": "For block def",
-    "text": [
-        {
-            "def": "x",
-            "for": {"i": [1, 2, 3, 4]},
-            "repeat": "${ i + 1 }",
-            "join": {"as": "array"},
-        }
-    ],
-}
+def for_data4(loop_kind):
+    return {
+        "description": "For block def",
+        "text": [
+            {
+                "def": "x",
+                "for": {"i": [1, 2, 3, 4]},
+                loop_kind: "${ i + 1 }",
+                "join": {"as": "array"},
+            }
+        ],
+    }
 
 
 def test_for_data4():
-    result = exec_dict(for_data4, output="all")
-    assert result["result"] == "[2, 3, 4, 5]"
-    assert result["scope"]["x"] == [2, 3, 4, 5]
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_data4(loop_kind), output="all")
+        assert result["result"] == "[2, 3, 4, 5]"
+        assert result["scope"]["x"] == [2, 3, 4, 5]
 
 
-for_as_text_data4 = {
-    "description": "For block def",
-    "text": [
-        {
-            "def": "x",
-            "for": {"i": [1, 2, 3, 4]},
-            "repeat": "${ i + 1 }",
-        }
-    ],
-}
+def for_as_text_data4(loop_kind):
+    return {
+        "description": "For block def",
+        "text": [
+            {
+                "def": "x",
+                "for": {"i": [1, 2, 3, 4]},
+                "repeat": "${ i + 1 }",
+            }
+        ],
+    }
 
 
 def test_for_as_text_data4():
-    result = exec_dict(for_as_text_data4, output="all")
-    assert result["result"] == "2345"
-    assert result["scope"]["x"] == "2345"
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_as_text_data4(loop_kind), output="all")
+        assert result["result"] == "2345"
+        assert result["scope"]["x"] == "2345"
 
 
-for_data5 = {
-    "description": "For block def",
-    "text": [
-        {
-            "def": "x",
-            "text": {
-                "for": {"i": [1, 2, 3, 4]},
-                "repeat": "${ i }",
-                "join": {"as": "array"},
-            },
-        }
-    ],
-}
+def for_data5(loop_kind):
+    return {
+        "description": "For block def",
+        "text": [
+            {
+                "def": "x",
+                "text": {
+                    "for": {"i": [1, 2, 3, 4]},
+                    loop_kind: "${ i }",
+                    "join": {"as": "array"},
+                },
+            }
+        ],
+    }
 
 
 def test_for_data5():
-    result = exec_dict(for_data5, output="all")
-    assert result["result"] == "[1, 2, 3, 4]"
-    assert result["scope"]["x"] == "[1, 2, 3, 4]"
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_data5(loop_kind), output="all")
+        assert result["result"] == "[1, 2, 3, 4]"
+        assert result["scope"]["x"] == "[1, 2, 3, 4]"
 
 
 def test_for_nested_array():
-    prog_str = """
+    for loop_kind in ["repeat", "map"]:
+        prog_str = f"""
 for:
     i: [1,2,3]
 repeat:
     for:
         j: [1,2]
-    repeat: "${i}${j}"
+    {loop_kind}: "${{i}}${{j}}"
     join:
         as: array
 join:
     as: array
 """
-    result = exec_str(prog_str)
-    assert result == [["11", "12"], ["21", "22"], ["31", "32"]]
+        result = exec_str(prog_str)
+        assert result == [["11", "12"], ["21", "22"], ["31", "32"]]
 
 
 def test_for_nested_text():
-    prog_str = r"""
+    for loop_kind1 in ["repeat", "map"]:
+        for loop_kind2 in ["repeat", "map"]:
+            prog_str = f"""
 for:
     i: [1,2,3]
-repeat:
+{loop_kind1}:
     for:
         j: [1,2]
-    repeat: "${i}${j}"
+    {loop_kind2}: "${{i}}${{j}}"
 join:
-    with: "\n"
+    with: "\\n"
 """
-    result = exec_str(prog_str)
-    assert result == "\n".join(["1112", "2122", "3132"])
+            result = exec_str(prog_str)
+            assert result == "\n".join(["1112", "2122", "3132"])
+
+
+def for_scope(loop_kind):
+    return {
+        "defs": {"x": 0},
+        "text": {
+            "for": {"i": [1, 2, 3, 4]},
+            loop_kind: {"defs": {"x": "${ x + i }"}, "data": "${ i }"},
+            "join": {"as": "array"},
+        },
+    }
+
+
+def test_for_scope():
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_scope(loop_kind), output="all")
+        assert result["result"] == "[1, 2, 3, 4]"
+        match loop_kind:
+            case "repeat":
+                assert result["scope"]["x"] == 10
+            case "map":
+                assert result["scope"]["x"] == 0
+
+
+def for_index(loop_kind):
+    return {
+        "text": {
+            "index": "idx",
+            "for": {"i": [1, 2, 3, 4]},
+            loop_kind: "${ i + idx }",
+            "join": {"as": "array"},
+        },
+    }
+
+
+def test_for_index():
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_index(loop_kind), output="all")
+        assert result["result"] == "[1, 3, 5, 7]"
+
+
+def for_context(loop_kind):
+    return {
+        "lastOf": [
+            "Hello",
+            {
+                "for": {"i": [1, 2, 3,]},
+                loop_kind: "${ pdl_context[0] }",
+                "join": {"as": "array"},
+            },
+        ]
+    }
+
+
+def test_for_context():
+    for loop_kind in ["repeat", "map"]:
+        result = exec_dict(for_context(loop_kind), output="all")
+        match loop_kind:
+            case "repeat":
+                assert result["result"] == [
+                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
+                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
+                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}
+                ]
+            case "map":
+                assert result["result"] == []
