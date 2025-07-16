@@ -239,7 +239,7 @@ def for_context(loop_kind):
                         3,
                     ]
                 },
-                loop_kind: "${ pdl_context[0] }",
+                loop_kind: "${ pdl_context.serialize('litellm') }",
                 "join": {"as": "array"},
             },
         ]
@@ -252,9 +252,69 @@ def test_for_context():
         match loop_kind:
             case "repeat":
                 assert result["result"] == [
-                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
-                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
-                    {"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"},
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0",
+                        },
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "role": "user",
+                                    "content": "Hello",
+                                    "pdl__defsite": "lastOf.0",
+                                }
+                            ],
+                            "pdl__defsite": "lastOf.1.repeat.0",
+                        },
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0",
+                        },
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "role": "user",
+                                    "content": "Hello",
+                                    "pdl__defsite": "lastOf.0",
+                                }
+                            ],
+                            "pdl__defsite": "lastOf.1.repeat.0",
+                        },
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "role": "user",
+                                    "content": "Hello",
+                                    "pdl__defsite": "lastOf.0",
+                                },
+                                {
+                                    "role": "user",
+                                    "content": [
+                                        {
+                                            "role": "user",
+                                            "content": "Hello",
+                                            "pdl__defsite": "lastOf.0",
+                                        }
+                                    ],
+                                    "pdl__defsite": "lastOf.1.repeat.0",
+                                },
+                            ],
+                            "pdl__defsite": "lastOf.1.repeat.1",
+                        },
+                    ],
                 ]
             case "map":
-                assert result["result"] == []
+                assert result["result"] == [
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                ]
