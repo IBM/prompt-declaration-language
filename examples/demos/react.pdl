@@ -91,5 +91,7 @@ text:
               expr: ${ action[0].arguments.expr }
         - case: Finish
           then: ${ action[0].arguments.topic }
+      fallback: |
+        Invalid action: ${ action }
     - "\n"
   until: ${ action[0].name == "Finish" }
