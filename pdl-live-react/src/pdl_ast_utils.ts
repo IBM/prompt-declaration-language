@@ -178,6 +178,7 @@ export function map_block_children(
     })
     .with({ kind: "repeat" }, (block) => {
       const for_ = block?.for ? f_expr(block.for) : undefined
+      const while_ = block?.until ? f_expr(block.while) : undefined
       const until = block?.until ? f_expr(block.until) : undefined
       const max_iterations = block?.maxIterations
         ? f_expr(block.maxIterations)
@@ -186,8 +187,22 @@ export function map_block_children(
       return {
         ...block,
         for: for_,
+        while: while_,
         repeat,
         until,
+        maxIterations: max_iterations,
+      }
+    })
+    .with({ kind: "map" }, (block) => {
+      const for_ = block?.for ? f_expr(block.for) : undefined
+      const max_iterations = block?.maxIterations
+        ? f_expr(block.maxIterations)
+        : undefined
+      const map = f_block(block.map)
+      return {
+        ...block,
+        for: for_,
+        map,
         maxIterations: max_iterations,
       }
     })
@@ -288,6 +303,9 @@ export function iter_block_children(
     })
     .with({ kind: "repeat" }, (block) => {
       f(block.repeat)
+    })
+    .with({ kind: "map" }, (block) => {
+      f(block.map)
     })
     .with({ kind: "error" }, (block) => f(block.program))
     .with({ kind: "read" }, () => {})

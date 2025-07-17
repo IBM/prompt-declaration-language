@@ -99,6 +99,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -243,6 +246,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -498,6 +504,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -642,6 +651,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -852,6 +864,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -1025,6 +1040,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -1169,6 +1187,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1402,6 +1423,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -1514,6 +1538,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -1660,6 +1687,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -1876,6 +1906,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -2026,6 +2059,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -2170,6 +2206,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2423,6 +2462,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -2567,6 +2609,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -2814,6 +2859,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -2958,6 +3006,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3167,6 +3218,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -3280,6 +3334,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -3426,6 +3483,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -3645,6 +3705,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -3773,6 +3836,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -3919,6 +3985,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4158,6 +4227,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -4302,6 +4374,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4504,6 +4579,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -4760,6 +4838,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -4904,6 +4985,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5127,6 +5211,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -5209,6 +5296,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5325,6 +5415,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -5471,6 +5564,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -5680,6 +5776,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -5792,6 +5891,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -5938,6 +6040,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6149,6 +6254,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6370,6 +6478,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -6514,6 +6625,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -6724,6 +6838,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -6837,6 +6954,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -6983,6 +7103,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -7185,6 +7308,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -7750,9 +7876,9 @@
       "title": "LocalizedExpression",
       "type": "object"
     },
-    "MatchBlock": {
+    "MapBlock": {
       "additionalProperties": false,
-      "description": "Match control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nmatch: ${ (answer | int) }\nwith:\n- case: 42\n  then: You won!\n- case:\n    any:\n    def: x\n  if: ${ x > 42 }\n  then: Too high\n- then: Too low",
+      "description": "Independent executions of  a block.\nRepeat the execution of a block starting from the initial scope\nand `pdl_context`.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nmap:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nmap:\n    ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -7819,6 +7945,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -7965,6 +8094,662 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Block to execute in case of error.\n    ",
+          "title": "Fallback"
+        },
+        "retry": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
+        },
+        "trace_error_on_retry": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
+          "title": "Trace Error On Retry"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
+          "title": "Role"
+        },
+        "pdl__context": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Current context\n    ",
+          "title": "Pdl  Context"
+        },
+        "pdl__id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Unique identifier for this block\n    ",
+          "title": "Pdl  Id"
+        },
+        "pdl__result": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Result of the execution of the block",
+          "title": "Pdl  Result"
+        },
+        "pdl__location": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlLocationType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__timing": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdlTiming"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
+        },
+        "kind": {
+          "const": "map",
+          "default": "map",
+          "title": "Kind",
+          "type": "string"
+        },
+        "for": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Arrays to iterate over.\n    ",
+          "title": "For"
+        },
+        "index": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable containing the loop iteration.\n    ",
+          "title": "Index"
+        },
+        "map": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
+              "$ref": "#/$defs/TextBlock"
+            },
+            {
+              "$ref": "#/$defs/LastOfBlock"
+            },
+            {
+              "$ref": "#/$defs/ArrayBlock"
+            },
+            {
+              "$ref": "#/$defs/ObjectBlock"
+            },
+            {
+              "$ref": "#/$defs/MessageBlock"
+            },
+            {
+              "$ref": "#/$defs/ReadBlock"
+            },
+            {
+              "$ref": "#/$defs/IncludeBlock"
+            },
+            {
+              "$ref": "#/$defs/ImportBlock"
+            },
+            {
+              "$ref": "#/$defs/ErrorBlock"
+            },
+            {
+              "$ref": "#/$defs/EmptyBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Body of the iterator.\n    ",
+          "title": "Map"
+        },
+        "maxIterations": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximal number of iterations to perform.\n    ",
+          "title": "Maxiterations"
+        },
+        "join": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JoinText"
+            },
+            {
+              "$ref": "#/$defs/JoinArray"
+            },
+            {
+              "$ref": "#/$defs/JoinObject"
+            },
+            {
+              "$ref": "#/$defs/JoinLastOf"
+            }
+          ],
+          "default": {
+            "as": "text",
+            "with": ""
+          },
+          "description": "Define how to combine the result of each iteration.\n    ",
+          "title": "Join"
+        },
+        "pdl__trace": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/FunctionBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CallBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LitellmModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GraniteioModelBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/CodeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArgsBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/GetBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/DataBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MatchBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MapBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/TextBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/LastOfBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ArrayBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ObjectBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MessageBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ReadBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/IncludeBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ImportBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/ErrorBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/EmptyBlock"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pdl  Trace"
+        }
+      },
+      "required": [
+        "map"
+      ],
+      "title": "MapBlock",
+      "type": "object"
+    },
+    "MatchBlock": {
+      "additionalProperties": false,
+      "description": "Match control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nmatch: ${ (answer | int) }\nwith:\n- case: 42\n  then: You won!\n- case:\n    any:\n    def: x\n  if: ${ x > 42 }\n  then: Too high\n- then: Too low",
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Documentation associated to the block.\n    ",
+          "title": "Description"
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/FunctionBlock"
+              },
+              {
+                "$ref": "#/$defs/CallBlock"
+              },
+              {
+                "$ref": "#/$defs/LitellmModelBlock"
+              },
+              {
+                "$ref": "#/$defs/GraniteioModelBlock"
+              },
+              {
+                "$ref": "#/$defs/CodeBlock"
+              },
+              {
+                "$ref": "#/$defs/ArgsBlock"
+              },
+              {
+                "$ref": "#/$defs/GetBlock"
+              },
+              {
+                "$ref": "#/$defs/DataBlock"
+              },
+              {
+                "$ref": "#/$defs/IfBlock"
+              },
+              {
+                "$ref": "#/$defs/MatchBlock"
+              },
+              {
+                "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
+                "$ref": "#/$defs/TextBlock"
+              },
+              {
+                "$ref": "#/$defs/LastOfBlock"
+              },
+              {
+                "$ref": "#/$defs/ArrayBlock"
+              },
+              {
+                "$ref": "#/$defs/ObjectBlock"
+              },
+              {
+                "$ref": "#/$defs/MessageBlock"
+              },
+              {
+                "$ref": "#/$defs/ReadBlock"
+              },
+              {
+                "$ref": "#/$defs/IncludeBlock"
+              },
+              {
+                "$ref": "#/$defs/ImportBlock"
+              },
+              {
+                "$ref": "#/$defs/ErrorBlock"
+              },
+              {
+                "$ref": "#/$defs/EmptyBlock"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
+          "title": "Def"
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ContributeTarget"
+              },
+              {
+                "additionalProperties": {
+                  "$ref": "#/$defs/ContributeValue"
+                },
+                "type": "object"
+              }
+            ]
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "anyOf": [
+            {
+              "enum": [
+                "json",
+                "jsonl",
+                "yaml"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/PdlParser"
+            },
+            {
+              "$ref": "#/$defs/RegexParser"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result.",
+          "title": "Parser"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "$ref": "#/$defs/CallBlock"
+            },
+            {
+              "$ref": "#/$defs/LitellmModelBlock"
+            },
+            {
+              "$ref": "#/$defs/GraniteioModelBlock"
+            },
+            {
+              "$ref": "#/$defs/CodeBlock"
+            },
+            {
+              "$ref": "#/$defs/ArgsBlock"
+            },
+            {
+              "$ref": "#/$defs/GetBlock"
+            },
+            {
+              "$ref": "#/$defs/DataBlock"
+            },
+            {
+              "$ref": "#/$defs/IfBlock"
+            },
+            {
+              "$ref": "#/$defs/MatchBlock"
+            },
+            {
+              "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8257,6 +9042,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -8406,6 +9194,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -8550,6 +9341,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -8754,6 +9548,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -8900,6 +9697,9 @@
                 "$ref": "#/$defs/RepeatBlock"
               },
               {
+                "$ref": "#/$defs/MapBlock"
+              },
+              {
                 "$ref": "#/$defs/TextBlock"
               },
               {
@@ -9044,6 +9844,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -9255,6 +10058,9 @@
                     "$ref": "#/$defs/RepeatBlock"
                   },
                   {
+                    "$ref": "#/$defs/MapBlock"
+                  },
+                  {
                     "$ref": "#/$defs/TextBlock"
                   },
                   {
@@ -9338,6 +10144,9 @@
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MapBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
@@ -9582,6 +10391,9 @@
           "$ref": "#/$defs/RepeatBlock"
         },
         {
+          "$ref": "#/$defs/MapBlock"
+        },
+        {
           "$ref": "#/$defs/TextBlock"
         },
         {
@@ -9714,6 +10526,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -9942,6 +10757,9 @@
           "$ref": "#/$defs/RepeatBlock"
         },
         {
+          "$ref": "#/$defs/MapBlock"
+        },
+        {
           "$ref": "#/$defs/TextBlock"
         },
         {
@@ -10047,6 +10865,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -10193,6 +11014,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -10435,7 +11259,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nrepeat:\n    ${ i }\njoin:\n  as: array\n```",
+      "description": "Repeat the execution of a block sequentially.\nThe scope and `pdl_context` are accumulated in between iterations.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nWhile loop:\n```PDL\ndefs:\n  i: 0\nwhile: ${i < 5}\nrepeat:\n    defs:\n      i: ${ i + 1}\n    data: ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
           "anyOf": [
@@ -10502,6 +11326,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -10648,6 +11475,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -10912,6 +11742,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -11056,6 +11889,9 @@
                     "$ref": "#/$defs/RepeatBlock"
                   },
                   {
+                    "$ref": "#/$defs/MapBlock"
+                  },
+                  {
                     "$ref": "#/$defs/TextBlock"
                   },
                   {
@@ -11175,6 +12011,9 @@
               },
               {
                 "$ref": "#/$defs/RepeatBlock"
+              },
+              {
+                "$ref": "#/$defs/MapBlock"
               },
               {
                 "$ref": "#/$defs/TextBlock"
@@ -11321,6 +12160,9 @@
             },
             {
               "$ref": "#/$defs/RepeatBlock"
+            },
+            {
+              "$ref": "#/$defs/MapBlock"
             },
             {
               "$ref": "#/$defs/TextBlock"
@@ -11529,6 +12371,9 @@
               "$ref": "#/$defs/RepeatBlock"
             },
             {
+              "$ref": "#/$defs/MapBlock"
+            },
+            {
               "$ref": "#/$defs/TextBlock"
             },
             {
@@ -11605,6 +12450,9 @@
                   },
                   {
                     "$ref": "#/$defs/RepeatBlock"
+                  },
+                  {
+                    "$ref": "#/$defs/MapBlock"
                   },
                   {
                     "$ref": "#/$defs/TextBlock"
