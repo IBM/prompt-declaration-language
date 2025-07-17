@@ -1,31 +1,33 @@
 description: Demonstrating a React program
 defs:
+  Calc:
+    description: Calculator function
+    function:
+        expr:
+          type: string
+          description: Arithmetic expression to calculate
+    return:
+      lang: python
+      code: result = ${ expr }
+  Search:
+    description: Wikipedia search
+    function:
+      topic:
+        type: string
+        description: Topic to search
+    return:
+      lang: python
+      code: |
+        import warnings, wikipedia
+        warnings.simplefilter("ignore")
+        try:
+          result = wikipedia.summary("${ topic }")
+        except wikipedia.WikipediaException as e:
+          result = str(e)
   tools:
     data:
-    - type: function
-      function:
-        name: Calc
-        description: Calculator function
-        parameters:
-          type: object
-          properties:
-            expr:
-              type: string
-              description: Arithmetic expression to calculate
-          required:
-          - expr
-    - type: function
-      function:
-        name: Search
-        description: Wikipedia search
-        parameters:
-          type: object
-          properties:
-            topic:
-              type: string
-              description: Topic to search
-          required:
-          - topic
+    - ${ Calc.signature }
+    - ${ Search.signature }
 text:
 - role: system
   text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
@@ -77,19 +79,17 @@ text:
     - "\nObservation: "
     - match: ${ action[0].name }
       with:
-        - case: 'Search'
+        - case: Search
           then:
-            lang: python
-            code: |
-              import warnings, wikipedia
-              warnings.simplefilter("ignore")
-              try:
-                result = wikipedia.summary("${ action[0].arguments.topic }")
-              except wikipedia.WikipediaException as e:
-                result = str(e)
-        - case: 'Calc'
+            call: ${ Search }
+            args:
+              topic: ${ action[0].arguments.topic }
+        - case: Calc
           then:
-            lang: python
-            code: result = ${ action[0].arguments.expr }
+            call: ${ Calc }
+            args:
+              expr: ${ action[0].arguments.expr }
+        - case: Finish
+          then: ${ action[0].arguments.topic }
     - "\n"
   until: ${ action[0].name == "Finish" }
