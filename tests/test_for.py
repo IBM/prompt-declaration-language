@@ -193,7 +193,7 @@ def for_scope(loop_kind):
         "defs": {"x": 0},
         "text": {
             "for": {"i": [1, 2, 3, 4]},
-            loop_kind: {"defs": {"x": "${ x + i }"}, "data": "${ i }"},
+            loop_kind: {"defs": {"x": "${ x + i }"}, "data": "${ i + x }"},
             "join": {"as": "array"},
         },
     }
@@ -202,11 +202,12 @@ def for_scope(loop_kind):
 def test_for_scope():
     for loop_kind in ["repeat", "map"]:
         result = exec_dict(for_scope(loop_kind), output="all")
-        assert result["result"] == "[1, 2, 3, 4]"
         match loop_kind:
             case "repeat":
+                assert result["result"] == "[2, 5, 9, 14]"
                 assert result["scope"]["x"] == 10
             case "map":
+                assert result["result"] == "[2, 4, 6, 8]"
                 assert result["scope"]["x"] == 0
 
 
