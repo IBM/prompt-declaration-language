@@ -91,16 +91,5 @@ text:
               expr: ${ action[0].arguments.expr }
         - case: Finish
           then: ${ action[0].arguments.topic }
-        - then: |
-            Unexpected action: ${ action }
-      fallback: |
-        Invalid action: ${ action }
     - "\n"
   until: ${ action[0].name == "Finish" }
-  fallback:
-    text:
-    - text: "Failure:\n"
-    - text: "- thought = ${ thought }\n"
-      fallback:  "- thought is undefined\n"
-    - text: "- action = ${ action }\n"
-      fallback:  "- action is undefined\n"
