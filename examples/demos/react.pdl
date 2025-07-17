@@ -97,7 +97,10 @@ text:
         Invalid action: ${ action }
     - "\n"
   until: ${ action[0].name == "Finish" }
-  fallback: |
-    Failure:
-    - thought = ${ thought or null }
-    - action = ${ action }
+  fallback:
+    text:
+    - text: "Failure:\n"
+    - text: "- thought = ${ thought }\n"
+      fallback:  "- thought is undefined\n"
+    - text: "- action = ${ action }\n"
+      fallback:  "- action is undefined\n"
