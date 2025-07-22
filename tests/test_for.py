@@ -319,3 +319,23 @@ def test_for_context():
                     [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
                     [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
                 ]
+
+
+def test_for_reduce():
+    for loop_kind1 in ["repeat", "map"]:
+        prog_str = f"""
+defs:
+  plus:
+    lang: python
+    code: |
+      import operator
+      result = operator.add
+for:
+    i: [1,2,3,4]
+{loop_kind1}: ${{ i }}
+join:
+  as:
+    reduce: ${{ plus }}
+"""
+        result = exec_str(prog_str)
+        assert result == 10
