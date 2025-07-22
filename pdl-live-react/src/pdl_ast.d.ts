@@ -1551,7 +1551,7 @@ export type Maxiterations = LocalizedExpression | number | string | null
  * Define how to combine the result of each iteration.
  *
  */
-export type Join = JoinText | JoinArray | JoinObject | JoinLastOf
+export type Join = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 /**
  * String concatenation of the result of each iteration.
  *
@@ -1577,6 +1577,10 @@ export type As2 = "object"
  *
  */
 export type As3 = "lastOf"
+/**
+ * Function used to combine the results.
+ */
+export type Reduce = LocalizedExpression | string
 export type PdlTrace2 =
   | (
       | boolean
@@ -1756,7 +1760,7 @@ export type Maxiterations1 = LocalizedExpression | number | string | null
  * Define how to combine the result of each iteration.
  *
  */
-export type Join1 = JoinText | JoinArray | JoinObject | JoinLastOf
+export type Join1 = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 export type PdlTrace3 =
   | (
       | boolean
@@ -5295,6 +5299,19 @@ export interface JoinObject {
  */
 export interface JoinLastOf {
   as: As3
+}
+/**
+ * Join loop iterations as the value of the last iteration.
+ */
+export interface JoinReduce {
+  as: ReduceConfig
+}
+/**
+ * Return the result of the last iteration.
+ *
+ */
+export interface ReduceConfig {
+  reduce: Reduce
 }
 /**
  * Case of a match.

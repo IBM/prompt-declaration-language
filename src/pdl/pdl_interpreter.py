@@ -11,7 +11,7 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from asyncio import AbstractEventLoop
-from functools import partial
+from functools import partial, reduce
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
@@ -66,10 +66,10 @@ from .pdl_ast import (  # noqa: E402
     ImportBlock,
     IncludeBlock,
     IndependentEnum,
-    IterationType,
     JoinArray,
     JoinLastOf,
     JoinObject,
+    JoinReduce,
     JoinText,
     JoinType,
     LastOfBlock,
@@ -101,6 +101,7 @@ from .pdl_ast import (  # noqa: E402
     PdlUsage,
     Program,
     ReadBlock,
+    ReduceConfig,
     RegexParser,
     RepeatBlock,
     RoleType,
@@ -586,7 +587,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "text",
-                IterationType.TEXT,
+                JoinText(),
                 state,
                 scope,
                 loc,
@@ -595,7 +596,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "lastOf",
-                IterationType.LASTOF,
+                JoinLastOf(as_="lastOf"),  # pyright: ignore
                 state,
                 scope,
                 loc,
@@ -604,7 +605,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "array",
-                IterationType.ARRAY,
+                JoinArray(as_="array"),  # pyright: ignore
                 state,
                 scope,
                 loc,
@@ -623,7 +624,7 @@ def process_block_body(
                         if isinstance(value_blocks, StructuredBlock):
                             context = value_blocks.context
                         value, value_background, scope, value_trace = process_blocks(
-                            IterationType.LASTOF,
+                            JoinLastOf(as_="lastOf"),  # pyright: ignore
                             context,
                             iteration_state,
                             scope,
@@ -660,7 +661,7 @@ def process_block_body(
                 result, background, scope, trace = process_blocks_of(
                     block,
                     "object",
-                    IterationType.OBJECT,
+                    JoinObject(as_="object"),  # pyright: ignore
                     iteration_state,
                     scope,
                     loc,
@@ -787,10 +788,11 @@ def process_block_body(
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and block.join.as_ == IterationType.TEXT
+                state.yield_result and isinstance(block.join, JoinText)
             )
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
+            block = _evaluate_join_field(scope, block, loc)
             repeat_loc = append(loc, "repeat")
             iidx = 0
             try:
@@ -809,7 +811,7 @@ def process_block_body(
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
-                    elif block.join.as_ == IterationType.TEXT:
+                    elif isinstance(block.join, JoinText):
                         join_string = block.join.with_
                         if iteration_state.yield_result:
                             yield_result(join_string, block.kind)
@@ -877,6 +879,7 @@ def process_block_body(
             iteration_state = state.with_yield_result(False)
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
+            block = _evaluate_join_field(scope, block, loc)
             map_loc = append(loc, "map")
             iidx = 0
             try:
@@ -1019,6 +1022,23 @@ def _evaluate_max_iterations_field(
     return block, max_iterations
 
 
+BlockTVarEvalJoin = TypeVar("BlockTVarEvalJoin", bound=RepeatBlock | MapBlock)
+
+
+def _evaluate_join_field(
+    scope: ScopeType, block: BlockTVarEvalJoin, loc: PdlLocationType
+) -> BlockTVarEvalJoin:
+    match block.join:
+        case JoinText() | JoinArray() | JoinObject() | JoinLastOf():
+            pass
+        case JoinReduce():
+            loc = append(append(loc, "as"), "reduce")
+            _, expr = process_expr(scope, block.join.as_.reduce, loc)
+            join = block.join.model_copy(update={"as_": ReduceConfig(reduce=expr)})
+            block = block.model_copy(update={"join": join})
+    return block
+
+
 def is_matching(  # pylint: disable=too-many-return-statements
     value: Any, pattern: PatternType, scope: ScopeType
 ) -> Optional[ScopeType]:
@@ -1135,7 +1155,7 @@ BlockTypeTVarProcessBlocksOf = TypeVar(
 def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     block: BlockTypeTVarProcessBlocksOf,
     field: str,
-    iteration_type: IterationType,
+    join_type: JoinType,
     state: InterpreterState,
     scope: ScopeType,
     loc: PdlLocationType,
@@ -1146,7 +1166,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
         if isinstance(block, StructuredBlock):
             context = block.context
         result, background, scope, blocks = process_blocks(
-            iteration_type,
+            join_type,
             context,
             state,
             scope,
@@ -1166,7 +1186,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
 
 
 def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-arguments
-    iteration_type: IterationType,
+    join_type: JoinType,
     context: IndependentEnum,
     state: InterpreterState,
     scope: ScopeType,
@@ -1181,8 +1201,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
         iteration_state = state.with_yield_result(
-            state.yield_result
-            and (iteration_type in (IterationType.LASTOF, IterationType.TEXT))
+            state.yield_result and isinstance(join_type, (JoinLastOf, JoinText))
         )
         new_loc = None
         background = DependentContext([])
@@ -1196,7 +1215,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                     "pdl_context": DependentContext([pdl_context_init, background])
                 }
                 new_loc = append(loc, "[" + str(i) + "]")
-                if iteration_type == IterationType.LASTOF and state.yield_result:
+                if isinstance(join_type, JoinLastOf) and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
                 (
                     iteration_result,
@@ -1227,24 +1246,12 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
             ) from exc
     else:
         iteration_state = state.with_yield_result(
-            state.yield_result and iteration_type != IterationType.ARRAY
+            state.yield_result and not isinstance(join_type, JoinArray)
         )
         block_result, background, scope, trace = process_block(
             iteration_state, scope, blocks, loc
         )
         results.append(block_result)
-    join_type: JoinType
-    match iteration_type:
-        case IterationType.TEXT:
-            join_type = JoinText()
-        case IterationType.ARRAY:
-            join_type = JoinArray(**{"as": IterationType.ARRAY})  # pyright: ignore
-        case IterationType.OBJECT:
-            join_type = JoinObject(**{"as": IterationType.OBJECT})  # pyright: ignore
-        case IterationType.LASTOF:
-            join_type = JoinLastOf(**{"as": IterationType.LASTOF})  # pyright: ignore
-        case _:
-            assert False
     result = combine_results(join_type, results)
     if state.yield_result and not iteration_state.yield_result:
         yield_result(result, block_kind)
@@ -1269,6 +1276,16 @@ def combine_results(join_type: JoinType, results: list[PdlLazy[Any]]):
             join_str = join_type.with_
             result = lazy_apply(
                 (lambda _: join_str.join([stringify(r.result()) for r in results])),
+                PdlConst(()),
+            )
+        case JoinReduce():
+            result = lazy_apply(
+                (
+                    lambda _: reduce(
+                        value_of_expr(join_type.as_.reduce),
+                        [r.result() for r in results],
+                    )
+                ),
                 PdlConst(()),
             )
         case _:
