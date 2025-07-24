@@ -14,6 +14,8 @@ from asyncio import AbstractEventLoop
 from functools import partial
 from os import getenv
 
+from pydantic.json_schema import SkipJsonSchema
+
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 from pathlib import Path  # noqa: E402
@@ -167,6 +169,15 @@ class InterpreterState(BaseModel):
         stack.pop()
         return self.model_copy(update={"id_stack": stack})
 
+
+class ClosureBlock(FunctionBlock):
+    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
+
+    def __call__(self, **kwds):
+        state = InterpreterState(yield_result=False, yield_background=False, batch=1) # TODO
+        current_context = [] # TODO
+        result, _, _ = execute_call(state, current_context, self, kwds, empty_block_location)
+        return result
 
 def generate(
     pdl_file: str | Path,
@@ -436,7 +447,7 @@ def process_advanced_block(
                 result.result()
             break
         except Exception as exc:
-            err_msg = exc.args[0]
+            err_msg = traceback.format_exc()
             do_retry = (
                 block.retry
                 and trial_idx + 1 < trial_total
@@ -909,7 +920,7 @@ def process_block_body(
             result, background, scope, trace = process_import(state, scope, block, loc)
 
         case FunctionBlock():
-            closure = block.model_copy()
+            closure = ClosureBlock(description=block.description, spec=block.spec, defs=block.defs, def_=block.def_, contribute=block.contribute, parser=parser, fallback=block.fallback, retry=block.retry, trace_error_on_retry=block.trace_error_on_retry, role=block.role, function=block.function, return_=block.return_, )
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
@@ -1866,7 +1877,7 @@ def process_call(
     background: LazyMessages = DependentContext([])
     args, block = process_expr_of(block, "args", scope, loc)
     closure, _ = process_expr_of(block, "call", scope, loc)
-    if not isinstance(closure, FunctionBlock):
+    if not isinstance(closure, ClosureBlock):
         msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
         if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):
             msg += " You might want to call `${ " + str(block.call) + " }`."
@@ -1884,12 +1895,25 @@ def process_call(
             loc=args_loc,
             trace=block.model_copy(),
         )
+    current_context = scope.data["pdl_context"]
+    try:
+        result, background, call_trace = execute_call(state, current_context, closure, args, loc)
+    except PDLRuntimeError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or closure.pdl__location,
+            trace=block.model_copy(update={"pdl__trace": exc.pdl__trace}),
+        ) from exc
+    trace = block.model_copy(update={"pdl__trace": call_trace})
+    return result, background, scope, trace
+
+def execute_call(state, current_context, closure, args, loc):
     if "pdl_context" in args:
-        args["pdl_context"] = deserialize(args["pdl_context"])
+        args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
     f_scope = (
         (closure.pdl__scope or PdlDict({}))
-        | PdlDict({"pdl_context": scope.data["pdl_context"]})
+        | PdlDict({"pdl_context": current_context})
         | PdlDict((args or {}))
     )
     if closure.pdl__location is not None:
@@ -1900,27 +1924,19 @@ def process_call(
         )
     else:
         fun_loc = empty_block_location
-    try:
-        result, background, _, f_trace = process_block(state, f_scope, f_body, fun_loc)
-    except PDLRuntimeError as exc:
-        raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or fun_loc,
-            trace=block.model_copy(update={"pdl__trace": exc.pdl__trace}),
-        ) from exc
-    trace = block.model_copy(update={"pdl__trace": f_trace})
+    result, background, _, f_trace = process_block(state, f_scope, f_body, fun_loc)
     if closure.spec is not None:
         result = lazy_apply(
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of function call to {block.call}:",
+                f"Type errors in result of function call to {closure.call}:",
                 loc,
-                trace,
+                f_trace,
             ),
             result,
-        )
-    return result, background, scope, trace
+        )        
+    return result,background,f_trace
 
 
 def process_input(
