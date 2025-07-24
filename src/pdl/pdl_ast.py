@@ -24,7 +24,6 @@ from pydantic import (
     RootModel,
     TypeAdapter,
 )
-from pydantic.json_schema import SkipJsonSchema
 from typing_extensions import TypeAliasType
 
 from .pdl_context import PDLContext
@@ -397,9 +396,6 @@ class FunctionBlock(LeafBlock):
     signature: Optional[Json] = None
     """Function signature computed from the function definition.
     """
-
-    # Field for internal use
-    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
 
 class CallBlock(LeafBlock):
