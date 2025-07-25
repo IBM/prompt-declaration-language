@@ -76,3 +76,14 @@ fallback: "Error"
         str(exc.value.message)
         == "Type errors during spec checking:\nline 4 - Error should be of type <class 'int'>"
     )
+
+def test_fallback_and_parser():
+    prog_str = """
+model: "raise an error"
+parser: json
+spec: { xxx: string, age: integer}
+fallback:
+    data: { "xxx": "rosa", "age": 3 }
+"""
+    result = exec_str(prog_str)
+    assert result == { "xxx": "rosa", "age": 3 }

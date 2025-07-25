@@ -453,6 +453,13 @@ def process_advanced_block(
                 if block.trace_error_on_retry:
                     scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
                 continue
+            state = init_state.with_yield_result(
+                init_state.yield_result
+                and ContributeTarget.RESULT in block.contribute
+            )
+            state = state.with_yield_background(
+                state.yield_background and context_in_contribute(block)
+            )
             (
                 result,
                 background,
