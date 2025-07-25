@@ -51,6 +51,8 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.REPEAT:
             color = None
+        case BlockKind.MAP:
+            color = None
         case BlockKind.READ:
             color = None
         case BlockKind.INCLUDE:

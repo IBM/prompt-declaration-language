@@ -19,6 +19,7 @@ from .pdl_ast import (
     IncludeBlock,
     LastOfBlock,
     LitellmModelBlock,
+    MapBlock,
     MatchBlock,
     MatchCase,
     MessageBlock,
@@ -82,6 +83,11 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
                 f(match_case.then)
         case RepeatBlock():
             f(block.repeat)
+            if block.pdl__trace is not None:
+                for trace in block.pdl__trace:
+                    f(trace)
+        case MapBlock():
+            f(block.map)
             if block.pdl__trace is not None:
                 for trace in block.pdl__trace:
                     f(trace)
@@ -189,6 +195,12 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.while_ = f.f_expr(block.while_)
             block.repeat = f.f_block(block.repeat)
             block.until = f.f_expr(block.until)
+            if block.pdl__trace is not None:
+                block.pdl__trace = [f.f_block(trace) for trace in block.pdl__trace]
+        case MapBlock():
+            if block.for_ is not None:
+                block.for_ = {x: f.f_expr(blocks) for x, blocks in block.for_.items()}
+            block.map = f.f_block(block.map)
             if block.pdl__trace is not None:
                 block.pdl__trace = [f.f_block(trace) for trace in block.pdl__trace]
         case ErrorBlock():
