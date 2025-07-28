@@ -196,8 +196,8 @@ class ClosureBlock(FunctionBlock):
     def __call__(self, **kwds):
         state = self.pdl__state.with_yield_result(False).with_yield_background(False)
         current_context = state.current_pdl_context.ref
-        result, _, _ = execute_call(
-            state, current_context, self, kwds, empty_block_location
+        result, _ = execute_call(
+            state, self, kwds, current_context, empty_block_location
         )
         return result
 
@@ -1919,8 +1919,6 @@ def call_pdl(code: str, scope: ScopeType) -> PdlLazy[Any]:
 def process_call(
     state: InterpreterState, scope: ScopeType, block: CallBlock, loc: PdlLocationType
 ) -> tuple[Any, LazyMessages, ScopeType, CallBlock]:
-    result = None
-    background: LazyMessages = DependentContext([])
     args, block = process_expr_of(block, "args", scope, loc)
     closure, _ = process_expr_of(block, "call", scope, loc)
     if not isinstance(closure, ClosureBlock):
@@ -1943,9 +1941,7 @@ def process_call(
         )
     current_context = scope.data["pdl_context"]
     try:
-        result, background, call_trace = execute_call(
-            state, current_context, closure, args, loc
-        )
+        result, call_trace = execute_call(state, closure, args, current_context, loc)
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1953,10 +1949,25 @@ def process_call(
             trace=block.model_copy(update={"pdl__trace": exc.pdl__trace}),
         ) from exc
     trace = block.model_copy(update={"pdl__trace": call_trace})
+    background = SingletonContext(
+        PdlDict(
+            {
+                "role": state.role,
+                "content": result,
+                "pdl__defsite": ".".join(state.id_stack),
+            }
+        )
+    )
     return result, background, scope, trace
 
 
-def execute_call(state, current_context, closure, args, loc):
+def execute_call(
+    state: InterpreterState,
+    closure: ClosureBlock,
+    args: dict[str, Any],
+    current_context: LazyMessages,
+    loc: PdlLocationType,
+) -> tuple[Any, BlockType]:
     if "pdl_context" in args:
         args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
@@ -1973,7 +1984,7 @@ def execute_call(state, current_context, closure, args, loc):
         )
     else:
         fun_loc = empty_block_location
-    result, background, _, f_trace = process_block(state, f_scope, f_body, fun_loc)
+    result, _, _, f_trace = process_block(state, f_scope, f_body, fun_loc)
     if closure.spec is not None:
         result = lazy_apply(
             lambda r: result_with_type_checking(
@@ -1985,7 +1996,7 @@ def execute_call(state, current_context, closure, args, loc):
             ),
             result,
         )
-    return result, background, f_trace
+    return result, f_trace
 
 
 def process_input(
