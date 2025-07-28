@@ -1957,7 +1957,7 @@ def execute_call(state, current_context, closure, args, loc):
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of the function{' ' + closure.signature.get("name", "") if closure.signature is not None else ""}:",
+                f"Type errors in result of the function{' ' + closure.signature.get('name', '') if closure.signature is not None else ''}:",
                 fun_loc,
                 f_trace,
             ),
