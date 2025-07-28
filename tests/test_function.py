@@ -201,3 +201,36 @@ lastOf:
         [],
         [],
     ]
+
+
+def test_call_from_code_04():
+    prog = """
+defs:
+  f:
+    function:
+    return:
+      lastOf:
+      - How are you?
+      - Bye
+lastOf:
+- Hello
+- context: independent
+  array:
+  - text:
+    - call: ${f}
+    - ${pdl_context}
+  - text:
+    - ${f()}
+    - ${pdl_context}
+  - text:
+    - lang: python
+      code:
+        result = f()
+    - ${pdl_context}
+"""
+    result = exec_str(prog)
+    assert [ctx.serialize("litellm") for ctx in result] == [
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
+    ]
