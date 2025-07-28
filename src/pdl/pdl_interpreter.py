@@ -17,7 +17,7 @@ from os import getenv
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Optional, Sequence, TypeVar  # noqa: E402
+from typing import Any, Generator, Generic, Optional, Sequence, TypeVar  # noqa: E402
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -132,19 +132,39 @@ from .pdl_utils import (  # noqa: E402
 empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
 
 
+RefT = TypeVar("RefT")
+
+
+class Ref(Generic[RefT]):
+    def __init__(self, ref: RefT):
+        self.ref = ref
+
+
 class InterpreterState(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     yield_result: bool = False
+    """Stream the result on the standard output as soon as possible."""
     yield_background: bool = False
+    """Stream the toplevel pdl_context on the standard output as soon as possible."""
     batch: int = 1
-    # batch=0: streaming
-    # batch=1: call to generate with `input`
+    """
+    Stream the output of the LLM
+    - batch=0: streaming
+    - batch=1: call to generate with `input`
+    """
     role: RoleType = "user"
+    """Current role to add messages in the context."""
     cwd: Path = Path.cwd()
-    # background_tasks = {}
+    """Current working directory."""
     id_stack: list[str] = []
+    """Id generator for the UI."""
+
+    # The following are shared variable that should be modified by side effects
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
+    """Event loop to schedule LLM calls."""
+    current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
+    """Current value of the context set at the beginning of the execution of the block."""
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -170,13 +190,12 @@ class InterpreterState(BaseModel):
 
 
 class ClosureBlock(FunctionBlock):
-    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
+    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
+    pdl__state: SkipJsonSchema[InterpreterState] = Field(repr=False)
 
     def __call__(self, **kwds):
-        state = InterpreterState(
-            yield_result=False, yield_background=False, batch=1
-        )  # TODO
-        current_context = []  # TODO
+        state = self.pdl__state.with_yield_result(False).with_yield_background(False)
+        current_context = state.current_pdl_context.ref
         result, _, _ = execute_call(
             state, current_context, self, kwds, empty_block_location
         )
@@ -261,6 +280,7 @@ def process_block(
     background: LazyMessages
     trace: BlockType
     try:
+        state.current_pdl_context.ref = scope["pdl_context"]  # type: ignore
         if not isinstance(block, Block):
             start = time.time_ns()
             try:
@@ -944,6 +964,8 @@ def process_block_body(
                 function=block.function,
                 return_=block.return_,  # pyright: ignore
                 pdl__location=loc,
+                pdl__scope=None,
+                pdl__state=state,
             )
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
