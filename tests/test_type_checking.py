@@ -605,3 +605,23 @@ def test_deprecated(capsys: pytest.CaptureFixture[str]):
     do_test_stderr(
         capsys, prog, ["Deprecated type syntax: use integer instead of int.", ""]
     )
+
+
+def test_function_call_jinja_19():
+    prog = """
+defs:
+  f:
+    function:
+      x:
+      y:
+    return:
+      ${x + 1}
+array:
+- call: ${f}
+  args:
+    x: 1
+    y: 1
+- ${ f(1, 2) }
+"""
+    with pytest.raises(PDLRuntimeError):
+        exec_str(prog)

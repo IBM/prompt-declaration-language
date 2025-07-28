@@ -168,8 +168,8 @@ line14 = {
     "file": "tests/data/line/hello14.pdl",
     "errors": [
         "",
-        "tests/data/line/hello14.pdl:25 - Type errors in result of function call to ${ translate }:",
-        "tests/data/line/hello14.pdl:25 - Bonjour le monde! should be of type <class 'int'>",
+        "tests/data/line/hello14.pdl:16 - Type errors in result of the function translate:",
+        "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
 
