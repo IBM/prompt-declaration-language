@@ -428,7 +428,7 @@ def join_to_dict(join: JoinType, json_compatible: bool) -> dict[str, Any]:
         case JoinArray() | JoinObject() | JoinLastOf():
             d["as"] = str(join.as_)
         case JoinReduce():
-            d["as"] = {"reduce": expr_to_dict(join.as_.reduce, json_compatible)}
+            d["reduce"] = expr_to_dict(join.reduce, json_compatible)
         case _:
             assert False
     return d

@@ -837,21 +837,13 @@ class JoinLastOf(JoinConfig):
     """
 
 
-class ReduceConfig(BaseModel):
-    """Provide reduce function to a join."""
-
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
-
-    reduce: ExpressionType[Callable]
-    """Function used to combine the results."""
-
-
 class JoinReduce(JoinConfig):
     """Join loop iterations as the value of the last iteration."""
 
-    as_: ReduceConfig = Field(alias="as")
-    """Return the result of the last iteration.
-    """
+    as_: Literal["reduce"] = Field(alias="as", default="reduce")
+
+    reduce: ExpressionType[Callable]
+    """Function used to combine the results."""
 
 
 JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce

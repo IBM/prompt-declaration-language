@@ -331,11 +331,10 @@ defs:
       import operator
       result = operator.add
 for:
-    i: [1,2,3,4]
+  i: [1,2,3,4]
 {loop_kind1}: ${{ i }}
 join:
-  as:
-    reduce: ${{ plus }}
+  reduce: ${{ plus }}
 """
         result = exec_str(prog_str)
         assert result == 10

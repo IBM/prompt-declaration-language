@@ -6366,12 +6366,26 @@
       "description": "Join loop iterations as the value of the last iteration.",
       "properties": {
         "as": {
-          "$ref": "#/$defs/ReduceConfig",
-          "description": "Return the result of the last iteration.\n    "
+          "const": "reduce",
+          "default": "reduce",
+          "title": "As",
+          "type": "string"
+        },
+        "reduce": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Function used to combine the results.",
+          "title": "Reduce"
         }
       },
       "required": [
-        "as"
+        "reduce"
       ],
       "title": "JoinReduce",
       "type": "object"
@@ -11230,29 +11244,6 @@
         "read"
       ],
       "title": "ReadBlock",
-      "type": "object"
-    },
-    "ReduceConfig": {
-      "additionalProperties": false,
-      "description": "Provide reduce function to a join.",
-      "properties": {
-        "reduce": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "Function used to combine the results.",
-          "title": "Reduce"
-        }
-      },
-      "required": [
-        "reduce"
-      ],
-      "title": "ReduceConfig",
       "type": "object"
     },
     "RegexParser": {

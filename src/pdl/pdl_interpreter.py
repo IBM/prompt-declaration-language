@@ -101,7 +101,6 @@ from .pdl_ast import (  # noqa: E402
     PdlUsage,
     Program,
     ReadBlock,
-    ReduceConfig,
     RegexParser,
     RepeatBlock,
     RoleType,
@@ -1038,9 +1037,9 @@ def _evaluate_join_field(
         case JoinText() | JoinArray() | JoinObject() | JoinLastOf():
             pass
         case JoinReduce():
-            loc = append(append(loc, "as"), "reduce")
-            _, expr = process_expr(scope, block.join.as_.reduce, loc)
-            join = block.join.model_copy(update={"as_": ReduceConfig(reduce=expr)})
+            loc = append(loc, "reduce")
+            _, expr = process_expr(scope, block.join.reduce, loc)
+            join = block.join.model_copy(update={"reduce": expr})
             block = block.model_copy(update={"join": join})
     return block
 
@@ -1288,7 +1287,7 @@ def combine_results(join_type: JoinType, results: list[PdlLazy[Any]]):
             result = lazy_apply(
                 (
                     lambda _: reduce(
-                        value_of_expr(join_type.as_.reduce),
+                        value_of_expr(join_type.reduce),
                         [r.result() for r in results],
                     )
                 ),

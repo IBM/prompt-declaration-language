@@ -1577,6 +1577,7 @@ export type As2 = "object"
  *
  */
 export type As3 = "lastOf"
+export type As4 = "reduce"
 /**
  * Function used to combine the results.
  */
@@ -5304,13 +5305,7 @@ export interface JoinLastOf {
  * Join loop iterations as the value of the last iteration.
  */
 export interface JoinReduce {
-  as: ReduceConfig
-}
-/**
- * Return the result of the last iteration.
- *
- */
-export interface ReduceConfig {
+  as?: As4
   reduce: Reduce
 }
 /**
