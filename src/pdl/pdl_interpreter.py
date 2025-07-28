@@ -14,8 +14,6 @@ from asyncio import AbstractEventLoop
 from functools import partial
 from os import getenv
 
-from pydantic.json_schema import SkipJsonSchema
-
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 from pathlib import Path  # noqa: E402
@@ -35,6 +33,7 @@ from jinja2 import (  # noqa: E402
 from jinja2.nodes import TemplateData  # noqa: E402
 from jinja2.runtime import Undefined  # noqa: E402
 from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
+from pydantic.json_schema import SkipJsonSchema  # noqa: E402
 
 from .pdl_ast import (  # noqa: E402
     AdvancedBlockType,
@@ -174,10 +173,15 @@ class ClosureBlock(FunctionBlock):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
 
     def __call__(self, **kwds):
-        state = InterpreterState(yield_result=False, yield_background=False, batch=1) # TODO
-        current_context = [] # TODO
-        result, _, _ = execute_call(state, current_context, self, kwds, empty_block_location)
+        state = InterpreterState(
+            yield_result=False, yield_background=False, batch=1
+        )  # TODO
+        current_context = []  # TODO
+        result, _, _ = execute_call(
+            state, current_context, self, kwds, empty_block_location
+        )
         return result
+
 
 def generate(
     pdl_file: str | Path,
@@ -926,7 +930,20 @@ def process_block_body(
             result, background, scope, trace = process_import(state, scope, block, loc)
 
         case FunctionBlock():
-            closure = ClosureBlock(description=block.description, spec=block.spec, defs=block.defs, def_=block.def_, contribute=block.contribute, parser=parser, fallback=block.fallback, retry=block.retry, trace_error_on_retry=block.trace_error_on_retry, role=block.role, function=block.function, return_=block.return_, )
+            closure = ClosureBlock(  # pyright: ignore
+                description=block.description,
+                spec=block.spec,
+                defs=block.defs,
+                def_=block.def_,  # pyright: ignore
+                contribute=block.contribute,
+                parser=block.parser,
+                fallback=block.fallback,
+                retry=block.retry,
+                trace_error_on_retry=block.trace_error_on_retry,
+                role=block.role,
+                function=block.function,
+                return_=block.return_,  # pyright: ignore
+            )
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
@@ -1903,7 +1920,9 @@ def process_call(
         )
     current_context = scope.data["pdl_context"]
     try:
-        result, background, call_trace = execute_call(state, current_context, closure, args, loc)
+        result, background, call_trace = execute_call(
+            state, current_context, closure, args, loc
+        )
     except PDLRuntimeError as exc:
         raise PDLRuntimeError(
             exc.message,
@@ -1912,6 +1931,7 @@ def process_call(
         ) from exc
     trace = block.model_copy(update={"pdl__trace": call_trace})
     return result, background, scope, trace
+
 
 def execute_call(state, current_context, closure, args, loc):
     if "pdl_context" in args:
@@ -1941,8 +1961,8 @@ def execute_call(state, current_context, closure, args, loc):
                 f_trace,
             ),
             result,
-        )        
-    return result,background,f_trace
+        )
+    return result, background, f_trace
 
 
 def process_input(

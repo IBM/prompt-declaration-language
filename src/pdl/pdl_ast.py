@@ -318,6 +318,7 @@ class Block(BaseModel):
         extra="forbid",
         use_attribute_docstrings=True,
         arbitrary_types_allowed=True,
+        validate_by_name=True,
     )
 
     description: Optional[str] = None
