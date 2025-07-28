@@ -943,6 +943,7 @@ def process_block_body(
                 role=block.role,
                 function=block.function,
                 return_=block.return_,  # pyright: ignore
+                pdl__location=loc,
             )
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
@@ -1956,8 +1957,8 @@ def execute_call(state, current_context, closure, args, loc):
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of function call to {closure.call}:",
-                loc,
+                f"Type errors in result of the function{' ' + closure.signature.get("name", "") if closure.signature is not None else ""}:",
+                fun_loc,
                 f_trace,
             ),
             result,
