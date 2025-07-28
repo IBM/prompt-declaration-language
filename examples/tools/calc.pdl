@@ -1,16 +1,20 @@
 description: tool use
 defs:
+  calc:
+    description: Calculator function
+    function:
+      expr:
+        type: string
+        description: Arithmetic expression to calculate
+    return:
+      lang: python
+      code: result = ${ expr }
   tools:
-    data:
-    - name: calc
-      description: Calculator function
-      arguments:
-        expr:
-          type: string
-          description: Arithmetic expression to calculate
+    array:
+      - ${ calc.signature }
 text:
 - role: system
-  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
+  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools.
   contribute: [context]
 - role: tools
   content:
@@ -21,11 +25,11 @@ text:
   model: ollama_chat/granite3.2:8b
   parser: json
   spec: [{ name: string, arguments: { expr: string }}]
-  parameters:
-    drop_params: true  # This is needed because the model does not support structured decoding. It directs LiteLLM to ignore parameters sent for structured decoding.
 - "\n"
-- if: ${ actions[0].name == "calc" }
-  then:
-    text:
-    - lang: python
-      code: result = ${ actions[0].arguments.expr }
+- match: ${ actions[0].name }
+  with:
+  - case: calc
+    then:
+      call: ${ calc }
+      args: 
+        expr: ${ actions[0].arguments.expr }

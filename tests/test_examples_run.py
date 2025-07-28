@@ -102,8 +102,8 @@ class FailedResults:
     """
 
     wrong_results: Dict[str, str] = field(default_factory=lambda: {})
-    unexpected_parse_error: List[str] = field(default_factory=lambda: [])
-    unexpected_runtime_error: List[str] = field(default_factory=lambda: [])
+    unexpected_parse_error: Dict[str, str] = field(default_factory=lambda: {})
+    unexpected_runtime_error: Dict[str, str] = field(default_factory=lambda: {})
 
 
 # pylint: disable=too-many-instance-attributes
@@ -229,9 +229,11 @@ class ExamplesRun:
             exec_result.result = str(output["result"])
             exec_result.error_code = ExecutionErrorCode.NO_ERROR
             pdl.write_trace("/dev/null", output["trace"])
-        except PDLParseError:
+        except PDLParseError as exc:
+            exec_result.result = str(exc)
             exec_result.error_code = ExecutionErrorCode.PARSE_ERROR
-        except Exception:
+        except Exception as exc:
+            exec_result.result = str(exc)
             exec_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
 
         self.execution_results[pdl_file_name] = exec_result
@@ -252,8 +254,8 @@ class ExamplesRun:
         """
 
         wrong_result: Dict[str, str] = {}
-        unexpected_parse_error: List[str] = []
-        unexpected_runtime_error: List[str] = []
+        unexpected_parse_error: Dict[str, str] = {}
+        unexpected_runtime_error: Dict[str, str] = {}
 
         for file in self.check:
             if file not in self.skip:
@@ -264,9 +266,9 @@ class ExamplesRun:
                 if not match:
                     # Check if actual results caused any error
                     if actual_result.error_code == ExecutionErrorCode.PARSE_ERROR:
-                        unexpected_parse_error.append(file)
+                        unexpected_parse_error[file] = str(actual_result.result)
                     elif actual_result.error_code == ExecutionErrorCode.RUNTIME_ERROR:
-                        unexpected_runtime_error.append(file)
+                        unexpected_runtime_error[file] = str(actual_result.result)
                     # If no error, then the results are wrong
                     else:
                         if actual_result.result is not None:
@@ -314,6 +316,26 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
 
     if background.update_results:
         background.write_results()
+
+    # Print the unexpected parse errors
+    for file, actual in background.failed_results.unexpected_parse_error.items():
+        print(
+            "\n============================================================================"
+        )
+        print(f"File that produced unexpected parse error: {file}")
+        print(
+            f"Error message:\n--------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+        )
+
+    # Print the runtime errors
+    for file, actual in background.failed_results.unexpected_runtime_error.items():
+        print(
+            "\n============================================================================"
+        )
+        print(f"File that produced unexpected runtime error: {file}")
+        print(
+            f"Error message:\n--------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+        )
 
     # Print the actual results for wrong results
     for file, actual in background.failed_results.wrong_results.items():
