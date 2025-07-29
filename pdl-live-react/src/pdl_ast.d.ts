@@ -739,17 +739,18 @@ export interface FunctionBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf21
   kind?: Kind21
@@ -895,17 +896,18 @@ export interface CallBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf
   kind?: Kind
@@ -1097,17 +1099,18 @@ export interface LitellmModelBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf1
   kind?: Kind1
@@ -1235,17 +1238,18 @@ export interface GraniteioModelBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf2
   kind?: Kind2
@@ -1382,17 +1386,18 @@ export interface CodeBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf3
   kind?: Kind3
@@ -1515,17 +1520,18 @@ export interface ArgsBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf4
   kind?: Kind4
@@ -1612,17 +1618,18 @@ export interface GetBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf5
   kind?: Kind5
@@ -1727,17 +1734,18 @@ export interface DataBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf6
   kind?: Kind6
@@ -1832,17 +1840,18 @@ export interface IfBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf7
   context?: IndependentEnum
@@ -1980,17 +1989,18 @@ export interface MatchBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf8
   context?: IndependentEnum1
@@ -2141,17 +2151,18 @@ export interface RepeatBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf9
   context?: IndependentEnum2
@@ -2302,17 +2313,18 @@ export interface MapBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf10
   context?: IndependentEnum3
@@ -2440,17 +2452,18 @@ export interface TextBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf11
   context?: IndependentEnum4
@@ -2535,17 +2548,18 @@ export interface LastOfBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf12
   context?: IndependentEnum5
@@ -2630,17 +2644,18 @@ export interface ArrayBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf13
   context?: IndependentEnum6
@@ -2725,17 +2740,18 @@ export interface ObjectBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf14
   context?: IndependentEnum7
@@ -2820,17 +2836,18 @@ export interface MessageBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf15
   kind?: Kind15
@@ -2957,17 +2974,18 @@ export interface ReadBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
@@ -3057,17 +3075,18 @@ export interface IncludeBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf17
   context?: IndependentEnum8
@@ -3153,17 +3172,18 @@ export interface ImportBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf18
   kind?: Kind18
@@ -3248,17 +3268,18 @@ export interface ErrorBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf19
   kind?: Kind19
@@ -3373,17 +3394,18 @@ export interface EmptyBlock {
    */
   role?: string | null
   /**
-   * Current context
-   *
+   * Current context.
    */
   pdl__context?: ModelInput | null
   /**
-   * Unique identifier for this block
-   *
+   * Unique identifier for this block.
    */
   pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf20
   kind?: Kind20

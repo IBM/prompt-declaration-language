@@ -57,26 +57,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -98,32 +84,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -202,26 +182,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -243,32 +209,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -445,26 +405,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -486,32 +432,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -555,14 +495,7 @@
           "title": "Args"
         },
         "pdl__trace": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null
         }
       },
@@ -609,26 +542,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -650,32 +569,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -801,26 +714,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -842,32 +741,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -944,26 +837,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -985,32 +864,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1081,26 +954,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1122,32 +981,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1215,26 +1068,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1256,32 +1095,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1374,26 +1207,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1415,32 +1234,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1503,26 +1316,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1544,32 +1343,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1751,26 +1544,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1792,32 +1571,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -1855,14 +1628,7 @@
           "description": "Branch to execute if the condition is true.\n    "
         },
         "else": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Branch to execute if the condition is false.\n    "
         }
@@ -1911,26 +1677,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -1952,32 +1704,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -1997,14 +1743,7 @@
           "type": "string"
         },
         "pdl__trace": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null
         }
       },
@@ -2051,26 +1790,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -2092,32 +1817,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -2141,14 +1860,7 @@
           "type": "string"
         },
         "pdl__trace": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null
         }
       },
@@ -2348,26 +2060,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -2389,32 +2087,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -2484,26 +2176,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -2525,32 +2203,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -3105,26 +2777,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -3146,32 +2804,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -3311,26 +2963,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -3352,32 +2990,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -3540,26 +3172,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -3581,32 +3199,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -3707,26 +3319,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -3748,32 +3346,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -3863,6 +3455,16 @@
         }
       ]
     },
+    "OptionalBlockType": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BlockType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OptionalBoolOrStr": {
       "anyOf": [
         {
@@ -3896,10 +3498,30 @@
         }
       ]
     },
+    "OptionalParserType": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ParserType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OptionalPdlLocationType": {
       "anyOf": [
         {
           "$ref": "#/$defs/PdlLocationType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalPdlTiming": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PdlTiming"
         },
         {
           "type": "null"
@@ -4188,26 +3810,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -4229,32 +3837,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": true,
@@ -4373,26 +3975,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -4414,32 +4002,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,
@@ -4611,26 +4193,12 @@
           "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ParserType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalParserType",
           "default": null,
           "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/BlockType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBlockType",
           "default": null,
           "description": "Block to execute in case of error.\n    "
         },
@@ -4652,32 +4220,26 @@
         "pdl__context": {
           "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    "
+          "description": "Current context."
         },
         "pdl__id": {
           "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    "
+          "description": "Unique identifier for this block."
         },
         "pdl__result": {
           "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block"
+          "description": "Result of the execution of the block."
         },
         "pdl__location": {
           "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlTiming"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
         },
         "pdl__is_leaf": {
           "const": false,

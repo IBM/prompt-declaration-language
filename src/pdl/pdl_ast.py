@@ -268,6 +268,8 @@ class RegexParser(Parser):
 ParserType = TypeAliasType(
     "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
 )
+OptionalParserType = TypeAliasType("OptionalParserType", Optional[ParserType])
+
 
 RoleType: TypeAlias = OptionalStr
 """Role name."""
@@ -311,6 +313,8 @@ class PdlTiming(BaseModel):
     """Timezone of start_nanos and end_nanos.
     """
 
+OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
+
 
 class PdlUsage(BaseModel):
     """Internal data structure to record token consumption usage information."""
@@ -351,9 +355,9 @@ class Block(BaseModel):
     ]
     """Indicate if the block contributes to the result and background context.
     """
-    parser: Annotated[Optional[ParserType], BeforeValidator(_ensure_lower)] = None
+    parser: Annotated[OptionalParserType, BeforeValidator(_ensure_lower)] = None
     """Parser to use to construct a value out of a string result."""
-    fallback: Optional["BlockType"] = None
+    fallback: "OptionalBlockType" = None
     """Block to execute in case of error.
     """
     retry: OptionalInt = None
@@ -369,15 +373,14 @@ class Block(BaseModel):
     """
     # Fields for internal use
     pdl__context: OptionalModelInput = []
-    """Current context
-    """
+    """Current context."""
     pdl__id: OptionalStr = ""
-    """Unique identifier for this block
-    """
+    """Unique identifier for this block."""
     pdl__result: OptionalAny = None
-    """Result of the execution of the block"""
+    """Result of the execution of the block."""
     pdl__location: OptionalPdlLocationType = None
-    pdl__timing: Optional[PdlTiming] = None
+    pdl__timing: OptionalPdlTiming = None
+    """Execution timing information."""
 
 
 class LeafBlock(Block):
@@ -422,7 +425,7 @@ class CallBlock(LeafBlock):
     """Arguments of the function with their values.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: "OptionalBlockType" = None
 
 
 class LitellmParameters(BaseModel):
@@ -746,7 +749,7 @@ class IfBlock(StructuredBlock):
     then: "BlockType"
     """Branch to execute if the condition is true.
     """
-    else_: Optional["BlockType"] = Field(default=None, alias="else")
+    else_: "OptionalBlockType" = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
 
@@ -995,7 +998,7 @@ class IncludeBlock(StructuredBlock):
     """Name of the file to include.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: "OptionalBlockType" = None
 
 
 class ImportBlock(LeafBlock):
@@ -1006,7 +1009,7 @@ class ImportBlock(LeafBlock):
     """Name of the file to import.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: "OptionalBlockType" = None
 
 
 class ErrorBlock(LeafBlock):
@@ -1061,6 +1064,7 @@ BlockType = TypeAliasType(
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 """Block or list of blocks.
 """
+OptionalBlockType = TypeAliasType("OptionalBlockType", Optional[BlockType])
 
 
 class Program(RootModel):
