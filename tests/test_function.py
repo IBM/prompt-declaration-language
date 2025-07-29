@@ -136,7 +136,7 @@ defs:
       x:
       y:
     return:
-      ${x + 1}
+      ${x + y}
 array:
 - call: ${f}
   args:
@@ -148,7 +148,7 @@ array:
     result = f(x=1, y=2)
 """
     result = exec_str(prog)
-    assert result == [2, 2, 2]
+    assert result == [3, 3, 3]
 
 
 def test_call_from_code_02():
@@ -234,3 +234,26 @@ lastOf:
         "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0'}]",
         "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
     ]
+
+
+def test_call_from_code_05():
+    prog = """
+defs:
+  f:
+    function:
+      x:
+      y:
+    return:
+      ${x - y}
+array:
+- call: ${f}
+  args:
+    x: 2
+    y: 1
+- ${ f(2, 1) }
+- lang: python
+  code:
+    result = f(2, 1)
+"""
+    result = exec_str(prog)
+    assert result == [1, 1, 1]
