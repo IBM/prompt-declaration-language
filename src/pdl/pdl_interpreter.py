@@ -193,11 +193,24 @@ class ClosureBlock(FunctionBlock):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
     pdl__state: SkipJsonSchema[InterpreterState] = Field(repr=False)
 
-    def __call__(self, **kwds):
+    def __call__(self, *args, **kwargs):
         state = self.pdl__state.with_yield_result(False).with_yield_background(False)
         current_context = state.current_pdl_context.ref
+        if len(args) > 0:
+            keys = self.function.keys() if self.function is not None else {}
+            if len(keys) < len(args):
+                if self.signature is not None and self.signature.get("name", "") != "":
+                    err = f"Too many arguments to the call of {self.signature['name']}"
+                else:
+                    err = "Too many arguments to the call"
+                raise PDLRuntimeExpressionError(
+                    err,
+                    loc=self.pdl__location,
+                    trace=self.model_copy(),
+                )
+            kwargs = dict(zip(keys, args)) | kwargs
         result, _, _ = execute_call(
-            state, current_context, self, kwds, empty_block_location
+            state, current_context, self, kwargs, self.pdl__location
         )
         return result
 
