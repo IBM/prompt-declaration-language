@@ -140,16 +140,11 @@ class AnyPattern(Pattern):
     any: Literal[None]
 
 
-PatternType: TypeAlias = (
-    None
-    | bool
-    | int
-    | float
-    | str
-    | OrPattern
-    | ArrayPattern
-    | ObjectPattern
-    | AnyPattern
+PatternType = TypeAliasType(
+    "PatternType",
+    Union[
+        None, bool, int, float, str, OrPattern, ArrayPattern, ObjectPattern, AnyPattern
+    ],
 )
 """Patterns allowed to match values in a `case` clause."""
 
@@ -261,8 +256,9 @@ class RegexParser(Parser):
     """Function used to parse to value (https://docs.python.org/3/library/re.html)."""
 
 
-ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
-
+ParserType = TypeAliasType(
+    "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
+)
 
 RoleType: TypeAlias = Optional[str]
 """Role name."""
@@ -843,7 +839,9 @@ class JoinReduce(JoinConfig):
     """Function used to combine the results."""
 
 
-JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+JoinType = TypeAliasType(
+    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
+)
 """Different ways to join loop iterations."""
 
 
@@ -1041,7 +1039,6 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-# BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
 BlockType = TypeAliasType(
     "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
 )

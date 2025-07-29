@@ -122,14 +122,7 @@ export type Contribute = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
+export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
 export type Description2 = string | null
 export type Description3 = string | null
 export type Regex = string
@@ -196,14 +189,6 @@ export type Contribute1 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser1 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -256,14 +241,6 @@ export type Contribute2 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser2 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -315,14 +292,6 @@ export type Contribute3 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser3 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -380,14 +349,6 @@ export type Contribute4 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser4 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -447,14 +408,6 @@ export type Contribute5 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser5 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -511,14 +464,6 @@ export type Contribute6 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser6 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -574,14 +519,6 @@ export type Contribute7 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser7 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -641,14 +578,6 @@ export type Contribute8 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser8 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -681,7 +610,7 @@ export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind8 = "match"
-export type Case =
+export type PatternType =
   | boolean
   | number
   | string
@@ -691,30 +620,12 @@ export type Case =
   | AnyPattern
   | null
 export type Def9 = string | null
+export type Anyof = PatternType[]
 export type Def10 = string | null
+export type Array = PatternType[]
 export type Def11 = string | null
 export type Def12 = string | null
 export type Any = null
-export type Array = (
-  | boolean
-  | number
-  | string
-  | OrPattern
-  | ArrayPattern
-  | ObjectPattern
-  | AnyPattern
-  | null
-)[]
-export type Anyof = (
-  | boolean
-  | number
-  | string
-  | OrPattern
-  | ArrayPattern
-  | ObjectPattern
-  | AnyPattern
-  | null
-)[]
 export type If1 = LocalizedExpression | boolean | string | null
 export type PdlCaseResult = boolean | null
 export type PdlIfResult = boolean | null
@@ -744,14 +655,6 @@ export type Contribute9 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser9 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -823,14 +726,6 @@ export type Contribute10 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser10 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -896,14 +791,6 @@ export type Contribute11 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser11 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -962,14 +849,6 @@ export type Contribute12 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser12 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1027,14 +906,6 @@ export type Contribute13 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser13 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1091,14 +962,6 @@ export type Contribute14 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser14 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -1158,14 +1021,6 @@ export type Contribute15 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser15 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1217,14 +1072,6 @@ export type Contribute16 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser16 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -1293,14 +1140,6 @@ export type Contribute17 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser17 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1359,14 +1198,6 @@ export type Contribute18 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser18 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1423,14 +1254,6 @@ export type Contribute19 = (
       [k: string]: ContributeValue
     }
 )[]
-/**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser19 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
 /**
  * The maximum number of times to retry when an error occurs within a block.
  *
@@ -1489,14 +1312,6 @@ export type Contribute20 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser20 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1542,11 +1357,6 @@ export type ToolCallId = LocalizedExpression | string | null
  */
 export type Maxiterations = LocalizedExpression | number | string | null
 /**
- * Define how to combine the result of each iteration.
- *
- */
-export type Join = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
-/**
  * String concatenation of the result of each iteration.
  *
  */
@@ -1587,11 +1397,6 @@ export type Until = LocalizedExpression | boolean | string
  *
  */
 export type Maxiterations1 = LocalizedExpression | number | string | null
-/**
- * Define how to combine the result of each iteration.
- *
- */
-export type Join1 = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 export type PdlTrace1 = BlockType[] | null
 /**
  * Variable where to store the raw response of the model.
@@ -1716,14 +1521,6 @@ export type Contribute21 = (
     }
 )[]
 /**
- * Parser to use to construct a value out of a string result.
- */
-export type Parser21 =
-  | ("json" | "jsonl" | "yaml")
-  | PdlParser
-  | RegexParser
-  | null
-/**
  * The maximum number of times to retry when an error occurs within a block.
  *
  */
@@ -1832,7 +1629,10 @@ export interface FunctionBlock {
   defs?: Defs
   def?: Def25
   contribute?: Contribute21
-  parser?: Parser21
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -1956,7 +1756,10 @@ export interface CallBlock {
   defs?: Defs1
   def?: Def
   contribute?: Contribute
-  parser?: Parser
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2126,7 +1929,10 @@ export interface LitellmModelBlock {
   defs?: Defs2
   def?: Def1
   contribute?: Contribute1
-  parser?: Parser1
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2228,7 +2034,10 @@ export interface GraniteioModelBlock {
   defs?: Defs3
   def?: Def2
   contribute?: Contribute2
-  parser?: Parser2
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2339,7 +2148,10 @@ export interface CodeBlock {
   defs?: Defs4
   def?: Def3
   contribute?: Contribute3
-  parser?: Parser3
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2440,7 +2252,10 @@ export interface ArgsBlock {
   defs?: Defs5
   def?: Def4
   contribute?: Contribute4
-  parser?: Parser4
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2505,7 +2320,10 @@ export interface GetBlock {
   defs?: Defs6
   def?: Def5
   contribute?: Contribute5
-  parser?: Parser5
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2588,7 +2406,10 @@ export interface DataBlock {
   defs?: Defs7
   def?: Def6
   contribute?: Contribute6
-  parser?: Parser6
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2661,7 +2482,10 @@ export interface IfBlock {
   defs?: Defs8
   def?: Def7
   contribute?: Contribute7
-  parser?: Parser7
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2777,7 +2601,10 @@ export interface MatchBlock {
   defs?: Defs9
   def?: Def8
   contribute?: Contribute8
-  parser?: Parser8
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2808,7 +2635,7 @@ export interface Defs9 {
  * Case of a match.
  */
 export interface MatchCase {
-  case?: Case
+  case?: PatternType | null
   if?: If1
   then: BlockType
   pdl__case_result?: PdlCaseResult
@@ -2837,15 +2664,7 @@ export interface ObjectPattern {
   object: Object1
 }
 export interface Object1 {
-  [k: string]:
-    | boolean
-    | number
-    | string
-    | OrPattern
-    | ArrayPattern
-    | ObjectPattern
-    | AnyPattern
-    | null
+  [k: string]: PatternType
 }
 /**
  * Match any value.
@@ -2914,7 +2733,10 @@ export interface RepeatBlock {
   defs?: Defs10
   def?: Def13
   contribute?: Contribute9
-  parser?: Parser9
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -2967,7 +2789,11 @@ export interface RepeatBlock {
     | null
   until?: Until
   maxIterations?: Maxiterations1
-  join?: Join1
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
+  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
   pdl__trace?: PdlTrace1
 }
 /**
@@ -3035,7 +2861,10 @@ export interface MapBlock {
   defs?: Defs11
   def?: Def14
   contribute?: Contribute10
-  parser?: Parser10
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3086,7 +2915,11 @@ export interface MapBlock {
     | EmptyBlock
     | null
   maxIterations?: Maxiterations
-  join?: Join
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
+  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
   pdl__trace?: PdlTrace
 }
 /**
@@ -3133,7 +2966,10 @@ export interface TextBlock {
   defs?: Defs12
   def?: Def15
   contribute?: Contribute11
-  parser?: Parser11
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3196,7 +3032,10 @@ export interface LastOfBlock {
   defs?: Defs13
   def?: Def16
   contribute?: Contribute12
-  parser?: Parser12
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3259,7 +3098,10 @@ export interface ArrayBlock {
   defs?: Defs14
   def?: Def17
   contribute?: Contribute13
-  parser?: Parser13
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3322,7 +3164,10 @@ export interface ObjectBlock {
   defs?: Defs15
   def?: Def18
   contribute?: Contribute14
-  parser?: Parser14
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3385,7 +3230,10 @@ export interface MessageBlock {
   defs?: Defs16
   def?: Def19
   contribute?: Contribute15
-  parser?: Parser15
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3490,7 +3338,10 @@ export interface ReadBlock {
   defs?: Defs17
   def?: Def20
   contribute?: Contribute16
-  parser?: Parser16
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3554,7 +3405,10 @@ export interface IncludeBlock {
   defs?: Defs18
   def?: Def21
   contribute?: Contribute17
-  parser?: Parser17
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3618,7 +3472,10 @@ export interface ImportBlock {
   defs?: Defs19
   def?: Def22
   contribute?: Contribute18
-  parser?: Parser18
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3681,7 +3538,10 @@ export interface ErrorBlock {
   defs?: Defs20
   def?: Def23
   contribute?: Contribute19
-  parser?: Parser19
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *
@@ -3774,7 +3634,10 @@ export interface EmptyBlock {
   defs?: Defs21
   def?: Def24
   contribute?: Contribute20
-  parser?: Parser20
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
   /**
    * Block to execute in case of error.
    *

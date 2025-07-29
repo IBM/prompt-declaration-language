@@ -97,26 +97,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -344,26 +332,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -531,35 +507,7 @@
         },
         "array": {
           "items": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/OrPattern"
-              },
-              {
-                "$ref": "#/$defs/ArrayPattern"
-              },
-              {
-                "$ref": "#/$defs/ObjectPattern"
-              },
-              {
-                "$ref": "#/$defs/AnyPattern"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/PatternType"
           },
           "title": "Array",
           "type": "array"
@@ -725,26 +673,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -991,26 +927,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -1269,26 +1193,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -1514,26 +1426,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -1753,26 +1653,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -1989,26 +1877,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -2250,26 +2126,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -2481,26 +2345,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -2851,26 +2703,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -3113,26 +2953,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -3355,26 +3183,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -3641,6 +3457,25 @@
       "title": "JoinText",
       "type": "object"
     },
+    "JoinType": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/JoinText"
+        },
+        {
+          "$ref": "#/$defs/JoinArray"
+        },
+        {
+          "$ref": "#/$defs/JoinObject"
+        },
+        {
+          "$ref": "#/$defs/JoinLastOf"
+        },
+        {
+          "$ref": "#/$defs/JoinReduce"
+        }
+      ]
+    },
     "JsonSchemaTypePdlType": {
       "additionalProperties": true,
       "description": "Json Schema with a type field.",
@@ -3735,26 +3570,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -3973,26 +3796,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -4723,26 +4534,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -4941,29 +4740,12 @@
           "title": "Maxiterations"
         },
         "join": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/JoinText"
-            },
-            {
-              "$ref": "#/$defs/JoinArray"
-            },
-            {
-              "$ref": "#/$defs/JoinObject"
-            },
-            {
-              "$ref": "#/$defs/JoinLastOf"
-            },
-            {
-              "$ref": "#/$defs/JoinReduce"
-            }
-          ],
+          "$ref": "#/$defs/JoinType",
           "default": {
             "as": "text",
             "with": ""
           },
-          "description": "Define how to combine the result of each iteration.\n    ",
-          "title": "Join"
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "pdl__trace": {
           "anyOf": [
@@ -5056,26 +4838,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -5246,35 +5016,13 @@
         "case": {
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/OrPattern"
-            },
-            {
-              "$ref": "#/$defs/ArrayPattern"
-            },
-            {
-              "$ref": "#/$defs/ObjectPattern"
-            },
-            {
-              "$ref": "#/$defs/AnyPattern"
+              "$ref": "#/$defs/PatternType"
             },
             {
               "type": "null"
             }
           ],
-          "default": null,
-          "title": "Case"
+          "default": null
         },
         "if": {
           "anyOf": [
@@ -5409,26 +5157,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -5671,26 +5407,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -5867,35 +5591,7 @@
         },
         "object": {
           "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/OrPattern"
-              },
-              {
-                "$ref": "#/$defs/ArrayPattern"
-              },
-              {
-                "$ref": "#/$defs/ObjectPattern"
-              },
-              {
-                "$ref": "#/$defs/AnyPattern"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/PatternType"
           },
           "title": "Object",
           "type": "object"
@@ -5957,35 +5653,7 @@
         },
         "anyOf": {
           "items": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/OrPattern"
-              },
-              {
-                "$ref": "#/$defs/ArrayPattern"
-              },
-              {
-                "$ref": "#/$defs/ObjectPattern"
-              },
-              {
-                "$ref": "#/$defs/AnyPattern"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/$defs/PatternType"
           },
           "title": "Anyof",
           "type": "array"
@@ -5996,6 +5664,55 @@
       ],
       "title": "OrPattern",
       "type": "object"
+    },
+    "ParserType": {
+      "anyOf": [
+        {
+          "enum": [
+            "json",
+            "jsonl",
+            "yaml"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/PdlParser"
+        },
+        {
+          "$ref": "#/$defs/RegexParser"
+        }
+      ]
+    },
+    "PatternType": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/OrPattern"
+        },
+        {
+          "$ref": "#/$defs/ArrayPattern"
+        },
+        {
+          "$ref": "#/$defs/ObjectPattern"
+        },
+        {
+          "$ref": "#/$defs/AnyPattern"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "PdlBlock": {
       "$ref": "#/$defs/BlockType",
@@ -6272,26 +5989,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -6575,26 +6280,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
@@ -6825,29 +6518,12 @@
           "title": "Maxiterations"
         },
         "join": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/JoinText"
-            },
-            {
-              "$ref": "#/$defs/JoinArray"
-            },
-            {
-              "$ref": "#/$defs/JoinObject"
-            },
-            {
-              "$ref": "#/$defs/JoinLastOf"
-            },
-            {
-              "$ref": "#/$defs/JoinReduce"
-            }
-          ],
+          "$ref": "#/$defs/JoinType",
           "default": {
             "as": "text",
             "with": ""
           },
-          "description": "Define how to combine the result of each iteration.\n    ",
-          "title": "Join"
+          "description": "Define how to combine the result of each iteration.\n    "
         },
         "pdl__trace": {
           "anyOf": [
@@ -6940,26 +6616,14 @@
         "parser": {
           "anyOf": [
             {
-              "enum": [
-                "json",
-                "jsonl",
-                "yaml"
-              ],
-              "type": "string"
-            },
-            {
-              "$ref": "#/$defs/PdlParser"
-            },
-            {
-              "$ref": "#/$defs/RegexParser"
+              "$ref": "#/$defs/ParserType"
             },
             {
               "type": "null"
             }
           ],
           "default": null,
-          "description": "Parser to use to construct a value out of a string result.",
-          "title": "Parser"
+          "description": "Parser to use to construct a value out of a string result."
         },
         "fallback": {
           "anyOf": [
