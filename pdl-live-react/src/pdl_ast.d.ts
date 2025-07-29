@@ -36,11 +36,6 @@ export type Program =
   | ErrorBlock
   | EmptyBlock
   | null
-/**
- * Documentation associated to the block.
- *
- */
-export type Description = string | null
 export type Enum = unknown[]
 export type PdlTypeType =
   | (
@@ -96,16 +91,6 @@ export type BlockType =
   | EmptyBlock
   | null
 /**
- * Documentation associated to the block.
- *
- */
-export type Description1 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def = string | null
-/**
  * Values allowed in the `contribute` field.
  */
 export type ContributeTarget = "result" | "context"
@@ -116,51 +101,18 @@ export type File = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute = (
+export type ContributeType = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
 export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
-export type Description2 = string | null
-export type Description3 = string | null
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role = string | null
-/**
- * Current context
- *
- */
-export type PdlContext =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId = string | null
-export type StartNanos = number | null
-export type EndNanos = number | null
-export type FirstUseNanos = number | null
-export type Timezone = string | null
+export type ModelInput = {
+  [k: string]: unknown
+}[]
 export type PdlIsLeaf = true
 export type Kind = "call"
 /**
@@ -169,159 +121,39 @@ export type Kind = "call"
  */
 export type Call = LocalizedExpression | FunctionBlock | string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description4 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def1 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute1 = (
+export type ContributeType1 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry1 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry1 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role1 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext1 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId1 = string | null
 export type PdlIsLeaf1 = true
 export type Kind1 = "model"
 /**
- * Documentation associated to the block.
- *
- */
-export type Description5 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def2 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute2 = (
+export type ContributeType2 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry2 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry2 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role2 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext2 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId2 = string | null
 export type PdlIsLeaf2 = true
 export type Kind2 = "model"
 /**
- * Documentation associated to the block.
- *
- */
-export type Description6 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def3 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute3 = (
+export type ContributeType3 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry3 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry3 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role3 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext3 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId3 = string | null
 export type PdlIsLeaf3 = true
 export type Kind3 = "code"
 /**
@@ -330,55 +162,15 @@ export type Kind3 = "code"
  */
 export type Lang = "python" | "command" | "jinja" | "pdl" | "ipython"
 /**
- * Documentation associated to the block.
- *
- */
-export type Description7 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def4 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute4 = (
+export type ContributeType4 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry4 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry4 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role4 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext4 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId4 = string | null
 export type PdlIsLeaf4 = true
 export type Kind4 = "code"
 export type Lang1 = "command"
@@ -388,55 +180,15 @@ export type Lang1 = "command"
  */
 export type Args1 = (LocalizedExpression | string)[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description8 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def5 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute5 = (
+export type ContributeType5 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry5 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry5 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role5 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext5 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId5 = string | null
 export type PdlIsLeaf5 = true
 export type Kind5 = "get"
 /**
@@ -444,55 +196,15 @@ export type Kind5 = "get"
  */
 export type Get = string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description9 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def6 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute6 = (
+export type ContributeType6 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry6 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry6 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role6 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext6 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId6 = string | null
 export type PdlIsLeaf6 = true
 export type Kind6 = "data"
 /**
@@ -500,55 +212,15 @@ export type Kind6 = "data"
  */
 export type Raw = boolean
 /**
- * Documentation associated to the block.
- *
- */
-export type Description10 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def7 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute7 = (
+export type ContributeType7 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry7 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry7 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role7 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext7 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId7 = string | null
 export type PdlIsLeaf7 = false
 export type IndependentEnum = "independent" | "dependent"
 export type Kind7 = "if"
@@ -558,55 +230,15 @@ export type Kind7 = "if"
  */
 export type If = LocalizedExpression | boolean | string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description11 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def8 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute8 = (
+export type ContributeType8 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry8 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry8 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role8 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext8 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId8 = string | null
 export type PdlIsLeaf8 = false
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind8 = "match"
@@ -619,12 +251,8 @@ export type PatternType =
   | ObjectPattern
   | AnyPattern
   | null
-export type Def9 = string | null
 export type Anyof = PatternType[]
-export type Def10 = string | null
 export type Array = PatternType[]
-export type Def11 = string | null
-export type Def12 = string | null
 export type Any = null
 export type If1 = LocalizedExpression | boolean | string | null
 export type PdlCaseResult = boolean | null
@@ -636,55 +264,15 @@ export type PdlMatched = boolean | null
  */
 export type With = MatchCase[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description12 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def13 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute9 = (
+export type ContributeType9 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry9 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry9 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role9 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext9 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId9 = string | null
 export type PdlIsLeaf9 = false
 export type IndependentEnum2 = "independent" | "dependent"
 export type Kind9 = "repeat"
@@ -696,65 +284,20 @@ export type For = {
   [k: string]: LocalizedExpression | unknown[] | string
 } | null
 /**
- * Name of the variable containing the loop iteration.
- *
- */
-export type Index = string | null
-/**
  * Condition to stay at the beginning of the loop.
  *
  */
 export type While = LocalizedExpression | boolean | string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description13 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def14 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute10 = (
+export type ContributeType10 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry10 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry10 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role10 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext10 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId10 = string | null
 export type PdlIsLeaf10 = false
 export type IndependentEnum3 = "independent" | "dependent"
 export type Kind10 = "map"
@@ -766,60 +309,15 @@ export type For1 = {
   [k: string]: LocalizedExpression | unknown[] | string
 } | null
 /**
- * Name of the variable containing the loop iteration.
- *
- */
-export type Index1 = string | null
-/**
- * Documentation associated to the block.
- *
- */
-export type Description14 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def15 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute11 = (
+export type ContributeType11 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry11 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry11 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role11 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext11 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId11 = string | null
 export type PdlIsLeaf11 = false
 export type IndependentEnum4 = "independent" | "dependent"
 export type Kind11 = "text"
@@ -829,55 +327,15 @@ export type Kind11 = "text"
  */
 export type Text = BlockType | BlockType[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description15 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def16 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute12 = (
+export type ContributeType12 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry12 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry12 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role12 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext12 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId12 = string | null
 export type PdlIsLeaf12 = false
 export type IndependentEnum5 = "independent" | "dependent"
 export type Kind12 = "lastOf"
@@ -886,55 +344,15 @@ export type Kind12 = "lastOf"
  */
 export type Lastof = BlockType[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description16 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def17 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute13 = (
+export type ContributeType13 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry13 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry13 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role13 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext13 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId13 = string | null
 export type PdlIsLeaf13 = false
 export type IndependentEnum6 = "independent" | "dependent"
 export type Kind13 = "array"
@@ -943,55 +361,15 @@ export type Kind13 = "array"
  */
 export type Array1 = BlockType[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description17 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def18 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute14 = (
+export type ContributeType14 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry14 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry14 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role14 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext14 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId14 = string | null
 export type PdlIsLeaf14 = false
 export type IndependentEnum7 = "independent" | "dependent"
 export type Kind14 = "object"
@@ -1001,107 +379,27 @@ export type Object2 =
     }
   | BlockType[]
 /**
- * Documentation associated to the block.
- *
- */
-export type Description18 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def19 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute15 = (
+export type ContributeType15 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry15 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry15 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role15 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext15 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId15 = string | null
 export type PdlIsLeaf15 = true
 export type Kind15 = "message"
 /**
- * Documentation associated to the block.
- *
- */
-export type Description19 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def20 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute16 = (
+export type ContributeType16 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry16 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry16 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role16 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext16 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId16 = string | null
 export type PdlIsLeaf16 = true
 export type Kind16 = "read"
 /**
@@ -1110,65 +408,20 @@ export type Kind16 = "read"
  */
 export type Read = LocalizedExpression | string | null
 /**
- * Message to prompt the user to enter a value.
- *
- */
-export type Message = string | null
-/**
  * Indicate if one or multiple lines should be read.
  *
  */
 export type Multiline = boolean
 /**
- * Documentation associated to the block.
- *
- */
-export type Description20 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def21 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute17 = (
+export type ContributeType17 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry17 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry17 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role17 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext17 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId17 = string | null
 export type PdlIsLeaf17 = false
 export type IndependentEnum8 = "independent" | "dependent"
 export type Kind17 = "include"
@@ -1178,55 +431,15 @@ export type Kind17 = "include"
  */
 export type Include = string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description21 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def22 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute18 = (
+export type ContributeType18 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry18 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry18 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role18 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext18 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId18 = string | null
 export type PdlIsLeaf18 = true
 export type Kind18 = "import"
 /**
@@ -1235,55 +448,15 @@ export type Kind18 = "import"
  */
 export type Import = string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description22 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def23 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute19 = (
+export type ContributeType19 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry19 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry19 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role19 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext19 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId19 = string | null
 export type PdlIsLeaf19 = true
 export type Kind19 = "error"
 /**
@@ -1292,55 +465,15 @@ export type Kind19 = "error"
  */
 export type Msg = string
 /**
- * Documentation associated to the block.
- *
- */
-export type Description23 = string | null
-/**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def24 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute20 = (
+export type ContributeType20 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry20 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry20 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role20 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext20 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId20 = string | null
 export type PdlIsLeaf20 = true
 export type Kind20 = "empty"
 /**
@@ -1399,18 +532,6 @@ export type Until = LocalizedExpression | boolean | string
 export type Maxiterations1 = LocalizedExpression | number | string | null
 export type PdlTrace1 = BlockType[] | null
 /**
- * Variable where to store the raw response of the model.
- *
- */
-export type Modelresponse = string | null
-export type CompletionTokens = number | null
-export type PromptTokens = number | null
-export type PdlModelInput =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
  * Optional field to ensure that the block is using granite-io.
  *
  */
@@ -1425,16 +546,6 @@ export type Parameters =
       [k: string]: unknown
     }
   | string
-  | null
-/**
- * Variable where to store the raw response of the model.
- *
- */
-export type Modelresponse1 = string | null
-export type PdlModelInput1 =
-  | {
-      [k: string]: unknown
-    }[]
   | null
 /**
  * Optional field to ensure that the block is using LiteLLM.
@@ -1506,50 +617,15 @@ export type MockResponse = string | null
 export type CustomLlmProvider = string | null
 export type MaxRetries = number | string | null
 /**
- * Name of the variable used to store the result of the execution of the block.
- *
- */
-export type Def25 = string | null
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute21 = (
+export type ContributeType21 = (
   | ContributeTarget
   | {
       [k: string]: ContributeValue
     }
 )[]
-/**
- * The maximum number of times to retry when an error occurs within a block.
- *
- */
-export type Retry21 = number | null
-/**
- * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
- *
- */
-export type TraceErrorOnRetry21 = boolean | string | null
-/**
- * Role associated to the block and sub-blocks.
- * Typical roles are `system`, `user`, and `assistant`,
- * but there may be other roles such as `available_tools`.
- */
-export type Role21 = string | null
-/**
- * Current context
- *
- */
-export type PdlContext21 =
-  | {
-      [k: string]: unknown
-    }[]
-  | null
-/**
- * Unique identifier for this block
- *
- */
-export type PdlId21 = string | null
 export type PdlIsLeaf21 = true
 export type Kind21 = "function"
 /**
@@ -1596,7 +672,11 @@ export type PdlBlock =
  * Function declaration.
  */
 export interface FunctionBlock {
-  description?: Description
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -1627,8 +707,12 @@ export interface FunctionBlock {
       }
     | null
   defs?: Defs
-  def?: Def25
-  contribute?: Contribute21
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType21
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1638,11 +722,32 @@ export interface FunctionBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry21
-  trace_error_on_retry?: TraceErrorOnRetry21
-  role?: Role21
-  pdl__context?: PdlContext21
-  pdl__id?: PdlId21
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -1723,7 +828,11 @@ export interface Defs {
  * Calling a function.
  */
 export interface CallBlock {
-  description?: Description1
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -1754,8 +863,12 @@ export interface CallBlock {
       }
     | null
   defs?: Defs1
-  def?: Def
-  contribute?: Contribute
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1765,11 +878,32 @@ export interface CallBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry
-  trace_error_on_retry?: TraceErrorOnRetry
-  role?: Role
-  pdl__context?: PdlContext
-  pdl__id?: PdlId
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -1815,7 +949,7 @@ export interface Table {
  * Use a PDL program as a parser specification (experimental).
  */
 export interface PdlParser {
-  description?: Description2
+  description?: string | null
   spec?:
     | (
         | "null"
@@ -1847,7 +981,7 @@ export interface PdlParser {
  * A regular expression parser.
  */
 export interface RegexParser {
-  description?: Description3
+  description?: string | null
   spec?:
     | (
         | "null"
@@ -1880,10 +1014,10 @@ export interface RegexParser {
  * Internal data structure to record timing information in the trace.
  */
 export interface PdlTiming {
-  start_nanos?: StartNanos
-  end_nanos?: EndNanos
-  first_use_nanos?: FirstUseNanos
-  timezone?: Timezone
+  start_nanos?: number | null
+  end_nanos?: number | null
+  first_use_nanos?: number | null
+  timezone?: string | null
 }
 /**
  * Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).
@@ -1896,7 +1030,11 @@ export interface PdlTiming {
  * ```
  */
 export interface LitellmModelBlock {
-  description?: Description4
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -1927,8 +1065,12 @@ export interface LitellmModelBlock {
       }
     | null
   defs?: Defs2
-  def?: Def1
-  contribute?: Contribute1
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType1
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1938,11 +1080,32 @@ export interface LitellmModelBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry1
-  trace_error_on_retry?: TraceErrorOnRetry1
-  role?: Role1
-  pdl__context?: PdlContext1
-  pdl__id?: PdlId1
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -1979,13 +1142,17 @@ export interface LitellmModelBlock {
     | ErrorBlock
     | EmptyBlock
     | null
-  modelResponse?: Modelresponse1
+  /**
+   * Variable where to store the raw response of the model.
+   *
+   */
+  modelResponse?: string | null
   /**
    * Tokens consumed during model call
    *
    */
   pdl__usage?: PdlUsage | null
-  pdl__model_input?: PdlModelInput1
+  pdl__model_input?: ModelInput | null
   platform?: Platform1
   model: Model1
   parameters?: Parameters1
@@ -2001,7 +1168,11 @@ export interface Defs2 {
  * Call an LLM through the granite-io API.
  */
 export interface GraniteioModelBlock {
-  description?: Description5
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2032,8 +1203,12 @@ export interface GraniteioModelBlock {
       }
     | null
   defs?: Defs3
-  def?: Def2
-  contribute?: Contribute2
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType2
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2043,11 +1218,32 @@ export interface GraniteioModelBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry2
-  trace_error_on_retry?: TraceErrorOnRetry2
-  role?: Role2
-  pdl__context?: PdlContext2
-  pdl__id?: PdlId2
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2084,13 +1280,17 @@ export interface GraniteioModelBlock {
     | ErrorBlock
     | EmptyBlock
     | null
-  modelResponse?: Modelresponse
+  /**
+   * Variable where to store the raw response of the model.
+   *
+   */
+  modelResponse?: string | null
   /**
    * Tokens consumed during model call
    *
    */
   pdl__usage?: PdlUsage | null
-  pdl__model_input?: PdlModelInput
+  pdl__model_input?: ModelInput | null
   platform?: Platform
   processor: unknown
   parameters?: Parameters
@@ -2115,7 +1315,11 @@ export interface Defs3 {
  * ```
  */
 export interface CodeBlock {
-  description?: Description6
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2146,8 +1350,12 @@ export interface CodeBlock {
       }
     | null
   defs?: Defs4
-  def?: Def3
-  contribute?: Contribute3
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType3
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2157,11 +1365,32 @@ export interface CodeBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry3
-  trace_error_on_retry?: TraceErrorOnRetry3
-  role?: Role3
-  pdl__context?: PdlContext3
-  pdl__id?: PdlId3
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2219,7 +1448,11 @@ export interface Defs4 {
  * ```
  */
 export interface ArgsBlock {
-  description?: Description7
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2250,8 +1483,12 @@ export interface ArgsBlock {
       }
     | null
   defs?: Defs5
-  def?: Def4
-  contribute?: Contribute4
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType4
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2261,11 +1498,32 @@ export interface ArgsBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry4
-  trace_error_on_retry?: TraceErrorOnRetry4
-  role?: Role4
-  pdl__context?: PdlContext4
-  pdl__id?: PdlId4
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2287,7 +1545,11 @@ export interface Defs5 {
  * The GetBlock is deprecated.  Use DataBlock instead.
  */
 export interface GetBlock {
-  description?: Description8
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2318,8 +1580,12 @@ export interface GetBlock {
       }
     | null
   defs?: Defs6
-  def?: Def5
-  contribute?: Contribute5
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType5
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2329,11 +1595,32 @@ export interface GetBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry5
-  trace_error_on_retry?: TraceErrorOnRetry5
-  role?: Role5
-  pdl__context?: PdlContext5
-  pdl__id?: PdlId5
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2373,7 +1660,11 @@ export interface Defs6 {
  * ```
  */
 export interface DataBlock {
-  description?: Description9
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2404,8 +1695,12 @@ export interface DataBlock {
       }
     | null
   defs?: Defs7
-  def?: Def6
-  contribute?: Contribute6
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType6
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2415,11 +1710,32 @@ export interface DataBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry6
-  trace_error_on_retry?: TraceErrorOnRetry6
-  role?: Role6
-  pdl__context?: PdlContext6
-  pdl__id?: PdlId6
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2449,7 +1765,11 @@ export interface Defs7 {
  * ```
  */
 export interface IfBlock {
-  description?: Description10
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2480,8 +1800,12 @@ export interface IfBlock {
       }
     | null
   defs?: Defs8
-  def?: Def7
-  contribute?: Contribute7
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType7
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2491,11 +1815,32 @@ export interface IfBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry7
-  trace_error_on_retry?: TraceErrorOnRetry7
-  role?: Role7
-  pdl__context?: PdlContext7
-  pdl__id?: PdlId7
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2568,7 +1913,11 @@ export interface Defs8 {
  * - then: Too low
  */
 export interface MatchBlock {
-  description?: Description11
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2599,8 +1948,12 @@ export interface MatchBlock {
       }
     | null
   defs?: Defs9
-  def?: Def8
-  contribute?: Contribute8
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType8
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2610,11 +1963,32 @@ export interface MatchBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry8
-  trace_error_on_retry?: TraceErrorOnRetry8
-  role?: Role8
-  pdl__context?: PdlContext8
-  pdl__id?: PdlId8
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2646,21 +2020,21 @@ export interface MatchCase {
  * Match any of the patterns.
  */
 export interface OrPattern {
-  def?: Def9
+  def?: string | null
   anyOf: Anyof
 }
 /**
  * Match an array.
  */
 export interface ArrayPattern {
-  def?: Def10
+  def?: string | null
   array: Array
 }
 /**
  * Match an object.
  */
 export interface ObjectPattern {
-  def?: Def11
+  def?: string | null
   object: Object1
 }
 export interface Object1 {
@@ -2670,7 +2044,7 @@ export interface Object1 {
  * Match any value.
  */
 export interface AnyPattern {
-  def?: Def12
+  def?: string | null
   any: Any
 }
 /**
@@ -2700,7 +2074,11 @@ export interface AnyPattern {
  * ```
  */
 export interface RepeatBlock {
-  description?: Description12
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2731,8 +2109,12 @@ export interface RepeatBlock {
       }
     | null
   defs?: Defs10
-  def?: Def13
-  contribute?: Contribute9
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType9
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2742,11 +2124,32 @@ export interface RepeatBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry9
-  trace_error_on_retry?: TraceErrorOnRetry9
-  role?: Role9
-  pdl__context?: PdlContext9
-  pdl__id?: PdlId9
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2754,7 +2157,11 @@ export interface RepeatBlock {
   context?: IndependentEnum2
   kind?: Kind9
   for?: For
-  index?: Index
+  /**
+   * Name of the variable containing the loop iteration.
+   *
+   */
+  index?: string | null
   while?: While
   /**
    * Body of the loop.
@@ -2828,7 +2235,11 @@ export interface Defs10 {
  * ```
  */
 export interface MapBlock {
-  description?: Description13
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2859,8 +2270,12 @@ export interface MapBlock {
       }
     | null
   defs?: Defs11
-  def?: Def14
-  contribute?: Contribute10
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType10
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2870,11 +2285,32 @@ export interface MapBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry10
-  trace_error_on_retry?: TraceErrorOnRetry10
-  role?: Role10
-  pdl__context?: PdlContext10
-  pdl__id?: PdlId10
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2882,7 +2318,11 @@ export interface MapBlock {
   context?: IndependentEnum3
   kind?: Kind10
   for?: For1
-  index?: Index1
+  /**
+   * Name of the variable containing the loop iteration.
+   *
+   */
+  index?: string | null
   /**
    * Body of the iterator.
    *
@@ -2933,7 +2373,11 @@ export interface Defs11 {
  * Create the concatenation of the stringify version of the result of each block of the list of blocks.
  */
 export interface TextBlock {
-  description?: Description14
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -2964,8 +2408,12 @@ export interface TextBlock {
       }
     | null
   defs?: Defs12
-  def?: Def15
-  contribute?: Contribute11
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType11
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2975,11 +2423,32 @@ export interface TextBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry11
-  trace_error_on_retry?: TraceErrorOnRetry11
-  role?: Role11
-  pdl__context?: PdlContext11
-  pdl__id?: PdlId11
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -2999,7 +2468,11 @@ export interface Defs12 {
  * Return the value of the last block if the list of blocks.
  */
 export interface LastOfBlock {
-  description?: Description15
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3030,8 +2503,12 @@ export interface LastOfBlock {
       }
     | null
   defs?: Defs13
-  def?: Def16
-  contribute?: Contribute12
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType12
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3041,11 +2518,32 @@ export interface LastOfBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry12
-  trace_error_on_retry?: TraceErrorOnRetry12
-  role?: Role12
-  pdl__context?: PdlContext12
-  pdl__id?: PdlId12
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3065,7 +2563,11 @@ export interface Defs13 {
  * Return the array of values computed by each block of the list of blocks.
  */
 export interface ArrayBlock {
-  description?: Description16
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3096,8 +2598,12 @@ export interface ArrayBlock {
       }
     | null
   defs?: Defs14
-  def?: Def17
-  contribute?: Contribute13
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType13
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3107,11 +2613,32 @@ export interface ArrayBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry13
-  trace_error_on_retry?: TraceErrorOnRetry13
-  role?: Role13
-  pdl__context?: PdlContext13
-  pdl__id?: PdlId13
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3131,7 +2658,11 @@ export interface Defs14 {
  * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
 export interface ObjectBlock {
-  description?: Description17
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3162,8 +2693,12 @@ export interface ObjectBlock {
       }
     | null
   defs?: Defs15
-  def?: Def18
-  contribute?: Contribute14
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType14
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3173,11 +2708,32 @@ export interface ObjectBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry14
-  trace_error_on_retry?: TraceErrorOnRetry14
-  role?: Role14
-  pdl__context?: PdlContext14
-  pdl__id?: PdlId14
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3197,7 +2753,11 @@ export interface Defs15 {
  * Create a message.
  */
 export interface MessageBlock {
-  description?: Description18
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3228,8 +2788,12 @@ export interface MessageBlock {
       }
     | null
   defs?: Defs16
-  def?: Def19
-  contribute?: Contribute15
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType15
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3239,11 +2803,32 @@ export interface MessageBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry15
-  trace_error_on_retry?: TraceErrorOnRetry15
-  role?: Role15
-  pdl__context?: PdlContext15
-  pdl__id?: PdlId15
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3305,7 +2890,11 @@ export interface Defs16 {
  * ```
  */
 export interface ReadBlock {
-  description?: Description19
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3336,8 +2925,12 @@ export interface ReadBlock {
       }
     | null
   defs?: Defs17
-  def?: Def20
-  contribute?: Contribute16
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType16
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3347,18 +2940,43 @@ export interface ReadBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry16
-  trace_error_on_retry?: TraceErrorOnRetry16
-  role?: Role16
-  pdl__context?: PdlContext16
-  pdl__id?: PdlId16
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
   read: Read
-  message?: Message
+  /**
+   * Message to prompt the user to enter a value.
+   *
+   */
+  message?: string | null
   multiline?: Multiline
 }
 /**
@@ -3372,7 +2990,11 @@ export interface Defs17 {
  * Include a PDL file.
  */
 export interface IncludeBlock {
-  description?: Description20
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3403,8 +3025,12 @@ export interface IncludeBlock {
       }
     | null
   defs?: Defs18
-  def?: Def21
-  contribute?: Contribute17
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType17
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3414,11 +3040,32 @@ export interface IncludeBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry17
-  trace_error_on_retry?: TraceErrorOnRetry17
-  role?: Role17
-  pdl__context?: PdlContext17
-  pdl__id?: PdlId17
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3439,7 +3086,11 @@ export interface Defs18 {
  * Import a PDL file.
  */
 export interface ImportBlock {
-  description?: Description21
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3470,8 +3121,12 @@ export interface ImportBlock {
       }
     | null
   defs?: Defs19
-  def?: Def22
-  contribute?: Contribute18
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType18
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3481,11 +3136,32 @@ export interface ImportBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry18
-  trace_error_on_retry?: TraceErrorOnRetry18
-  role?: Role18
-  pdl__context?: PdlContext18
-  pdl__id?: PdlId18
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3505,7 +3181,11 @@ export interface Defs19 {
  * Block representing an error generated at runtime.
  */
 export interface ErrorBlock {
-  description?: Description22
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3536,8 +3216,12 @@ export interface ErrorBlock {
       }
     | null
   defs?: Defs20
-  def?: Def23
-  contribute?: Contribute19
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType19
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3547,11 +3231,32 @@ export interface ErrorBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry19
-  trace_error_on_retry?: TraceErrorOnRetry19
-  role?: Role19
-  pdl__context?: PdlContext19
-  pdl__id?: PdlId19
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3601,7 +3306,11 @@ export interface Defs20 {
  * Block without an action. It can contain definitions.
  */
 export interface EmptyBlock {
-  description?: Description23
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
   /**
    * Type specification of the result of the block.
    *
@@ -3632,8 +3341,12 @@ export interface EmptyBlock {
       }
     | null
   defs?: Defs21
-  def?: Def24
-  contribute?: Contribute20
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: ContributeType20
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3643,11 +3356,32 @@ export interface EmptyBlock {
    *
    */
   fallback?: BlockType | null
-  retry?: Retry20
-  trace_error_on_retry?: TraceErrorOnRetry20
-  role?: Role20
-  pdl__context?: PdlContext20
-  pdl__id?: PdlId20
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context
+   *
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block
+   *
+   */
+  pdl__id?: string | null
   pdl__result?: unknown
   pdl__location?: PdlLocationType | null
   pdl__timing?: PdlTiming | null
@@ -3697,8 +3431,8 @@ export interface JoinReduce {
  * Internal data structure to record token consumption usage information.
  */
 export interface PdlUsage {
-  completion_tokens?: CompletionTokens
-  prompt_tokens?: PromptTokens
+  completion_tokens?: number | null
+  prompt_tokens?: number | null
   [k: string]: unknown
 }
 /**

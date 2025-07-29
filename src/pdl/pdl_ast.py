@@ -37,13 +37,17 @@ def _ensure_lower(value):
     return value
 
 
-ScopeType: TypeAlias = PdlDict[str, Any]
+OptionalStr = TypeAliasType("OptionalStr", Optional[str])
+OptionalInt = TypeAliasType("OptionalInt", Optional[int])
+OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
+OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
 
 
-ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
+ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
 
-
-LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
+ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
+OptionalModelInput = TypeAliasType("OptionalModelInput", Optional[ModelInput])
+LazyMessage = TypeAliasType("LazyMessage", PdlLazy[dict[str, Any]])
 LazyMessages: TypeAlias = PDLContext
 
 
@@ -79,6 +83,11 @@ class PdlLocationType(BaseModel):
     table: dict[str, int]
 
 
+OptionalPdlLocationType = TypeAliasType(
+    "OptionalPdlLocationType", Optional[PdlLocationType]
+)
+
+
 empty_block_location = PdlLocationType(file="", path=[], table={})
 
 
@@ -96,7 +105,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
     )
     pdl__expr: Any
     pdl__result: Optional[LocalizedExpressionT] = None
-    pdl__location: Optional[PdlLocationType] = None
+    pdl__location: OptionalPdlLocationType = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
@@ -108,7 +117,7 @@ class Pattern(BaseModel):
     """Common fields for structured patterns."""
 
     model_config = ConfigDict(extra="forbid")
-    def_: Optional[str] = Field(default=None, alias="def")
+    def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the value matched by the pattern.
     """
 
@@ -229,7 +238,7 @@ class Parser(BaseModel):
     """Common fields for all parsers (`parser` field)."""
 
     model_config = ConfigDict(extra="forbid")
-    description: Optional[str] = None
+    description: OptionalStr = None
     """Documentation associated to the parser.
     """
     spec: PdlTypeType = None
@@ -260,7 +269,7 @@ ParserType = TypeAliasType(
     "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
 )
 
-RoleType: TypeAlias = Optional[str]
+RoleType: TypeAlias = OptionalStr
 """Role name."""
 
 
@@ -280,20 +289,25 @@ class ContributeValue(BaseModel):
     """Value to contribute."""
 
 
+ContributeType = TypeAliasType(
+    "ContributeType", Sequence[Union[ContributeTarget, dict[str, ContributeValue]]]
+)
+
+
 class PdlTiming(BaseModel):
     """Internal data structure to record timing information in the trace."""
 
     model_config = ConfigDict(extra="forbid")
-    start_nanos: Optional[int] = 0
+    start_nanos: OptionalInt = 0
     """Time at which block execution began.
     """
-    end_nanos: Optional[int] = 0
+    end_nanos: OptionalInt = 0
     """Time at which block execution ended.
     """
-    first_use_nanos: Optional[int] = 0
+    first_use_nanos: OptionalInt = 0
     """Time at which the value of the block was needed for the first time.
     """
-    timezone: Optional[str] = ""
+    timezone: OptionalStr = ""
     """Timezone of start_nanos and end_nanos.
     """
 
@@ -301,10 +315,10 @@ class PdlTiming(BaseModel):
 class PdlUsage(BaseModel):
     """Internal data structure to record token consumption usage information."""
 
-    completion_tokens: Optional[int] = 0
+    completion_tokens: OptionalInt = 0
     """Completion tokens consumed
     """
-    prompt_tokens: Optional[int] = 0
+    prompt_tokens: OptionalInt = 0
     """Prompt tokens consumed
     """
 
@@ -319,7 +333,7 @@ class Block(BaseModel):
         validate_by_name=True,
     )
 
-    description: Optional[str] = None
+    description: OptionalStr = None
     """Documentation associated to the block.
     """
     spec: PdlTypeType = None
@@ -328,10 +342,10 @@ class Block(BaseModel):
     defs: dict[str, "BlockType"] = {}
     """Set of definitions executed before the execution of the block.
     """
-    def_: Optional[str] = Field(default=None, alias="def")
+    def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
+    contribute: ContributeType = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -342,10 +356,10 @@ class Block(BaseModel):
     fallback: Optional["BlockType"] = None
     """Block to execute in case of error.
     """
-    retry: Optional[int] = None
+    retry: OptionalInt = None
     """The maximum number of times to retry when an error occurs within a block.
     """
-    trace_error_on_retry: Optional[bool] | str = None
+    trace_error_on_retry: OptionalBoolOrStr = None
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
     role: RoleType = None
@@ -354,15 +368,15 @@ class Block(BaseModel):
     but there may be other roles such as `available_tools`.
     """
     # Fields for internal use
-    pdl__context: Optional[ModelInput] = []
+    pdl__context: OptionalModelInput = []
     """Current context
     """
-    pdl__id: Optional[str] = ""
+    pdl__id: OptionalStr = ""
     """Unique identifier for this block
     """
-    pdl__result: Optional[Any] = None
+    pdl__result: OptionalAny = None
     """Result of the execution of the block"""
-    pdl__location: Optional[PdlLocationType] = None
+    pdl__location: OptionalPdlLocationType = None
     pdl__timing: Optional[PdlTiming] = None
 
 
@@ -514,14 +528,14 @@ class ModelBlock(LeafBlock):
     input: "BlockType" = "${ pdl_context }"
     """Messages to send to the model.
     """
-    modelResponse: Optional[str] = None
+    modelResponse: OptionalStr = None
     """Variable where to store the raw response of the model.
     """
     # Field for internal use
     pdl__usage: Optional[PdlUsage] = None
     """Tokens consumed during model call
     """
-    pdl__model_input: Optional[ModelInput] = None
+    pdl__model_input: OptionalModelInput = None
 
 
 class LitellmModelBlock(ModelBlock):
@@ -877,7 +891,7 @@ class RepeatBlock(StructuredBlock):
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
-    index: Optional[str] = None
+    index: OptionalStr = None
     """Name of the variable containing the loop iteration.
     """
     while_: ExpressionType[bool] = Field(default=True, alias="while")
@@ -929,7 +943,7 @@ class MapBlock(StructuredBlock):
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
-    index: Optional[str] = None
+    index: OptionalStr = None
     """Name of the variable containing the loop iteration.
     """
     map: "BlockType"
@@ -965,7 +979,7 @@ class ReadBlock(LeafBlock):
     read: ExpressionType[str] | None
     """Name of the file to read. If `None`, read the standard input.
     """
-    message: Optional[str] = None
+    message: OptionalStr = None
     """Message to prompt the user to enter a value.
     """
     multiline: bool = False
@@ -1076,7 +1090,7 @@ class PDLRuntimeError(PDLException):
         message: str,
         loc: Optional[PdlLocationType] = None,
         trace: Optional[BlockType] = None,
-        fallback: Optional[Any] = None,
+        fallback: OptionalAny = None,
     ):
         super().__init__(message)
         self.loc = loc
@@ -1099,7 +1113,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         message: str,
         blocks: list[BlockType],
         loc: Optional[PdlLocationType] = None,
-        fallback: Optional[Any] = None,
+        fallback: OptionalAny = None,
     ):
         super().__init__(message)
         self.loc = loc

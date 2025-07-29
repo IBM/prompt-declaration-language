@@ -5,16 +5,8 @@
       "description": "Match any value.",
       "properties": {
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "any": {
           "const": null,
@@ -33,17 +25,9 @@
       "description": "Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.\n\nExample:\n```PDL\nargs:\n- /bin/sh\n- \"-c\"\n- \"if [[ $x = 1 ]]; then echo y; else echo n; fi\"\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -60,39 +44,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -119,97 +81,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -268,17 +170,9 @@
       "description": "Return the array of values computed by each block of the list of blocks.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -295,39 +189,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -354,97 +226,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -494,16 +306,8 @@
       "description": "Match an array.",
       "properties": {
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "array": {
           "items": {
@@ -609,17 +413,9 @@
       "description": "Calling a function.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -636,39 +432,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -695,97 +469,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -863,17 +577,9 @@
       "description": "Execute a piece of code.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -890,39 +596,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -949,97 +633,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -1098,6 +722,22 @@
       "title": "ContributeTarget",
       "type": "string"
     },
+    "ContributeType": {
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ContributeTarget"
+          },
+          {
+            "additionalProperties": {
+              "$ref": "#/$defs/ContributeValue"
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "type": "array"
+    },
     "ContributeValue": {
       "additionalProperties": false,
       "description": "Contribution of a specific value instead of the default one.",
@@ -1129,17 +769,9 @@
       "description": "Arbitrary value, equivalent to JSON.\n\nExample. As part of a `defs` section, set `numbers` to the list `[1, 2, 3, 4]`:\n```PDL\ndefs:\n  numbers:\n    data: [1, 2, 3, 4]\n```\n\nExample.  Evaluate `${ TEST.answer }` in\n[Jinja](https://jinja.palletsprojects.com/en/stable/), passing\nthe result to a regex parser with capture groups.  Set\n`EXTRACTED_GROUND_TRUTH` to an object with attribute `answer`,\na string, containing the value of the capture group.\n```PDL\n- data: ${ TEST.answer }\n  parser:\n    regex: \"(.|\\n)*#### (?P<answer>([0-9])*)\\n*\"\n    spec:\n      answer: string\n  def: EXTRACTED_GROUND_TRUTH\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -1156,39 +788,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -1215,97 +825,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -1362,17 +912,9 @@
       "description": "Block without an action. It can contain definitions.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -1389,39 +931,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -1448,97 +968,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -1589,17 +1049,9 @@
       "description": "Block representing an error generated at runtime.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -1616,39 +1068,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -1675,97 +1105,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -1813,17 +1183,9 @@
       "description": "Function declaration.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -1840,39 +1202,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -1899,97 +1239,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -2062,17 +1342,9 @@
       "description": "Get the value of a variable.\n\nThe GetBlock is deprecated.  Use DataBlock instead.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -2089,39 +1361,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -2148,97 +1398,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -2281,17 +1471,9 @@
       "description": "Call an LLM through the granite-io API.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -2308,39 +1490,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -2367,97 +1527,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -2489,17 +1589,9 @@
           "description": "Messages to send to the model.\n    "
         },
         "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Variable where to store the raw response of the model.\n    ",
-          "title": "Modelresponse"
+          "description": "Variable where to store the raw response of the model.\n    "
         },
         "pdl__usage": {
           "anyOf": [
@@ -2514,20 +1606,8 @@
           "description": "Tokens consumed during model call\n    "
         },
         "pdl__model_input": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pdl  Model Input"
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": null
         },
         "platform": {
           "const": "granite-io",
@@ -2639,17 +1719,9 @@
       "description": "Conditional control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nif: ${ (answer | int) == 42 }\nthen: You won!\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -2666,39 +1738,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -2725,97 +1775,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -2889,17 +1879,9 @@
       "description": "Import a PDL file.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -2916,39 +1898,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -2975,97 +1935,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -3119,17 +2019,9 @@
       "description": "Include a PDL file.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -3146,39 +2038,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -3205,97 +2075,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -3506,17 +2316,9 @@
       "description": "Return the value of the last block if the list of blocks.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -3533,39 +2335,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -3592,97 +2372,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -3732,17 +2452,9 @@
       "description": "Call an LLM through [the LiteLLM API](https://docs.litellm.ai/).\n\nExample:\n```PDL\nmodel: ollama/granite-code:8b\nparameters:\n  stop: ['!']\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -3759,39 +2471,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -3818,97 +2508,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -3940,17 +2570,9 @@
           "description": "Messages to send to the model.\n    "
         },
         "modelResponse": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Variable where to store the raw response of the model.\n    ",
-          "title": "Modelresponse"
+          "description": "Variable where to store the raw response of the model.\n    "
         },
         "pdl__usage": {
           "anyOf": [
@@ -3965,20 +2587,8 @@
           "description": "Tokens consumed during model call\n    "
         },
         "pdl__model_input": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pdl  Model Input"
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": null
         },
         "platform": {
           "const": "litellm",
@@ -4448,14 +3058,7 @@
           "title": "Pdl  Result"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         }
       },
@@ -4470,17 +3073,9 @@
       "description": "Independent executions of  a block.\nRepeat the execution of a block starting from the initial scope\nand `pdl_context`.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nmap:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nmap:\n    ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -4497,39 +3092,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -4556,97 +3129,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -4704,17 +3217,9 @@
           "title": "For"
         },
         "index": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable containing the loop iteration.\n    ",
-          "title": "Index"
+          "description": "Name of the variable containing the loop iteration.\n    "
         },
         "map": {
           "$ref": "#/$defs/BlockType",
@@ -4774,17 +3279,9 @@
       "description": "Match control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nmatch: ${ (answer | int) }\nwith:\n- case: 42\n  then: You won!\n- case:\n    any:\n    def: x\n  if: ${ x > 42 }\n  then: Too high\n- then: Too low",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -4801,39 +3298,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -4860,97 +3335,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -5093,17 +3508,9 @@
       "description": "Create a message.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -5120,39 +3527,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -5179,97 +3564,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -5338,22 +3663,21 @@
       "title": "MessageBlock",
       "type": "object"
     },
+    "ModelInput": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "type": "array"
+    },
     "ObjectBlock": {
       "additionalProperties": false,
       "description": "Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -5370,39 +3694,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -5429,97 +3731,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -5578,16 +3820,8 @@
       "description": "Match an object.",
       "properties": {
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "object": {
           "additionalProperties": {
@@ -5621,6 +3855,57 @@
       "title": "ObjectPdlType",
       "type": "object"
     },
+    "OptionalAny": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalBoolOrStr": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalInt": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalModelInput": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ModelInput"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalPdlLocationType": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PdlLocationType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OptionalPdlType": {
       "additionalProperties": false,
       "description": "Optional type.",
@@ -5635,21 +3920,23 @@
       "title": "OptionalPdlType",
       "type": "object"
     },
+    "OptionalStr": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OrPattern": {
       "additionalProperties": false,
       "description": "Match any of the patterns.",
       "properties": {
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Def"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "anyOf": {
           "items": {
@@ -5754,16 +4041,8 @@
       "description": "Use a PDL program as a parser specification (experimental).",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -5784,52 +4063,20 @@
       "description": "Internal data structure to record timing information in the trace.",
       "properties": {
         "start_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Start Nanos"
+          "$ref": "#/$defs/OptionalInt",
+          "default": 0
         },
         "end_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "End Nanos"
+          "$ref": "#/$defs/OptionalInt",
+          "default": 0
         },
         "first_use_nanos": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "First Use Nanos"
+          "$ref": "#/$defs/OptionalInt",
+          "default": 0
         },
         "timezone": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": "",
-          "title": "Timezone"
+          "$ref": "#/$defs/OptionalStr",
+          "default": ""
         }
       },
       "title": "PdlTiming",
@@ -5888,28 +4135,12 @@
       "description": "Internal data structure to record token consumption usage information.",
       "properties": {
         "completion_tokens": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Completion Tokens"
+          "$ref": "#/$defs/OptionalInt",
+          "default": 0
         },
         "prompt_tokens": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": 0,
-          "title": "Prompt Tokens"
+          "$ref": "#/$defs/OptionalInt",
+          "default": 0
         }
       },
       "title": "PdlUsage",
@@ -5925,17 +4156,9 @@
       "description": "Read from a file or standard input.\n\nExample. Read from the standard input with a prompt starting with `> `.\n```PDL\nread:\nmessage: \"> \"\n```\n\nExample. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.\n```PDL\nread: ./data.yaml\nparser: yaml\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -5952,39 +4175,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -6011,97 +4212,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -6143,17 +4284,9 @@
           "title": "Read"
         },
         "message": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Message to prompt the user to enter a value.\n    ",
-          "title": "Message"
+          "description": "Message to prompt the user to enter a value.\n    "
         },
         "multiline": {
           "default": false,
@@ -6173,16 +4306,8 @@
       "description": "A regular expression parser.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Description"
+          "$ref": "#/$defs/OptionalStr",
+          "default": null
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -6216,17 +4341,9 @@
       "description": "Repeat the execution of a block sequentially.\nThe scope and `pdl_context` are accumulated in between iterations.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nWhile loop:\n```PDL\ndefs:\n  i: 0\nwhile: ${i < 5}\nrepeat:\n    defs:\n      i: ${ i + 1}\n    data: ${ i }\njoin:\n  as: array\n```",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -6243,39 +4360,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -6302,97 +4397,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
@@ -6450,17 +4485,9 @@
           "title": "For"
         },
         "index": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable containing the loop iteration.\n    ",
-          "title": "Index"
+          "description": "Name of the variable containing the loop iteration.\n    "
         },
         "while": {
           "anyOf": [
@@ -6552,17 +4579,9 @@
       "description": "Create the concatenation of the stringify version of the result of each block of the list of blocks.",
       "properties": {
         "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Documentation associated to the block.\n    ",
-          "title": "Description"
+          "description": "Documentation associated to the block.\n    "
         },
         "spec": {
           "$ref": "#/$defs/PdlTypeType",
@@ -6579,39 +4598,17 @@
           "type": "object"
         },
         "def": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Name of the variable used to store the result of the execution of the block.\n    ",
-          "title": "Def"
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
         },
         "contribute": {
+          "$ref": "#/$defs/ContributeType",
           "default": [
             "result",
             "context"
           ],
-          "description": "Indicate if the block contributes to the result and background context.\n    ",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/ContributeTarget"
-              },
-              {
-                "additionalProperties": {
-                  "$ref": "#/$defs/ContributeValue"
-                },
-                "type": "object"
-              }
-            ]
-          },
-          "title": "Contribute",
-          "type": "array"
+          "description": "Indicate if the block contributes to the result and background context.\n    "
         },
         "parser": {
           "anyOf": [
@@ -6638,97 +4635,37 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "anyOf": [
-            {
-              "type": "integer"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalInt",
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
-          "title": "Retry"
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
         },
         "trace_error_on_retry": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalBoolOrStr",
           "default": null,
-          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    ",
-          "title": "Trace Error On Retry"
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
         "role": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": null,
-          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`.",
-          "title": "Role"
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
         },
         "pdl__context": {
-          "anyOf": [
-            {
-              "items": {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalModelInput",
           "default": [],
-          "description": "Current context\n    ",
-          "title": "Pdl  Context"
+          "description": "Current context\n    "
         },
         "pdl__id": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalStr",
           "default": "",
-          "description": "Unique identifier for this block\n    ",
-          "title": "Pdl  Id"
+          "description": "Unique identifier for this block\n    "
         },
         "pdl__result": {
-          "anyOf": [
-            {},
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalAny",
           "default": null,
-          "description": "Result of the execution of the block",
-          "title": "Pdl  Result"
+          "description": "Result of the execution of the block"
         },
         "pdl__location": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlLocationType"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlLocationType",
           "default": null
         },
         "pdl__timing": {
