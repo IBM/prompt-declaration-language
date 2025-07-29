@@ -199,7 +199,7 @@ class ClosureBlock(FunctionBlock):
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
             if len(keys) < len(args):
-                if self.signature is not None and self.signature.get("name", "") is not "":
+                if self.signature is not None and self.signature.get("name", "") != "":
                     err = f"Too many arguments to the call of {self.signature['name']}"
                 else:
                     err = "Too many arguments to the call"
