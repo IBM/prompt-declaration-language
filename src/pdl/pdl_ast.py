@@ -178,7 +178,6 @@ class PdlType(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-
 class OptionalPdlType(PdlType):
     """Optional type."""
 
@@ -1041,7 +1040,10 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
+# BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
+BlockType = TypeAliasType(
+    "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
+)
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
