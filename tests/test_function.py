@@ -141,7 +141,7 @@ array:
 - call: ${f}
   args:
     x: 1
-    y: 1
+    y: 2
 - ${ f(x=1, y=2) }
 - lang: python
   code:
