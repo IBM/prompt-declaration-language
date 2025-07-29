@@ -178,6 +178,7 @@ class PdlType(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
+
 class OptionalPdlType(PdlType):
     """Optional type."""
 
