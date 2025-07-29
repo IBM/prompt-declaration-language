@@ -29,6 +29,10 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    JoinArray,
+    JoinLastOf,
+    JoinObject,
+    JoinReduce,
     JoinText,
     JoinType,
     JsonSchemaTypePdlType,
@@ -36,6 +40,7 @@ from .pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
+    MapBlock,
     MatchBlock,
     MessageBlock,
     ObjectBlock,
@@ -243,7 +248,20 @@ def block_to_dict(  # noqa: C901
                 d["until"] = expr_to_dict(block.until, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
-            d["join"] = join_to_dict(block.join)
+            d["join"] = join_to_dict(block.join, json_compatible)
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = [
+                    block_to_dict(b, json_compatible) for b in block.pdl__trace
+                ]
+        case MapBlock():
+            if block.for_ is not None:
+                d["for"] = expr_to_dict(block.for_, json_compatible)
+            if block.index is not None:
+                d["index"] = block.index
+            d["map"] = block_to_dict(block.map, json_compatible)
+            if block.maxIterations is not None:
+                d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
+            d["join"] = join_to_dict(block.join, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
@@ -402,13 +420,17 @@ def pattern_to_dict(pattern: PatternType):
     return result
 
 
-def join_to_dict(join: JoinType) -> dict[str, Any]:
-    d = {}
+def join_to_dict(join: JoinType, json_compatible: bool) -> dict[str, Any]:
+    d: dict[str, Any] = {}
     match join:
         case JoinText():
             d["with"] = join.with_
-        case _:
+        case JoinArray() | JoinObject() | JoinLastOf():
             d["as"] = str(join.as_)
+        case JoinReduce():
+            d["reduce"] = expr_to_dict(join.reduce, json_compatible)
+        case _:
+            assert False
     return d
 
 

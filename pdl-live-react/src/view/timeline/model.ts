@@ -147,11 +147,12 @@ export function childrenOf(block: NonScalarPdlBlock) {
       .with({ kind: "object" }, (data) => [data.object])
       .with({ kind: "message" }, (data) => [data.content])
       .with({ kind: "repeat" }, (data) => [data.pdl__trace ?? data.repeat])
+      .with({ kind: "map" }, (data) => [data.pdl__trace ?? data.map])
       .with({ kind: "empty" }, (data) =>
         data.defs ? Object.values(data.defs) : [],
       )
       .with({ kind: "error" }, () => []) // TODO show errors in trace
-      .with({ kind: undefined }, () => [])
+      .with({ kind: P.nullish }, () => [])
       // @ts-expect-error: TODO
       .exhaustive()
       .flat()

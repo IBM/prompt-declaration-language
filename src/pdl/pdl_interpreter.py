@@ -11,13 +11,21 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from asyncio import AbstractEventLoop
-from functools import partial
+from functools import partial, reduce
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
 from pathlib import Path  # noqa: E402
-from typing import Any, Generator, Generic, Optional, Sequence, TypeVar  # noqa: E402
+from typing import (  # noqa: E402
+    Any,
+    Generator,
+    Generic,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+)
 
 import httpx  # noqa: E402
 import json_repair  # noqa: E402
@@ -60,13 +68,19 @@ from .pdl_ast import (  # noqa: E402
     ImportBlock,
     IncludeBlock,
     IndependentEnum,
-    IterationType,
+    JoinArray,
+    JoinLastOf,
+    JoinObject,
+    JoinReduce,
+    JoinText,
+    JoinType,
     LastOfBlock,
     LazyMessage,
     LazyMessages,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
+    MapBlock,
     MatchBlock,
     MessageBlock,
     ModelBlock,
@@ -627,7 +641,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "text",
-                IterationType.TEXT,
+                JoinText(),
                 state,
                 scope,
                 loc,
@@ -636,7 +650,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "lastOf",
-                IterationType.LASTOF,
+                JoinLastOf(as_="lastOf"),  # pyright: ignore
                 state,
                 scope,
                 loc,
@@ -645,7 +659,7 @@ def process_block_body(
             result, background, scope, trace = process_blocks_of(
                 block,
                 "array",
-                IterationType.ARRAY,
+                JoinArray(as_="array"),  # pyright: ignore
                 state,
                 scope,
                 loc,
@@ -664,7 +678,7 @@ def process_block_body(
                         if isinstance(value_blocks, StructuredBlock):
                             context = value_blocks.context
                         value, value_background, scope, value_trace = process_blocks(
-                            IterationType.LASTOF,
+                            JoinLastOf(as_="lastOf"),  # pyright: ignore
                             context,
                             iteration_state,
                             scope,
@@ -701,7 +715,7 @@ def process_block_body(
                 result, background, scope, trace = process_blocks_of(
                     block,
                     "object",
-                    IterationType.OBJECT,
+                    JoinObject(as_="object"),  # pyright: ignore
                     iteration_state,
                     scope,
                     loc,
@@ -827,46 +841,12 @@ def process_block_body(
             background = DependentContext([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
-            if block.for_ is None:
-                items = None
-                lengths = None
-            else:
-                items, block = process_expr_of(block, "for_", scope, loc, "for")
-                lengths = []
-                for idx, lst in items.items():
-                    if not isinstance(lst, list):
-                        msg = f"Values inside the For block must be lists but got {type(lst)}."
-                        lst_loc = append(
-                            append(block.pdl__location or empty_block_location, "for"),
-                            idx,
-                        )
-                        raise PDLRuntimeError(
-                            message=msg,
-                            loc=lst_loc,
-                            trace=ErrorBlock(
-                                msg=msg, pdl__location=lst_loc, program=block
-                            ),
-                            fallback=[],
-                        )
-                    lengths.append(len(lst))
-                if len(set(lengths)) != 1:  # Not all the lists are of the same length
-                    msg = "Lists inside the For block must be of the same length."
-                    for_loc = append(block.pdl__location or empty_block_location, "for")
-                    raise PDLRuntimeError(
-                        msg,
-                        loc=for_loc,
-                        trace=ErrorBlock(msg=msg, pdl__location=for_loc, program=block),
-                        fallback=[],
-                    )
             iteration_state = state.with_yield_result(
-                state.yield_result and block.join.as_ == IterationType.TEXT
+                state.yield_result and isinstance(block.join, JoinText)
             )
-            if block.maxIterations is None:
-                max_iterations = None
-            else:
-                max_iterations, block = process_expr_of(
-                    block, "maxIterations", scope, loc
-                )
+            block, items, length = _evaluate_for_field(scope, block, loc)
+            block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
+            block = _evaluate_join_field(scope, block, loc)
             repeat_loc = append(loc, "repeat")
             iidx = 0
             try:
@@ -877,7 +857,7 @@ def process_block_body(
                         scope = scope | {block.index: iidx}
                     if max_iterations is not None and iidx >= max_iterations:
                         break
-                    if lengths is not None and iidx >= lengths[0]:
+                    if length is not None and iidx >= length:
                         break
                     stay, _ = process_condition_of(block, "while_", scope, loc, "while")
                     if not stay:
@@ -885,9 +865,8 @@ def process_block_body(
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
-                    elif block.join.as_ == IterationType.TEXT:
+                    elif isinstance(block.join, JoinText):
                         join_string = block.join.with_
-                        results.append(PdlConst(join_string))
                         if iteration_state.yield_result:
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
@@ -921,13 +900,11 @@ def process_block_body(
                         saved_background = DependentContext(
                             [saved_background, iteration_background]
                         )
+                        background = saved_background
                     else:
                         saved_background = IndependentContext(
                             [saved_background, iteration_background]
                         )
-
-                    if block.context is IndependentEnum.DEPENDENT:
-                        background = saved_background
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
                     iteration_state = iteration_state.with_pop()
@@ -943,9 +920,64 @@ def process_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.join.as_, results)
+            result = combine_results(block.join, results)
             if block.context is IndependentEnum.INDEPENDENT:
                 background = saved_background
+            if state.yield_result and not iteration_state.yield_result:
+                yield_result(result.result(), block.kind)
+            trace = block.model_copy(update={"pdl__trace": iter_trace})
+        case MapBlock():
+            results = []
+            background = DependentContext([])
+            iter_trace = []
+            iteration_state = state.with_yield_result(False)
+            block, items, length = _evaluate_for_field(scope, block, loc)
+            block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
+            block = _evaluate_join_field(scope, block, loc)
+            map_loc = append(loc, "map")
+            iidx = 0
+            try:
+                saved_background = IndependentContext([])
+                while True:
+                    iteration_scope = scope_init
+                    if block.index is not None:
+                        iteration_scope = iteration_scope | {block.index: iidx}
+                    if max_iterations is not None and iidx >= max_iterations:
+                        break
+                    if length is not None and iidx >= length:
+                        break
+                    iteration_state = iteration_state.with_iter(iidx)
+                    if items is not None:
+                        for k in items.keys():
+                            iteration_scope = iteration_scope | {k: items[k][iidx]}
+                    (
+                        iteration_result,
+                        iteration_background,
+                        iteration_scope,
+                        body_trace,
+                    ) = process_block(
+                        iteration_state,
+                        iteration_scope,
+                        block.map,
+                        map_loc,
+                    )
+                    saved_background = IndependentContext(
+                        [saved_background, iteration_background]
+                    )
+                    results.append(iteration_result)
+                    iter_trace.append(body_trace)
+                    iteration_state = iteration_state.with_pop()
+                    iidx = iidx + 1
+            except PDLRuntimeError as exc:
+                iter_trace.append(exc.pdl__trace)
+                trace = block.model_copy(update={"pdl__trace": iter_trace})
+                raise PDLRuntimeError(
+                    exc.message,
+                    loc=exc.loc or map_loc,
+                    trace=trace,
+                ) from exc
+            result = combine_results(block.join, results)
+            # background = saved_background  # commented because the block do not contribute to the background
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"pdl__trace": iter_trace})
@@ -1006,6 +1038,75 @@ def process_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, background, scope, trace
+
+
+BlockTVarEvalFor = TypeVar("BlockTVarEvalFor", bound=RepeatBlock | MapBlock)
+
+
+def _evaluate_for_field(
+    scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
+) -> Tuple[BlockTVarEvalFor, Optional[dict[str, list]], Optional[int]]:
+    if block.for_ is None:
+        items = None
+        length = None
+    else:
+        items, block = process_expr_of(block, "for_", scope, loc, "for")
+        lengths = []
+        for idx, lst in items.items():
+            if not isinstance(lst, list):
+                msg = f"Values inside the For block must be lists but got {type(lst)}."
+                lst_loc = append(
+                    append(block.pdl__location or empty_block_location, "for"),
+                    idx,
+                )
+                raise PDLRuntimeError(
+                    message=msg,
+                    loc=lst_loc,
+                    trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
+                    fallback=[],
+                )
+            lengths.append(len(lst))
+        if len(set(lengths)) != 1:  # Not all the lists are of the same length
+            msg = "Lists inside the For block must be of the same length."
+            for_loc = append(block.pdl__location or empty_block_location, "for")
+            raise PDLRuntimeError(
+                msg,
+                loc=for_loc,
+                trace=ErrorBlock(msg=msg, pdl__location=for_loc, program=block),
+                fallback=[],
+            )
+        length = lengths[0]
+    return block, items, length
+
+
+BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBlock)
+
+
+def _evaluate_max_iterations_field(
+    scope: ScopeType, block: BlockTVarEvalMaxIter, loc: PdlLocationType
+) -> Tuple[BlockTVarEvalMaxIter, Optional[int]]:
+    if block.maxIterations is None:
+        max_iterations = None
+    else:
+        max_iterations, block = process_expr_of(block, "maxIterations", scope, loc)
+    return block, max_iterations
+
+
+BlockTVarEvalJoin = TypeVar("BlockTVarEvalJoin", bound=RepeatBlock | MapBlock)
+
+
+def _evaluate_join_field(
+    scope: ScopeType, block: BlockTVarEvalJoin, loc: PdlLocationType
+) -> BlockTVarEvalJoin:
+    match block.join:
+        case JoinText() | JoinArray() | JoinObject() | JoinLastOf():
+            pass
+        case JoinReduce():
+            loc = append(loc, "reduce")
+            _, expr = process_expr(scope, block.join.reduce, loc)
+            join = block.join.model_copy(update={"reduce": expr})
+            block = block.model_copy(update={"join": join})
+    return block
 
 
 def is_matching(  # pylint: disable=too-many-return-statements
@@ -1124,7 +1225,7 @@ BlockTypeTVarProcessBlocksOf = TypeVar(
 def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     block: BlockTypeTVarProcessBlocksOf,
     field: str,
-    iteration_type: IterationType,
+    join_type: JoinType,
     state: InterpreterState,
     scope: ScopeType,
     loc: PdlLocationType,
@@ -1135,7 +1236,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
         if isinstance(block, StructuredBlock):
             context = block.context
         result, background, scope, blocks = process_blocks(
-            iteration_type,
+            join_type,
             context,
             state,
             scope,
@@ -1155,7 +1256,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
 
 
 def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-arguments
-    iteration_type: IterationType,
+    join_type: JoinType,
     context: IndependentEnum,
     state: InterpreterState,
     scope: ScopeType,
@@ -1170,8 +1271,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
         iteration_state = state.with_yield_result(
-            state.yield_result
-            and (iteration_type in (IterationType.LASTOF, IterationType.TEXT))
+            state.yield_result and isinstance(join_type, (JoinLastOf, JoinText))
         )
         new_loc = None
         background = DependentContext([])
@@ -1185,7 +1285,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                     "pdl_context": DependentContext([pdl_context_init, background])
                 }
                 new_loc = append(loc, "[" + str(i) + "]")
-                if iteration_type == IterationType.LASTOF and state.yield_result:
+                if isinstance(join_type, JoinLastOf) and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
                 (
                     iteration_result,
@@ -1216,35 +1316,46 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
             ) from exc
     else:
         iteration_state = state.with_yield_result(
-            state.yield_result and iteration_type != IterationType.ARRAY
+            state.yield_result and not isinstance(join_type, JoinArray)
         )
         block_result, background, scope, trace = process_block(
             iteration_state, scope, blocks, loc
         )
         results.append(block_result)
-    result = combine_results(iteration_type, results)
+    result = combine_results(join_type, results)
     if state.yield_result and not iteration_state.yield_result:
         yield_result(result, block_kind)
     return result, background, scope, trace
 
 
-def combine_results(iteration_type: IterationType, results: list[PdlLazy[Any]]):
+def combine_results(join_type: JoinType, results: list[PdlLazy[Any]]):
     result: Any
-    match iteration_type:
-        case IterationType.ARRAY:
+    match join_type:
+        case JoinArray():
             result = PdlList(results)
-        case IterationType.OBJECT:
+        case JoinObject():
             result = PdlDict({})
             for d in results:
                 result = result | d
-        case IterationType.LASTOF:
+        case JoinLastOf():
             if len(results) > 0:
                 result = results[-1]
             else:
                 result = None
-        case IterationType.TEXT:
+        case JoinText():
+            join_str = join_type.with_
             result = lazy_apply(
-                (lambda _: "".join([stringify(r.result()) for r in results])),
+                (lambda _: join_str.join([stringify(r.result()) for r in results])),
+                PdlConst(()),
+            )
+        case JoinReduce():
+            result = lazy_apply(
+                (
+                    lambda _: reduce(
+                        value_of_expr(join_type.reduce),
+                        [r.result() for r in results],
+                    )
+                ),
                 PdlConst(()),
             )
         case _:

@@ -5,6 +5,7 @@ from os import environ
 from typing import (
     Annotated,
     Any,
+    Callable,
     Generic,
     Literal,
     Mapping,
@@ -61,6 +62,7 @@ class BlockKind(StrEnum):
     IF = "if"
     MATCH = "match"
     REPEAT = "repeat"
+    MAP = "map"
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
@@ -788,23 +790,18 @@ class MatchBlock(StructuredBlock):
     """
 
 
-class IterationType(StrEnum):
-    LASTOF = "lastOf"
-    ARRAY = "array"
-    OBJECT = "object"
-    TEXT = "text"
-
-
 class JoinConfig(BaseModel):
     """Configure how loop iterations should be combined."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
+    )
 
 
 class JoinText(JoinConfig):
     """Join loop iterations as a string."""
 
-    as_: Literal[IterationType.TEXT] = Field(alias="as", default=IterationType.TEXT)
+    as_: Literal["text"] = Field(alias="as", default="text")
     """String concatenation of the result of each iteration.
     """
 
@@ -816,7 +813,7 @@ class JoinText(JoinConfig):
 class JoinArray(JoinConfig):
     """Join loop iterations as an array."""
 
-    as_: Literal[IterationType.ARRAY] = Field(alias="as")
+    as_: Literal["array"] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
@@ -824,7 +821,7 @@ class JoinArray(JoinConfig):
 class JoinObject(JoinConfig):
     """Join loop iterations as an object."""
 
-    as_: Literal[IterationType.OBJECT] = Field(alias="as")
+    as_: Literal["object"] = Field(alias="as")
     """Return the union of the objects created at each iteration.
     """
 
@@ -832,18 +829,28 @@ class JoinObject(JoinConfig):
 class JoinLastOf(JoinConfig):
     """Join loop iterations as the value of the last iteration."""
 
-    as_: Literal[IterationType.LASTOF] = Field(alias="as")
+    as_: Literal["lastOf"] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
 
-JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
+class JoinReduce(JoinConfig):
+    """Join loop iterations as the value of the last iteration."""
+
+    as_: Literal["reduce"] = Field(alias="as", default="reduce")
+
+    reduce: ExpressionType[Callable]
+    """Function used to combine the results."""
+
+
+JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 """Different ways to join loop iterations."""
 
 
 class RepeatBlock(StructuredBlock):
     """
-    Repeat the execution of a block.
+    Repeat the execution of a block sequentially.
+    The scope and `pdl_context` are accumulated in between iterations.
 
     For loop example:
     ```PDL
@@ -854,12 +861,15 @@ class RepeatBlock(StructuredBlock):
         "${ name }'s number is ${ number }\\n"
     ```
 
-    Bounded loop:
+    While loop:
     ```PDL
-    index: i
-    maxIterations: 5
+    defs:
+      i: 0
+    while: ${i < 5}
     repeat:
-        ${ i }
+        defs:
+          i: ${ i + 1}
+        data: ${ i }
     join:
       as: array
     ```
@@ -880,6 +890,52 @@ class RepeatBlock(StructuredBlock):
     """
     until: ExpressionType[bool] = False
     """Condition to exit at the end of the loop.
+    """
+    maxIterations: Optional[ExpressionType[int]] = None
+    """Maximal number of iterations to perform.
+    """
+    join: JoinType = JoinText()
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
+    pdl__trace: Optional[list["BlockType"]] = None
+
+
+class MapBlock(StructuredBlock):
+    """
+    Independent executions of  a block.
+    Repeat the execution of a block starting from the initial scope
+    and `pdl_context`.
+
+    For loop example:
+    ```PDL
+    for:
+        number: [1, 2, 3, 4]
+        name: ["Bob", "Carol", "David", "Ernest"]
+    map:
+        "${ name }'s number is ${ number }\\n"
+    ```
+
+    Bounded loop:
+    ```PDL
+    index: i
+    maxIterations: 5
+    map:
+        ${ i }
+    join:
+      as: array
+    ```
+    """
+
+    kind: Literal[BlockKind.MAP] = BlockKind.MAP
+    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    """Arrays to iterate over.
+    """
+    index: Optional[str] = None
+    """Name of the variable containing the loop iteration.
+    """
+    map: "BlockType"
+    """Body of the iterator.
     """
     maxIterations: Optional[ExpressionType[int]] = None
     """Maximal number of iterations to perform.
@@ -971,6 +1027,7 @@ AdvancedBlockType: TypeAlias = (
     | IfBlock
     | MatchBlock
     | RepeatBlock
+    | MapBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
