@@ -2,7 +2,7 @@ description: Hello world with variable def and use
 text:
 - "Hello\n"
 - model: ollama_chat/granite3.2:2b
-  def: GEN
   parameters:
     stop: ['!']
-- "\nGEN is equal to: ${ GEN }"
+  def: GEN
+- "\nThe variable GEN is equal to: ${ GEN }"

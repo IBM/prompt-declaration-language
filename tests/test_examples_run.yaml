@@ -1,5 +1,10 @@
-update_results: false
-check: []
+update_results: true
+check:
+  - examples/tutorial/defs.pdl
+  - examples/tutorial/function_definition.pdl
+  - examples/tutorial/function_empty_context.pdl 
+  - examples/tutorial/calling_llm_with_input_messages_var.pdl
+  - examples/tutorial/local_computation.pdl
 skip:
   - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl

@@ -1,0 +1,9 @@
+description: Local computations using defs
+text:
+- "Hello\n"
+- defs:
+    GEN:
+      model: ollama_chat/granite3.2:2b
+      parameters:
+        stop: ['!']
+- "The variable GEN is equal to: ${ GEN }"
