@@ -313,6 +313,7 @@ class PdlTiming(BaseModel):
     """Timezone of start_nanos and end_nanos.
     """
 
+
 OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
 
 
