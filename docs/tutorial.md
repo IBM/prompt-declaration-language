@@ -206,6 +206,39 @@ In Spanish: Hola!
 La traducción de "Hello" al español es "Hola".
 ```
 
+## Control Block Outputs with `contribute`
+
+By default, when a PDL block is executed, it produces a result that is contributed to the overall result, and it also contributes to the background context. We saw that `defs` and `lastOf` gives some control over the contribution to the result of context. `defs` executes a block without contributing to the context and name the result that can be used later. `lastOf` contributes only to the context for all of its sun-blocks except the last one. It is also possible to control the contribution of each block using the `contribute` field.
+
+Consider an example similar as above, but that uses `contribute` instead of `defs` and `lastOf` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/muting_block_output.pdl)):
+
+```yaml
+--8<-- "./examples/tutorial/muting_block_output.pdl"
+```
+
+Instead of a `lastOf`, we set `contribute` to `[context]` for the block that produces `"\nTranslate to French\n"`. That way, we only contribute to the context and not to the result.
+We set `contribute` to `[]` for the call to the LLM such that it does not produce an output but only save the result in the `fr` variable that is used in the last block of the program. When we execute this program, we obtain:
+
+```
+Hello
+
+In Fench: Bonjour!
+
+Translation of "Hello" in French is "Bonjour".
+``` 
+
+In general, `contribute` can be used to set how the result of the block contribute to the final result and the background context.
+Here are its possible values:
+
+- `[]`: no contribution to either the final result or the background context
+
+- `[result]`: contribute to the final result but not the background context
+
+- `[context]`: contribute to the background context but not the final result
+
+- `[result, context]`: contribute to both, which is also the default setting.
+
+
 ## Function Definition
 
 PDL supports function definitions to make it easier to reuse code.
@@ -234,32 +267,6 @@ PDL is a language with higher order functions meaning that functions are values.
 
 Notice that the arguments of function calls are expressions and cannot be arbitrary PDL blocks.
 
-## Muting Block Output with contribute
-
-By default, when a PDL block is executed it produces a result that is contributed to the overall result, and it also contributes to the background context. It is possible to mute both contributions by setting `contribute` to `[]` for any block. This feature allows the computation of intermediate values that are not necessarily output as a result. The value of the variable specified in `def` is still set to the result of the block.
-
-Consider the similar example as above, but with `contribute` set to `[]` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/muting_block_output.pdl)):
-
-```yaml
---8<-- "./examples/tutorial/muting_block_output.pdl"
-```
-
-The call to the translator with French as language does not produce an output. However, we save the result in variable `FRENCH` and use it in the last sentence of the document. When we execute this program, we obtain:
-
-```
-The french sentence was: 'J'aime Paris !'
-```
-
-In general, `contribute` can be used to set how the result of the block contribute to the final result and the background context.
-Here are its possible values:
-
-- `[]`: no contribution to either the final result or the background context
-
-- `[result]`: contribute to the final result but not the background context
-
-- `[context]`: contribute to the background context but not the final result
-
-- `[result, context]`: contribute to both, which is also the default setting.
 
 ## Building Data Structures
 
