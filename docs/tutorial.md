@@ -190,7 +190,7 @@ The following program defines two variables `fr` and `es` associated to a `text`
 ```
 
 This program first output `Hello` and add it in the context.
-Then, the blocks defining the variable `fr` and `es` are both executed in a context containing only the `Hello` message. These blocks are using a `lastOf` block that adds the value to each sub-blocs to the context and output the value of the last block. Finally, the value of the variables are used in the `text` block.
+Then, the blocks defining the `fr` and `es` variables are both executed in a context containing only the `Hello` message. These blocks are using a `lastOf` that adds the value to each sub-blocs to the context and output the value of the last block. Finally, the value of the variables are used in the `text` block.
 
 The output of this program is:
 

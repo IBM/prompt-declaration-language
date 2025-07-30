@@ -1,4 +1,4 @@
-description: Hello world with variable def and use
+description: Variable def and use
 text:
 - "Hello\n"
 - model: ollama_chat/granite3.2:2b
