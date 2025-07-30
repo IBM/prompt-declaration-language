@@ -229,6 +229,9 @@ class ClosureBlock(FunctionBlock):
         return result
 
 
+ClosureBlock.model_rebuild()
+
+
 def generate(
     pdl_file: str | Path,
     state: Optional[InterpreterState],
