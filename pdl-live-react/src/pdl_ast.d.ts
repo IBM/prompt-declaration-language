@@ -174,11 +174,12 @@ export type ContributeType4 = (
 export type PdlIsLeaf4 = true
 export type Kind4 = "code"
 export type Lang1 = "command"
+export type ExpressionStr = LocalizedExpression | string
 /**
  * The argument vector to spawn.
  *
  */
-export type Args1 = (LocalizedExpression | string)[]
+export type Args1 = ExpressionStr[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -225,11 +226,6 @@ export type PdlIsLeaf7 = false
 export type IndependentEnum = "independent" | "dependent"
 export type Kind7 = "if"
 /**
- * Condition.
- *
- */
-export type If = LocalizedExpression | boolean | string
-/**
  * Indicate if the block contributes to the result and background context.
  *
  */
@@ -254,7 +250,7 @@ export type PatternType =
 export type Anyof = PatternType[]
 export type Array = PatternType[]
 export type Any = null
-export type If1 = LocalizedExpression | boolean | string | null
+export type ExpressionBool = LocalizedExpression | boolean | string
 export type PdlCaseResult = boolean | null
 export type PdlIfResult = boolean | null
 export type PdlMatched = boolean | null
@@ -283,11 +279,6 @@ export type Kind9 = "repeat"
 export type For = {
   [k: string]: LocalizedExpression | unknown[] | string
 } | null
-/**
- * Condition to stay at the beginning of the loop.
- *
- */
-export type While = LocalizedExpression | boolean | string
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -403,11 +394,6 @@ export type ContributeType16 = (
 export type PdlIsLeaf16 = true
 export type Kind16 = "read"
 /**
- * Name of the file to read. If `None`, read the standard input.
- *
- */
-export type Read = LocalizedExpression | string | null
-/**
  * Indicate if one or multiple lines should be read.
  *
  */
@@ -476,19 +462,7 @@ export type ContributeType20 = (
 )[]
 export type PdlIsLeaf20 = true
 export type Kind20 = "empty"
-/**
- * For example, the name of the tool that was invoked, for which this message is the tool response.
- */
-export type Name = LocalizedExpression | string | null
-/**
- * The id of the tool invocation for which this message is the tool response.
- */
-export type ToolCallId = LocalizedExpression | string | null
-/**
- * Maximal number of iterations to perform.
- *
- */
-export type Maxiterations = LocalizedExpression | number | string | null
+export type ExpressionInt = LocalizedExpression | number | string
 /**
  * String concatenation of the result of each iteration.
  *
@@ -520,16 +494,6 @@ export type As4 = "reduce"
  */
 export type Reduce = LocalizedExpression | string
 export type PdlTrace = BlockType[] | null
-/**
- * Condition to exit at the end of the loop.
- *
- */
-export type Until = LocalizedExpression | boolean | string
-/**
- * Maximal number of iterations to perform.
- *
- */
-export type Maxiterations1 = LocalizedExpression | number | string | null
 export type PdlTrace1 = BlockType[] | null
 /**
  * Optional field to ensure that the block is using granite-io.
@@ -552,11 +516,6 @@ export type Parameters =
  *
  */
 export type Platform1 = "litellm"
-/**
- * Name of the model following the LiteLLM convention.
- *
- */
-export type Model1 = LocalizedExpression | string
 /**
  * Parameters to send to the model.
  *
@@ -1157,7 +1116,11 @@ export interface LitellmModelBlock {
   pdl__usage?: PdlUsage | null
   pdl__model_input?: ModelInput | null
   platform?: Platform1
-  model: Model1
+  /**
+   * Name of the model following the LiteLLM convention.
+   *
+   */
+  model: LocalizedExpression | string
   parameters?: Parameters1
 }
 /**
@@ -1856,7 +1819,11 @@ export interface IfBlock {
   pdl__is_leaf?: PdlIsLeaf7
   context?: IndependentEnum
   kind?: Kind7
-  if: If
+  /**
+   * Condition.
+   *
+   */
+  if: LocalizedExpression | boolean | string
   /**
    * Branch to execute if the condition is true.
    *
@@ -2020,7 +1987,7 @@ export interface Defs9 {
  */
 export interface MatchCase {
   case?: PatternType | null
-  if?: If1
+  if?: ExpressionBool | null
   then: BlockType
   pdl__case_result?: PdlCaseResult
   pdl__if_result?: PdlIfResult
@@ -2173,7 +2140,11 @@ export interface RepeatBlock {
    *
    */
   index?: string | null
-  while?: While
+  /**
+   * Condition to stay at the beginning of the loop.
+   *
+   */
+  while?: LocalizedExpression | boolean | string
   /**
    * Body of the loop.
    *
@@ -2205,8 +2176,16 @@ export interface RepeatBlock {
     | ErrorBlock
     | EmptyBlock
     | null
-  until?: Until
-  maxIterations?: Maxiterations1
+  /**
+   * Condition to exit at the end of the loop.
+   *
+   */
+  until?: LocalizedExpression | boolean | string
+  /**
+   * Maximal number of iterations to perform.
+   *
+   */
+  maxIterations?: ExpressionInt | null
   /**
    * Define how to combine the result of each iteration.
    *
@@ -2366,7 +2345,11 @@ export interface MapBlock {
     | ErrorBlock
     | EmptyBlock
     | null
-  maxIterations?: Maxiterations
+  /**
+   * Maximal number of iterations to perform.
+   *
+   */
+  maxIterations?: ExpressionInt | null
   /**
    * Define how to combine the result of each iteration.
    *
@@ -2881,8 +2864,14 @@ export interface MessageBlock {
     | ErrorBlock
     | EmptyBlock
     | null
-  name?: Name
-  tool_call_id?: ToolCallId
+  /**
+   * For example, the name of the tool that was invoked, for which this message is the tool response.
+   */
+  name?: ExpressionStr | null
+  /**
+   * The id of the tool invocation for which this message is the tool response.
+   */
+  tool_call_id?: ExpressionStr | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2989,7 +2978,11 @@ export interface ReadBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
-  read: Read
+  /**
+   * Name of the file to read. If `None`, read the standard input.
+   *
+   */
+  read: ExpressionStr | null
   /**
    * Message to prompt the user to enter a value.
    *

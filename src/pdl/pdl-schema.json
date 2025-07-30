@@ -126,14 +126,7 @@
         "args": {
           "description": "The argument vector to spawn.\n    ",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-              },
-              {
-                "type": "string"
-              }
-            ]
+            "$ref": "#/$defs/ExpressionStr"
           },
           "title": "Args",
           "type": "array"
@@ -1031,6 +1024,42 @@
       "title": "ErrorBlock",
       "type": "object"
     },
+    "ExpressionBool": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExpressionInt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExpressionStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "FunctionBlock": {
       "additionalProperties": false,
       "description": "Function declaration.",
@@ -1387,14 +1416,7 @@
           "description": "Variable where to store the raw response of the model.\n    "
         },
         "pdl__usage": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlUsage"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlUsage",
           "default": null,
           "description": "Tokens consumed during model call\n    "
         },
@@ -1455,34 +1477,12 @@
     "GraniteioProcessor": {
       "properties": {
         "type": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Type"
+          "$ref": "#/$defs/OptionalExpressionStr",
+          "default": null
         },
         "model": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Model"
+          "$ref": "#/$defs/OptionalExpressionStr",
+          "default": null
         },
         "backend": {
           "anyOf": [
@@ -1609,19 +1609,8 @@
           "type": "string"
         },
         "if": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "Condition.\n    ",
-          "title": "If"
+          "$ref": "#/$defs/ExpressionBool",
+          "description": "Condition.\n    "
         },
         "then": {
           "$ref": "#/$defs/BlockType",
@@ -2247,14 +2236,7 @@
           "description": "Variable where to store the raw response of the model.\n    "
         },
         "pdl__usage": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/PdlUsage"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalPdlUsage",
           "default": null,
           "description": "Tokens consumed during model call\n    "
         },
@@ -2270,16 +2252,8 @@
           "type": "string"
         },
         "model": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "Name of the model following the LiteLLM convention.\n    ",
-          "title": "Model"
+          "$ref": "#/$defs/ExpressionStr",
+          "description": "Name of the model following the LiteLLM convention.\n    "
         },
         "parameters": {
           "anyOf": [
@@ -2878,23 +2852,9 @@
           "description": "Body of the iterator.\n    "
         },
         "maxIterations": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalExpressionInt",
           "default": null,
-          "description": "Maximal number of iterations to perform.\n    ",
-          "title": "Maxiterations"
+          "description": "Maximal number of iterations to perform.\n    "
         },
         "join": {
           "$ref": "#/$defs/JoinType",
@@ -3072,22 +3032,8 @@
           "default": null
         },
         "if": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "If"
+          "$ref": "#/$defs/OptionalExpressionBool",
+          "default": null
         },
         "then": {
           "$ref": "#/$defs/BlockType"
@@ -3237,36 +3183,14 @@
           "description": "Content of the message."
         },
         "name": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalExpressionStr",
           "default": null,
-          "description": "For example, the name of the tool that was invoked, for which this message is the tool response.",
-          "title": "Name"
+          "description": "For example, the name of the tool that was invoked, for which this message is the tool response."
         },
         "tool_call_id": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalExpressionStr",
           "default": null,
-          "description": "The id of the tool invocation for which this message is the tool response.",
-          "title": "Tool Call Id"
+          "description": "The id of the tool invocation for which this message is the tool response."
         }
       },
       "required": [
@@ -3478,6 +3402,36 @@
         }
       ]
     },
+    "OptionalExpressionBool": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionBool"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalExpressionInt": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionInt"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalExpressionStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionStr"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OptionalInt": {
       "anyOf": [
         {
@@ -3541,6 +3495,16 @@
       ],
       "title": "OptionalPdlType",
       "type": "object"
+    },
+    "OptionalPdlUsage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PdlUsage"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "OptionalStr": {
       "anyOf": [
@@ -3871,19 +3835,8 @@
           "type": "string"
         },
         "read": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Name of the file to read. If `None`, read the standard input.\n    ",
-          "title": "Read"
+          "$ref": "#/$defs/OptionalExpressionStr",
+          "description": "Name of the file to read. If `None`, read the standard input.\n    "
         },
         "message": {
           "$ref": "#/$defs/OptionalStr",
@@ -4072,59 +4025,23 @@
           "description": "Name of the variable containing the loop iteration.\n    "
         },
         "while": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            }
-          ],
+          "$ref": "#/$defs/ExpressionBool",
           "default": true,
-          "description": "Condition to stay at the beginning of the loop.\n    ",
-          "title": "While"
+          "description": "Condition to stay at the beginning of the loop.\n    "
         },
         "repeat": {
           "$ref": "#/$defs/BlockType",
           "description": "Body of the loop.\n    "
         },
         "until": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            }
-          ],
+          "$ref": "#/$defs/ExpressionBool",
           "default": false,
-          "description": "Condition to exit at the end of the loop.\n    ",
-          "title": "Until"
+          "description": "Condition to exit at the end of the loop.\n    "
         },
         "maxIterations": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "type": "integer"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalExpressionInt",
           "default": null,
-          "description": "Maximal number of iterations to perform.\n    ",
-          "title": "Maxiterations"
+          "description": "Maximal number of iterations to perform.\n    "
         },
         "join": {
           "$ref": "#/$defs/JoinType",

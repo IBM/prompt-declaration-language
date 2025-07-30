@@ -42,6 +42,10 @@ OptionalInt = TypeAliasType("OptionalInt", Optional[int])
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
 OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
 
+OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
+"""Optional block.
+"""
+
 
 ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
 
@@ -111,6 +115,26 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
 ExpressionTypeT = TypeVar("ExpressionTypeT")
 ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 """Expressions are represented Jinja as strings in between `${` and `}`."""
+
+ExpressionStr = TypeAliasType("ExpressionStr", ExpressionType[str])
+"""Expression evaluating into a string."""
+
+OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", Optional[ExpressionStr])
+"""Optional expression evaluating into a string."""
+
+ExpressionInt = TypeAliasType("ExpressionInt", ExpressionType[int])
+"""Expression evaluating into an int."""
+
+OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", Optional[ExpressionInt])
+"""Optional expression evaluating into an int."""
+
+ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
+"""Expression evaluating into a bool."""
+
+OptionalExpressionBool = TypeAliasType(
+    "OptionalExpressionBool", Optional[ExpressionBool]
+)
+"""Optional expression evaluating into a bool."""
 
 
 class Pattern(BaseModel):
@@ -328,6 +352,9 @@ class PdlUsage(BaseModel):
     """
 
 
+OptionalPdlUsage = TypeAliasType("OptionalPdlUsage", Optional[PdlUsage])
+
+
 class Block(BaseModel):
     """Common fields for all PDL blocks."""
 
@@ -358,7 +385,7 @@ class Block(BaseModel):
     """
     parser: Annotated[OptionalParserType, BeforeValidator(_ensure_lower)] = None
     """Parser to use to construct a value out of a string result."""
-    fallback: "OptionalBlockType" = None
+    fallback: OptionalBlockType = None
     """Block to execute in case of error.
     """
     retry: OptionalInt = None
@@ -426,7 +453,7 @@ class CallBlock(LeafBlock):
     """Arguments of the function with their values.
     """
     # Field for internal use
-    pdl__trace: "OptionalBlockType" = None
+    pdl__trace: OptionalBlockType = None
 
 
 class LitellmParameters(BaseModel):
@@ -536,7 +563,7 @@ class ModelBlock(LeafBlock):
     """Variable where to store the raw response of the model.
     """
     # Field for internal use
-    pdl__usage: Optional[PdlUsage] = None
+    pdl__usage: OptionalPdlUsage = None
     """Tokens consumed during model call
     """
     pdl__model_input: OptionalModelInput = None
@@ -557,7 +584,7 @@ class LitellmModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     """Optional field to ensure that the block is using LiteLLM.
     """
-    model: ExpressionType[str]
+    model: ExpressionStr
     """Name of the model following the LiteLLM convention.
     """
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
@@ -566,10 +593,10 @@ class LitellmModelBlock(ModelBlock):
 
 
 class GraniteioProcessor(BaseModel):
-    type: Optional[ExpressionType[str]] = None
+    type: OptionalExpressionStr = None
     """Type of IO processor.
     """
-    model: Optional[ExpressionType[str]] = None
+    model: OptionalExpressionStr = None
     """Model name used by the backend.
     """
     backend: ExpressionType[str | dict[str, Any] | object]
@@ -634,7 +661,7 @@ class ArgsBlock(BaseCodeBlock):
     """
 
     lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
-    args: list[ExpressionType[str]]
+    args: list[ExpressionStr]
     """The argument vector to spawn.
     """
 
@@ -722,9 +749,9 @@ class MessageBlock(LeafBlock):
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     content: "BlockType"
     """Content of the message."""
-    name: Optional[ExpressionType[str]] = None
+    name: OptionalExpressionStr = None
     """For example, the name of the tool that was invoked, for which this message is the tool response."""
-    tool_call_id: Optional[ExpressionType[str]] = None
+    tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
 
 
@@ -744,13 +771,13 @@ class IfBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.IF] = BlockKind.IF
-    condition: ExpressionType[bool] = Field(alias="if")
+    condition: ExpressionBool = Field(alias="if")
     """Condition.
     """
     then: "BlockType"
     """Branch to execute if the condition is true.
     """
-    else_: "OptionalBlockType" = Field(default=None, alias="else")
+    else_: OptionalBlockType = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
 
@@ -762,7 +789,7 @@ class MatchCase(BaseModel):
     case: Optional[PatternType] = None
     """Value to match.
     """
-    if_: Optional[ExpressionType[bool]] = Field(default=None, alias="if")
+    if_: OptionalExpressionBool = Field(default=None, alias="if")
     """Boolean condition to satisfy.
     """
     then: "BlockType"
@@ -898,16 +925,16 @@ class RepeatBlock(StructuredBlock):
     index: OptionalStr = None
     """Name of the variable containing the loop iteration.
     """
-    while_: ExpressionType[bool] = Field(default=True, alias="while")
+    while_: ExpressionBool = Field(default=True, alias="while")
     """Condition to stay at the beginning of the loop.
     """
     repeat: "BlockType"
     """Body of the loop.
     """
-    until: ExpressionType[bool] = False
+    until: ExpressionBool = False
     """Condition to exit at the end of the loop.
     """
-    maxIterations: Optional[ExpressionType[int]] = None
+    maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()
@@ -953,7 +980,7 @@ class MapBlock(StructuredBlock):
     map: "BlockType"
     """Body of the iterator.
     """
-    maxIterations: Optional[ExpressionType[int]] = None
+    maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()
@@ -980,7 +1007,7 @@ class ReadBlock(LeafBlock):
     """
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: ExpressionType[str] | None
+    read: OptionalExpressionStr
     """Name of the file to read. If `None`, read the standard input.
     """
     message: OptionalStr = None
@@ -999,7 +1026,7 @@ class IncludeBlock(StructuredBlock):
     """Name of the file to include.
     """
     # Field for internal use
-    pdl__trace: "OptionalBlockType" = None
+    pdl__trace: OptionalBlockType = None
 
 
 class ImportBlock(LeafBlock):
@@ -1010,7 +1037,7 @@ class ImportBlock(LeafBlock):
     """Name of the file to import.
     """
     # Field for internal use
-    pdl__trace: "OptionalBlockType" = None
+    pdl__trace: OptionalBlockType = None
 
 
 class ErrorBlock(LeafBlock):
@@ -1065,7 +1092,6 @@ BlockType = TypeAliasType(
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
 """Block or list of blocks.
 """
-OptionalBlockType = TypeAliasType("OptionalBlockType", Optional[BlockType])
 
 
 class Program(RootModel):
