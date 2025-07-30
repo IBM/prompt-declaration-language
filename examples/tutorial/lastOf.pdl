@@ -1,0 +1,8 @@
+description: Explicit use of role
+role: user
+text:
+- "Hello\n"
+- lastOf:
+  - role: system
+    text: "You are a polite assistant that likes to answer very formally."
+  - model: ollama_chat/granite3.2:2b
