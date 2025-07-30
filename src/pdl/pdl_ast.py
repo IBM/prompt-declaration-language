@@ -38,19 +38,26 @@ def _ensure_lower(value):
 
 
 OptionalStr = TypeAliasType("OptionalStr", Optional[str])
+"""Optional string."""
 OptionalInt = TypeAliasType("OptionalInt", Optional[int])
+"""Optional integer."""
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
+"""Optional boolean or string."""
 OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
+"""Optional value of any type."""
 
 OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
-"""Optional block.
-"""
+"""Optional block."""
 
 
 ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
+"""Type of the execution environment."""
 
 ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
+"""Type of the input of an LLM call."""
 OptionalModelInput = TypeAliasType("OptionalModelInput", Optional[ModelInput])
+"""Optional value of type ModelInput."""
+
 LazyMessage = TypeAliasType("LazyMessage", PdlLazy[dict[str, Any]])
 LazyMessages: TypeAlias = PDLContext
 
@@ -90,6 +97,7 @@ class PdlLocationType(BaseModel):
 OptionalPdlLocationType = TypeAliasType(
     "OptionalPdlLocationType", Optional[PdlLocationType]
 )
+"""Optional location type."""
 
 
 empty_block_location = PdlLocationType(file="", path=[], table={})
@@ -292,8 +300,9 @@ class RegexParser(Parser):
 ParserType = TypeAliasType(
     "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
 )
+"""Different parsers."""
 OptionalParserType = TypeAliasType("OptionalParserType", Optional[ParserType])
-
+"""Optional parser."""
 
 RoleType: TypeAlias = OptionalStr
 """Role name."""
@@ -318,6 +327,7 @@ class ContributeValue(BaseModel):
 ContributeType = TypeAliasType(
     "ContributeType", Sequence[Union[ContributeTarget, dict[str, ContributeValue]]]
 )
+"""Type of the contribute field."""
 
 
 class PdlTiming(BaseModel):
@@ -339,6 +349,7 @@ class PdlTiming(BaseModel):
 
 
 OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
+"""Optional execution time information."""
 
 
 class PdlUsage(BaseModel):
@@ -353,6 +364,7 @@ class PdlUsage(BaseModel):
 
 
 OptionalPdlUsage = TypeAliasType("OptionalPdlUsage", Optional[PdlUsage])
+"""Optional usage of statistics of an LLM call."""
 
 
 class Block(BaseModel):
