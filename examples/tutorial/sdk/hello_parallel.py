@@ -1,4 +1,5 @@
 import concurrent.futures
+
 from pdl.pdl import exec_str
 
 HELLO = """
@@ -7,6 +8,7 @@ text:
   Hello, my name is ${name}
 - model: ollama_chat/granite3.2:2b
 """
+
 
 def _run_agent(name):
     pdl_output = exec_str(
@@ -21,8 +23,8 @@ def _run_agent(name):
     return pdl_output
 
 
-if __name__ == '__main__':
-    data = ["Alice", "Nicolas", "Rosa", "Remi" ]
+if __name__ == "__main__":
+    data = ["Alice", "Nicolas", "Rosa", "Remi"]
     with concurrent.futures.ProcessPoolExecutor() as executor:
         futures = {executor.submit(_run_agent, name) for name in data}
         executor.map(_run_agent, data)
@@ -32,4 +34,4 @@ if __name__ == '__main__':
             except Exception as e:
                 print(f"Task raised an exception: {e}")
             else:
-                 print(result)
+                print(result)
