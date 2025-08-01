@@ -254,7 +254,10 @@ class PDLOptimizer:
         exp_file = self.experiment_path / f"{self.experiment_uuid}.json"
 
         with exp_file.open("w") as f:
-            json.dump(self.experiment_log, f)
+            try:
+                json.dump(self.experiment_log, f)
+            except TypeError:
+                logger.warning("Unable to save experiment")  # TODO
 
         return exp_file
 
