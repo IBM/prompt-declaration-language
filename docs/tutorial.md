@@ -110,16 +110,16 @@ You are a polite assistant that likes to answer very formally.
 Greetings! I trust this message finds you in good health and high spirits. How may I be of assistance today? Please feel free to pose your query or request, knowing that I am here to serve with diligence and precision.
 ```
 
-If we want to add the `system` message to the background context without having it present in the output we can use a `lastOf` block.
+If we want to add the `system` message to the background context without having it present in the result, we can use a `lastOf` block.
 The `lastOf` is associated to a list of blocks that are executed in sequence.
-Each sub-block contributes messages to the background context but the output of the block is the output of the last block.
-The following program provides the same input to the LLM, but the system prompt is not part of the output ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/lastOf.pdl)):
+Each sub-block contributes messages to the background context but the result of the block is the result of the last block.
+The following program provides the same input to the LLM, but the system prompt is not part of the result ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/lastOf.pdl)):
 
 ```yaml
 --8<-- "./examples/tutorial/lastOf.pdl"
 ```
 
-Therefore, the output of the program is:
+Therefore, the result of the program is:
 
 ```
 Hello
@@ -135,7 +135,7 @@ In PDL, we can declaratively chain models together as in the following example (
 --8<-- "./examples/tutorial/calling_llm_chaining.pdl"
 ```
 
-In this program, the first block output `Hello\n` and add a message with this value to the background context. The second block calls Granite on the background context containing the Hello message. The following block in the program prints out the sentence: `\nTranslate the above to French\n`. The final line of the program takes the entire context produced so far and passes it as input to the Granite model. Notice that the input passed to this model is the context up to that point, represented as a conversation. This makes it easy to chain models together and continue building on previous interactions. Notice how the conversational context is accumulated implicitly without requiring the user to explicitly manage messages.
+In this program, the first block result is `Hello\n` and adds a message with this value to the background context. The second block calls Granite on the background context containing the Hello message and adds the response of the model to the result and context. The following block contributes the sentence: `\nTranslate the above to French\n`. The final line of the program takes the entire context produced so far and passes it as input to the Granite model. Notice that the input passed to this model is the context up to that point, represented as a conversation. This makes it easy to chain models together and continue building on previous interactions. Notice how the conversational context is accumulated implicitly without requiring the user to explicitly manage messages.
 
 When we execute this program, we obtain:
 
@@ -148,7 +148,7 @@ Bonjour
 
 ## Variable Definition and Use
 
-Any block can define a variable using a `def: <var>` field. This means that the output of that block is assigned to the variable `<var>`, which may be reused at a later point in the document.
+Any block can define a variable using a `def: <var>` field. This means that the result of that block is assigned to the variable `<var>`, which may be reused at a later point in the document.
 
 Consider the following example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/variable_def_use.pdl)):
 
@@ -156,7 +156,7 @@ Consider the following example ([file](https://github.com/IBM/prompt-declaration
 --8<-- "./examples/tutorial/variable_def_use.pdl"
 ```
 
-Here we assign the output of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `${ }` for accessing the value of a variable. Any [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) expression is allowed to be used inside these braces. These expressions
+Here we assign the response of the model to variable `GEN` using the `def` field. The last line of the program prints out the value of `GEN`. Notice the notation `${ }` for accessing the value of a variable. Any [Jinja](https://jinja.palletsprojects.com/en/3.1.x/) expression is allowed to be used inside these braces. These expressions
 are also used to specify conditions for loops and conditionals. See for example this [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/chatbot.pdl).
 
 When we execute this program, we obtain:
@@ -169,7 +169,7 @@ The variable GEN is equal to: Hello
 
 ## Local Computation Using `defs`
 
-In the previous example, the value of the variable `GEN` computed by the `model` block is part of the output and is added to the background context. To define the variable `GEN` without contributing to the output and context, the `model` block can be moved into a `defs` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/local_computation.pdl)):
+In the previous example, the value of the variable `GEN` computed by the `model` block is part of the result and is added to the background context. To define the variable `GEN` without contributing to the result and context, the `model` block can be moved into a `defs` ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/local_computation.pdl)):
 
 ```yaml
 --8<-- "./examples/tutorial/local_computation.pdl"
@@ -265,7 +265,13 @@ Functions can be declared with optional parameters (see [example](https://github
 
 PDL is a language with higher order functions meaning that functions are values. So for example, a function can be aliased (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/function_alias.pdl)).
 
-Notice that the arguments of function calls are expressions and cannot be arbitrary PDL blocks.
+PDL functions can also be called from Jinja expressions as in the following example ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/function_call_in_jinja.pdl)):
+
+```yaml
+--8<-- "./examples/tutorial/function_call_in_jinja.pdl"
+```
+
+Notice that arguments can be positional or named. 
 
 
 ## Building Data Structures
@@ -1042,8 +1048,16 @@ What is the color of the sky?
 
 ## Python SDK
 
-See examples of PDL being called programmatically in Python
-[here](https://github.com/IBM/prompt-declaration-language/blob/main/examples/sdk).
+PDL programs can be defined and called programmatically directly in Python.
+In the following example, the PDL program is defined as a string and then parsed and executed using the [`exec_str`](https://ibm.github.io/prompt-declaration-language/api_reference/#src.pdl.pdl.exec_str) function ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/sdk/hello_str.py)).
+
+```python
+--8<-- "./examples/tutorial/sdk/hello_str.py"
+```
+
+The SDK also provides functions to execute programs defined in a file (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_file.py)), as a Python dictionary (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_dict.py)), or PDL abstract syntax tree defined by a [Pydantic](https://docs.pydantic.dev) data structure (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_prog.py)). The documentation of the API is available [here](https://ibm.github.io/prompt-declaration-language/api_reference/).
+
+
 
 For a more sophisticated example, see [here](https://github.com/IBM/prompt-declaration-language/blob/main/examples/callback).
 

@@ -1,0 +1,14 @@
+description: Calling a PDL function from Jinja
+defs:
+  translate:
+    function:
+      sentence: string
+      language: string
+    return:
+      lastOf:
+      - |
+        Translate the sentence '${ sentence }' to ${ language }.
+        Only give the result of the translation.
+      - model: ollama_chat/granite3.2:2b
+text: |
+  The way to say hello in French is ${ translate("Hello", language="French") }.
