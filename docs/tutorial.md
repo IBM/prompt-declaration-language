@@ -1058,8 +1058,14 @@ In the following example, the PDL program is defined as a string and then parsed
 The SDK also provides functions to execute programs defined in a file (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_file.py)), as a Python dictionary (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_dict.py)), or PDL abstract syntax tree defined by a [Pydantic](https://docs.pydantic.dev) data structure (see [example](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/sdk/hello_prog.py)). The documentation of the API is available [here](https://ibm.github.io/prompt-declaration-language/api_reference/).
 
 
+A way to handle the processing of large datasets using PDL is to use Python multiprocessing capabilities to launch multiple instances of the PDL interpreter. The example below, w are using the Python's `concurrent.futures.ProcessPoolExecutor` to execute in parallel multiple instances of the PDL program `HELLO` where the free variable `name` is instantiated with a different value for each instance ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/tutorial/sdk/hello_parallel.py)).
 
-For a more sophisticated example, see [here](https://github.com/IBM/prompt-declaration-language/blob/main/examples/callback).
+```python
+--8<-- "./examples/tutorial/sdk/hello_parallel.py"
+```
+
+Finally, it possible to interleave the use of Python and PDL.
+You can find an example [here](https://github.com/IBM/prompt-declaration-language/blob/main/examples/callback) of a Python application which is using a function defined in PDL which itself depend on the Python application.
 
 ## Debugging PDL Programs
 
