@@ -2,7 +2,8 @@ from pdl.pdl import exec_str
 
 HELLO = """
 text:
-- "Hello\n"
+- >+
+  Hello
 - model: ollama_chat/granite3.2:2b
   parameters:
     stop: ['!']
