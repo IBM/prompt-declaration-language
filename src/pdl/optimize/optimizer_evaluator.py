@@ -64,7 +64,7 @@ class OptimizerEvaluator(Thread):
         end_time = None
         total_tokens = -1
         errored = False
-        score = 0
+        score = 0.0
         while retry:
             if tries > 1:
                 console.log("RETRYING! ", tries)
@@ -107,7 +107,7 @@ class OptimizerEvaluator(Thread):
 
                 if tries >= RETRY_COUNT:
                     retry = False
-                
+
                 score = float(self.score(document, truth))
             except PDLParseError as exc:
                 console.print_exception(show_locals=False)

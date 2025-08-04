@@ -79,7 +79,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    
 
     if not args.config.exists():
         print("Config file doesn't exist:", args.config)
@@ -94,7 +93,7 @@ if __name__ == "__main__":
         print("Couldn't load config:", args.config)
         traceback.print_last()
         sys.exit(1)
-        
+
     if not Path(config.pdl_path).exists():
         print("PDL file doesn't exist:", config.pdl_path)
         sys.exit(1)

@@ -1,7 +1,8 @@
-from datasets.load import load_dataset
-from datasets.dataset_dict import DatasetDict
-from pathlib import Path
 import json
+from pathlib import Path
+
+from datasets.dataset_dict import DatasetDict
+from datasets.load import load_dataset
 
 # Load dataset
 bea19: DatasetDict = load_dataset("juancavallotti/bea-19-corruption")

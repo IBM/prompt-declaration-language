@@ -2,10 +2,14 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+
 class JsonlDataset(BaseModel):
     train: str = Field(..., description="Path to the training dataset in JSONL format")
     test: str = Field(..., description="Path to the test dataset in JSONL format")
-    validation: str = Field(..., description="Path to the validation dataset in JSONL format")
+    validation: str = Field(
+        ..., description="Path to the validation dataset in JSONL format"
+    )
+
 
 class OptimizationConfig(BaseModel):
     pdl_path: str = Field(..., description="Path to the PDL file to optimize")
@@ -14,7 +18,9 @@ class OptimizationConfig(BaseModel):
     demonstration_columns: list[str] = Field()
     instance_columns: list[str] = Field()
     groundtruth_column: str | None = Field()
-    eval_pdl: str = Field(..., description="Path to the PDL file used for evaluation")
+    eval_pdl: str | None = Field(
+        default=None, description="Path to the PDL file used for evaluation"
+    )
     num_candidates: int = Field(default=30)
     num_demonstrations: int | None = Field(default=None)
     initial_validation_set_size: int = Field(default=10)

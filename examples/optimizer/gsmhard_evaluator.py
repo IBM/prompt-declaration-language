@@ -11,7 +11,7 @@ def is_float(s: str | float) -> str:
         f = float(s)
         return f"{f:.2f}"
     except Exception:
-        return s
+        return str(s)
 
 
 class GsmHardEvaluator(OptimizerEvaluator):
@@ -81,7 +81,7 @@ class GsmHardEvaluator(OptimizerEvaluator):
 
         answerf = is_float(answer)
         truthf = is_float(ground_truth)
-        
+
         return float(
             answer == ground_truth
             or answerf == truthf

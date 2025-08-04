@@ -712,7 +712,9 @@ class PDLOptimizer:
         )
 
     def benchmark(self, test_set_size: int, candidate: dict | None = None):
-        if self.num_demonstrations <= 0:
+        if self.num_demonstrations is None:
+            demo_size = 0
+        elif self.num_demonstrations <= 0:
             demo_size = len(self.dataset[self.train_set_name])
         else:
             demo_size = self.num_demonstrations
