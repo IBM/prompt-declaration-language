@@ -2,13 +2,13 @@
 defs: 
   b: 
     function:
-      arg: str 
+      arg: string 
     return:
       ${ arg }
 
   a: 
     function:
-      arg: str 
+      arg: string 
     return:
       call: ${ b }
       args:

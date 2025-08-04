@@ -1,7 +1,10 @@
 use ::std::collections::HashMap;
+use ::std::error::Error;
+use ::std::time::SystemTime;
+
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
-use serde_json::{to_string, Number, Value};
+use serde_json::{Number, Value, to_string};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 //why doesn't this work? #[serde(rename_all_fields(serialize = "lowercase"))]
@@ -16,23 +19,54 @@ pub enum Role {
     Tool,
 }
 
+/// Function used to parse to value (https://docs.python.org/3/library/re.html).
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum RegexMode {
+    #[serde(rename = "search")]
+    Search,
+    #[serde(rename = "match")]
+    Match,
+    #[serde(rename = "fullmatch")]
+    Fullmatch,
+    #[serde(rename = "split")]
+    Split,
+    #[serde(rename = "findall")]
+    Findall,
+}
+
+/// A regular expression parser
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct RegexParser {
+    /// Regular expression to parse the value
+    pub regex: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<RegexMode>,
+
+    /// Expected type of the parsed value
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spec: Option<IndexMap<String, PdlType>>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum PdlParser {
     #[serde(rename = "json")]
     Json,
-    /*#[serde(rename = "jsonl")]
-    Jsonl,*/
+    #[serde(rename = "jsonl")]
+    Jsonl,
     #[serde(rename = "yaml")]
     Yaml,
+    #[serde(untagged)]
+    Regex(RegexParser),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum PdlBaseType {
-    #[serde(rename = "str")]
+    #[serde(rename = "string")]
     Str,
-    #[serde(rename = "bool")]
+    #[serde(rename = "boolean")]
     Bool,
-    #[serde(rename = "int")]
+    #[serde(rename = "integer")]
     Int,
     #[serde(rename = "null")]
     Null,
@@ -51,81 +85,129 @@ pub enum PdlType {
     Object(HashMap<String, PdlType>),
 }
 
+/// Timing information
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Timing {
+    // TODO serde_json doesn't support u128, but (below) as_nanos() returns u128...
+    start_nanos: u64,
+    end_nanos: u64,
+    timezone: String,
+}
+
+type TimingError = Box<dyn Error + Send + Sync>;
+impl Timing {
+    fn now() -> Result<u64, TimingError> {
+        Ok(::std::time::SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)?
+            .as_nanos() as u64)
+    }
+
+    pub fn start() -> Result<Timing, TimingError> {
+        let mut t = Timing::default();
+        t.start_nanos = Timing::now()?;
+        t.timezone = iana_time_zone::get_timezone()?;
+        Ok(t)
+    }
+
+    pub fn end(&mut self) -> Result<(), TimingError> {
+        self.end_nanos = Timing::now()?;
+        Ok(())
+    }
+}
+
+/// Common metadata of blocks
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
+#[serde(default)]
+#[builder(setter(into, strip_option), default)]
+pub struct Metadata {
+    /// Documentation associated to the block
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// Set of definitions executed before the execution of the block
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub defs: Option<IndexMap<String, PdlBlock>>,
+
+    /// Name of the variable used to store the result of the execution of the block
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub def: Option<String>,
+
+    /// Indicate if the block contributes to the result and background context
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contribute: Option<Vec<String>>, // TODO
+
+    /// Type specification of the result of the block
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spec: Option<Value>,
+
+    #[serde(rename = "pdl__id", skip_serializing_if = "Option::is_none")]
+    pub pdl_id: Option<String>,
+
+    #[serde(rename = "pdl__result", skip_serializing_if = "Option::is_none")]
+    pub pdl_result: Option<Box<PdlResult>>,
+
+    #[serde(rename = "pdl__is_leaf", skip_serializing_if = "Option::is_none")]
+    pub pdl_is_leaf: Option<bool>,
+
+    #[serde(rename = "pdl__timing", skip_serializing_if = "Option::is_none")]
+    pub pdl_timing: Option<Timing>,
+}
+
 /// Call a function
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "call")]
 pub struct CallBlock {
-    /// Function to call
-    pub call: String,
+    pub call: EvalsTo<String, Box<PdlResult>>,
 
     /// Arguments of the function with their values
     #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<Value>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 impl CallBlock {
     pub fn new(call: String) -> Self {
         CallBlock {
-            call: call,
+            call: EvalsTo::Jinja(call),
             args: None,
-            defs: None,
+            pdl_trace: None,
         }
     }
 }
 
 pub trait SequencingBlock {
     fn kind(&self) -> &str;
-    fn description(&self) -> &Option<String>;
     fn role(&self) -> &Option<Role>;
-    fn def(&self) -> &Option<String>;
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>>;
     fn items(&self) -> &Vec<PdlBlock>;
     fn with_items(&self, items: Vec<PdlBlock>) -> Self;
     fn parser(&self) -> &Option<PdlParser>;
-    fn to_block(&self) -> PdlBlock;
+    fn to_block(&self) -> Body;
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult;
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T>;
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T>;
 }
 
 /// Return the value of the last block if the list of blocks
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "lastOf")]
 pub struct LastOfBlock {
     /// Sequence of blocks to execute
     #[serde(rename = "lastOf")]
     pub last_of: Vec<PdlBlock>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 }
 impl SequencingBlock for LastOfBlock {
     fn kind(&self) -> &str {
         "lastOf"
     }
-    fn description(&self) -> &Option<String> {
-        &self.description
-    }
     fn role(&self) -> &Option<Role> {
         &self.role
-    }
-    fn def(&self) -> &Option<String> {
-        return &self.def;
-    }
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>> {
-        &self.defs
     }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.last_of
@@ -138,8 +220,8 @@ impl SequencingBlock for LastOfBlock {
     fn parser(&self) -> &Option<PdlParser> {
         &self.parser
     }
-    fn to_block(&self) -> PdlBlock {
-        PdlBlock::LastOf(self.clone())
+    fn to_block(&self) -> Body {
+        Body::LastOf(self.clone())
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         match output_results.last() {
@@ -147,7 +229,7 @@ impl SequencingBlock for LastOfBlock {
             None => "".into(),
         }
     }
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T> {
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T> {
         match output_messages.last() {
             Some(m) => vec![m.clone()],
             None => vec![],
@@ -157,41 +239,28 @@ impl SequencingBlock for LastOfBlock {
 
 /// Create the concatenation of the stringify version of the result of
 /// each block of the list of blocks.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
+#[serde(tag = "kind", rename = "text")]
+#[builder(setter(into, strip_option), default)]
 pub struct TextBlock {
     /// Body of the text
+    // Note: do NOT apply #[serde(default)] here. This seems to give
+    // permission for the deserializer to match everything to
+    // TextBlock, since ... all fields are optional/have defaults.
     pub text: Vec<PdlBlock>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<Role>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 }
 impl SequencingBlock for TextBlock {
     fn kind(&self) -> &str {
         "text"
     }
-    fn description(&self) -> &Option<String> {
-        &self.description
-    }
     fn role(&self) -> &Option<Role> {
         &self.role
-    }
-    fn def(&self) -> &Option<String> {
-        return &self.def;
-    }
-    fn defs(&self) -> &Option<IndexMap<String, PdlBlock>> {
-        &self.defs
     }
     fn items(&self) -> &Vec<PdlBlock> {
         &self.text
@@ -204,62 +273,28 @@ impl SequencingBlock for TextBlock {
     fn parser(&self) -> &Option<PdlParser> {
         &self.parser
     }
-    fn to_block(&self) -> PdlBlock {
-        PdlBlock::Text(self.clone())
+    fn to_block(&self) -> Body {
+        Body::Text(self.clone())
     }
     fn result_for(&self, output_results: Vec<PdlResult>) -> PdlResult {
         PdlResult::String(
             output_results
                 .into_iter()
-                .map(|m| m.to_string())
+                .map(|m| match m {
+                    PdlResult::String(s) => s,
+                    x => x.to_string(),
+                })
                 .collect::<Vec<_>>()
                 .join("\n"),
         )
     }
-    fn messages_for<T: Clone>(&self, output_messages: Vec<T>) -> Vec<T> {
-        output_messages
-    }
-}
-
-impl TextBlock {
-    pub fn new(text: Vec<PdlBlock>) -> Self {
-        TextBlock {
-            def: None,
-            defs: None,
-            description: None,
-            role: None,
-            parser: None,
-            text: text,
-        }
-    }
-
-    pub fn def(&mut self, def: &str) -> &mut Self {
-        self.def = Some(def.into());
-        self
-    }
-
-    pub fn description(&mut self, description: String) -> &mut Self {
-        self.description = Some(description);
-        self
-    }
-
-    pub fn parser(&mut self, parser: PdlParser) -> &mut Self {
-        self.parser = Some(parser);
-        self
-    }
-
-    pub fn build(&self) -> Self {
-        self.clone()
-    }
-}
-
-impl From<Vec<PdlBlock>> for TextBlock {
-    fn from(v: Vec<PdlBlock>) -> Self {
-        TextBlock::new(v).build()
+    fn messages_for<T: Clone>(&self, output_messages: &Vec<T>) -> Vec<T> {
+        output_messages.clone()
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "function")]
 pub struct FunctionBlock {
     pub function: HashMap<String, PdlType>,
     #[serde(rename = "return")]
@@ -268,70 +303,41 @@ pub struct FunctionBlock {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PdlUsage {
-    // Completion tokens consumed
+    /// Completion tokens consumed
     pub completion_tokens: u64,
-    // Prompt tokens consumed
+    /// Prompt tokens consumed
     pub prompt_tokens: u64,
-    // Completion nanos
-    pub completion_nanos: u64,
-    // Prompt nanos
-    pub prompt_nanos: u64,
+    /// Completion nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completion_nanos: Option<u64>,
+    /// Prompt nanos
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prompt_nanos: Option<u64>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
+#[serde(tag = "kind", rename = "model")]
+#[builder(setter(into, strip_option), default)]
 pub struct ModelBlock {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    pub model: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
+    pub model: EvalsTo<String, String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<HashMap<String, Value>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub input: Option<Box<PdlBlock>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[serde(rename = "modelResponse")]
+    pub platform: Option<String>,
+    #[serde(rename = "modelResponse", skip_serializing_if = "Option::is_none")]
     pub model_response: Option<String>,
-    #[serde(rename = "pdl__result")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pdl_result: Option<String>,
-    #[serde(rename = "pdl__usage")]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "pdl__usage", skip_serializing_if = "Option::is_none")]
     pub pdl_usage: Option<PdlUsage>,
-}
 
-impl ModelBlock {
-    pub fn new(model: &str) -> Self {
-        ModelBlock {
-            def: None,
-            description: None,
-            model_response: None,
-            parameters: None,
-            pdl_result: None,
-            pdl_usage: None,
-            model: model.into(),
-            input: None,
-        }
-    }
+    /// The result of evaluating the `input` field (if given)
+    #[serde(rename = "pdl__model_input", skip_serializing_if = "Option::is_none")]
+    pub pdl_model_input: Option<Vec<MessageBlock>>,
 
-    pub fn input(&mut self, input: PdlBlock) -> &mut Self {
-        self.input = Some(Box::new(input));
-        self
-    }
-
-    pub fn input_str(&mut self, input: &str) -> &mut Self {
-        self.input = Some(Box::new(PdlBlock::String(input.into())));
-        self
-    }
-
-    pub fn parameters(&mut self, parameters: &HashMap<String, Value>) -> &mut Self {
-        self.parameters = Some(parameters.clone());
-        self
-    }
-
-    pub fn build(&self) -> Self {
-        self.clone()
-    }
+    /// The actual input given to the model (whether via `input` or from the incoming messages)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub context: Option<Vec<MessageBlock>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -339,6 +345,37 @@ impl ModelBlock {
 pub enum ListOrString {
     String(String),
     List(Vec<Value>),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum IterationType {
+    #[serde(rename = "lastOf")]
+    LastOf,
+    #[serde(rename = "array")]
+    Array,
+    #[serde(rename = "object")]
+    Object,
+    #[serde(rename = "text")]
+    Text,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct JoinAs {
+    #[serde(rename = "as")]
+    as_: IterationType,
+}
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct JoinAsWith {
+    #[serde(rename = "as")]
+    as_: IterationType,
+    with: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum JoinType {
+    AsWith(JoinAsWith),
+    As(JoinAs),
 }
 
 /// Repeat the execution of a block.
@@ -352,17 +389,23 @@ pub enum ListOrString {
 ///     "${ name }'s number is ${ number }\\n"
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "repeat")]
 pub struct RepeatBlock {
     /// Arrays to iterate over
     #[serde(rename = "for")]
-    pub for_: HashMap<String, ListOrString>,
+    pub for_: HashMap<String, EvalsTo<ListOrString, Vec<PdlResult>>>,
 
     /// Body of the loop
     pub repeat: Box<PdlBlock>,
+
+    /// Define how to combine the result of each iteration
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub join: Option<JoinType>,
 }
 
 /// Create a message
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "message")]
 pub struct MessageBlock {
     /// Role of associated to the message, e.g. User or Assistant
     pub role: Role,
@@ -370,8 +413,9 @@ pub struct MessageBlock {
     /// Content of the message
     pub content: Box<PdlBlock>,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    /// pdl_id of block that defined the `content of this message
+    #[serde(rename = "pdl__defsite", skip_serializing_if = "Option::is_none")]
+    pub pdl_defsite: Option<String>,
 
     /// For example, the name of the tool that was invoked, for which this message is the tool response
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -386,6 +430,7 @@ pub struct MessageBlock {
 /// block. If the body of the object is an array, the resulting object
 /// is the union of the objects computed by each element of the array.
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "object")]
 pub struct ObjectBlock {
     pub object: HashMap<String, PdlBlock>,
 }
@@ -413,15 +458,13 @@ pub struct ObjectBlock {
 ///   def: EXTRACTED_GROUND_TRUTH
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "data")]
 pub struct DataBlock {
     pub data: Value,
 
     /// Do not evaluate expressions inside strings.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raw: Option<bool>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
@@ -438,8 +481,12 @@ pub struct DataBlock {
 ///     result = random.randint(1, 20)
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "code")]
 pub struct PythonCodeBlock {
+    /// Programming language of the code
     pub lang: String,
+
+    /// Code to execute
     pub code: String,
 }
 
@@ -464,6 +511,7 @@ pub enum StringOrNull {
 /// parser: yaml
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "read")]
 pub struct ReadBlock {
     /// Name of the file to read. If `None`, read the standard input.
     pub read: StringOrNull,
@@ -475,9 +523,6 @@ pub struct ReadBlock {
     pub multiline: Option<bool>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub def: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub parser: Option<PdlParser>,
 }
 
@@ -486,6 +531,40 @@ pub struct ReadBlock {
 pub enum StringOrBoolean {
     String(String),
     Boolean(bool),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Expr<S, T> {
+    #[serde(rename = "pdl__expr")]
+    pub pdl_expr: S,
+
+    #[serde(rename = "pdl__result", skip_serializing_if = "Option::is_none")]
+    pub pdl_result: Option<T>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum EvalsTo<S, T> {
+    Jinja(String),
+    Const(T),
+    Expr(Expr<S, T>),
+}
+
+impl Default for EvalsTo<String, String> {
+    fn default() -> Self {
+        EvalsTo::Const("".to_string())
+    }
+}
+
+impl From<&str> for EvalsTo<String, String> {
+    fn from(s: &str) -> Self {
+        EvalsTo::Const(s.to_string())
+    }
+}
+impl From<String> for EvalsTo<String, String> {
+    fn from(s: String) -> Self {
+        EvalsTo::Const(s)
+    }
 }
 
 /// Conditional control structure.
@@ -500,10 +579,11 @@ pub enum StringOrBoolean {
 /// then: You won!
 /// ```
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "if")]
 pub struct IfBlock {
     /// The condition to check
     #[serde(rename = "if")]
-    pub condition: StringOrBoolean,
+    pub condition: EvalsTo<StringOrBoolean, bool>,
 
     /// Branch to execute if the condition is true
     pub then: Box<PdlBlock>,
@@ -514,11 +594,13 @@ pub struct IfBlock {
     pub else_: Option<Box<PdlBlock>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub defs: Option<IndexMap<String, PdlBlock>>,
+    pub if_result: Option<bool>,
 }
 
 /// Return the array of values computed by each block of the list of blocks
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Default, derive_builder::Builder)]
+#[serde(tag = "kind", rename = "array")]
+#[builder(setter(into, strip_option), default)]
 pub struct ArrayBlock {
     /// Elements of the array
     pub array: Vec<PdlBlock>,
@@ -526,30 +608,62 @@ pub struct ArrayBlock {
 
 /// Include a PDL file
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "include")]
 pub struct IncludeBlock {
     /// Name of the file to include.
     pub include: String,
+
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 /// Import a PDL file
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "import")]
 pub struct ImportBlock {
     /// Name of the file to include.
     pub import: String,
+
+    #[serde(rename = "pdl__trace", skip_serializing_if = "Option::is_none")]
+    pub pdl_trace: Option<Box<PdlBlock>>,
 }
 
 /// Block containing only defs
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "kind", rename = "empty")]
 pub struct EmptyBlock {
     pub defs: IndexMap<String, PdlBlock>,
 }
 
+/// A PDL program/sub-program consists of either a literal (string, number, boolean) or some kind of structured block
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum PdlBlock {
     Bool(bool),
     Number(Number),
     String(String),
+    Function(FunctionBlock),
+    Advanced(Block),
+
+    // Must be last to prevent serde from aggressively matching on it,
+    // since other block types also (may) have a `defs`.
+    Empty(EmptyBlock),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Block {
+    #[serde(flatten)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub metadata: Option<Metadata>,
+
+    #[serde(flatten)]
+    pub body: Body,
+}
+
+/// A PDL block that has structure and metadata
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(untagged)]
+pub enum Body {
     If(IfBlock),
     Import(ImportBlock),
     Include(IncludeBlock),
@@ -559,15 +673,17 @@ pub enum PdlBlock {
     Array(ArrayBlock),
     Message(MessageBlock),
     Repeat(RepeatBlock),
-    Text(TextBlock),
-    LastOf(LastOfBlock),
-    Model(ModelBlock),
-    Function(FunctionBlock),
     PythonCode(PythonCodeBlock),
     Read(ReadBlock),
+    Model(ModelBlock),
+    LastOf(LastOfBlock),
+    Text(TextBlock),
+}
 
-    // must be last to prevent serde from aggressively matching on it, since other block types also (may) have a `defs`
-    Empty(EmptyBlock),
+impl From<bool> for PdlBlock {
+    fn from(b: bool) -> Self {
+        PdlBlock::Bool(b)
+    }
 }
 
 impl From<&str> for PdlBlock {
@@ -602,8 +718,8 @@ pub enum PdlResult {
     Number(Number),
     String(String),
     Bool(bool),
-    Block(PdlBlock),
     Closure(Closure),
+    Block(PdlBlock),
     List(Vec<PdlResult>),
     Dict(HashMap<String, PdlResult>),
 }
@@ -631,5 +747,17 @@ impl From<&bool> for PdlResult {
 impl From<Number> for PdlResult {
     fn from(n: Number) -> Self {
         PdlResult::Number(n)
+    }
+}
+impl PartialEq for PdlResult {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (PdlResult::Number(a), PdlResult::Number(b)) => a == b,
+            (PdlResult::String(a), PdlResult::String(b)) => a == b,
+            (PdlResult::Bool(a), PdlResult::Bool(b)) => a == b,
+            (PdlResult::List(a), PdlResult::List(b)) => a == b,
+            (PdlResult::Dict(a), PdlResult::Dict(b)) => a == b,
+            _ => false,
+        }
     }
 }

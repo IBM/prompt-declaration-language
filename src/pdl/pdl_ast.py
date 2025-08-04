@@ -1,10 +1,11 @@
-"""PDL programs are represented by the Pydantic data structure defined in this file.
-"""
+"""PDL programs are represented by the Pydantic data structure defined in this file."""
 
 from enum import StrEnum
+from os import environ
 from typing import (
     Annotated,
     Any,
+    Callable,
     Generic,
     Literal,
     Mapping,
@@ -15,11 +16,19 @@ from typing import (
     Union,
 )
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field, RootModel
-from pydantic.json_schema import SkipJsonSchema
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    Json,
+    RootModel,
+    TypeAdapter,
+)
+from typing_extensions import TypeAliasType
 
+from .pdl_context import PDLContext
 from .pdl_lazy import PdlDict, PdlLazy
-from .pdl_schema_utils import pdltype_to_jsonschema
 
 
 def _ensure_lower(value):
@@ -28,14 +37,29 @@ def _ensure_lower(value):
     return value
 
 
-ScopeType: TypeAlias = PdlDict[str, Any]
+OptionalStr = TypeAliasType("OptionalStr", Optional[str])
+"""Optional string."""
+OptionalInt = TypeAliasType("OptionalInt", Optional[int])
+"""Optional integer."""
+OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
+"""Optional boolean or string."""
+OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
+"""Optional value of any type."""
+
+OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
+"""Optional block."""
 
 
-ModelInput: TypeAlias = Sequence[Mapping[str, Any]]
+ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
+"""Type of the execution environment."""
 
+ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
+"""Type of the input of an LLM call."""
+OptionalModelInput = TypeAliasType("OptionalModelInput", Optional[ModelInput])
+"""Optional value of type ModelInput."""
 
-LazyMessage: TypeAlias = PdlLazy[dict[str, Any]]
-LazyMessages: TypeAlias = PdlLazy[list[dict[str, Any]]]
+LazyMessage = TypeAliasType("LazyMessage", PdlLazy[dict[str, Any]])
+LazyMessages: TypeAlias = PDLContext
 
 
 class BlockKind(StrEnum):
@@ -53,6 +77,7 @@ class BlockKind(StrEnum):
     IF = "if"
     MATCH = "match"
     REPEAT = "repeat"
+    MAP = "map"
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
@@ -68,6 +93,12 @@ class PdlLocationType(BaseModel):
     path: list[str]
     file: str
     table: dict[str, int]
+
+
+OptionalPdlLocationType = TypeAliasType(
+    "OptionalPdlLocationType", Optional[PdlLocationType]
+)
+"""Optional location type."""
 
 
 empty_block_location = PdlLocationType(file="", path=[], table={})
@@ -87,74 +118,176 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
     )
     pdl__expr: Any
     pdl__result: Optional[LocalizedExpressionT] = None
-    pdl__location: Optional[PdlLocationType] = None
+    pdl__location: OptionalPdlLocationType = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
 ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
+"""Expressions are represented Jinja as strings in between `${` and `}`."""
+
+ExpressionStr = TypeAliasType("ExpressionStr", ExpressionType[str])
+"""Expression evaluating into a string."""
+
+OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", Optional[ExpressionStr])
+"""Optional expression evaluating into a string."""
+
+ExpressionInt = TypeAliasType("ExpressionInt", ExpressionType[int])
+"""Expression evaluating into an int."""
+
+OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", Optional[ExpressionInt])
+"""Optional expression evaluating into an int."""
+
+ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
+"""Expression evaluating into a bool."""
+
+OptionalExpressionBool = TypeAliasType(
+    "OptionalExpressionBool", Optional[ExpressionBool]
+)
+"""Optional expression evaluating into a bool."""
 
 
 class Pattern(BaseModel):
-    """Patterns allowed to match values in a `case` clause."""
+    """Common fields for structured patterns."""
 
     model_config = ConfigDict(extra="forbid")
-    def_: Optional[str] = Field(default=None, alias="def")
+    def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the value matched by the pattern.
     """
 
 
 class OrPattern(Pattern):
-    anyOf: list["PatternType"]
     """Match any of the patterns."""
+
+    anyOf: list["PatternType"]
+    """List of possible patterns."""
 
 
 class ArrayPattern(Pattern):
-    array: list["PatternType"]
     """Match an array."""
+
+    array: list["PatternType"]
+    """Shape of the array to match."""
 
 
 class ObjectPattern(Pattern):
-    object: dict[str, "PatternType"]
     """Match an object."""
+
+    object: dict[str, "PatternType"]
+    """Shape of the object to match."""
 
 
 class AnyPattern(Pattern):
-    any: Literal[None]
     """Match any value."""
 
+    any: Literal[None]
 
-PatternType: TypeAlias = (
-    None
-    | bool
-    | int
-    | float
-    | str
-    | OrPattern
-    | ArrayPattern
-    | ObjectPattern
-    | AnyPattern
+
+PatternType = TypeAliasType(
+    "PatternType",
+    Union[
+        None, bool, int, float, str, OrPattern, ArrayPattern, ObjectPattern, AnyPattern
+    ],
 )
+"""Patterns allowed to match values in a `case` clause."""
+
+
+BasePdlType: TypeAlias = Literal[
+    "null",
+    "boolean",
+    "string",
+    "number",
+    "integer",
+    "array",
+    "object",
+    # deprecated syntax below
+    "bool",
+    "str",
+    "float",
+    "int",
+    "list",
+    "obj",
+]
+"""Base types."""
+
+
+class PdlType(BaseModel):
+    """Common fields for PDL types."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class OptionalPdlType(PdlType):
+    """Optional type."""
+
+    optional: "PdlTypeType"
+    """"""
+
+
+class JsonSchemaTypePdlType(PdlType):
+    """Json Schema with a type field."""
+
+    model_config = ConfigDict(extra="allow")
+
+    type: str | list[str]
+    """Data type that a schema should expect."""
+
+
+class EnumPdlType(PdlType):
+    """Json Schema with an `enum` field."""
+
+    model_config = ConfigDict(extra="allow")
+
+    enum: list[Any]
+    """List of allowed values in the type."""
+
+
+class ObjectPdlType(PdlType):
+    """Object type."""
+
+    object: dict[str, "PdlTypeType"]
+    """Fields of the objects with their types."""
+
+
+PdlTypeType = TypeAliasType(
+    "PdlTypeType",
+    Annotated[
+        "Union[None,"  # pyright: ignore
+        "      BasePdlType,"
+        "      EnumPdlType,"
+        "      list['PdlTypeType'],"
+        "      OptionalPdlType,"
+        "      JsonSchemaTypePdlType,"
+        "      ObjectPdlType,"
+        "      dict[str, 'PdlTypeType']]",
+        Field(union_mode="left_to_right"),
+    ],
+)
+"""Types."""
+
+pdl_type_adapter = TypeAdapter(PdlTypeType)
 
 
 class Parser(BaseModel):
     """Common fields for all parsers (`parser` field)."""
 
     model_config = ConfigDict(extra="forbid")
-    description: Optional[str] = None
+    description: OptionalStr = None
     """Documentation associated to the parser.
     """
-    spec: Optional[dict[str, Any]] = None
+    spec: PdlTypeType = None
     """Expected type of the parsed value.
     """
 
 
 class PdlParser(Parser):
+    """Use a PDL program as a parser specification (experimental)."""
+
     pdl: "BlockType"
-    """Use a PDL program as a parser specification."""
+    """PDL program describing the shape of the expected value."""
 
 
 class RegexParser(Parser):
-    """A regular expression parser"""
+    """A regular expression parser."""
 
     regex: str
     """Regular expression to parse the value."""
@@ -165,49 +298,74 @@ class RegexParser(Parser):
     """Function used to parse to value (https://docs.python.org/3/library/re.html)."""
 
 
-ParserType: TypeAlias = Literal["json", "jsonl", "yaml"] | PdlParser | RegexParser
+ParserType = TypeAliasType(
+    "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
+)
+"""Different parsers."""
+OptionalParserType = TypeAliasType("OptionalParserType", Optional[ParserType])
+"""Optional parser."""
 
-
-RoleType: TypeAlias = Optional[str]
+RoleType: TypeAlias = OptionalStr
+"""Role name."""
 
 
 class ContributeTarget(StrEnum):
+    """Values allowed in the `contribute` field."""
+
     RESULT = "result"
     CONTEXT = "context"
 
 
 class ContributeValue(BaseModel):
-    value: ExpressionType[list[Any]]
+    """Contribution of a specific value instead of the default one."""
+
     model_config = ConfigDict(extra="forbid")
+
+    value: ExpressionType[list[Any]]
+    """Value to contribute."""
+
+
+ContributeType = TypeAliasType(
+    "ContributeType", Sequence[Union[ContributeTarget, dict[str, ContributeValue]]]
+)
+"""Type of the contribute field."""
 
 
 class PdlTiming(BaseModel):
     """Internal data structure to record timing information in the trace."""
 
     model_config = ConfigDict(extra="forbid")
-    start_nanos: Optional[int] = 0
+    start_nanos: OptionalInt = 0
     """Time at which block execution began.
     """
-    end_nanos: Optional[int] = 0
+    end_nanos: OptionalInt = 0
     """Time at which block execution ended.
     """
-    first_use_nanos: Optional[int] = 0
+    first_use_nanos: OptionalInt = 0
     """Time at which the value of the block was needed for the first time.
     """
-    timezone: Optional[str] = ""
+    timezone: OptionalStr = ""
     """Timezone of start_nanos and end_nanos.
     """
+
+
+OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
+"""Optional execution time information."""
 
 
 class PdlUsage(BaseModel):
     """Internal data structure to record token consumption usage information."""
 
-    completion_tokens: Optional[int] = 0
+    completion_tokens: OptionalInt = 0
     """Completion tokens consumed
     """
-    prompt_tokens: Optional[int] = 0
+    prompt_tokens: OptionalInt = 0
     """Prompt tokens consumed
     """
+
+
+OptionalPdlUsage = TypeAliasType("OptionalPdlUsage", Optional[PdlUsage])
+"""Optional usage of statistics of an LLM call."""
 
 
 class Block(BaseModel):
@@ -217,47 +375,53 @@ class Block(BaseModel):
         extra="forbid",
         use_attribute_docstrings=True,
         arbitrary_types_allowed=True,
+        validate_by_name=True,
     )
 
-    description: Optional[str] = None
+    description: OptionalStr = None
     """Documentation associated to the block.
     """
-    spec: Any = None
+    spec: PdlTypeType = None
     """Type specification of the result of the block.
     """
     defs: dict[str, "BlockType"] = {}
     """Set of definitions executed before the execution of the block.
     """
-    def_: Optional[str] = Field(default=None, alias="def")
+    def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] = [
+    contribute: ContributeType = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
     """Indicate if the block contributes to the result and background context.
     """
-    parser: Annotated[Optional[ParserType], BeforeValidator(_ensure_lower)] = None
+    parser: Annotated[OptionalParserType, BeforeValidator(_ensure_lower)] = None
     """Parser to use to construct a value out of a string result."""
-    fallback: Optional["BlockType"] = None
+    fallback: OptionalBlockType = None
     """Block to execute in case of error.
+    """
+    retry: OptionalInt = None
+    """The maximum number of times to retry when an error occurs within a block.
+    """
+    trace_error_on_retry: OptionalBoolOrStr = None
+    """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     Typical roles are `system`, `user`, and `assistant`,
     but there may be other roles such as `available_tools`.
     """
-    context: Optional[ModelInput] = []
-    """Current context
-    """
     # Fields for internal use
-    pdl__id: Optional[str] = ""
-    """Unique identifier for this block
-    """
-    pdl__result: Optional[Any] = None
-    """Result of the execution of the block"""
-    pdl__location: Optional[PdlLocationType] = None
-    pdl__timing: Optional[PdlTiming] = None
+    pdl__context: OptionalModelInput = []
+    """Current context."""
+    pdl__id: OptionalStr = ""
+    """Unique identifier for this block."""
+    pdl__result: OptionalAny = None
+    """Result of the execution of the block."""
+    pdl__location: OptionalPdlLocationType = None
+    pdl__timing: OptionalPdlTiming = None
+    """Execution timing information."""
 
 
 class LeafBlock(Block):
@@ -265,37 +429,44 @@ class LeafBlock(Block):
     pdl__is_leaf: Literal[True] = True
 
 
+class IndependentEnum(StrEnum):
+    INDEPENDENT = "independent"
+    DEPENDENT = "dependent"
+
+
 class StructuredBlock(Block):
     # Field for internal use
     pdl__is_leaf: Literal[False] = False
+    context: IndependentEnum = IndependentEnum.DEPENDENT
 
 
 class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
-    function: Optional[dict[str, Any]]
+    function: Optional[dict[str, PdlTypeType]]
     """Functions parameters with their types.
     """
-    returns: "BlockType" = Field(..., alias="return")
-    """Body of the function
+    return_: "BlockType" = Field(..., alias="return")
+    """Body of the function.
     """
-    # Field for internal use
-    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(default=None, repr=False)
+    signature: Optional[Json] = None
+    """Function signature computed from the function definition.
+    """
 
 
 class CallBlock(LeafBlock):
     """Calling a function."""
 
     kind: Literal[BlockKind.CALL] = BlockKind.CALL
-    call: ExpressionType
+    call: ExpressionType[FunctionBlock]
     """Function to call.
     """
     args: ExpressionType = {}
     """Arguments of the function with their values.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: OptionalBlockType = None
 
 
 class LitellmParameters(BaseModel):
@@ -365,7 +536,7 @@ class LitellmParameters(BaseModel):
     """The name of the function to call within the conversation (default is an empty string)
     """
     # set api_base, api_version, api_key
-    base_url: Optional[str] | str = None
+    base_url: Optional[str] | str = environ.get("OPENAI_BASE_URL")
     """Base URL for the API (default is None).
     """
     api_version: Optional[str] | str = None
@@ -398,22 +569,19 @@ class ModelBlock(LeafBlock):
     """Common fields for the `model` blocks."""
 
     kind: Literal[BlockKind.MODEL] = BlockKind.MODEL
-    model: ExpressionType
-    """Model to use.
-    """
     input: "BlockType" = "${ pdl_context }"
     """Messages to send to the model.
     """
-    modelResponse: Optional[str] = None
+    modelResponse: OptionalStr = None
     """Variable where to store the raw response of the model.
     """
     sampling: bool = True
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
-    pdl__usage: Optional[PdlUsage] = None
+    pdl__trace: OptionalBlockType = None
+    pdl__usage: OptionalPdlUsage = None
     """Tokens consumed during model call
     """
-    pdl__model_input: Optional[ModelInput] = None
+    pdl__model_input: OptionalModelInput = None
 
 
 class LitellmModelBlock(ModelBlock):
@@ -422,20 +590,32 @@ class LitellmModelBlock(ModelBlock):
 
     Example:
     ```PDL
-    - model: ollama/granite-code:8b
-      parameters:
-        stop: ['!']
+    model: ollama/granite-code:8b
+    parameters:
+      stop: ['!']
     ```
     """
 
     platform: Literal[ModelPlatform.LITELLM] = ModelPlatform.LITELLM
     """Optional field to ensure that the block is using LiteLLM.
     """
-    model: ExpressionType[str]
+    model: ExpressionStr
     """Name of the model following the LiteLLM convention.
     """
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
     """Parameters to send to the model.
+    """
+
+
+class GraniteioProcessor(BaseModel):
+    type: OptionalExpressionStr = None
+    """Type of IO processor.
+    """
+    model: OptionalExpressionStr = None
+    """Model name used by the backend.
+    """
+    backend: ExpressionType[str | dict[str, Any] | object]
+    """Backend object or name and configuration.
     """
 
 
@@ -445,14 +625,8 @@ class GraniteioModelBlock(ModelBlock):
     platform: Literal[ModelPlatform.GRANITEIO] = ModelPlatform.GRANITEIO
     """Optional field to ensure that the block is using granite-io.
     """
-    model: ExpressionType[object]
-    """Model name used by the backend.
-    """
-    backend: ExpressionType[str | dict[str, Any]]
-    """Backend name and configuration.
-    """
-    processor: Optional[ExpressionType[str]] = None
-    """IO Processor name.
+    processor: GraniteioProcessor | ExpressionType[object]
+    """IO Processor configuration or object.
     """
     parameters: Optional[ExpressionType[dict[str, Any]]] = None
     """Parameters sent to the model.
@@ -478,7 +652,8 @@ class CodeBlock(BaseCodeBlock):
     """
 
     lang: Annotated[
-        Literal["python", "command", "jinja", "pdl"], BeforeValidator(_ensure_lower)
+        Literal["python", "command", "jinja", "pdl", "ipython"],
+        BeforeValidator(_ensure_lower),
     ]
     """Programming language of the code.
     """
@@ -501,7 +676,7 @@ class ArgsBlock(BaseCodeBlock):
     """
 
     lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
-    args: list[ExpressionType[str]]
+    args: list[ExpressionStr]
     """The argument vector to spawn.
     """
 
@@ -539,7 +714,7 @@ class DataBlock(LeafBlock):
       parser:
         regex: "(.|\\n)*#### (?P<answer>([0-9])*)\\n*"
         spec:
-          answer: str
+          answer: string
       def: EXTRACTED_GROUND_TRUTH
     ```
     """
@@ -589,9 +764,9 @@ class MessageBlock(LeafBlock):
     kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
     content: "BlockType"
     """Content of the message."""
-    name: Optional[ExpressionType[str]] = None
+    name: OptionalExpressionStr = None
     """For example, the name of the tool that was invoked, for which this message is the tool response."""
-    tool_call_id: Optional[ExpressionType[str]] = None
+    tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
 
 
@@ -611,17 +786,15 @@ class IfBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.IF] = BlockKind.IF
-    condition: ExpressionType[bool] = Field(alias="if")
+    condition: ExpressionBool = Field(alias="if")
     """Condition.
     """
     then: "BlockType"
     """Branch to execute if the condition is true.
     """
-    else_: Optional["BlockType"] = Field(default=None, alias="else")
+    else_: OptionalBlockType = Field(default=None, alias="else")
     """Branch to execute if the condition is false.
     """
-    # Field for internal use
-    if_result: Optional[bool] = None
 
 
 class MatchCase(BaseModel):
@@ -631,7 +804,7 @@ class MatchCase(BaseModel):
     case: Optional[PatternType] = None
     """Value to match.
     """
-    if_: Optional[ExpressionType[bool]] = Field(default=None, alias="if")
+    if_: OptionalExpressionBool = Field(default=None, alias="if")
     """Boolean condition to satisfy.
     """
     then: "BlockType"
@@ -673,21 +846,18 @@ class MatchBlock(StructuredBlock):
     """
 
 
-class IterationType(StrEnum):
-    LASTOF = "lastOf"
-    ARRAY = "array"
-    OBJECT = "object"
-    TEXT = "text"
-
-
 class JoinConfig(BaseModel):
     """Configure how loop iterations should be combined."""
 
-    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
+    )
 
 
 class JoinText(JoinConfig):
-    as_: Literal[IterationType.TEXT] = Field(alias="as", default=IterationType.TEXT)
+    """Join loop iterations as a string."""
+
+    as_: Literal["text"] = Field(alias="as", default="text")
     """String concatenation of the result of each iteration.
     """
 
@@ -697,29 +867,48 @@ class JoinText(JoinConfig):
 
 
 class JoinArray(JoinConfig):
-    as_: Literal[IterationType.ARRAY] = Field(alias="as")
+    """Join loop iterations as an array."""
+
+    as_: Literal["array"] = Field(alias="as")
     """Return the result of each iteration as an array.
     """
 
 
 class JoinObject(JoinConfig):
-    as_: Literal[IterationType.OBJECT] = Field(alias="as")
+    """Join loop iterations as an object."""
+
+    as_: Literal["object"] = Field(alias="as")
     """Return the union of the objects created at each iteration.
     """
 
 
 class JoinLastOf(JoinConfig):
-    as_: Literal[IterationType.LASTOF] = Field(alias="as")
+    """Join loop iterations as the value of the last iteration."""
+
+    as_: Literal["lastOf"] = Field(alias="as")
     """Return the result of the last iteration.
     """
 
 
-JoinType: TypeAlias = JoinText | JoinArray | JoinObject | JoinLastOf
+class JoinReduce(JoinConfig):
+    """Join loop iterations as the value of the last iteration."""
+
+    as_: Literal["reduce"] = Field(alias="as", default="reduce")
+
+    reduce: ExpressionType[Callable]
+    """Function used to combine the results."""
+
+
+JoinType = TypeAliasType(
+    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
+)
+"""Different ways to join loop iterations."""
 
 
 class RepeatBlock(StructuredBlock):
     """
-    Repeat the execution of a block.
+    Repeat the execution of a block sequentially.
+    The scope and `pdl_context` are accumulated in between iterations.
 
     For loop example:
     ```PDL
@@ -729,22 +918,84 @@ class RepeatBlock(StructuredBlock):
     repeat:
         "${ name }'s number is ${ number }\\n"
     ```
+
+    While loop:
+    ```PDL
+    defs:
+      i: 0
+    while: ${i < 5}
+    repeat:
+        defs:
+          i: ${ i + 1}
+        data: ${ i }
+    join:
+      as: array
+    ```
     """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
     for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
-    while_: ExpressionType[bool] = Field(default=True, alias="while")
+    index: OptionalStr = None
+    """Name of the variable containing the loop iteration.
+    """
+    while_: ExpressionBool = Field(default=True, alias="while")
     """Condition to stay at the beginning of the loop.
     """
     repeat: "BlockType"
     """Body of the loop.
     """
-    until: ExpressionType[bool] = False
+    until: ExpressionBool = False
     """Condition to exit at the end of the loop.
     """
-    max_iterations: Optional[ExpressionType[int]] = None
+    maxIterations: OptionalExpressionInt = None
+    """Maximal number of iterations to perform.
+    """
+    join: JoinType = JoinText()
+    """Define how to combine the result of each iteration.
+    """
+    # Field for internal use
+    pdl__trace: Optional[list["BlockType"]] = None
+
+
+class MapBlock(StructuredBlock):
+    """
+    Independent executions of  a block.
+    Repeat the execution of a block starting from the initial scope
+    and `pdl_context`.
+
+    For loop example:
+    ```PDL
+    for:
+        number: [1, 2, 3, 4]
+        name: ["Bob", "Carol", "David", "Ernest"]
+    map:
+        "${ name }'s number is ${ number }\\n"
+    ```
+
+    Bounded loop:
+    ```PDL
+    index: i
+    maxIterations: 5
+    map:
+        ${ i }
+    join:
+      as: array
+    ```
+    """
+
+    kind: Literal[BlockKind.MAP] = BlockKind.MAP
+    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    """Arrays to iterate over.
+    """
+    index: OptionalStr = None
+    """Name of the variable containing the loop iteration.
+    """
+    map: "BlockType"
+    """Body of the iterator.
+    """
+    maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
     join: JoinType = JoinText()
@@ -771,10 +1022,10 @@ class ReadBlock(LeafBlock):
     """
 
     kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: ExpressionType[str] | None
+    read: OptionalExpressionStr
     """Name of the file to read. If `None`, read the standard input.
     """
-    message: Optional[str] = None
+    message: OptionalStr = None
     """Message to prompt the user to enter a value.
     """
     multiline: bool = False
@@ -790,7 +1041,7 @@ class IncludeBlock(StructuredBlock):
     """Name of the file to include.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: OptionalBlockType = None
 
 
 class ImportBlock(LeafBlock):
@@ -801,7 +1052,7 @@ class ImportBlock(LeafBlock):
     """Name of the file to import.
     """
     # Field for internal use
-    pdl__trace: Optional["BlockType"] = None
+    pdl__trace: OptionalBlockType = None
 
 
 class FactorBlock(LeafBlock):
@@ -841,6 +1092,7 @@ AdvancedBlockType: TypeAlias = (
     | IfBlock
     | MatchBlock
     | RepeatBlock
+    | MapBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -855,7 +1107,9 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType: TypeAlias = None | bool | int | float | str | AdvancedBlockType
+BlockType = TypeAliasType(
+    "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
+)
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
@@ -890,7 +1144,7 @@ class PDLRuntimeError(PDLException):
         message: str,
         loc: Optional[PdlLocationType] = None,
         trace: Optional[BlockType] = None,
-        fallback: Optional[Any] = None,
+        fallback: OptionalAny = None,
     ):
         super().__init__(message)
         self.loc = loc
@@ -913,7 +1167,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         message: str,
         blocks: list[BlockType],
         loc: Optional[PdlLocationType] = None,
-        fallback: Optional[Any] = None,
+        fallback: OptionalAny = None,
     ):
         super().__init__(message)
         self.loc = loc
@@ -929,33 +1183,6 @@ TEMPERATURE_SAMPLING = 0.7
 TOP_P_SAMPLING = 0.85
 TOP_K_SAMPLING = 50
 DECODING_METHOD = "greedy"
-
-
-def set_structured_decoding_parameters(
-    spec: Any,
-    parameters: Optional[dict[str, Any]],
-) -> dict[str, Any]:
-    if parameters is None:
-        parameters = {}
-
-    if (
-        spec is not None
-        and "response_format" not in parameters
-        and "guided_decoding_backend" not in parameters
-    ):
-        schema = pdltype_to_jsonschema(spec, True)
-
-        parameters["guided_decoding_backend"] = "lm-format-enforcer"
-        parameters["guided_json"] = schema
-        parameters["response_format"] = {
-            "type": "json_schema",
-            "json_schema": {
-                "name": "schema",
-                "schema": schema,
-                "strict": True,
-            },
-        }
-    return parameters
 
 
 def get_default_model_parameters() -> list[dict[str, Any]]:

@@ -4,10 +4,10 @@ text:
   parser: json
   def: data
   contribute: []
-  spec: { "questions": ["str"], "answers": ["obj"] }
+  spec: { questions: [string], answers: [object] }
 - model: watsonx_text/ibm/granite-20b-code-instruct
   def: model_output
-  spec: {"bob": int, "carol": str}
+  spec: {bob: integer, "carol": string}
   input: 
     text:
     - for: 

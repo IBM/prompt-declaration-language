@@ -1,4 +1,4 @@
-import { match } from "ts-pattern"
+import { match, P } from "ts-pattern"
 
 import { type PdlBlock } from "../../pdl_ast"
 import {
@@ -69,8 +69,8 @@ function squashProximateModelInputs(model: TimelineModel): TimelineModel {
       if (isLLMBlock(block) && hasInput(block)) {
         const lastInput =
           block.pdl__model_input[block.pdl__model_input.length - 1]
-        if (lastInput && typeof lastInput.defsite === "string") {
-          M[lastInput.defsite] = true
+        if (lastInput && typeof lastInput.pdl__defsite === "string") {
+          M[lastInput.pdl__defsite] = true
         }
       }
       return M
@@ -102,14 +102,15 @@ function computeModelIter(
 
   const childrenModel = childrenOf(block)
     .filter(nonNullable)
-    .flatMap((child) => computeModelIter(child, root))
+    .flatMap((child: PdlBlock) => computeModelIter(child, root))
 
   // Correct for anomalies in the trace where a child may have an
   // earlier end timestamp than its children. See
   // https://github.com/IBM/prompt-declaration-language/pull/683
   if (root) {
     const maxEnd = childrenModel.reduce(
-      (maxEnd, child) => Math.max(maxEnd, child.block.pdl__timing.end_nanos),
+      (maxEnd: number, child: TimelineRow) =>
+        Math.max(maxEnd, child.block.pdl__timing.end_nanos),
       0,
     )
     root.block.pdl__timing.end_nanos = Math.max(
@@ -122,34 +123,41 @@ function computeModelIter(
 }
 
 export function childrenOf(block: NonScalarPdlBlock) {
-  return match(block)
-    .with({ kind: "model" }, (data) => [/*data.input,*/ data.pdl__result])
-    .with({ kind: "code" }, (data) => [data.pdl__result])
-    .with({ kind: "get" }, (data) => [data.pdl__result])
-    .with({ kind: "data" }, (data) => [data.pdl__result])
-    .with({ kind: "if" }, (data) =>
-      data.if_result ? [data.then] : [data.else],
-    )
-    .with({ kind: "match" }, (data) => [data.with]) // TODO
-    .with({ kind: "read" }, (data) => [data.pdl__result])
-    .with({ kind: "include" }, (data) => [data.pdl__trace ?? data.pdl__result])
-    .with({ kind: "import" }, (data) => [data.pdl__trace ?? data.pdl__result])
-    .with({ kind: "function" }, () => [])
-    .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
-    .with({ kind: "text" }, (data) => [data.text])
-    .with({ kind: "lastOf" }, (data) => [data.lastOf])
-    .with({ kind: "array" }, (data) => [data.array])
-    .with({ kind: "object" }, (data) => [data.object])
-    .with({ kind: "message" }, (data) => [data.content])
-    .with({ kind: "repeat" }, (data) => [data.pdl__trace ?? data.repeat])
-    .with({ kind: "empty" }, (data) =>
-      data.defs ? Object.values(data.defs) : [],
-    )
-    .with({ kind: "error" }, () => []) // TODO show errors in trace
-    .with({ kind: undefined }, () => [])
-    .exhaustive()
-    .flat()
-    .filter(nonNullable)
+  return (
+    match(block)
+      .with({ kind: "model" }, (data) => [/*data.input,*/ data.pdl__result])
+      .with({ kind: "code" }, (data) => [data.pdl__result])
+      .with({ kind: "get" }, (data) => [data.pdl__result])
+      .with({ kind: "data" }, (data) => [data.pdl__result])
+      .with({ kind: "if", if: { pdl__result: P._ } }, (data) =>
+        data.if.pdl__result ? [data.then] : [data.else],
+      )
+      .with({ kind: "if" }, (data) => [data.then, data.else])
+      .with({ kind: "match" }, (data) => [data.with]) // TODO
+      .with({ kind: "read" }, (data) => [data.pdl__result])
+      .with({ kind: "include" }, (data) => [
+        data.pdl__trace ?? data.pdl__result,
+      ])
+      .with({ kind: "import" }, (data) => [data.pdl__trace ?? data.pdl__result])
+      .with({ kind: "function" }, () => [])
+      .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
+      .with({ kind: "text" }, (data) => [data.text])
+      .with({ kind: "lastOf" }, (data) => [data.lastOf])
+      .with({ kind: "array" }, (data) => [data.array])
+      .with({ kind: "object" }, (data) => [data.object])
+      .with({ kind: "message" }, (data) => [data.content])
+      .with({ kind: "repeat" }, (data) => [data.pdl__trace ?? data.repeat])
+      .with({ kind: "map" }, (data) => [data.pdl__trace ?? data.map])
+      .with({ kind: "empty" }, (data) =>
+        data.defs ? Object.values(data.defs) : [],
+      )
+      .with({ kind: "error" }, () => []) // TODO show errors in trace
+      .with({ kind: P.nullish }, () => [])
+      // @ts-expect-error: TODO
+      .exhaustive()
+      .flat()
+      .filter(nonNullable)
+  )
 }
 
 function positionOf(row: TimelineRow): Position {

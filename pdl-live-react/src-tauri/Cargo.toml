@@ -1,9 +1,9 @@
 [package]
 name = "pdl"
-version = "0.6.0"
+version = "0.7.1"
 description = "Prompt Declaration Language"
 authors = ["nickm@us.ibm.com"]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -13,6 +13,9 @@ edition = "2021"
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
 name = "tauri_app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
+
+[features]
+interpreter = ["dep:rustpython-vm", "dep:rustpython-stdlib", "dep:rustpython-pylib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -26,7 +29,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 urlencoding = "2.1.3"
 tempfile = "3.16.0"
-duct = "0.13.7"
+duct = "1.0.0"
 rayon = "1.10.0"
 yaml-rust2 = "0.10.0"
 futures = "0.3.31"
@@ -35,14 +38,21 @@ base64ct = { version = "1.7.1", features = ["alloc"] }
 dirs = "6.0.0"
 serde_norway = "0.9.42"
 minijinja = { version = "2.9.0", features = ["custom_syntax"] }
-ollama-rs = { version = "0.3.0", features = ["stream"] }
+ollama-rs = { version = "0.3.1", features = ["stream"] }
 owo-colors = "4.2.0"
-rustpython-vm = "0.4.0"
+rustpython-vm = { git="https://github.com/RustPython/RustPython.git", features= ["importlib", "threading", "encodings"], optional = true } # "0.4.0"
 async-recursion = "1.1.1"
 tokio-stream = "0.1.17"
 tokio = { version = "1.44.1", features = ["io-std"] }
 indexmap = { version = "2.9.0", features = ["serde"] }
-rustpython-stdlib = { version = "0.4.0", features = ["openssl", "zlib"] }
+rustpython-stdlib = { git="https://github.com/RustPython/RustPython.git", features = ["ssl-vendor"], optional = true } # 0.4.0
+rustpython-pylib = { git="https://github.com/RustPython/RustPython.git", features = ["freeze-stdlib"], optional = true } # 0.4.0
+schemars = "0.8.22"
+fs4 = "0.13.1"
+derive_builder = "0.20.2"
+iana-time-zone = "0.1.63"
+async-openai = "0.29.0"
+regex = "1.11.1"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-cli = "2"

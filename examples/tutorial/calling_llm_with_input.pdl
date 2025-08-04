@@ -1,4 +1,4 @@
-description: Hello world calling a model
+description: Calling a model with an input text
 text:
 - "Hello\n"
 - model: ollama_chat/granite3.2:2b

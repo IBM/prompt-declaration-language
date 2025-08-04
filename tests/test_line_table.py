@@ -168,8 +168,8 @@ line14 = {
     "file": "tests/data/line/hello14.pdl",
     "errors": [
         "",
-        "tests/data/line/hello14.pdl:25 - Type errors in result of function call to ${ translate }:",
-        "tests/data/line/hello14.pdl:25 - Bonjour le monde! should be of type <class 'int'>",
+        "tests/data/line/hello14.pdl:16 - Type errors in result of the function translate:",
+        "tests/data/line/hello14.pdl:16 - Bonjour le monde! should be of type <class 'int'>",
     ],
 }
 
@@ -331,7 +331,7 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists.",
+        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists but got <class 'str'>.",
     ],
 }
 
@@ -383,7 +383,7 @@ line30 = {
     "file": "tests/data/line/hello30.pdl",
     "errors": [
         "",
-        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists.",
+        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists but got <class 'dict'>.",
     ],
 }
 

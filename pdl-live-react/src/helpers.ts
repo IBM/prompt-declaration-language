@@ -6,9 +6,10 @@ import type {
   TextBlock,
   ArgsBlock,
   CodeBlock,
-  PdlModelInput,
+  ModelInput,
   LocalizedExpression,
 } from "./pdl_ast"
+import { match, P } from "ts-pattern"
 
 /** Re-export for convenience */
 export type { PdlBlock } from "./pdl_ast"
@@ -38,8 +39,8 @@ export type WithTiming = Required<
 
 export type PdlBlockWithTiming = NonScalarPdlBlock & { pdl__timing: WithTiming }
 
-export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "context"> & {
-  context: { role: string; content: string; defsite?: string }[]
+export type PdlBlockWithContext = Omit<PdlBlockWithTiming, "pdl__context"> & {
+  pdl__context: { role: string; content: string; pdl__defsite?: string }[]
 }
 
 /** Does the given block have a `pdl__result` field? */
@@ -206,8 +207,8 @@ export function hasContextInformation(
 ): block is PdlBlockWithContext {
   return (
     hasTimingInformation(block) &&
-    block.context !== null &&
-    Array.isArray(block.context)
+    block.pdl__context !== null &&
+    Array.isArray(block.pdl__context)
   )
 }
 
@@ -231,10 +232,10 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
 
 export function hasInput(block: PdlBlock): block is
   | (Omit<GraniteioModelBlock, "input"> & {
-      pdl__model_input: NonNullable<PdlModelInput>
+      pdl__model_input: NonNullable<ModelInput>
     })
   | (Omit<LitellmModelBlock, "input"> & {
-      pdl__model_input: NonNullable<PdlModelInput>
+      pdl__model_input: NonNullable<ModelInput>
     }) {
   const mb = block as ModelBlock
   return Array.isArray(mb.pdl__model_input) && mb.pdl__model_input.length > 0
@@ -325,10 +326,27 @@ function isExpr(e: unknown): e is LocalizedExpression {
   )
 }
 
-export function extractModel({ model }: ModelBlock): string {
-  return typeof model === "string"
-    ? model
-    : isExpr(model)
-      ? String(model.pdl__result)
-      : "unknown"
+function getValue<T>(expr: ExpressionT<T>) {
+  if (isExpr(expr)) {
+    if (expr.pdl__result === undefined) {
+      return expr.pdl__expr
+    } else {
+      return expr.pdl__result
+    }
+  } else {
+    return expr
+  }
+}
+
+export function extractModel(block: ModelBlock): string {
+  return match(block)
+    .with({ model: P._ }, (block) => stringify(getValue(block.model)))
+    .with({ processor: { model: P._ } }, (block) =>
+      stringify(getValue(block.processor.model)),
+    )
+    .with({ processor: { type: P._ } }, (block) =>
+      stringify(getValue(block.processor.type)),
+    )
+    .with({ processor: P._ }, (block) => stringify(getValue(block.processor)))
+    .exhaustive()
 }

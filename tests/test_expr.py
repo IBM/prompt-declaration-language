@@ -120,7 +120,7 @@ def test_expr_detection1():
     prog = """
 lastOf:
 - '${ 1 }'
-spec: int
+spec: integer
 """
     result = exec_str(prog)
     assert result == 1
@@ -130,7 +130,7 @@ def test_expr_detection2():
     prog = """
 lastOf:
 - '${ { "a": 1 }["a"] }'
-spec: int
+spec: integer
 """
     result = exec_str(prog)
     assert result == 1
@@ -140,7 +140,7 @@ def test_expr_detection3():
     prog = """
 lastOf:
 - '${ 1 } ${ 2 }'
-spec: str
+spec: string
 """
     result = exec_str(prog)
     assert result == "1 2"
@@ -150,7 +150,7 @@ def test_expr_detection4():
     prog = """
 lastOf:
 - '${ 1 } { 2 }'
-spec: str
+spec: string
 """
     result = exec_str(prog)
     assert result == "1 { 2 }"

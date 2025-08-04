@@ -1,0 +1,187 @@
+description: MBPP agent
+defs:
+  react_code_block:
+    function:
+      trajectory: [object]
+    return:
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
+              - defs:
+                  type:
+                    text: ${ trajectory.keys()|first }
+                match: ${ type }
+                with:
+                - case: task
+                  then: |
+                    Task:
+                    ${ trajectory[type]|trim }
+                - case: thought
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Assistant:
+                        <thought>${ trajectory[type]|trim }</thought>
+                - case: action
+                  then: |
+                    <execute>
+                    ${ trajectory[type]|trim }
+                    </execute>
+                - case: observation
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Observation:
+                        ${ trajectory[type]|trim }
+                - case: solution
+                  then: |-
+                    <solution>
+                    ${ trajectory[type]|trim }
+                    </solution>
+                - if: ${ type not in ['question'] }
+                  then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
+  react_demos:
+    data:
+      - - task: |-
+            Write a function to find the similar elements from the given two tuple lists.
+            assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
+        - thought: |-
+            The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+                res = tuple(set(test_tup1) | set(test_tup2))
+                return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: |-
+            ---------------------------------------------------------------------------
+            AssertionError                            Traceback (most recent call last)
+            Cell In[4], line 5
+                  3     return res
+                  4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+
+            AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
+        - thought: |-
+            To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: "[Executed Successfully with No Output]"
+        - thought: There is no more AssertionError. I can now submit the solution.
+        - solution: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+match: ${ prompt_pattern }
+with:
+  # CoT
+  - case: cot
+    then:
+      text:
+        - for:
+            example: ${ demonstrations }
+          repeat:
+            text: |+
+              Task: ${ example.question }
+              Solution:
+              ${ example.answer }
+
+        - |
+          Task: ${ prompt }
+          Solution:
+        - model: ${ model }
+          parameters:
+            stop:
+              - "<|endoftext|>"
+            max_tokens: 512
+            include_stop_sequence: false
+            temperature: 0
+
+  # ReAct
+  - case: react
+    then:
+      text:
+        # see https://github.com/xingyaoww/mint-bench/blob/main/mint/tasks/in_context_examples/mbpp/with_tool.txt for prompt
+        - for:
+            traj: ${ demonstrations }
+          repeat:
+            text:
+              - call: ${ react_code_block }
+                args:
+                  trajectory: ${ traj }
+              - "\n"
+        - for:
+            traj: ${ react_demos }
+          repeat:
+            text:
+              - call: ${ react_code_block }
+                args:
+                  trajectory: ${ traj }
+        - |-
+
+          Task:
+          ${ prompt|trim }
+
+          Assistant:
+          <thought>
+        - defs:
+            temperature: 0.0
+            SOLUTION: ""
+            iterations: 0
+            max_iterations: 5
+            EXECUTE: ""
+        - repeat:
+            text:
+              - repeat:
+                  defs:
+                    iterations: ${ iterations+1 }
+                  def: THOUGHT
+                  text:
+                    - model: ${ model }
+                      def: THOUGHT_inner
+                      parameters:
+                        temperature: ${ temperature }
+                        stop:
+                          - </execute>
+                          - </solution>
+                          - <|endoftext|>
+                        max_tokens: 1024
+                        include_stop_sequences: true
+                    - defs:
+                        thought_trim: ${ THOUGHT_inner|trim|trim('\n') }
+                until: ${ thought_trim.endswith('</solution>') or thought_trim.endswith('</execute>') or iterations>max_iterations }
+              - if: ${ thought_trim.endswith('</execute>') }
+                then:
+                  text:
+                    - "\n\nObservation:\n"
+                    - defs:
+                        observation:
+                          lang: ipython
+                          code: |
+                            ${ thought_trim.split('<execute>')[-1].strip('</execute>\n\n').lstrip('```python').strip('`') or thought_trim }
+                    - "${ (observation|trim|trim('\n')) if observation is not none else '[Executed Successfully with No Output]' }"
+                    - |-
+
+
+                      Assistant:
+                      <thought>
+              - if: ${ thought_trim.endswith('</solution>') }
+                then:
+                  defs:
+                    SOLUTION: ${ thought_trim.split('<solution>')[-1].strip('</solution>') or thought_trim }
+          until: ${ SOLUTION != '' or iterations>max_iterations }
+        - if: ${ iterations>max_iterations }
+          then: "[ Failed to find a solution within ${ max_iterations } iterations. ]</thought>"
+        - |-
+
+          Solution:
+          ${ SOLUTION|trim }

@@ -1,14 +1,19 @@
-description: Hello world with function definition and call
+description: Function with optional parameter
+defs:
+  hello:
+    function:
+      name: string
+      lastName: {optional: string} # optional parameter
+    return:
+      if: ${ lastName is defined }
+      then: Hello ${ name } ${ lastName }!
+      else: Hello ${ name }!
 text:
-- def: hello
-  function:
-    name: str
-    lastName: {optional: str} # optional parameter
-  return:
-    if: ${ lastName is defined }
-    then: Hello ${ name } ${ lastName }!
-    else: Hello ${ name }!
 - call: ${ hello }
   args:
     name: World
-    lastName: Universe
+- "\n"
+- call: ${ hello }
+  args:
+    name: Earth
+    lastName: Planet

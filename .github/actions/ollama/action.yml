@@ -1,0 +1,49 @@
+name: 'Ollama Setup'
+description: 'Composte action for Ollama set up in GH environment'
+runs:
+  using: 'composite'
+  steps:
+    - name: Remove unnecessary files
+      shell: bash
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      # Set up Ollama
+    - name: Install Ollama and start server
+      shell: bash
+      run: |
+        curl -fsSL https://ollama.com/install.sh | sudo -E sh
+
+    - name: Pull models in examples/
+      shell: bash
+      run: |
+        ollama pull granite3.2:2b
+        ollama pull granite3.2:8b
+        ollama pull granite3.3:8b
+        ollama pull mxbai-embed-large
+        ollama list
+
+    - name: Check that all required models are available
+      shell: bash
+      run: |
+        models=("mxbai-embed-large" "granite3.2:2b" "granite3.2:8b" "granite3.3:8b")
+        missing=0
+        for model in "${models[@]}"; do
+          if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
+            echo "❌ Model $model is missing!"
+            missing=1
+          fi
+        done
+
+        if [ "$missing" -eq 1 ]; then
+          exit 1
+        else
+          echo "✅ All expected models are available."
+        fi
+
+    - name: Wait for Ollama server
+      shell: bash
+      run: |
+        sleep 5
+        time curl -i http://localhost:11434

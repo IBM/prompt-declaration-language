@@ -12,12 +12,12 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm>=1.57.3,!=1.59.9,!=1.63.14",
-  "openai==1.61.0",
-  "termcolor~=2.0",
+  "litellm>=1.66.0",
+  "openai>=1.66.1",
+  "termcolor>=2,<4",
   "ipython>=8,<10",
   "json-repair~=0.35",
-  "granite-io~=0.2",
+  "granite-io>=0.5,<0.6",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -47,10 +47,12 @@ examples = [
   "pypdf~=5.2",
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "datasets>2,<4",
+  "datasets>3,<5",
   "sympy~=1.0",
-  "scikit-learn~=1.6.1",
-  "faiss-cpu~=1.10.0"
+  "scikit-learn>=1.6.1,<1.8.0",
+  "faiss-cpu>=1.10,<1.12",
+  "funcy>=2",
+  "evalplus>=0.3.1",
 ]
 docs = [
   "mkdocs~=1.0",
@@ -58,7 +60,13 @@ docs = [
   "mkdocs-material~=9.0",
   "pymdown-extensions~=10.0"
 ]
-all = [ "prompt-declaration-language[dev,examples,docs]" ]
+optimizer = [
+  "rich>=14.0.0",
+  "evalplus>=0.3.1",
+  "duration_parser>=1.0.1",
+  "multiprocess~=0.70",
+]
+all = [ "prompt-declaration-language[dev,examples,docs,optimizer]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"

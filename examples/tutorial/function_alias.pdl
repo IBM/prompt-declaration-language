@@ -1,8 +1,8 @@
-description: Hello function
+description: Use a function as a value
 defs:
   hello:
     function:
-      name: str
+      name: string
     return: Hello ${ name }!
   alias: ${ hello }
 text:

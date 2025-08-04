@@ -1,0 +1,9 @@
+text:
+  - text:
+      - |
+          {"key": "value"}
+          {"key2": "value2"}
+    parser: jsonl
+    def: foo
+  - ${ foo[0].key }
+  - ${ foo[1].key2 }

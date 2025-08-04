@@ -1,7 +1,7 @@
 description: Hello world showing call out to python code
 text:
 - lang: python
-  spec: int
+  spec: integer
   code: |
     import string
     result = "hello"

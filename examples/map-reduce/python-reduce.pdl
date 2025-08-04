@@ -1,0 +1,13 @@
+defs:
+  plus:
+    lang: python
+    code: |
+      import operator
+      result = operator.add
+for:
+  i: [1,2,3,4]
+map:
+  ${i}
+join:
+  as: reduce
+  reduce: ${ plus }

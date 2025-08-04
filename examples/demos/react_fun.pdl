@@ -1,0 +1,145 @@
+description: Function definition for react pattern
+defs:
+  react_inner:
+    function:
+      examples: [string]
+      question: string
+      model: string
+    return:
+      text:
+      - defs:
+          tools:
+            data:
+            - type: function
+              function:
+                name: Calc
+                description: Calculator function
+                parameters:
+                  type: object
+                  properties:
+                    expr:
+                      type: string
+                      description: Arithmetic expression to calculate
+                  required:
+                  - expr
+            - type: function
+              function:
+                name: Search
+                description: Wikipedia search
+                parameters:
+                  type: object
+                  properties:
+                    topic:
+                      type: string
+                      description: Topic to search
+                  required:
+                  - topic
+      - for:
+          ex: ${ examples }
+        repeat:
+          "${ ex }\n"
+        contribute: [context]
+      - ${ question }
+      - "\n"
+      - role: system
+        text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
+        contribute: [context]
+      - role: tools
+        content:
+          text: ${ tools }
+        contribute: [context]
+      - def: prev_action
+        contribute: []
+        data: none
+      - def: exit
+        contribute: []
+        data: False
+      - repeat:
+          text:
+          - def: thought
+            model: ${ model }
+            parameters:
+              temperature: 0
+              stop: ["Action:"]
+          - "Action:\n"
+          - def: action
+            model: ${ model }
+            parameters:
+              temperature: 0
+              stop: ["\n"]
+            parser: json
+          - if: ${ action != prev_action}
+            then:
+              def: observation
+              if: ${ action[0].name == "Search" }
+              then:
+                text:
+                - "\nObservation: "
+                - lang: python
+                  code: |
+                    import warnings, wikipedia
+                    warnings.simplefilter("ignore")
+                    try:
+                      result = wikipedia.summary("${ action[0].arguments.topic }")
+                    except wikipedia.WikipediaException as e:
+                      result = str(e)
+                - "\n"
+              else:
+                  if: ${ action[0].name == "Calc" }
+                  then:
+                    text:
+                    - "\nObservation: "
+                    - lang: python
+                      code: result = ${ action[0].arguments.expr }
+                    - "\n"
+            else:
+              def: exit
+              contribute: []
+              data: True
+          - def: prev_action
+            contribute: []
+            data: ${ action }
+        until: ${ action[0].name == "Finish" or exit }
+
+  react:
+    function:
+      question: string
+      model: string
+    return:
+        defs:
+          examples:
+            array:
+                - text:
+                    |
+                    What profession does Nicholas Ray and Elia Kazan have in common?
+                    Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+                    Action:
+                    [{"name": "Search", "arguments": {"topic": "Nicholas Ray"}}]
+                    Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+                    Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+                    Action:
+                    [{"name": "Search", "arguments": {"topic": "Elia Kazan"}}]
+                    Observation: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+                    Thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+                    Action:
+                    [{"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}]
+
+
+                    What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
+                    Thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
+                    Action:
+                    [{"name": "Search", "arguments": {"topic": "Colorado orogeny"}}]
+                    Observation: The Colorado orogeny was an episode of mountain building (an orogeny) ...
+                    Thought: It does not mention the eastern sector. So I need to look up eastern sector.
+                    Thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
+                    Action:
+                    [{"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}]
+
+        call: ${ react_inner }
+        args:
+          pdl_context: []
+          examples: ${ examples }
+          question: ${ question }
+          model: ${ model }
+
+

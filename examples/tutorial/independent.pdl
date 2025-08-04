@@ -1,0 +1,13 @@
+description: Independent example --- hello * ( (' in French'*g) + (' en Espanol'*g)) * Goodbye! * g 
+text:
+  - hello
+  - context: independent
+    text:
+    - text:
+      - " in French!"
+      - model: ollama_chat/granite3.2:2b
+    - text:
+      - " en Espanol!"
+      - model: ollama_chat/granite3.2:2b
+  - "Which language did I use last?"
+  - model: ollama_chat/granite3.2:2b

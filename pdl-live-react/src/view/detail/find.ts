@@ -3,6 +3,7 @@ import { childrenOf } from "../timeline/model"
 import {
   isNonScalarPdlBlock,
   nonNullable,
+  PdlBlock,
   type NonScalarPdlBlock as Block,
 } from "../../helpers"
 
@@ -21,7 +22,7 @@ export default function find(
   } else {
     return (
       childrenOf(block)
-        .map((child) => find(child, id))
+        .map((child: PdlBlock) => find(child, id))
         .filter(nonNullable)[0] || null
     )
   }

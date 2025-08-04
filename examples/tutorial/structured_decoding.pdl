@@ -5,4 +5,4 @@ text:
 - "\nWhat is the color of the sky? Write it as JSON\n"
 - model: watsonx/ibm/granite-34b-code-instruct
   parser: json
-  spec: { color: str }
+  spec: { color: string }

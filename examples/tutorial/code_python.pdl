@@ -1,4 +1,4 @@
-description: Hello world showing call to python code
+description: Hello world showing call to Python code
 text:
 - "Hello, "
 - lang: python

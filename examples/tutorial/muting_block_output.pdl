@@ -1,21 +1,11 @@
-description: Function def and call
-defs:
-  translate:
-    function:
-      sentence: str
-      language: str
-    return:
-      text:
-      - text: "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-        contribute: [context]
-      - model: ollama_chat/granite3.2:2b
-        parameters:
-          stop: ["\n"]
+description: Control block outputs with `contribute`
 text:
-- call: ${ translate }
+- "Hello\n"
+- text: "\nTranslate to French\n"
+  contribute: [context]
+- model: ollama_chat/granite3.2:2b
   contribute: []
-  def: FRENCH
-  args:
-    sentence: I love Paris!
-    language: French
-- "The french sentence was: ${ FRENCH }"
+  def: fr
+- |
+  
+  In Fench: ${ fr }

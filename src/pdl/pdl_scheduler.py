@@ -1,14 +1,27 @@
+from asyncio import AbstractEventLoop, new_event_loop, set_event_loop
+from threading import Thread
 from typing import Any, Optional
 
 from termcolor import colored
-from termcolor._types import Color
 
 from .pdl_ast import BlockKind
 from .pdl_utils import stringify
 
 
+def _start_background_loop(loop):
+    set_event_loop(loop)
+    loop.run_forever()
+
+
+def create_event_loop_thread() -> AbstractEventLoop:
+    loop = new_event_loop()
+    loop_thread = Thread(target=_start_background_loop, args=(loop,), daemon=True)
+    loop_thread.start()
+    return loop
+
+
 def color_of(kind: BlockKind):
-    color: Optional[Color]
+    color: Optional[str]
     match kind:
         case BlockKind.FUNCTION:
             color = None
@@ -38,11 +51,15 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.REPEAT:
             color = None
+        case BlockKind.MAP:
+            color = None
         case BlockKind.READ:
             color = None
         case BlockKind.INCLUDE:
             color = None
         case BlockKind.IMPORT:
+            color = None
+        case BlockKind.FACTOR:
             color = None
         case BlockKind.EMPTY:
             color = None
@@ -52,7 +69,7 @@ def color_of(kind: BlockKind):
 
 
 def color_of_role(role: str):
-    color: Optional[Color] = None
+    color: Optional[str] = None
     match role:
         case "assistant":
             color = "green"

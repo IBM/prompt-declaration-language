@@ -1,0 +1,39 @@
+description: tool use
+defs:
+  tools:
+    data:
+    - name: search
+      description: Wikipedia search
+      parameters:
+        type: object
+        properties:
+          topic:
+            type: string
+            description: Topic to search
+text:
+- role: system
+  content: |
+      You are a helpful AI assistant with access to the following tools. 
+      If a tool does not exist in the provided list of tools, notify the user 
+      that you do not have the ability to fulfill the request.
+  contribute: [context]
+- role: tools
+  content: 
+    text: ${ tools }
+  contribute: [context]
+- "What is the circumference of planet Earth?\n"
+- def: actions
+  model: ollama_chat/granite3.3:8b
+  parser: json
+  spec: [{ name: string, arguments: { topic: string }}]
+- "\n"
+- if: ${ actions[0].name == "search" }
+  then:
+    lang: python
+    code: |
+      import warnings, wikipedia
+      warnings.simplefilter("ignore")
+      try:
+        result = wikipedia.summary("${ actions[0].arguments.topic }")
+      except wikipedia.WikipediaException as e:
+        result = str(e)

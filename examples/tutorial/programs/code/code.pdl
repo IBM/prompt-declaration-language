@@ -1,0 +1,24 @@
+description: Code explanation example
+defs:
+  # Read data.yaml as YAML and store it in a variable `CODE`
+  CODE:
+    read: ./data.yaml
+    parser: yaml
+text:
+# Output the `source_code:` of the YAML to the console
+- "\n${ CODE.source_code }\n"
+# Use ollama to invoke a Granite model with a prompt
+- model: ollama_chat/granite3.2:2b
+  input: |
+    Here is some info about the location of the function in the repo.
+    repo:
+    ${ CODE.repo_info.repo }
+    path: ${ CODE.repo_info.path }
+    Function_name: ${ CODE.repo_info.function_name }
+
+
+    Explain the following code:
+    ```
+    ${ CODE.source_code }```
+  parameters:
+    temperature: 0

@@ -5,8 +5,8 @@ use urlencoding::encode;
 
 use crate::compile;
 use crate::gui::new_window;
-use crate::pdl::interpreter::run_file_sync as runr;
-use crate::pdl::run::run_pdl_program;
+#[cfg(feature = "interpreter")]
+use crate::pdl::interpreter::{RunOptions, load_scope, run_file_sync};
 
 #[cfg(desktop)]
 pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>> {
@@ -34,7 +34,7 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
             let args = compile_subcommand_matches.matches.args;
 
             match compile_subcommand_matches.name.as_str() {
-                "beeai" => compile::beeai::compile(
+                "beeai" => compile::beeai::compile_to_file(
                     args.get("source")
                         .and_then(|a| a.value.as_str())
                         .expect("valid positional source arg"),
@@ -50,28 +50,34 @@ pub fn setup(app: &mut tauri::App) -> Result<bool, Box<dyn ::std::error::Error>>
                 _ => Err(Box::from("Unsupported compile command")),
             }
         }
-        "runr" => runr(
+        #[cfg(feature = "interpreter")]
+        "run" => run_file_sync(
             subcommand_args
                 .get("source")
                 .and_then(|a| a.value.as_str())
                 .expect("valid positional source arg"),
-            subcommand_args
-                .get("debug")
-                .and_then(|a| a.value.as_bool())
-                .or(Some(false))
-                == Some(true),
+            RunOptions {
+                trace: subcommand_args.get("trace").and_then(|a| a.value.as_str()),
+                debug: subcommand_args
+                    .get("debug")
+                    .and_then(|a| a.value.as_bool())
+                    .or(Some(false))
+                    == Some(true),
+                stream: subcommand_args
+                    .get("no-stream")
+                    .and_then(|a| a.value.as_bool())
+                    .or(Some(false))
+                    == Some(false),
+            },
+            load_scope(
+                subcommand_args.get("data").and_then(|a| a.value.as_str()),
+                subcommand_args
+                    .get("data-file")
+                    .and_then(|a| a.value.as_str()),
+                None,
+            )?,
         )
         .and_then(|_trace| Ok(true)),
-        "run" => run_pdl_program(
-            subcommand_args
-                .get("source")
-                .and_then(|a| a.value.as_str())
-                .expect("valid positional source arg"),
-            subcommand_args.get("trace").and_then(|a| a.value.as_str()),
-            subcommand_args.get("data").and_then(|a| a.value.as_str()),
-            subcommand_args.get("stream").and_then(|a| a.value.as_str()),
-        )
-        .and_then(|()| Ok(true)),
         "view" => new_window(
             app.handle().clone(),
             subcommand_args.get("trace").and_then(|a| {
