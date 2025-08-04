@@ -2,7 +2,7 @@ defs:
   obs:
     array: [0, 0,  0, 0, 0, 0, 0, 0, 1, 1]
   p:
-    model: ollama_chat/granite3.2:2b
+    model: ollama_chat/granite3.3:2b
     parameters:
       temperature: 1
     input: Generate a number between 0 and 1 that represents the bias of a coin that might returns head (represented with the value 1) more often than tail (represented with the value 0). DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
