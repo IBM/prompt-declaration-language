@@ -5,8 +5,12 @@ from datasets.dataset_dict import DatasetDict
 from datasets.load import load_dataset
 
 # Load dataset
-bea19: DatasetDict = load_dataset("juancavallotti/bea-19-corruption")
-
+bea19 = load_dataset("juancavallotti/bea-19-corruption")
+if not isinstance(bea19, DatasetDict):
+    raise TypeError(
+        f"Expected bea19 to be a DatasetDict, but got: {type(bea19)}"
+    )
+    
 # Create validation split from train (1024 examples)
 new_split = bea19["train"].train_test_split(test_size=1024)
 bea19["test"] = new_split["test"]
