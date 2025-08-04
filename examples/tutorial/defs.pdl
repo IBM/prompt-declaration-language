@@ -1,22 +1,16 @@
-description: Function def and call
-defs:
-  translate:
-    function:
-      sentence: string
-      language: string
-    return:
-      lastOf:
-      - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-      - model: ollama_chat/granite3.2:2b
-        parameters:
-          stop: ["\n"]
 text:
-- call: ${ translate }
-  args:
-    sentence: I love Paris!
-    language: French
-- "\n"
-- call: ${ translate }
-  args:
-    sentence: I love Madrid!
-    language: Spanish
+- "Hello\n"
+- defs:
+    fr:
+      lastOf:
+      - "\nTranslate to French\n"
+      - model: ollama_chat/granite3.2:2b
+    es:
+      lastOf:
+      - "\nTranslate to Spanish\n"
+      - model: ollama_chat/granite3.2:2b
+  text: |
+  
+    In Fench: ${ fr }
+
+    In Spanish: ${ es }

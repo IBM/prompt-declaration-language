@@ -45,7 +45,6 @@ export function map_block_children(
     )
     new_block = { ...new_block, contribute }
   }
-  // @ts-expect-error: TODO
   new_block = match(new_block)
     // .with(P.string, s => s)
     .with({ kind: "empty" }, (block) => block)
@@ -179,6 +178,7 @@ export function map_block_children(
     })
     .with({ kind: "repeat" }, (block) => {
       const for_ = block?.for ? f_expr(block.for) : undefined
+      const while_ = block?.until ? f_expr(block.while) : undefined
       const until = block?.until ? f_expr(block.until) : undefined
       const max_iterations = block?.maxIterations
         ? f_expr(block.maxIterations)
@@ -187,8 +187,22 @@ export function map_block_children(
       return {
         ...block,
         for: for_,
+        while: while_,
         repeat,
         until,
+        maxIterations: max_iterations,
+      }
+    })
+    .with({ kind: "map" }, (block) => {
+      const for_ = block?.for ? f_expr(block.for) : undefined
+      const max_iterations = block?.maxIterations
+        ? f_expr(block.maxIterations)
+        : undefined
+      const map = f_block(block.map)
+      return {
+        ...block,
+        for: for_,
+        map,
         maxIterations: max_iterations,
       }
     })
@@ -202,7 +216,8 @@ export function map_block_children(
     })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
-    .with({ kind: undefined }, (block) => block)
+    .with({ kind: P.nullish }, (block) => block)
+    // @ts-expect-error: TODO
     .exhaustive()
   match(new_block)
     .with({ parser: { pdl: P._ } }, (block) => {
@@ -289,11 +304,15 @@ export function iter_block_children(
     .with({ kind: "repeat" }, (block) => {
       f(block.repeat)
     })
+    .with({ kind: "map" }, (block) => {
+      f(block.map)
+    })
     .with({ kind: "error" }, (block) => f(block.program))
     .with({ kind: "read" }, () => {})
     .with({ kind: "include" }, () => {})
     .with({ kind: "import" }, () => {})
     .with({ kind: undefined }, () => {})
+    // @ts-expect-error: TODO
     .exhaustive()
   match(block)
     .with({ parser: { pdl: P._ } }, (block) => {

@@ -68,16 +68,16 @@ class IndependentContext(PDLContext):
         for item in context:
             match item:
                 case IndependentContext():
-                    ret += item.context.data
+                    ret = ret + item.context.data
                 case SingletonContext():
-                    ret += [item]
+                    ret = ret + [item]
                 case DependentContext():
                     if len(item) == 0:
                         pass
                     else:
-                        ret += [item]
+                        ret = ret + [item]
                 case dict():
-                    ret += [SingletonContext(item)]
+                    ret = ret + [SingletonContext(item)]
                 case _:
                     assert False
         self.context = PdlList(ret)
@@ -98,7 +98,7 @@ class IndependentContext(PDLContext):
 
     def __repr__(self):  # pyright: ignore
         ret = "{"
-        ret += ",".join([i.__repr__() for i in self.context.result()])
+        ret = ret + ",".join([i.__repr__() for i in self.context.result()])
         return ret + "}"
 
 
@@ -110,16 +110,16 @@ class DependentContext(PDLContext):
         for item in context:
             match item:
                 case DependentContext():
-                    ret += item.context.data
+                    ret = ret + item.context.data
                 case SingletonContext():
-                    ret += [item]
+                    ret = ret + [item]
                 case IndependentContext():
                     if len(item) == 0:
                         pass
                     else:
-                        ret += [item]
+                        ret = ret + [item]
                 case dict():
-                    ret += [SingletonContext(item)]
+                    ret = ret + [SingletonContext(item)]
                 case _:
                     assert False
         self.context = PdlList(ret)
@@ -138,7 +138,7 @@ class DependentContext(PDLContext):
 
     def __repr__(self):  # pyright: ignore
         ret = "["
-        ret += ",".join([i.__repr__() for i in self.context.result()])
+        ret = ret + ",".join([i.__repr__() for i in self.context.result()])
         return ret + "]"
 
 

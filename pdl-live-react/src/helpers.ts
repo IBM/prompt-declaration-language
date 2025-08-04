@@ -6,7 +6,7 @@ import type {
   TextBlock,
   ArgsBlock,
   CodeBlock,
-  PdlModelInput,
+  ModelInput,
   LocalizedExpression,
 } from "./pdl_ast"
 import { match, P } from "ts-pattern"
@@ -232,10 +232,10 @@ export function hasMessage(block: PdlBlock): block is MessageBearing {
 
 export function hasInput(block: PdlBlock): block is
   | (Omit<GraniteioModelBlock, "input"> & {
-      pdl__model_input: NonNullable<PdlModelInput>
+      pdl__model_input: NonNullable<ModelInput>
     })
   | (Omit<LitellmModelBlock, "input"> & {
-      pdl__model_input: NonNullable<PdlModelInput>
+      pdl__model_input: NonNullable<ModelInput>
     }) {
   const mb = block as ModelBlock
   return Array.isArray(mb.pdl__model_input) && mb.pdl__model_input.length > 0

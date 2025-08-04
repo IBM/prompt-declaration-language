@@ -3,8 +3,10 @@ defs:
   prompt:
     array:
     - role: system
-      content: You are a helpful software engineer. You write clear, concise, well-commented code.
+      content: You are a helpful assistant that is fluent in French.
     - role: user
-      content: Write a Python function that implement merge sort.
-model: ollama_chat/granite3.2:2b
-input: ${ prompt }
+      content: Translate the word 'Hello' to French
+text:
+- "Hello\n"
+- model: ollama_chat/granite3.2:2b
+  input: ${ prompt }

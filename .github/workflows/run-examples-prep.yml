@@ -17,7 +17,7 @@ jobs:
         fetch-depth: 0
     - name: Detect all PDL files that were changed or added
       id: changed-pdl-files
-      uses: tj-actions/changed-files@6cb76d07bee4c9772c6882c06c37837bf82a04d3 # v46
+      uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46
       with:
         files: |
           **.pdl

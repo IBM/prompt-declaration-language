@@ -50,13 +50,13 @@ pip install 'prompt-declaration-language[examples]'
 
 The Live Explorer can be installed as follows (MacOS):
 ```
-brew install pdl 
+brew install pdl
 ```
 
 For other platforms, see installation notes.
 
 You can run PDL with LLM models in local using [Ollama](https://ollama.com), or other cloud service.
-See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for 
+See [here](https://ibm.github.io/prompt-declaration-language/tutorial/#using-ollama-models) for
 instructions on how to install an Ollama model locally.
 
 Most examples in this repository use IBM Granite models on [Ollama](https://ollama.com) and some are on [Replicate](https://replicate.com/). In order to run these examples, you need to create a free account
@@ -172,7 +172,7 @@ text:
     temperature: 0
 ```
 
-Notice the syntactic differences. Model ids on watsonx start with `watsonx`. 
+Notice the syntactic differences. Model ids on watsonx start with `watsonx`.
 
 Watsonx also provides a text completion endpoint as shown in the following example. A text completion endpoint does not take chat
 templates into account:
@@ -201,7 +201,7 @@ text:
 ```
 
 
-A PDL program computes 2 data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is the list of messages used to make calls to LLMs via LiteLLM.
+A PDL program computes two data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs, where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is the list of messages used to make calls to LLMs via LiteLLM.
 
 The PDL interpreter can also stream the background conversation instead of the result:
 
@@ -266,10 +266,10 @@ When we execute this program with the PDL interpreter, we obtain the following t
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }
@@ -293,10 +293,10 @@ When we execute this new program, we obtain the following:
 @SuppressWarnings("unchecked")
 public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
   Map<String, String> offsetMap;
-  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
-    offsetMap = new HashMap<>();  
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
   } else {
-    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
   }
   return offsetMap;
 }
