@@ -45,10 +45,7 @@ class OptimizerEvaluator(Thread):
     def get_scope(self) -> ScopeType:
         raise NotImplementedError
 
-    def extract_answer(self, document: str) -> Any:
-        raise NotImplementedError
-
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
+    def score(self, document: str, ground_truth: Any) -> float:
         raise NotImplementedError
 
     def run(  # type: ignore # noqa: C901
@@ -58,7 +55,6 @@ class OptimizerEvaluator(Thread):
         answer = None
         exception: PDLParseError | PDLRuntimeError | Exception | bool | None = None
         result = None
-        match = False
         truth = self.example[self.answer_key]
         scope: PdlDict = PdlDict({})
 
@@ -68,6 +64,7 @@ class OptimizerEvaluator(Thread):
         end_time = None
         total_tokens = -1
         errored = False
+        score = 0
         while retry:
             if tries > 1:
                 console.log("RETRYING! ", tries)
@@ -93,6 +90,12 @@ class OptimizerEvaluator(Thread):
 
                 if isinstance(document, str):
                     document = document.strip()
+                    if document:
+                        errored = False
+                        retry = False
+                    else:
+                        console.log("Empty document returned, retrying...")
+                    answer = document
                 else:
                     raise TypeError(
                         f"Expected document to be a string, got {type(document)}",
@@ -102,24 +105,10 @@ class OptimizerEvaluator(Thread):
                 runtime = end_time - start_time
                 console.log(f"Runtime took seconds: {runtime:.2f}")
 
-                errored = False
-                if errored:
-                    console.log("PDL error occured.")
-                else:
-                    answer = self.extract_answer(document)
-
-                    if answer is None:
-                        last_line = document.splitlines()[-1]
-                        console.log("Couldn't extract answer: ", last_line)
-
-                if answer is None or errored:
-                    retry = True
-
-                if answer is not None and not errored:
-                    retry = False
-
                 if tries >= RETRY_COUNT:
                     retry = False
+                
+                score = float(self.score(document, truth))
             except PDLParseError as exc:
                 console.print_exception(show_locals=False)
                 errored = True
@@ -160,11 +149,9 @@ class OptimizerEvaluator(Thread):
         if errored and not exception:
             exception = errored
 
-        match = self.answer_correct(document, answer, truth)
-
         return TrialOutput(
             pdl_program=self.pdl_program,
-            correct=match,
+            score=score,
             exception=exception,
             scope=scope,
             pdl_result=result,

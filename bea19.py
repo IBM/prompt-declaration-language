@@ -1,0 +1,30 @@
+from datasets.load import load_dataset
+from datasets.dataset_dict import DatasetDict
+from pathlib import Path
+import json
+
+# Load dataset
+bea19: DatasetDict = load_dataset("juancavallotti/bea-19-corruption")
+
+# Create validation split from train (1024 examples)
+new_split = bea19["train"].train_test_split(test_size=1024)
+bea19["test"] = new_split["test"]
+
+val_split = new_split["train"].train_test_split()
+bea19["train"] = val_split["train"]
+bea19["validation"] = val_split["test"]
+
+# Output dir
+out_dir = Path("bea19_jsonl")
+out_dir.mkdir(parents=True, exist_ok=True)
+
+
+# Save to JSONL
+def save_jsonl(dataset, path: Path) -> None:
+    with path.open("w") as f:
+        for item in dataset:
+            f.write(json.dumps(item) + "\n")
+
+
+for split in ["train", "validation", "test"]:
+    save_jsonl(bea19[split], out_dir / f"{split}.jsonl")
