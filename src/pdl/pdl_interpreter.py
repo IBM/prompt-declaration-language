@@ -600,7 +600,7 @@ def process_block_body(
         case ModelBlock():
             if block.sampling:
                 result, background, scope, trace = sample(
-                    PDL_model(state, scope, block, loc), name=block.pdl__id
+                    MuPplModel(state, scope, block, loc), name=block.pdl__id
                 )
             else:
                 result, background, scope, trace = process_call_model(
@@ -2328,12 +2328,14 @@ def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     return v
 
 
-class PDL_model(Distribution[Any]):
+class MuPplModel(Distribution[Any]):
     """
-    Call an LLM via PDL
+    Call an LLM via mu-ppl
     """
 
-    def __init__(self, state, scope, block, loc):
+    def __init__(
+        self, state: InterpreterState, scope: ScopeType, block, loc: PdlLocationType
+    ):
         self.state = state
         self.scope = scope
         self.block = block
