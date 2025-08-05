@@ -15,7 +15,7 @@ instance_columns:
 
 groundtruth_column: sentence # column name for the ground truth in the dataset
 
-eval_pdl: examples/optimizer/eval_levenstein.pdl # Path to the PDL file for evaluation
+eval_pdl: examples/optimizer/eval_levenshtein.pdl # Path to the PDL file for evaluation
 
 budget: null # Set a budget, can be number of iterations, or a duration string e.g. "2h"
 budget_growth: double # double validation set size each iteration
