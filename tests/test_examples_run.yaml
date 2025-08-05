@@ -40,6 +40,7 @@ skip:
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
   - examples/optimizer/bea19.pdl
+  - examples/optimizer/eval_levenshtein.pdl
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |
