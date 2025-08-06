@@ -1,13 +1,13 @@
 defs:
   plus:
     function:
-      ctx1: number
-      ctx2: number
+      x: number
+      y: number
     return:
-      ${ x * y }
+      ${ x + y }
 for:
   i: [1,2,3,4]
 map:
-  model:...
+  ${ i }
 reduce:
   function: ${ plus }
