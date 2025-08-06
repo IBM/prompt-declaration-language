@@ -77,7 +77,7 @@ def for_data3(loop_kind):
                     "id": "${ ids }",
                 },
                 loop_kind: "${ i }: ${ name }: ${ id }\n",
-                "join": {"as": "array"},
+                "reduce": {"as": "array"},
             }
         ],
     }
@@ -97,7 +97,7 @@ def for_data4(loop_kind):
                 "def": "x",
                 "for": {"i": [1, 2, 3, 4]},
                 loop_kind: "${ i + 1 }",
-                "join": {"as": "array"},
+                "reduce": {"as": "array"},
             }
         ],
     }
@@ -139,7 +139,7 @@ def for_data5(loop_kind):
                 "text": {
                     "for": {"i": [1, 2, 3, 4]},
                     loop_kind: "${ i }",
-                    "join": {"as": "array"},
+                    "reduce": {"as": "array"},
                 },
             }
         ],
@@ -162,9 +162,9 @@ repeat:
     for:
         j: [1,2]
     {loop_kind}: "${{i}}${{j}}"
-    join:
+    reduce:
         as: array
-join:
+reduce:
     as: array
 """
         result = exec_str(prog_str)
@@ -181,7 +181,7 @@ for:
     for:
         j: [1,2]
     {loop_kind2}: "${{i}}${{j}}"
-join:
+reduce:
     with: "\\n"
 """
             result = exec_str(prog_str)
@@ -194,7 +194,7 @@ def for_scope(loop_kind):
         "text": {
             "for": {"i": [1, 2, 3, 4]},
             loop_kind: {"defs": {"x": "${ x + i }"}, "data": "${ i + x }"},
-            "join": {"as": "array"},
+            "reduce": {"as": "array"},
         },
     }
 
@@ -217,7 +217,7 @@ def for_index(loop_kind):
             "index": "idx",
             "for": {"i": [1, 2, 3, 4]},
             loop_kind: "${ i + idx }",
-            "join": {"as": "array"},
+            "reduce": {"as": "array"},
         },
     }
 
@@ -241,7 +241,7 @@ def for_context(loop_kind):
                     ]
                 },
                 loop_kind: "${ pdl_context.serialize('litellm') }",
-                "join": {"as": "array"},
+                "reduce": {"as": "array"},
             },
         ]
     }
@@ -333,8 +333,8 @@ defs:
 for:
   i: [1,2,3,4]
 {loop_kind1}: ${{ i }}
-join:
-  reduce: ${{ plus }}
+reduce:
+  function: ${{ plus }}
 """
         result = exec_str(prog_str)
         assert result == 10

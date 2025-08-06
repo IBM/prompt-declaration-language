@@ -58,5 +58,5 @@ text:
     text: 
     - "Hallucination Risk: ${ hallucination.risk }"
     - "\nSentence: ${ hallucination.response_text }"
-  join: 
+  reduce: 
     with: "\n"

@@ -80,7 +80,7 @@ defs:
           icl_question: ${icl_question}
           icl_answer: ${icl_answer}
           question: ${question}
-      join:
+      reduce:
         as: array
 
   gen_questions_freeform:
@@ -100,7 +100,7 @@ defs:
               task_description: ${task_description}
               icl_question: ${example.question}
               icl_answer: ${example.answer}
-          join:
+          reduce:
             as: array
       lang: python
       code: | # flatten list_of_lists into simple list
@@ -186,7 +186,7 @@ defs:
             data:
               question: ${question}
               keep: ${filter_output}
-          join:
+          reduce:
             as: array
         filtered:
           lang: python
@@ -281,7 +281,7 @@ defs:
             call: ${gen_answers_inner}
             args:
               question: ${question}
-          join:
+          reduce:
             as: array
       lang: python
       spec: [{question: string, answer: string}]
@@ -368,7 +368,7 @@ defs:
             data:
               qa_pair: ${qa_pair}
               rating: ${filter_output}
-          join:
+          reduce:
             as: array
         filtered:
           lang: python

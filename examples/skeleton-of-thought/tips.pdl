@@ -56,7 +56,7 @@ text:
       topic: ${ topic.topic }
       number: ${ topic.number }
       pdl_context: []
-  join:
+  reduce:
     as: array
   maxIterations: ${ MAX_ITERATIONS }
   def: skeletons
@@ -68,7 +68,7 @@ text:
     code: |
       skel = """ ${skeleton} """
       result = skel.split("\n")
-  join:
+  reduce:
     as: array
   def: skeletons_array
 - for:
@@ -83,7 +83,7 @@ text:
         topic: ${ topic.topic }
         tip: ${ tip }
         pdl_context: []
-    join:
+    reduce:
       as: array
       
   

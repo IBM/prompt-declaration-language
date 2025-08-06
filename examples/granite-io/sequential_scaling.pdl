@@ -1,0 +1,19 @@
+defs:
+  proc: 
+    lang: python
+    code: |
+      from granite_io_pdl.sequential_scaling import SequentialScalingInputOutputProcessor
+      from granite_io.io.base import ChatCompletionInputs
+      from granite_io.types import ChatCompletionResults
+      import random
+
+      def validator(results: ChatCompletionResults):
+          b = random.choice([True, False])
+          print(f"======> {b}")
+          return b
+
+      result = SequentialScalingInputOutputProcessor(model="granite3.2:2b", backend="openai", validator=validator)
+text:
+- |
+  How to write a Rust program that reverse a list?
+- processor: ${ proc }

@@ -10,5 +10,5 @@ for:
 repeat:
   data:
     ${ name }: ${ number }
-join:
+reduce:
   as: object

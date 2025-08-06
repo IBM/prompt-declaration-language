@@ -248,7 +248,7 @@ def block_to_dict(  # noqa: C901
                 d["until"] = expr_to_dict(block.until, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
-            d["join"] = join_to_dict(block.join, json_compatible)
+            d["join"] = join_to_dict(block.reduce, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
@@ -261,7 +261,7 @@ def block_to_dict(  # noqa: C901
             d["map"] = block_to_dict(block.map, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
-            d["join"] = join_to_dict(block.join, json_compatible)
+            d["join"] = join_to_dict(block.reduce, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
@@ -428,7 +428,7 @@ def join_to_dict(join: JoinType, json_compatible: bool) -> dict[str, Any]:
         case JoinArray() | JoinObject() | JoinLastOf():
             d["as"] = str(join.as_)
         case JoinReduce():
-            d["reduce"] = expr_to_dict(join.reduce, json_compatible)
+            d["reduce"] = expr_to_dict(join.function, json_compatible)
         case _:
             assert False
     return d

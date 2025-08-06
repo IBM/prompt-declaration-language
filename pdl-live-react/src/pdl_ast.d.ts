@@ -492,7 +492,7 @@ export type As4 = "reduce"
 /**
  * Function used to combine the results.
  */
-export type Reduce = LocalizedExpression | string
+export type Function = LocalizedExpression | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
 /**
@@ -591,7 +591,7 @@ export type Kind21 = "function"
  * Functions parameters with their types.
  *
  */
-export type Function = {
+export type Function1 = {
   [k: string]: PdlTypeType
 } | null
 /**
@@ -713,7 +713,7 @@ export interface FunctionBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf21
   kind?: Kind21
-  function: Function
+  function: Function1
   /**
    * Body of the function.
    *
@@ -2046,7 +2046,7 @@ export interface AnyPattern {
  *     defs:
  *       i: ${ i + 1}
  *     data: ${ i }
- * join:
+ * reduce:
  *   as: array
  * ```
  */
@@ -2190,7 +2190,7 @@ export interface RepeatBlock {
    * Define how to combine the result of each iteration.
    *
    */
-  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  reduce?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
   pdl__trace?: PdlTrace1
 }
 /**
@@ -2220,7 +2220,7 @@ export interface Defs10 {
  * maxIterations: 5
  * map:
  *     ${ i }
- * join:
+ * reduce:
  *   as: array
  * ```
  */
@@ -2354,7 +2354,7 @@ export interface MapBlock {
    * Define how to combine the result of each iteration.
    *
    */
-  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  reduce?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
   pdl__trace?: PdlTrace
 }
 /**
@@ -3440,7 +3440,7 @@ export interface JoinLastOf {
  */
 export interface JoinReduce {
   as?: As4
-  reduce: Reduce
+  function: Function
 }
 /**
  * Internal data structure to record token consumption usage information.
