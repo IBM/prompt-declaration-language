@@ -65,9 +65,10 @@ class MBPPEvaluator(OptimizerEvaluator):
             solution = solution.split("```")[1]
         return solution.strip()
 
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
-        if answer is None or not isinstance(answer, str):
-            return False
+    def score(self, document: str, ground_truth: Any) -> float:
+        answer = self.extract_answer(document)
+        if not answer:
+            return 0.0
 
         retry_parse = False
         try:
@@ -78,16 +79,16 @@ class MBPPEvaluator(OptimizerEvaluator):
 
         if retry_parse:
             pattern = r"```(?:python)?\n(.*?)\n```"
-            match = re.search(pattern, answer, re.DOTALL)
+            match = re.search(pattern, document, re.DOTALL)
             if match:
                 answer = match.group(1)
                 try:
                     ast.parse(answer)
                 except Exception as e:
                     print(e)
-                    return False
+                    return 0.0
             else:
-                return False
+                return 0.0
 
         task_id = self.example["task_id"]
 
@@ -109,4 +110,4 @@ class MBPPEvaluator(OptimizerEvaluator):
         base_stat, _ = result["base"]
         plus_stat, _ = result["plus"]
 
-        return base_stat == "pass" and plus_stat == "pass"
+        return float(base_stat == "pass" and plus_stat == "pass")

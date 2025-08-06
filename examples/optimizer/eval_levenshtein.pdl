@@ -1,0 +1,11 @@
+defs:
+  score:
+    function:
+      document: string
+      ground_truth: string
+    return:
+      lang: python
+      fallback: 0
+      code: |
+        import textdistance
+        result = textdistance.levenshtein.normalized_similarity(document, ground_truth)
