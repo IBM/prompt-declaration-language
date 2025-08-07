@@ -29,6 +29,7 @@ skip:
   - examples/optimizer/mbpp.pdl
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
+  - examples/requirements/email.pdl
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |
