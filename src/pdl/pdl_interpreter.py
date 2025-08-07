@@ -12,6 +12,7 @@ import types
 import warnings
 from asyncio import AbstractEventLoop
 from functools import partial, reduce
+from itertools import count
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
@@ -930,9 +931,7 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"pdl__trace": iter_trace})
         case MapBlock():
-            results = []
             background = DependentContext([])
-            iter_trace = []
             iteration_state = state.with_yield_result(False)
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
@@ -940,40 +939,36 @@ def process_block_body(
             map_loc = append(loc, "map")
             iidx = 0
             try:
-                saved_background = IndependentContext([])
-                while True:
+                if max_iterations is not None:
+                    index_iterator: Any = range(max_iterations)
+                else:
+                    index_iterator = count()
+                if items is not None and length is not None:
+                    items_iterator = (
+                        {k: elems[i] for k, elems in items.items()}
+                        for i in range(length)
+                    )
+                else:
+                    items_iterator = ({} for _ in count())
+
+                def loop_body(iidx, items):
                     iteration_scope = scope_init
                     if block.index is not None:
                         iteration_scope = iteration_scope | {block.index: iidx}
-                    if max_iterations is not None and iidx >= max_iterations:
-                        break
-                    if length is not None and iidx >= length:
-                        break
-                    iteration_state = iteration_state.with_iter(iidx)
-                    if items is not None:
-                        for k in items.keys():
-                            iteration_scope = iteration_scope | {k: items[k][iidx]}
-                    (
-                        iteration_result,
-                        iteration_background,
-                        iteration_scope,
-                        body_trace,
-                    ) = process_block(
-                        iteration_state,
+                    iteration_scope = iteration_scope | items
+                    return process_block(
+                        iteration_state.with_iter(iidx),
                         iteration_scope,
                         block.map,
                         map_loc,
                     )
-                    saved_background = IndependentContext(
-                        [saved_background, iteration_background]
-                    )
-                    results.append(iteration_result)
-                    iter_trace.append(body_trace)
-                    iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
+
+                map_output = map(loop_body, index_iterator, items_iterator)
+                results, _, _, traces = zip(*map_output)  # type: ignore
+                # saved_background = IndependentContext(backgrounds)
             except PDLRuntimeError as exc:
-                iter_trace.append(exc.pdl__trace)
-                trace = block.model_copy(update={"pdl__trace": iter_trace})
+                traces = [exc.pdl__trace]  # type: ignore
+                trace = block.model_copy(update={"pdl__trace": traces})
                 raise PDLRuntimeError(
                     exc.message,
                     loc=exc.loc or map_loc,
@@ -983,7 +978,7 @@ def process_block_body(
             # background = saved_background  # commented because the block do not contribute to the background
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"pdl__trace": iter_trace})
+            trace = block.model_copy(update={"pdl__trace": traces})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
