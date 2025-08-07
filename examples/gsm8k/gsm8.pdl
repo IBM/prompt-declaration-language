@@ -35,7 +35,7 @@ text:
     input: |
       Question: ${ TEST.question }
       Answer: 
-  join:
+  reduce:
     as: array
   contribute: []
   def: ALL_LLM_FULL_A
@@ -56,7 +56,7 @@ text:
     input: | # 'input' is the prompt
       Generate the final answer from the conclusion of this text as JSON with a single key named answer.
       ${ LLM_FULL_ANSWER }
-  join:
+  reduce:
     as: array
   contribute: []
   def: SIMPLIFIED_LLM_ANSWERS

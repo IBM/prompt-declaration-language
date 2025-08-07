@@ -867,7 +867,7 @@ def process_block_body(
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
             iteration_state = state.with_yield_result(
-                state.yield_result and isinstance(block.join, JoinText)
+                state.yield_result and isinstance(block.reduce, JoinText)
             )
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
@@ -890,8 +890,8 @@ def process_block_body(
                     iteration_state = iteration_state.with_iter(iidx)
                     if first:
                         first = False
-                    elif isinstance(block.join, JoinText):
-                        join_string = block.join.with_
+                    elif isinstance(block.reduce, JoinText):
+                        join_string = block.reduce.with_
                         if iteration_state.yield_result:
                             yield_result(join_string, block.kind)
                         if iteration_state.yield_background:
@@ -945,7 +945,7 @@ def process_block_body(
                     loc=exc.loc or repeat_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.join, results)
+            result = combine_results(block.reduce, results)
             if block.context is IndependentEnum.INDEPENDENT:
                 background = saved_background
             if state.yield_result and not iteration_state.yield_result:
@@ -1001,7 +1001,7 @@ def process_block_body(
                     loc=exc.loc or map_loc,
                     trace=trace,
                 ) from exc
-            result = combine_results(block.join, results)
+            result = combine_results(block.reduce, results)
             # background = saved_background  # commented because the block do not contribute to the background
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
@@ -1123,14 +1123,14 @@ BlockTVarEvalJoin = TypeVar("BlockTVarEvalJoin", bound=RepeatBlock | MapBlock)
 def _evaluate_join_field(
     scope: ScopeType, block: BlockTVarEvalJoin, loc: PdlLocationType
 ) -> BlockTVarEvalJoin:
-    match block.join:
+    match block.reduce:
         case JoinText() | JoinArray() | JoinObject() | JoinLastOf():
             pass
         case JoinReduce():
             loc = append(loc, "reduce")
-            _, expr = process_expr(scope, block.join.reduce, loc)
-            join = block.join.model_copy(update={"reduce": expr})
-            block = block.model_copy(update={"join": join})
+            _, expr = process_expr(scope, block.reduce.function, loc)
+            join = block.reduce.model_copy(update={"function": expr})
+            block = block.model_copy(update={"reduce": join})
     return block
 
 
@@ -1377,7 +1377,7 @@ def combine_results(join_type: JoinType, results: list[PdlLazy[Any]]):
             result = lazy_apply(
                 (
                     lambda _: reduce(
-                        value_of_expr(join_type.reduce),
+                        value_of_expr(join_type.function),
                         [r.result() for r in results],
                     )
                 ),

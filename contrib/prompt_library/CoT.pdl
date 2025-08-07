@@ -24,7 +24,7 @@ defs:
               question: ${ example.question }
               reasoning: ${ example.reasoning }
               answer: ${ example.answer }
-          join:
+          reduce:
             with: "\n\n"
 
   chain_of_thought:

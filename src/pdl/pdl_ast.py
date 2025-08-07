@@ -916,7 +916,7 @@ class JoinReduce(JoinConfig):
 
     as_: Literal["reduce"] = Field(alias="as", default="reduce")
 
-    reduce: ExpressionType[Callable]
+    function: ExpressionType[Callable]
     """Function used to combine the results."""
 
 
@@ -949,7 +949,7 @@ class RepeatBlock(StructuredBlock):
         defs:
           i: ${ i + 1}
         data: ${ i }
-    join:
+    reduce:
       as: array
     ```
     """
@@ -973,7 +973,7 @@ class RepeatBlock(StructuredBlock):
     maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
-    join: JoinType = JoinText()
+    reduce: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -1001,7 +1001,7 @@ class MapBlock(StructuredBlock):
     maxIterations: 5
     map:
         ${ i }
-    join:
+    reduce:
       as: array
     ```
     """
@@ -1019,7 +1019,7 @@ class MapBlock(StructuredBlock):
     maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
-    join: JoinType = JoinText()
+    reduce: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use

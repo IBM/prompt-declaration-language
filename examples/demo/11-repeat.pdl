@@ -13,5 +13,5 @@ repeat:
   - data:
       name: ${ name }
       number: ${ number }
-join:
+reduce:
   with: "\n"

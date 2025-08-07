@@ -110,11 +110,11 @@ text:
         pdl_context: []
         problem: ${ problem.question }
     maxIterations: ${ N }
-    join:
+    reduce:
       as: array
   maxIterations: ${ MAX_ITERATIONS }
   def: plans
-  join:
+  reduce:
     as: array
 
 - for:
@@ -129,13 +129,13 @@ text:
           pdl_context: []
           plan: ${ plan }
       maxIterations: ${ N }
-      join:
+      reduce:
         as: array
-    join:
+    reduce:
       as: array
   maxIterations: ${ MAX_ITERATIONS }
   def: solutions
-  join:
+  reduce:
     as: array
 
 - for:
@@ -152,13 +152,13 @@ text:
           pdl_context: []
           solution: ${ solution_for_problem }
       maxIterations: ${ N }
-      join:
+      reduce:
         as: array
-    join:
+    reduce:
       as: array
   maxIterations: ${ MAX_ITERATIONS }
   def: results
-  join:
+  reduce:
     as: array
 
 - for:
@@ -172,11 +172,11 @@ text:
         pdl_context: []
         results: ${ results_for_problem }
     maxIterations: ${ N }
-    join:
+    reduce:
       as: array
   maxIterations: ${ MAX_ITERATIONS }
   def: per_plan_votes
-  join:
+  reduce:
     as: array
 
 - for:
@@ -187,7 +187,7 @@ text:
       pdl_context: []
       numbers: ${ votes }
   maxIterations: ${ MAX_ITERATIONS }
-  join:
+  reduce:
     as: array
   def: results
 
@@ -202,7 +202,7 @@ text:
       truth: ${ problem.answer }
   maxIterations: ${ MAX_ITERATIONS }
   def: stats
-  join:
+  reduce:
     as: array
 
 - "\nAccuracy: ${ stats|sum / MAX_ITERATIONS * 100}% "

@@ -1993,7 +1993,7 @@
           "title": "As",
           "type": "string"
         },
-        "reduce": {
+        "function": {
           "anyOf": [
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
@@ -2003,11 +2003,11 @@
             }
           ],
           "description": "Function used to combine the results.",
-          "title": "Reduce"
+          "title": "Function"
         }
       },
       "required": [
-        "reduce"
+        "function"
       ],
       "title": "JoinReduce",
       "type": "object"
@@ -2791,7 +2791,7 @@
     },
     "MapBlock": {
       "additionalProperties": false,
-      "description": "Independent executions of  a block.\nRepeat the execution of a block starting from the initial scope\nand `pdl_context`.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nmap:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nmap:\n    ${ i }\njoin:\n  as: array\n```",
+      "description": "Independent executions of  a block.\nRepeat the execution of a block starting from the initial scope\nand `pdl_context`.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nmap:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nBounded loop:\n```PDL\nindex: i\nmaxIterations: 5\nmap:\n    ${ i }\nreduce:\n  as: array\n```",
       "properties": {
         "description": {
           "$ref": "#/$defs/OptionalStr",
@@ -2936,7 +2936,7 @@
           "default": null,
           "description": "Maximal number of iterations to perform.\n    "
         },
-        "join": {
+        "reduce": {
           "$ref": "#/$defs/JoinType",
           "default": {
             "as": "text",
@@ -3993,7 +3993,7 @@
     },
     "RepeatBlock": {
       "additionalProperties": false,
-      "description": "Repeat the execution of a block sequentially.\nThe scope and `pdl_context` are accumulated in between iterations.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nWhile loop:\n```PDL\ndefs:\n  i: 0\nwhile: ${i < 5}\nrepeat:\n    defs:\n      i: ${ i + 1}\n    data: ${ i }\njoin:\n  as: array\n```",
+      "description": "Repeat the execution of a block sequentially.\nThe scope and `pdl_context` are accumulated in between iterations.\n\nFor loop example:\n```PDL\nfor:\n    number: [1, 2, 3, 4]\n    name: [\"Bob\", \"Carol\", \"David\", \"Ernest\"]\nrepeat:\n    \"${ name }'s number is ${ number }\\n\"\n```\n\nWhile loop:\n```PDL\ndefs:\n  i: 0\nwhile: ${i < 5}\nrepeat:\n    defs:\n      i: ${ i + 1}\n    data: ${ i }\nreduce:\n  as: array\n```",
       "properties": {
         "description": {
           "$ref": "#/$defs/OptionalStr",
@@ -4148,7 +4148,7 @@
           "default": null,
           "description": "Maximal number of iterations to perform.\n    "
         },
-        "join": {
+        "reduce": {
           "$ref": "#/$defs/JoinType",
           "default": {
             "as": "text",

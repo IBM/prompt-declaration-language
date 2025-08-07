@@ -771,7 +771,7 @@ and asking `why not?` if the answer (stored in variable `eval`) is `no`. The loo
 Notice that the `repeat` and `then` blocks are followed by `text`. This is because of the semantics of lists in PDL. If we want to aggregate the result by stringifying every element in the list and collating them together, then we need the keyword `text` to precede a list. The number of iterations of a loop can be bounded by adding a `maxIterations` field.
 
 The way that the result of each iteration is collated with other iterations can be customized in PDL using
-the `join` feature (see the following section).
+the `reduce` feature (see the following section).
 
 Another simple example of using an `if` statement is [this](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/if.pdl).
 
@@ -827,10 +827,10 @@ which outputs:
 4
 ```
 
-When `join` is not specified, the collation defaults to
+When `reduce` is not specified, the collation defaults to
 
 ```
-join:
+reduce:
   as: text
   with: ""
 ```
@@ -838,7 +838,7 @@ join:
 meaning that result of each iteration is stringified and concatenated with that of other iterations. When using `with`,
 `as: text` can be elided.
 
-Note that `join` can be added to any looping construct (`repeat`) not just `for` loops.
+Note that `reduce` can be added to any looping construct (`repeat`) not just `for` loops.
 
 The `for` loop construct also allows iterating over 2 or more lists of the same length simultaneously:
 

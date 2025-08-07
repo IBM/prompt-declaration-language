@@ -110,7 +110,7 @@ repeat_data_error = {
         ]
     },
     "maxIterations": 3,
-    "join": {"as": "lastOf"},
+    "reduce": {"as": "lastOf"},
 }
 
 

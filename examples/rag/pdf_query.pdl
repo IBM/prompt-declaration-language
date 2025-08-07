@@ -42,6 +42,6 @@ lastOf:
                 temperature: 0
           data:
             ${question}: ${CONCLUSION}
-        join:
+        reduce:
           as: array
     text: "${ CONCLUSIONS | tojson }\n"

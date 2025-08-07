@@ -22,7 +22,7 @@ defs:
           demo: ${ demos } 
         repeat: 
           ${ demo }
-        join:
+        reduce:
           with: "\n"
       - text:
         - "\nProblem:\n"
@@ -91,7 +91,7 @@ text:
       demos: ${ demos }
   maxIterations: ${ MAX_ITERATIONS }
   def: plans
-  join:
+  reduce:
     as: array
 
 - for:
@@ -103,7 +103,7 @@ text:
       plan: ${ plan }
   maxIterations: ${ MAX_ITERATIONS }
   def: solutions
-  join:
+  reduce:
     as: array
 
 - for:
@@ -115,7 +115,7 @@ text:
       solution: ${ solution }
   maxIterations: ${ MAX_ITERATIONS }
   def: results
-  join:
+  reduce:
     as: array
 
 - for:
@@ -129,7 +129,7 @@ text:
       truth: ${ problem.answer }
   maxIterations: ${ MAX_ITERATIONS }
   def: stats
-  join:
+  reduce:
     as: array
 
 - "\nAccuracy: ${ stats|sum / MAX_ITERATIONS * 100}% "

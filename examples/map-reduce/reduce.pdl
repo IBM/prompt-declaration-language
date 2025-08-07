@@ -8,6 +8,6 @@ defs:
 for:
   i: [1,2,3,4]
 map:
-  ${i}
-join:
-  reduce: ${ plus }
+  ${ i }
+reduce:
+  function: ${ plus }

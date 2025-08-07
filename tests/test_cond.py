@@ -210,7 +210,7 @@ repeat_until_data = {
                 ]
             },
             "until": "${ I == 5 }",
-            "join": {"as": "lastOf"},
+            "reduce": {"as": "lastOf"},
         },
     ],
 }
@@ -248,7 +248,7 @@ repeat_until_array_data = {
                 ]
             },
             "until": "${ I == 5 }",
-            "join": {"as": "array"},
+            "reduce": {"as": "array"},
         },
     ],
 }
@@ -321,7 +321,7 @@ repeat_until_text_with_data = {
                 },
             },
             "until": "${ I == 5 }",
-            "join": {"with": "\n"},
+            "reduce": {"with": "\n"},
         },
     ],
 }
