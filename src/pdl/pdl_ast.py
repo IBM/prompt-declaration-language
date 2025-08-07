@@ -329,6 +329,7 @@ ContributeType = TypeAliasType(
 )
 """Type of the contribute field."""
 
+
 class RequirementType(BaseModel):
     """Single requirement definition."""
 
@@ -336,17 +337,15 @@ class RequirementType(BaseModel):
 
     description: ExpressionType
     """English description of the requirement"""
-    
+
     evaluate: Optional[ExpressionType["FunctionBlock"]]
     """Evaluation function for the requirement"""
 
     transformContext: Optional[ExpressionType["FunctionBlock"]]
     """Function to transform the context for the requirement"""
-   
 
-RequirementsType = TypeAliasType(
-    "RequirementsType", Sequence[RequirementType]
-)
+
+RequirementsType = TypeAliasType("RequirementsType", Sequence[RequirementType])
 """Type of requirements field"""
 
 
@@ -1188,12 +1187,6 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self.blocks = blocks
         self.fallback = fallback
         self.message = message
-
-
-
-
-
-
 
 
 MAX_NEW_TOKENS = 1024
