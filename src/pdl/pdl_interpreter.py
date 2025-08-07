@@ -963,7 +963,9 @@ def process_block_body(
                         map_loc,
                     )
 
-                map_output = map(loop_body, index_iterator, items_iterator)
+                map_output = map(  # pylint: disable=bad-builtin
+                    loop_body, index_iterator, items_iterator
+                )
                 results, _, _, traces = zip(*map_output)  # type: ignore
                 # saved_background = IndependentContext(backgrounds)
             except PDLRuntimeError as exc:
