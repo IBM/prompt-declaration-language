@@ -442,7 +442,7 @@ def set_error_to_scope_for_retry(
     return scope
 
 
-def process_advanced_block(
+def process_advanced_block(  # noqa:C901
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
@@ -476,6 +476,28 @@ def process_advanced_block(
             result, background, new_scope, trace = process_block_body(
                 state, scope, block, loc
             )
+            if block.requirements != []:
+                requirements_satisfied = True
+                for req in block.requirements:
+                    evalfn, _ = process_expr(scope, getattr(req, "evaluate"), loc)
+                    evaluation = evalfn(
+                        requirement=getattr(req, "description"), response=result
+                    )
+                    if evaluation.result() is False:
+                        requirements_satisfied = False
+                        transfn, _ = process_expr(
+                            scope, getattr(req, "transformContext"), loc
+                        )
+                        new_context = transfn(
+                            pdl_context=scope["pdl_context"],
+                            requirement=getattr(req, "description"),
+                            response=result,
+                        )
+                        scope = scope | {"pdl_context": new_context}
+                if requirements_satisfied is False:
+                    print("\nTrying again!")
+                    continue
+
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
             add_done_callback(
                 id_with_set_first_use_nanos(block.pdl__timing), background
@@ -2238,6 +2260,10 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
     match parser:
         case "json":
             try:
+                if text == "False":
+                    return json.loads("false")
+                if text == "True":
+                    return json.loads("true")
                 result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
             except Exception as exc:
                 raise PDLRuntimeParserError(
