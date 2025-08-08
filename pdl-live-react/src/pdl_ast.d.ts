@@ -2491,6 +2491,11 @@ export interface MapBlock {
    *
    */
   join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  /**
+   * Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
+   *
+   */
+  maxWorkers?: number | null
   pdl__trace?: PdlTrace
 }
 /**

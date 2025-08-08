@@ -2944,6 +2944,11 @@
           },
           "description": "Define how to combine the result of each iteration.\n    "
         },
+        "maxWorkers": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.\n    "
+        },
         "pdl__trace": {
           "anyOf": [
             {
