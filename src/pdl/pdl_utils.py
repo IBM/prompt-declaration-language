@@ -128,7 +128,6 @@ def message_post_processing(message: dict) -> dict[str, Any]:
     return ret
 
 
-
 def apply_defaults(
     model_id: str,
     params: dict[str, Any],
