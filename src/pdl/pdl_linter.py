@@ -385,7 +385,7 @@ def _lint_python_code_blocks(block: BlockType):
     match block:
         case CodeBlock(lang="python", code=code):
             if isinstance(code, str) and EXPR_START_STRING not in code:
-                # Try to parse the Python code if the code block is 
+                # Try to parse the Python code if the code block is
                 # a string that does not contains a jinja expression
                 ast.parse(code)
     iter_block_children(_lint_python_code_blocks, block)
