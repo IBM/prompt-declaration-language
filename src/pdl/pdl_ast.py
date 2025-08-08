@@ -1022,6 +1022,9 @@ class MapBlock(StructuredBlock):
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
+    maxWorkers: OptionalInt = None
+    """Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
+    """
     # Field for internal use
     pdl__trace: Optional[list["BlockType"]] = None
 

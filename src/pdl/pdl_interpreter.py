@@ -11,6 +11,7 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from asyncio import AbstractEventLoop
+from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
 from itertools import count
 from os import getenv
@@ -986,11 +987,18 @@ def process_block_body(
                         map_loc,
                     )
 
-                # with ThreadPoolExecutor(max_workers=4) as executor:
-                #     map_output = executor.map(
-                map_output = map(  # pylint: disable=bad-builtin
-                    loop_body, index_iterator, items_iterator
-                )
+                map_output: Iterable[
+                    Tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]
+                ]
+                if block.maxWorkers == 0:
+                    map_output = map(  # pylint: disable=bad-builtin
+                        loop_body, index_iterator, items_iterator
+                    )
+                else:
+                    with ThreadPoolExecutor(block.maxWorkers) as executor:
+                        map_output = executor.map(
+                            loop_body, index_iterator, items_iterator
+                        )
                 results, _, _, traces = _split_map_output(map_output)
                 # saved_background = IndependentContext(backgrounds)
             except PDLRuntimeError as exc:
