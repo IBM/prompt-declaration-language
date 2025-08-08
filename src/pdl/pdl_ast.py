@@ -586,6 +586,7 @@ class LitellmParameters(BaseModel):
 class ModelPlatform(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "granite-io"
+    MELLEA = "mellea"
 
 
 class ModelBlock(LeafBlock):
@@ -637,6 +638,44 @@ class GraniteioProcessor(BaseModel):
     """
     backend: ExpressionType[str | dict[str, Any] | object]
     """Backend object or name and configuration.
+    """
+
+
+class StrategyKind(StrEnum):
+    REJECTIONSAMPLINGSTATEGY = "RejectionSamplingStrategy"
+
+
+class InstructionType(BaseModel):
+    """Single requirement definition."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    instruction: ExpressionType
+    """English description of the instruction"""
+
+    requirements: Optional[list[ExpressionType[str]]] = []
+    """List of requirements in English"""
+
+    strategy: Optional[StrategyKind] = StrategyKind.REJECTIONSAMPLINGSTATEGY
+    """Strategy for requirement enforcement"""
+
+    loopBudget: Optional[int] = 1
+    """Loop budget for strategy"""
+
+
+class MelleaBlock(ModelBlock):
+    """
+    Use Mellea to call models
+    """
+
+    platform: Literal[ModelPlatform.MELLEA] = ModelPlatform.MELLEA
+    """Optional field to ensure that the block is using Mellea
+    """
+    session: ExpressionType[str | dict[str, Any] | object]
+    """Session object or name and configuration.
+    """
+    instruct: InstructionType
+    """Instruction for the block
     """
 
 
@@ -1099,6 +1138,7 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
+    | MelleaBlock
     | CodeBlock
     | ArgsBlock
     | GetBlock

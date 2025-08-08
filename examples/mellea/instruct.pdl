@@ -1,0 +1,38 @@
+defs:
+  RITS_API_KEY:
+    lang: python
+    code: |
+      import os
+      result = os.getenv("RITS_API_KEY")
+  session: 
+    lang: python
+    code: |
+      from mellea import MelleaSession
+      from mellea.backends.types import ModelOption
+      from mellea.backends.ollama import OllamaModelBackend
+      from mellea.backends import model_ids
+      
+      # create a session with Mistral running on Ollama
+      result = MelleaSession(
+          backend=OllamaModelBackend(
+              model_id=model_ids.MISTRALAI_MISTRAL_0_3_7B,
+              model_options={ModelOption.MAX_NEW_TOKENS: 300},
+          )
+      )
+
+text:
+- session: ${ session }
+  instruct: 
+    instruction: Write an email to invite all interns to the office party
+    requirements: 
+    - be formal
+    - Use 'Dear interns' as greeting
+    strategy: RejectionSamplingStrategy
+    loopBudget: 3
+- "\n\nIs this a good letter? Please write a short paragraph. Use Emojis!\n"
+- model: openai/openai/gpt-oss-120b
+  parameters:
+    api_key: ${RITS_API_KEY}
+    api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b/v1
+    extra_headers:
+      RITS_API_KEY: ${RITS_API_KEY}

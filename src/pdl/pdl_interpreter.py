@@ -40,6 +40,9 @@ from jinja2 import (  # noqa: E402
 )
 from jinja2.nodes import TemplateData  # noqa: E402
 from jinja2.runtime import Undefined  # noqa: E402
+from mellea.stdlib.sampling import (  # noqa: E402 # pylint: disable=no-name-in-module
+    RejectionSamplingStrategy,
+)
 from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
 from pydantic.json_schema import SkipJsonSchema  # noqa: E402
 
@@ -82,6 +85,7 @@ from .pdl_ast import (  # noqa: E402
     LocalizedExpression,
     MapBlock,
     MatchBlock,
+    MelleaBlock,
     MessageBlock,
     ModelBlock,
     ModelInput,
@@ -107,6 +111,7 @@ from .pdl_ast import (  # noqa: E402
     RepeatBlock,
     RoleType,
     ScopeType,
+    StrategyKind,
     StructuredBlock,
     TextBlock,
     empty_block_location,
@@ -391,7 +396,10 @@ def process_advanced_block_timed(
     match trace:
         case ModelBlock():
             mode: SerializeMode
-            if trace.platform == ModelPlatform.LITELLM:
+            if trace.platform in (
+                ModelPlatform.LITELLM,
+                ModelPlatform.MELLEA,
+            ):  # TODO: Serializing Mellea contexts like LiteLLM for now
                 mode = SerializeMode.LITELLM
             else:
                 mode = SerializeMode.GRANITEIO
@@ -617,7 +625,15 @@ def process_block_body(
     trace: AdvancedBlockType
     block.pdl__location = loc
     match block:
-        case ModelBlock():
+        case MelleaBlock():
+            result, background, scope, trace = process_call_mellea_model(
+                state, scope, block, loc
+            )
+            if state.yield_result:
+                yield_result(result.result(), block.kind)
+            if state.yield_background:
+                yield_background(background)
+        case LitellmModelBlock() | GraniteioModelBlock():
             result, background, scope, trace = process_call_model(
                 state, scope, block, loc
             )
@@ -1580,6 +1596,58 @@ def _process_expr(  # pylint: disable=too-many-return-statements
 BlockTypeTVarProcessCallModel = TypeVar(
     "BlockTypeTVarProcessCallModel", bound=ModelBlock
 )
+
+
+def process_call_mellea_model(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: MelleaBlock,
+    loc: PdlLocationType,
+) -> tuple[
+    Any,
+    LazyMessages,
+    ScopeType,
+    BlockTypeTVarProcessCallModel,
+]:
+    session, _ = process_expr_of(
+        block, "session", scope, append(loc, "session")  # pyright: ignore
+    )
+    context: PDLContext = scope["pdl_context"]  # type:ignore
+    for msg in context:
+        session.ctx.insert(msg)
+
+    instruction, _ = process_expr(
+        scope, block.instruct.instruction, append(loc, "instruction")
+    )
+
+    requirements, _ = process_expr(
+        scope, block.instruct.requirements, append(loc, "requirements")
+    )
+
+    strategy, _ = process_expr(scope, block.instruct.strategy, append(loc, "strategy"))
+
+    loop_budget, _ = process_expr(
+        scope, block.instruct.loopBudget, append(loc, "loopBudget")
+    )
+
+    if loop_budget is None:
+        loop_budget = 1
+    strat = RejectionSamplingStrategy(loop_budget=1)
+
+    if strategy == StrategyKind.REJECTIONSAMPLINGSTATEGY:
+        strat = RejectionSamplingStrategy(loop_budget=loop_budget)
+
+    output = session.instruct(instruction, requirements=requirements, strategy=strat)
+    result = str(output)
+
+    trace: BlockTypeTVarProcessCallModel = block.model_copy(
+        update={"pdl__result": result}
+    )  # pyright: ignore
+    background: LazyMessages = SingletonContext(
+        PdlDict({"role": "assistant", "content": result, "pdl__defsite": block.pdl__id})
+    )
+
+    return PdlConst(result), background, scope, trace
 
 
 def process_call_model(

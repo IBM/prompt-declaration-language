@@ -313,6 +313,9 @@
           "$ref": "#/$defs/GraniteioModelBlock"
         },
         {
+          "$ref": "#/$defs/MelleaBlock"
+        },
+        {
           "$ref": "#/$defs/CodeBlock"
         },
         {
@@ -1932,6 +1935,74 @@
       "title": "IndependentEnum",
       "type": "string"
     },
+    "InstructionType": {
+      "additionalProperties": false,
+      "description": "Single requirement definition.",
+      "properties": {
+        "instruction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {},
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Instruction"
+        },
+        "requirements": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "title": "Requirements"
+        },
+        "strategy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StrategyKind"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "RejectionSamplingStrategy"
+        },
+        "loopBudget": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 1,
+          "title": "Loopbudget"
+        }
+      },
+      "required": [
+        "instruction"
+      ],
+      "title": "InstructionType",
+      "type": "object"
+    },
     "JoinArray": {
       "additionalProperties": false,
       "description": "Join loop iterations as an array.",
@@ -3166,6 +3237,163 @@
       "title": "MatchCase",
       "type": "object"
     },
+    "MelleaBlock": {
+      "additionalProperties": false,
+      "description": "Use Mellea to call models",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "$ref": "#/$defs/ContributeType",
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    "
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "requirements": {
+          "$ref": "#/$defs/RequirementsType",
+          "default": [],
+          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "model",
+          "default": "model",
+          "title": "Kind",
+          "type": "string"
+        },
+        "input": {
+          "$ref": "#/$defs/BlockType",
+          "default": "${ pdl_context }",
+          "description": "Messages to send to the model.\n    "
+        },
+        "modelResponse": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Variable where to store the raw response of the model.\n    "
+        },
+        "pdl__usage": {
+          "$ref": "#/$defs/OptionalPdlUsage",
+          "default": null,
+          "description": "Tokens consumed during model call\n    "
+        },
+        "pdl__model_input": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": null
+        },
+        "platform": {
+          "const": "mellea",
+          "default": "mellea",
+          "description": "Optional field to ensure that the block is using Mellea\n    ",
+          "title": "Platform",
+          "type": "string"
+        },
+        "session": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {}
+          ],
+          "description": "Session object or name and configuration.\n    ",
+          "title": "Session"
+        },
+        "instruct": {
+          "$ref": "#/$defs/InstructionType",
+          "description": "Instruction for the block\n    "
+        }
+      },
+      "required": [
+        "session",
+        "instruct"
+      ],
+      "title": "MelleaBlock",
+      "type": "object"
+    },
     "MessageBlock": {
       "additionalProperties": false,
       "description": "Create a message.",
@@ -4242,6 +4470,13 @@
         "$ref": "#/$defs/RequirementType"
       },
       "type": "array"
+    },
+    "StrategyKind": {
+      "enum": [
+        "RejectionSamplingStrategy"
+      ],
+      "title": "StrategyKind",
+      "type": "string"
     },
     "TextBlock": {
       "additionalProperties": false,

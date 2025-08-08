@@ -29,6 +29,7 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    InstructionType,
     JoinArray,
     JoinLastOf,
     JoinObject,
@@ -42,6 +43,7 @@ from .pdl_ast import (
     LocalizedExpression,
     MapBlock,
     MatchBlock,
+    MelleaBlock,
     MessageBlock,
     ObjectBlock,
     ObjectPattern,
@@ -176,6 +178,11 @@ def block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+        case MelleaBlock():
+            d["platform"] = str(block.platform)
+            d["session"] = expr_to_dict(block.session, json_compatible)
+            d["instruct"] = instruct_to_dict(block.instruct, json_compatible)
+
         case ArgsBlock():
             d["args"] = block.args
         case CodeBlock():
@@ -405,9 +412,21 @@ def usage_to_dict(usage: PdlUsage) -> dict:
 
 def requirement_to_dict(req: RequirementType, json_compatible: bool) -> dict:
     d: dict = {}
-    d["description"] = req.description
+    d["description"] = expr_to_dict(req.description, json_compatible)
     d["evaluate"] = expr_to_dict(req.evaluate, json_compatible)
     d["transformContext"] = expr_to_dict(req.transformContext, json_compatible)
+    return d
+
+
+def instruct_to_dict(instruct: InstructionType, json_compatible: bool) -> dict:
+    d: dict = {}
+    d["instruction"] = expr_to_dict(instruct.instruction, json_compatible)
+    if instruct.requirements is not None:
+        d["requirements"] = [expr_to_dict(instruct.requirements, json_compatible)]
+    if instruct.strategy is not None:
+        d["strategy"] = expr_to_dict(instruct.strategy, json_compatible)
+    if instruct.loopBudget is not None:
+        d["loopBudget"] = expr_to_dict(instruct.loopBudget, json_compatible)
     return d
 
 

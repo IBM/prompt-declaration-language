@@ -111,13 +111,20 @@ def get_contribute_value(
 def remove_none_values_from_message(message: dict) -> dict[str, Any]:
     ret = {}
     for key, value in message.items():
-        if key == "content":
+        if key == "content" and value is not None:
+            ret[key] = value
+        elif (
+            key == "reasoning_content" and value is not None
+        ):  # TODO: replacing reasoning_content with content here
+            key = "content"
             ret[key] = value
         if value is not None:
             if isinstance(value, dict):
                 ret[key] = remove_none_values_from_message(value)
             else:
                 ret[key] = value
+    if "content" not in ret:
+        ret["content"] = ""
     return ret
 
 
