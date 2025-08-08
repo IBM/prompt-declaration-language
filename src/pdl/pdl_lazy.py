@@ -156,18 +156,23 @@ class PdlApply(PdlLazy[ApplyOutputT]):
 
     @property
     def data(self):
-        return self.result()
-
-    def __repr__(self):
-        return self.result().__repr__()
-
-    def result(self) -> ApplyOutputT:
         if self._done:
             return self._data
         v = self.x.result()
         self._data = self.f(v)
         self._done = True
         return self._data
+
+    def __repr__(self):
+        return self.result().__repr__()
+
+    def result(self) -> ApplyOutputT:
+        data = self.data
+        if isinstance(data, PdlLazy):
+            result = data.result()
+        else:
+            result = data
+        return result  # pyright: ignore
 
 
 LazyApplyInputT = TypeVar("LazyApplyInputT")
@@ -192,20 +197,14 @@ class PdlApply2(PdlLazy[Apply2OutputT]):
         x1: PdlLazy[Apply2Input1T],
         x2: PdlLazy[Apply2Input2T],
     ):
-        self._data: Apply2OutputT
+        self._data: Apply2OutputT | PdlLazy[Apply2OutputT]
         self.f = f
         self.x1 = x1
         self.x2 = x2
         self._done = False
 
     @property
-    def data(self):
-        return self.result()
-
-    def __repr__(self):
-        return self.result().__repr__()
-
-    def result(self) -> Apply2OutputT:
+    def data(self) -> Apply2OutputT | PdlLazy[Apply2OutputT]:
         if self._done:
             return self._data
         if isinstance(self.x1, PdlLazy):
@@ -219,6 +218,17 @@ class PdlApply2(PdlLazy[Apply2OutputT]):
         self._data = self.f(v1, v2)
         self._done = True
         return self._data
+
+    def __repr__(self):
+        return self.result().__repr__()
+
+    def result(self) -> Apply2OutputT:
+        data = self.data
+        if isinstance(data, PdlLazy):
+            result = data.result()
+        else:
+            result = data
+        return result  # pyright: ignore
 
 
 LazyApply2Input1T = TypeVar("LazyApply2Input1T")  # pylint: disable=invalid-name
