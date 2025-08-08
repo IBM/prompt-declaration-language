@@ -22,6 +22,7 @@ from typing import (  # noqa: E402
     Any,
     Generator,
     Generic,
+    Iterable,
     Optional,
     Sequence,
     Tuple,
@@ -963,10 +964,12 @@ def process_block_body(
                         map_loc,
                     )
 
+                # with ThreadPoolExecutor(max_workers=4) as executor:
+                #     map_output = executor.map(
                 map_output = map(  # pylint: disable=bad-builtin
                     loop_body, index_iterator, items_iterator
                 )
-                results, _, _, traces = zip(*map_output)  # type: ignore
+                results, _, _, traces = _split_map_output(map_output)
                 # saved_background = IndependentContext(backgrounds)
             except PDLRuntimeError as exc:
                 traces = [exc.pdl__trace]  # type: ignore
@@ -1038,6 +1041,21 @@ def process_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, background, scope, trace
+
+
+def _split_map_output(
+    map_output: Iterable[Tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]],
+) -> Tuple[list[PdlLazy[Any]], list[LazyMessages], list[ScopeType], list[BlockType]]:
+    results = []
+    backgrounds = []
+    scopes = []
+    traces = []
+    for result, background, scope, trace in map_output:
+        results.append(result)
+        backgrounds.append(background)
+        scopes.append(scope)
+        traces.append(trace)
+    return results, backgrounds, scopes, traces
 
 
 BlockTVarEvalFor = TypeVar("BlockTVarEvalFor", bound=RepeatBlock | MapBlock)
