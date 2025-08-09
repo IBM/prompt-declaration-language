@@ -259,6 +259,8 @@ def block_to_dict(  # noqa: C901
                 d["for"] = expr_to_dict(block.for_, json_compatible)
             if block.index is not None:
                 d["index"] = block.index
+            if block.maxWorkers is not None:
+                d["maxWorkers"] = expr_to_dict(block.maxWorkers, json_compatible)
             d["map"] = block_to_dict(block.map, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
