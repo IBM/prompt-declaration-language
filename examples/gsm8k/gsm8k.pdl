@@ -39,7 +39,7 @@ defs:
             text: ${ r1.text + "\n\n" + r2.text }
     for:
       TEST: ${ TESTS }
-    maxWorkers: 10
+    # maxWorkers: 10
     map:
       defs:
         # First phase: ask LLM the Grade School Math questions
