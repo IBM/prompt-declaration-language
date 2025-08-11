@@ -18,6 +18,10 @@ defs:
   # How many problems to evaluate.  The entire dataset is 1319 problems.
   # MAX_ITERATIONS: 1319
   MAX_ITERATIONS: 50
+  # Which model to use
+  # MODEL: ollama/granite-code:8b
+  # MODEL: ollama/granite3.2:8b
+  MODEL: watsonx/ibm/granite-3-2-8b-instruct
 
   # PDL variables that hold statistics
   SUCCESSES: 0
@@ -29,8 +33,7 @@ text:
     TEST: ${ TESTS }
   repeat:
     # Ask the LLM for the answer
-    # - model: ollama/granite-code:8b
-    model: ollama/granite3.2:8b
+    model: ${ MODEL }
       # First, get LLM to answer the question
     input: |
       Question: ${ TEST.question }
@@ -51,8 +54,7 @@ text:
     LLM_FULL_ANSWER: ${ ALL_LLM_FULL_A }
   repeat:
     # Next, get LLM to convert its answer into a single JSON key/value
-    # - model: ollama/granite-code:8b
-    model: ollama/granite3.2:8b
+    model: ${ MODEL }
     input: | # 'input' is the prompt
       Generate the final answer from the conclusion of this text as JSON with a single key named answer.
       ${ LLM_FULL_ANSWER }

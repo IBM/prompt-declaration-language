@@ -193,17 +193,15 @@ class InterpreterState(BaseModel):
         return self.model_copy(update={"role": role})
 
     def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
-        stack = self.id_stack.copy() if self.id_stack is not None else []
-        stack.append(n)
-        return self.model_copy(update={"id_stack": stack})
+        stack = self.id_stack if self.id_stack is not None else []
+        return self.model_copy(update={"id_stack": stack + [n]})
 
     def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
         return self.with_id(str(i))
 
     def with_pop(self: "InterpreterState") -> "InterpreterState":
-        stack = self.id_stack.copy() if self.id_stack is not None else []
-        stack.pop()
-        return self.model_copy(update={"id_stack": stack})
+        stack = self.id_stack if self.id_stack is not None else []
+        return self.model_copy(update={"id_stack": stack[:-1]})
 
 
 class ClosureBlock(FunctionBlock):
@@ -961,7 +959,6 @@ def process_block_body(
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
             block = _evaluate_join_field(scope, block, loc)
             map_loc = append(loc, "map")
-            iidx = 0
             try:
                 if max_iterations is not None:
                     index_iterator: Any = range(max_iterations)
