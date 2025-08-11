@@ -1,4 +1,5 @@
-benchmark: gsm8k # Name our benchmark
+pdl_path: gsm8k.pdl # Path to the PDL file to optimize
+dataset: gsm8k # Name our benchmark
 budget: null # Set a budget, can be number of iterations, or a duration string e.g. "2h"
 budget_growth: double # double validation set size each iteration
 # or to_max: reach max_test_set_size by final iteration
@@ -12,6 +13,21 @@ test_set_name: test # name of test set
 train_set_name: train # name of train set
 validation_set_name: validation # name of validation set
 demonstrations_variable_name: demonstrations # variable name to insert demonstrations into
+demonstration_columns:
+  - question # column name for the question in the dataset
+  - reasoning
+  - answer
+  - traj_keys
+  - traj_values
+  - rewoo_traj_keys
+  - rewoo_traj_values
+
+instance_columns:
+  - question
+  - reasoning
+
+groundtruth_column: answer # column name for the ground truth in the dataset
+
 variables: # define discrete options to sample from
   model: # set ${ model } variable
     - watsonx/meta-llama/llama-3-2-3b-instruct
