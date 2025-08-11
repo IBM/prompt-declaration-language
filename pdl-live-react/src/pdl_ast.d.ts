@@ -110,6 +110,17 @@ export type ContributeType = (
 export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
+export type Evaluate = LocalizedExpression | FunctionBlock | string | null
+export type Transformcontext =
+  | LocalizedExpression
+  | FunctionBlock
+  | string
+  | null
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType = RequirementType[]
 export type ModelInput = {
   [k: string]: unknown
 }[]
@@ -130,6 +141,11 @@ export type ContributeType1 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType1 = RequirementType[]
 export type PdlIsLeaf1 = true
 export type Kind1 = "model"
 /**
@@ -142,6 +158,11 @@ export type ContributeType2 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType2 = RequirementType[]
 export type PdlIsLeaf2 = true
 export type Kind2 = "model"
 /**
@@ -154,6 +175,11 @@ export type ContributeType3 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType3 = RequirementType[]
 export type PdlIsLeaf3 = true
 export type Kind3 = "code"
 /**
@@ -171,6 +197,11 @@ export type ContributeType4 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType4 = RequirementType[]
 export type PdlIsLeaf4 = true
 export type Kind4 = "code"
 export type Lang1 = "command"
@@ -190,6 +221,11 @@ export type ContributeType5 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType5 = RequirementType[]
 export type PdlIsLeaf5 = true
 export type Kind5 = "get"
 /**
@@ -206,6 +242,11 @@ export type ContributeType6 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType6 = RequirementType[]
 export type PdlIsLeaf6 = true
 export type Kind6 = "data"
 /**
@@ -222,6 +263,11 @@ export type ContributeType7 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType7 = RequirementType[]
 export type PdlIsLeaf7 = false
 export type IndependentEnum = "independent" | "dependent"
 export type Kind7 = "if"
@@ -235,6 +281,11 @@ export type ContributeType8 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType8 = RequirementType[]
 export type PdlIsLeaf8 = false
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind8 = "match"
@@ -269,6 +320,11 @@ export type ContributeType9 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType9 = RequirementType[]
 export type PdlIsLeaf9 = false
 export type IndependentEnum2 = "independent" | "dependent"
 export type Kind9 = "repeat"
@@ -289,6 +345,11 @@ export type ContributeType10 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType10 = RequirementType[]
 export type PdlIsLeaf10 = false
 export type IndependentEnum3 = "independent" | "dependent"
 export type Kind10 = "map"
@@ -309,6 +370,11 @@ export type ContributeType11 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType11 = RequirementType[]
 export type PdlIsLeaf11 = false
 export type IndependentEnum4 = "independent" | "dependent"
 export type Kind11 = "text"
@@ -327,6 +393,11 @@ export type ContributeType12 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType12 = RequirementType[]
 export type PdlIsLeaf12 = false
 export type IndependentEnum5 = "independent" | "dependent"
 export type Kind12 = "lastOf"
@@ -344,6 +415,11 @@ export type ContributeType13 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType13 = RequirementType[]
 export type PdlIsLeaf13 = false
 export type IndependentEnum6 = "independent" | "dependent"
 export type Kind13 = "array"
@@ -361,6 +437,11 @@ export type ContributeType14 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType14 = RequirementType[]
 export type PdlIsLeaf14 = false
 export type IndependentEnum7 = "independent" | "dependent"
 export type Kind14 = "object"
@@ -379,6 +460,11 @@ export type ContributeType15 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType15 = RequirementType[]
 export type PdlIsLeaf15 = true
 export type Kind15 = "message"
 /**
@@ -391,6 +477,11 @@ export type ContributeType16 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType16 = RequirementType[]
 export type PdlIsLeaf16 = true
 export type Kind16 = "read"
 /**
@@ -408,6 +499,11 @@ export type ContributeType17 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType17 = RequirementType[]
 export type PdlIsLeaf17 = false
 export type IndependentEnum8 = "independent" | "dependent"
 export type Kind17 = "include"
@@ -426,6 +522,11 @@ export type ContributeType18 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType18 = RequirementType[]
 export type PdlIsLeaf18 = true
 export type Kind18 = "import"
 /**
@@ -443,6 +544,11 @@ export type ContributeType19 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType19 = RequirementType[]
 export type PdlIsLeaf19 = true
 export type Kind19 = "error"
 /**
@@ -460,6 +566,11 @@ export type ContributeType20 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType20 = RequirementType[]
 export type PdlIsLeaf20 = true
 export type Kind20 = "empty"
 export type ExpressionInt = LocalizedExpression | number | string
@@ -585,6 +696,11 @@ export type ContributeType21 = (
       [k: string]: ContributeValue
     }
 )[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType21 = RequirementType[]
 export type PdlIsLeaf21 = true
 export type Kind21 = "function"
 /**
@@ -691,6 +807,7 @@ export interface FunctionBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType21
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -848,6 +965,7 @@ export interface CallBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -972,6 +1090,14 @@ export interface RegexParser {
   mode?: Mode
 }
 /**
+ * Single requirement definition.
+ */
+export interface RequirementType {
+  description: unknown
+  evaluate: Evaluate
+  transformContext: Transformcontext
+}
+/**
  * Internal data structure to record timing information in the trace.
  */
 export interface PdlTiming {
@@ -1051,6 +1177,7 @@ export interface LitellmModelBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType1
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1194,6 +1321,7 @@ export interface GraniteioModelBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType2
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1342,6 +1470,7 @@ export interface CodeBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType3
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1476,6 +1605,7 @@ export interface ArgsBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType4
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1574,6 +1704,7 @@ export interface GetBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType5
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1690,6 +1821,7 @@ export interface DataBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType6
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1796,6 +1928,7 @@ export interface IfBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType7
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1949,6 +2082,7 @@ export interface MatchBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType8
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2111,6 +2245,7 @@ export interface RepeatBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType9
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2285,6 +2420,7 @@ export interface MapBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType10
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2355,6 +2491,11 @@ export interface MapBlock {
    *
    */
   join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  /**
+   * Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
+   *
+   */
+  maxWorkers?: number | null
   pdl__trace?: PdlTrace
 }
 /**
@@ -2428,6 +2569,7 @@ export interface TextBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType11
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2524,6 +2666,7 @@ export interface LastOfBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType12
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2620,6 +2763,7 @@ export interface ArrayBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType13
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2716,6 +2860,7 @@ export interface ObjectBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType14
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2812,6 +2957,7 @@ export interface MessageBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType15
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2956,6 +3102,7 @@ export interface ReadBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType16
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3061,6 +3208,7 @@ export interface IncludeBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType17
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3158,6 +3306,7 @@ export interface ImportBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType18
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3254,6 +3403,7 @@ export interface ErrorBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType19
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3380,6 +3530,7 @@ export interface EmptyBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType20
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,

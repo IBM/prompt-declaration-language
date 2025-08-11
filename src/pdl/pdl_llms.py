@@ -17,7 +17,7 @@ from .pdl_ast import (
 )
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_schema_utils import pdltype_to_jsonschema
-from .pdl_utils import remove_none_values_from_message
+from .pdl_utils import message_post_processing
 
 # Load environment variables
 load_dotenv()
@@ -47,7 +47,7 @@ class LitellmModel:
             if msg.role is None:
                 msg.role = "assistant"
             return (
-                remove_none_values_from_message(msg.json()),
+                message_post_processing(msg.json()),
                 response.json(),  # pyright: ignore
             )
         except httpx.RequestError as exc:
@@ -161,7 +161,7 @@ class LitellmModel:
             msg = chunk.choices[0].delta  # pyright: ignore
             if msg.role is None:
                 msg.role = "assistant"
-            yield remove_none_values_from_message(msg.model_dump())
+            yield message_post_processing(msg.model_dump())
         return result
 
 

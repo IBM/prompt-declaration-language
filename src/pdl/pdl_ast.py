@@ -330,6 +330,25 @@ ContributeType = TypeAliasType(
 """Type of the contribute field."""
 
 
+class RequirementType(BaseModel):
+    """Single requirement definition."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    description: ExpressionType
+    """English description of the requirement"""
+
+    evaluate: Optional[ExpressionType["FunctionBlock"]]
+    """Evaluation function for the requirement"""
+
+    transformContext: Optional[ExpressionType["FunctionBlock"]]
+    """Function to transform the context for the requirement"""
+
+
+RequirementsType = TypeAliasType("RequirementsType", Sequence[RequirementType])
+"""Type of requirements field"""
+
+
 class PdlTiming(BaseModel):
     """Internal data structure to record timing information in the trace."""
 
@@ -406,6 +425,11 @@ class Block(BaseModel):
     trace_error_on_retry: OptionalBoolOrStr = None
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
+
+    requirements: RequirementsType = []
+    """Specify any requirements that the result of the block must satisfy.
+    """
+
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     Typical roles are `system`, `user`, and `assistant`,
@@ -997,6 +1021,9 @@ class MapBlock(StructuredBlock):
     """
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
+    """
+    maxWorkers: OptionalInt = None
+    """Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
     """
     # Field for internal use
     pdl__trace: Optional[list["BlockType"]] = None

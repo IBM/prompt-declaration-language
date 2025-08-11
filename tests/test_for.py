@@ -326,6 +326,25 @@ def test_for_reduce():
         prog_str = f"""
 defs:
   plus:
+    function:
+        x: number
+        y: number
+    return: ${{ x + y }}
+for:
+  i: [1,2,3,4]
+{loop_kind1}: ${{ i }}
+join:
+  reduce: ${{ plus }}
+"""
+        result = exec_str(prog_str)
+        assert result == 10
+
+
+def test_for_reduce_python():
+    for loop_kind1 in ["repeat", "map"]:
+        prog_str = f"""
+defs:
+  plus:
     lang: python
     code: |
       import operator
@@ -338,3 +357,15 @@ join:
 """
         result = exec_str(prog_str)
         assert result == 10
+
+
+def test_map_max_workers():
+    for max_workers in [0, "null", 2, 4]:
+        prog_str = f"""
+for:
+  i: [1,2,3,4]
+map: ${{ i }}
+maxWorkers: {max_workers}
+"""
+        result = exec_str(prog_str)
+        assert result == "1234"
