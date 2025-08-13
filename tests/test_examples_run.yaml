@@ -1,4 +1,4 @@
-update_results: true
+update_results: false
 check: []
 skip:
   - examples/demos/react.pdl
