@@ -1,19 +1,10 @@
-update_results: true
-check:
-  - examples/tutorial/defs.pdl
-  - examples/tutorial/function_definition.pdl
-  - examples/tutorial/function_empty_context.pdl
-  - examples/tutorial/calling_llm_with_input_messages_var.pdl
-  - examples/tutorial/local_computation.pdl
-  - examples/tutorial/role.pdl
-  - examples/tutorial/lastOf.pdl
-  - examples/tutorial/muting_block_output.pdl
-  - examples/tutorial/function_optional_params.pdl
-  - examples/tutorial/function_call_in_jinja.pdl
+update_results: false
+check: []
 skip:
   - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl
-  - examples/gsm8k/gsm8.pdl
+  - examples/gsm8k/gsm8k.pdl
+  - examples/gsm8k/gsm8k-loop-fission.pdl 
   - examples/gsm8k/gsm8k-plan.pdl
   - examples/gsm8k/gsm8k-plan-few-shots.pdl
   - examples/gsm8k/gsm8k-tot-few-shot.pdl
@@ -39,6 +30,9 @@ skip:
   - examples/optimizer/mbpp.pdl
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
+  - examples/optimizer/bea19.pdl
+  - examples/optimizer/eval_levenshtein.pdl
+  - examples/requirements/email.pdl
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |

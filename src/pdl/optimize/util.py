@@ -20,7 +20,7 @@ class TrialOutput:
     pdl_program: Program
     scope: ScopeType
     runtime: float
-    correct: bool = False
+    score: float = 0.0
     exception: BaseException | bool | None = None
     pdl_result: Any = None
     pdl_document: str = ""
@@ -32,7 +32,7 @@ class TrialOutput:
 
     def to_dict(self) -> dict:
         return {
-            "correct": self.correct,
+            "score": self.score,
             "exception": str(self.exception),
             "pdl_document": self.pdl_document,
             "answer": self.answer,

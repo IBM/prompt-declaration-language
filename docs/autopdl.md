@@ -127,7 +127,7 @@ Finally, we can run the example like so:
 
 ``` { .bash .copy .annotate linenums="1" }
 cd examples/optimizer
-python optimize.py optimize --config gsm8k_optimizer_config.yml --dataset-path ../../var/gsm8k_trajectified gsm8k.pdl
+python optimize.py optimize --config gsm8k_optimizer_config.yml --dataset-path ../../var/gsm8k_trajectified
 ```
 
 This will report details about the optimization process, such as the number of candidates evaluated. The output will look something like this:

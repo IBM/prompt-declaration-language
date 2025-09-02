@@ -11,7 +11,9 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from asyncio import AbstractEventLoop
+from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
+from itertools import count
 from os import getenv
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
@@ -21,6 +23,7 @@ from typing import (  # noqa: E402
     Any,
     Generator,
     Generic,
+    Iterable,
     Optional,
     Sequence,
     Tuple,
@@ -192,17 +195,15 @@ class InterpreterState(BaseModel):
         return self.model_copy(update={"role": role})
 
     def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
-        stack = self.id_stack.copy() if self.id_stack is not None else []
-        stack.append(n)
-        return self.model_copy(update={"id_stack": stack})
+        stack = self.id_stack if self.id_stack is not None else []
+        return self.model_copy(update={"id_stack": stack + [n]})
 
     def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
         return self.with_id(str(i))
 
     def with_pop(self: "InterpreterState") -> "InterpreterState":
-        stack = self.id_stack.copy() if self.id_stack is not None else []
-        stack.pop()
-        return self.model_copy(update={"id_stack": stack})
+        stack = self.id_stack if self.id_stack is not None else []
+        return self.model_copy(update={"id_stack": stack[:-1]})
 
 
 class ClosureBlock(FunctionBlock):
@@ -444,7 +445,7 @@ def set_error_to_scope_for_retry(
     return scope
 
 
-def process_advanced_block(
+def process_advanced_block(  # noqa:C901
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
@@ -478,6 +479,28 @@ def process_advanced_block(
             result, background, new_scope, trace = process_block_body(
                 state, scope, block, loc
             )
+            if block.requirements != []:
+                requirements_satisfied = True
+                for req in block.requirements:
+                    evalfn, _ = process_expr(scope, getattr(req, "evaluate"), loc)
+                    evaluation = evalfn(
+                        requirement=getattr(req, "description"), response=result
+                    )
+                    if evaluation.result() is False:
+                        requirements_satisfied = False
+                        transfn, _ = process_expr(
+                            scope, getattr(req, "transformContext"), loc
+                        )
+                        new_context = transfn(
+                            pdl_context=scope["pdl_context"],
+                            requirement=getattr(req, "description"),
+                            response=result,
+                        )
+                        scope = scope | {"pdl_context": new_context}
+                if requirements_satisfied is False:
+                    print("\nTrying again!")
+                    continue
+
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
             add_done_callback(
                 id_with_set_first_use_nanos(block.pdl__timing), background
@@ -937,50 +960,54 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"pdl__trace": iter_trace})
         case MapBlock():
-            results = []
             background = DependentContext([])
-            iter_trace = []
             iteration_state = state.with_yield_result(False)
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
             block = _evaluate_join_field(scope, block, loc)
             map_loc = append(loc, "map")
-            iidx = 0
             try:
-                saved_background = IndependentContext([])
-                while True:
+                if max_iterations is not None:
+                    index_iterator: Any = range(max_iterations)
+                else:
+                    index_iterator = count()
+                if items is not None and length is not None:
+                    items_iterator = (
+                        {k: elems[i] for k, elems in items.items()}
+                        for i in range(length)
+                    )
+                else:
+                    items_iterator = ({} for _ in count())
+
+                def loop_body(iidx, items):
                     iteration_scope = scope_init
                     if block.index is not None:
                         iteration_scope = iteration_scope | {block.index: iidx}
-                    if max_iterations is not None and iidx >= max_iterations:
-                        break
-                    if length is not None and iidx >= length:
-                        break
-                    iteration_state = iteration_state.with_iter(iidx)
-                    if items is not None:
-                        for k in items.keys():
-                            iteration_scope = iteration_scope | {k: items[k][iidx]}
-                    (
-                        iteration_result,
-                        iteration_background,
-                        iteration_scope,
-                        body_trace,
-                    ) = process_block(
-                        iteration_state,
+                    iteration_scope = iteration_scope | items
+                    return process_block(
+                        iteration_state.with_iter(iidx),
                         iteration_scope,
                         block.map,
                         map_loc,
                     )
-                    saved_background = IndependentContext(
-                        [saved_background, iteration_background]
+
+                map_output: Iterable[
+                    Tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]
+                ]
+                if block.maxWorkers == 0:
+                    map_output = map(  # pylint: disable=bad-builtin
+                        loop_body, index_iterator, items_iterator
                     )
-                    results.append(iteration_result)
-                    iter_trace.append(body_trace)
-                    iteration_state = iteration_state.with_pop()
-                    iidx = iidx + 1
+                else:
+                    with ThreadPoolExecutor(block.maxWorkers) as executor:
+                        map_output = executor.map(
+                            loop_body, index_iterator, items_iterator
+                        )
+                results, _, _, traces = _split_map_output(map_output)
+                # saved_background = IndependentContext(backgrounds)
             except PDLRuntimeError as exc:
-                iter_trace.append(exc.pdl__trace)
-                trace = block.model_copy(update={"pdl__trace": iter_trace})
+                traces = [exc.pdl__trace]  # type: ignore
+                trace = block.model_copy(update={"pdl__trace": traces})
                 raise PDLRuntimeError(
                     exc.message,
                     loc=exc.loc or map_loc,
@@ -990,7 +1017,7 @@ def process_block_body(
             # background = saved_background  # commented because the block do not contribute to the background
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
-            trace = block.model_copy(update={"pdl__trace": iter_trace})
+            trace = block.model_copy(update={"pdl__trace": traces})
         case ReadBlock():
             result, background, scope, trace = process_input(state, scope, block, loc)
             if state.yield_result:
@@ -1055,6 +1082,21 @@ def process_block_body(
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
     return result, background, scope, trace
+
+
+def _split_map_output(
+    map_output: Iterable[Tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]],
+) -> Tuple[list[PdlLazy[Any]], list[LazyMessages], list[ScopeType], list[BlockType]]:
+    results = []
+    backgrounds = []
+    scopes = []
+    traces = []
+    for result, background, scope, trace in map_output:
+        results.append(result)
+        backgrounds.append(background)
+        scopes.append(scope)
+        traces.append(trace)
+    return results, backgrounds, scopes, traces
 
 
 BlockTVarEvalFor = TypeVar("BlockTVarEvalFor", bound=RepeatBlock | MapBlock)
@@ -2252,6 +2294,10 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
     match parser:
         case "json":
             try:
+                if text == "False":
+                    return json.loads("false")
+                if text == "True":
+                    return json.loads("true")
                 result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
             except Exception as exc:
                 raise PDLRuntimeParserError(

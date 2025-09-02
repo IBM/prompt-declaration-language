@@ -6,12 +6,12 @@ from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
 
 
-def is_float(s: str) -> str:
+def is_float(s: str | float) -> str:
     try:
         f = float(s)
         return f"{f:.2f}"
     except Exception:
-        return s
+        return str(s)
 
 
 class GsmHardEvaluator(OptimizerEvaluator):
@@ -74,10 +74,16 @@ class GsmHardEvaluator(OptimizerEvaluator):
         scope["question"] = self.example["input"]
         return empty_scope | scope
 
-    def extract_answer(self, document: str) -> float | int | None:
-        return extract_math_answer(document)
+    def score(self, document: str, ground_truth: Any) -> float:
+        answer = extract_math_answer(document)
+        if answer is None:
+            return 0.0
 
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
         answerf = is_float(answer)
-        truthf = is_float(truth)
-        return answer == truth or answerf == truthf or document.endswith(f" {truth}")
+        truthf = is_float(ground_truth)
+
+        return float(
+            answer == ground_truth
+            or answerf == truthf
+            or document.endswith(f" {ground_truth}")
+        )
