@@ -1,4 +1,4 @@
-from pdl.pdl import exec_dict, exec_file
+from pdl.pdl import exec_dict, exec_file, exec_str
 
 hello_def = {
     "def": "hello",
@@ -126,3 +126,134 @@ def test_call_expression_args():
         result
         == "FN::get_current_stock:: 'Simple call!'\n{'product_name': 'from_object'}\nFN::get_current_stock:: 'from_object'\n"
     )
+
+
+def test_call_from_code_01():
+    prog = """
+defs:
+  f:
+    function:
+      x:
+      y:
+    return:
+      ${x + y}
+array:
+- call: ${f}
+  args:
+    x: 1
+    y: 2
+- ${ f(x=1, y=2) }
+- lang: python
+  code:
+    result = f(x=1, y=2)
+"""
+    result = exec_str(prog)
+    assert result == [3, 3, 3]
+
+
+def test_call_from_code_02():
+    prog = """
+defs:
+  f:
+    function:
+    return:
+      ${pdl_context}
+lastOf:
+- Hello
+- context: independent
+  array:
+  - call: ${f}
+  - ${ f() }
+  - lang: python
+    code:
+      result = f()
+"""
+    result = exec_str(prog)
+    assert [ctx.serialize("litellm") for ctx in result] == [
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+    ]
+
+
+def test_call_from_code_03():
+    prog = """
+defs:
+  f:
+    function:
+    return:
+      ${pdl_context}
+lastOf:
+- Hello
+- context: independent
+  array:
+  - call: ${f}
+    args:
+      pdl_context: []
+  - ${ f(pdl_context=[]) }
+  - lang: python
+    code:
+      result = f(pdl_context=[])
+"""
+    result = exec_str(prog)
+    assert [ctx.serialize("litellm") for ctx in result] == [
+        [],
+        [],
+        [],
+    ]
+
+
+def test_call_from_code_04():
+    prog = """
+defs:
+  f:
+    function:
+    return:
+      lastOf:
+      - How are you?
+      - Bye
+lastOf:
+- Hello
+- context: independent
+  array:
+  - text:
+    - call: ${f}
+    - ${pdl_context}
+  - text:
+    - ${f()}
+    - ${pdl_context}
+  - text:
+    - lang: python
+      code:
+        result = f()
+    - ${pdl_context}
+"""
+    result = exec_str(prog)
+    assert result == [
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
+    ]
+
+
+def test_call_from_code_05():
+    prog = """
+defs:
+  f:
+    function:
+      x:
+      y:
+    return:
+      ${x - y}
+array:
+- call: ${f}
+  args:
+    x: 2
+    y: 1
+- ${ f(2, 1) }
+- lang: python
+  code:
+    result = f(2, 1)
+"""
+    result = exec_str(prog)
+    assert result == [1, 1, 1]

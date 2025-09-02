@@ -40,8 +40,11 @@ class PDLContext(ABC, Sequence):
 class SingletonContext(PDLContext):
     message: PdlLazy[dict[str, Any]]
 
-    def __init__(self, message: PdlLazy[dict[str, Any]]):
-        self.message = message
+    def __init__(self, message: PdlLazy[dict[str, Any]] | dict[str, Any]):
+        if isinstance(message, PdlLazy):
+            self.message = message
+        else:
+            self.message = PdlConst(message)
 
     def serialize(self, mode: SerializeMode) -> list[dict[str, Any]]:
         result = self.message.result()
@@ -60,20 +63,23 @@ class SingletonContext(PDLContext):
 class IndependentContext(PDLContext):
     context: PdlLazy[list[PDLContext]]
 
-    def __init__(self, context: list[PDLContext]):
+    def __init__(self, context: list[PDLContext | dict[str, Any]]):
         ret: list[PDLContext] = []
         for item in context:
-            if isinstance(item, IndependentContext):
-                ret += item.context.data
-            elif isinstance(item, SingletonContext):
-                ret += [item]
-            elif isinstance(item, DependentContext) and len(item) == 0:
-                pass
-            else:
-                # Not all elements of the list are Independent, so return
-                self.context = PdlList(context)
-                return
-        # All elements of the list are Independent
+            match item:
+                case IndependentContext():
+                    ret = ret + item.context.data
+                case SingletonContext():
+                    ret = ret + [item]
+                case DependentContext():
+                    if len(item) == 0:
+                        pass
+                    else:
+                        ret = ret + [item]
+                case dict():
+                    ret = ret + [SingletonContext(item)]
+                case _:
+                    assert False
         self.context = PdlList(ret)
 
     def serialize(self, mode: SerializeMode) -> list[dict[str, Any]]:
@@ -92,27 +98,30 @@ class IndependentContext(PDLContext):
 
     def __repr__(self):  # pyright: ignore
         ret = "{"
-        ret += ",".join([i.__repr__() for i in self.context.result()])
+        ret = ret + ",".join([i.__repr__() for i in self.context.result()])
         return ret + "}"
 
 
 class DependentContext(PDLContext):
     context: PdlLazy[list[PDLContext]]
 
-    def __init__(self, context: list[PDLContext]):
+    def __init__(self, context: list[PDLContext | dict[str, Any]]):
         ret: list[PDLContext] = []
         for item in context:
-            if isinstance(item, DependentContext):
-                ret += item.context.data
-            elif isinstance(item, SingletonContext):
-                ret += [item]
-            elif isinstance(item, IndependentContext) and len(item) == 0:
-                pass
-            else:
-                # Not all elements of the list are Dependent, so return
-                self.context = PdlList(context)
-                return
-        # All elements of the list are Dependent
+            match item:
+                case DependentContext():
+                    ret = ret + item.context.data
+                case SingletonContext():
+                    ret = ret + [item]
+                case IndependentContext():
+                    if len(item) == 0:
+                        pass
+                    else:
+                        ret = ret + [item]
+                case dict():
+                    ret = ret + [SingletonContext(item)]
+                case _:
+                    assert False
         self.context = PdlList(ret)
 
     def serialize(self, mode: SerializeMode) -> list[dict[str, Any]]:
@@ -129,7 +138,7 @@ class DependentContext(PDLContext):
 
     def __repr__(self):  # pyright: ignore
         ret = "["
-        ret += ",".join([i.__repr__() for i in self.context.result()])
+        ret = ret + ",".join([i.__repr__() for i in self.context.result()])
         return ret + "]"
 
 

@@ -32,6 +32,10 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    JoinArray,
+    JoinLastOf,
+    JoinObject,
+    JoinReduce,
     JoinText,
     JoinType,
     JsonSchemaTypePdlType,
@@ -39,6 +43,7 @@ from .pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
+    MapBlock,
     MatchBlock,
     MessageBlock,
     ObjectBlock,
@@ -57,6 +62,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    RequirementType,
     StructuredBlock,
     TextBlock,
 )
@@ -248,7 +254,22 @@ def block_to_dict(  # noqa: C901
                 d["until"] = expr_to_dict(block.until, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
-            d["join"] = join_to_dict(block.join)
+            d["join"] = join_to_dict(block.join, json_compatible)
+            if block.pdl__trace is not None:
+                d["pdl__trace"] = [
+                    block_to_dict(b, json_compatible) for b in block.pdl__trace
+                ]
+        case MapBlock():
+            if block.for_ is not None:
+                d["for"] = expr_to_dict(block.for_, json_compatible)
+            if block.index is not None:
+                d["index"] = block.index
+            if block.maxWorkers is not None:
+                d["maxWorkers"] = expr_to_dict(block.maxWorkers, json_compatible)
+            d["map"] = block_to_dict(block.map, json_compatible)
+            if block.maxIterations is not None:
+                d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
+            d["join"] = join_to_dict(block.join, json_compatible)
             if block.pdl__trace is not None:
                 d["pdl__trace"] = [
                     block_to_dict(b, json_compatible) for b in block.pdl__trace
@@ -284,6 +305,10 @@ def block_to_dict(  # noqa: C901
         d["pdl__result"] = data_to_dict(block.pdl__result.result(), json_compatible)
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
+    if block.requirements is not None:
+        d["requirements"] = [
+            requirement_to_dict(b, json_compatible) for b in block.requirements
+        ]
     # if block.pdl__location is not None:
     #     d["pdl__location"] = location_to_dict(block.pdl__location)
     if block.fallback is not None:
@@ -385,6 +410,14 @@ def usage_to_dict(usage: PdlUsage) -> dict:
     return d
 
 
+def requirement_to_dict(req: RequirementType, json_compatible: bool) -> dict:
+    d: dict = {}
+    d["description"] = req.description
+    d["evaluate"] = expr_to_dict(req.evaluate, json_compatible)
+    d["transformContext"] = expr_to_dict(req.transformContext, json_compatible)
+    return d
+
+
 def pattern_to_dict(pattern: PatternType):
     if not isinstance(pattern, pdl_ast.Pattern):
         return pattern
@@ -407,13 +440,17 @@ def pattern_to_dict(pattern: PatternType):
     return result
 
 
-def join_to_dict(join: JoinType) -> dict[str, Any]:
-    d = {}
+def join_to_dict(join: JoinType, json_compatible: bool) -> dict[str, Any]:
+    d: dict[str, Any] = {}
     match join:
         case JoinText():
             d["with"] = join.with_
-        case _:
+        case JoinArray() | JoinObject() | JoinLastOf():
             d["as"] = str(join.as_)
+        case JoinReduce():
+            d["reduce"] = expr_to_dict(join.reduce, json_compatible)
+        case _:
+            assert False
     return d
 
 

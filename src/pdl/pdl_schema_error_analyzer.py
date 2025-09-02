@@ -156,6 +156,13 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
                     the_type_exists = True
                 if "enum" in item and data in item["enum"]:
                     the_type_exists = True
+                if "$ref" in item:
+                    ref_string = item["$ref"].split("/")[2]
+                    ref_type = defs[ref_string]
+                    errs = analyze_errors(defs, ref_type, data, loc)
+                    the_type_exists = len(errs) == 0
+                if the_type_exists:
+                    break
             if not the_type_exists:
                 ret.append(
                     get_loc_string(loc)

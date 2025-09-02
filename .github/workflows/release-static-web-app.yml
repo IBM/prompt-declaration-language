@@ -13,12 +13,12 @@ jobs:
     strategy:
       fail-fast: false
 
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-24.04'
     defaults:
       run:
         working-directory: ./pdl-live-react
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: setup node
         uses: actions/setup-node@v4

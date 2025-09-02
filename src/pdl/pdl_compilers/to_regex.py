@@ -19,6 +19,7 @@ from ..pdl_ast import (
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
+    MapBlock,
     ModelBlock,
     ReadBlock,
     RepeatBlock,
@@ -311,6 +312,10 @@ def compile_block(
             scope = scope_union(then_scope, else_scope)
         case RepeatBlock():
             body, scope = compile_block(scope, block.repeat)
+            # XXX TODO: join char in text mode XXX
+            regex = ReStar(body)
+        case MapBlock():
+            body, scope = compile_block(scope, block.map)
             # XXX TODO: join char in text mode XXX
             regex = ReStar(body)
         case ReadBlock():

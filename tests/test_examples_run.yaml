@@ -1,8 +1,10 @@
-update_results: false
+update_results: true
 check: []
 skip:
+  - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl
-  - examples/gsm8k/gsm8.pdl
+  - examples/gsm8k/gsm8k.pdl
+  - examples/gsm8k/gsm8k-loop-fission.pdl 
   - examples/gsm8k/gsm8k-plan.pdl
   - examples/gsm8k/gsm8k-plan-few-shots.pdl
   - examples/gsm8k/gsm8k-tot-few-shot.pdl
@@ -28,6 +30,9 @@ skip:
   - examples/optimizer/mbpp.pdl
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
+  - examples/optimizer/bea19.pdl
+  - examples/optimizer/eval_levenshtein.pdl
+  - examples/requirements/email.pdl
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |

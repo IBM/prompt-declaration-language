@@ -11,7 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from datasets import Dataset, DatasetDict
+from datasets.arrow_dataset import Dataset
+from datasets.dataset_dict import DatasetDict
 from duration_parser import parse as parse_duration
 from numpy.random import default_rng
 from rich.logging import RichHandler
@@ -67,22 +68,22 @@ class PDLOptimizer:
     # pylint: disable=too-many-instance-attributes,too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
-        pdl_path: Path,
         dataset: DatasetDict,
         config: OptimizationConfig,
         trial_thread: type[OptimizerEvaluator],
         yield_output: bool,
         experiment_path: Path,
     ) -> None:
-        self.pdl_path = pdl_path
         self.trial_thread = trial_thread
         self.yield_output = yield_output
 
         self.config = config
+        self.pdl_path = Path(config.pdl_path)
         self.parallelism = config.parallelism
         self.num_demonstrations = config.num_demonstrations
-        self.starting_validation_set_size = config.initial_test_set_size
-        self.ending_test_set_size = config.max_test_set_size
+        self.starting_validation_set_size = config.initial_validation_set_size
+        self.ending_validation_set_size = config.max_validation_set_size
+        self.max_test_set_size = config.max_test_set_size
         self.max_candidates = config.num_candidates
         self.timeout = config.timeout
         self.budget_growth = config.budget_growth
@@ -159,10 +160,13 @@ class PDLOptimizer:
         demo_name = self.config.demonstrations_variable_name
         candidates = []
 
+        num_demonstrations_set = {
+            int(x) for x in self.config.variables.get("num_demonstrations", set())
+        }
+
         if (
-            "prompt_pattern" in self.config.variables
-            and "cot" in self.config.variables.get("prompt_pattern", [])
-            and 0 in self.config.variables.get("num_demonstrations", [])
+            "cot" in self.config.variables.get("prompt_pattern", [])
+            and 0 in num_demonstrations_set
         ):
             cot_candidate = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
@@ -178,18 +182,18 @@ class PDLOptimizer:
 
             candidates.append(cot_candidate)
 
-        zero_shots_seen = ["cot"]
+        zero_shots_seen = {"cot"}
         while len(candidates) < num_candidates:
             variable_instance = {
                 k: self.sample_random_index(v) for k, v in self.config.variables.items()
             }
             if (
                 variable_instance.get("num_demonstrations") == 0
-                and variable_instance.get("prompt_pattern") == "cot"
+                and variable_instance.get("prompt_pattern") is not None
             ):
                 if variable_instance["prompt_pattern"] in zero_shots_seen:
                     continue
-                zero_shots_seen.append(variable_instance["prompt_pattern"])
+                zero_shots_seen.add(variable_instance["prompt_pattern"])
 
             num_demonstrations = int(
                 variable_instance.get("num_demonstrations", self.num_demonstrations),
@@ -214,16 +218,26 @@ class PDLOptimizer:
             candidates.append(candidate)
 
         if (
-            "num_demonstrations"
-            in self.config.variables  # check if is variable in config
-            and len(self.config.variables["num_demonstrations"])
-            > 1  # check more than 1 option
-            and 0 in [int(x) for x in self.config.variables["num_demonstrations"]]
-            # check zeroshot is an option
+            len(num_demonstrations_set) > 1  # check more than 1 option
+            and 0 in num_demonstrations_set  # check zeroshot is an option
         ):
-            zero_shotters = [x for x in candidates if x["num_demonstrations"] == 0]
+            zero_shotters = [
+                x.get("uuid") for x in candidates if x.get("num_demonstrations") == 0
+            ]
+            variables_zs = self.config.variables.copy()
+            variables_zs.pop("num_demonstrations", None)
 
-            assert len(zero_shotters) <= 3
+            max_zs = len(list(itertools.product(*variables_zs.values())))
+
+            if len(zero_shotters) > max_zs:
+                logger.warning(
+                    "More zero-shot candidates (%d) than expected (%d; "
+                    "product of all variables). "
+                    "Identical duplicated candidates may waste compute.",
+                    len(zero_shotters),
+                    max_zs,
+                )
+
         assert len(candidates) == num_candidates
         return candidates
 
@@ -240,7 +254,10 @@ class PDLOptimizer:
         exp_file = self.experiment_path / f"{self.experiment_uuid}.json"
 
         with exp_file.open("w") as f:
-            json.dump(self.experiment_log, f)
+            try:
+                json.dump(self.experiment_log, f)
+            except TypeError:
+                logger.warning("Unable to save experiment")  # TODO
 
         return exp_file
 
@@ -276,7 +293,7 @@ class PDLOptimizer:
             self.starting_validation_set_size,
             validation_set_size,
         )
-        ending_validation_set_size = self.ending_test_set_size
+        ending_validation_set_size = self.ending_validation_set_size
         num_iterations = ceil(log2(num_candidates))
 
         validation_set_multiplier = 0
@@ -477,7 +494,7 @@ class PDLOptimizer:
             # reset_usage_stats()
 
             range_end = min(
-                ending_validation_set_size,
+                self.max_test_set_size,
                 len(self.dataset[self.test_set_name]),
             )
             eval_set_indices = list(range(range_end))
@@ -502,7 +519,7 @@ class PDLOptimizer:
             self.pbar.close()
 
             self.experiment_log["final_iteration"] = {
-                "ending_test_set_size": ending_validation_set_size,
+                "ending_test_set_size": range_end,
                 "eval_set_indices": eval_set_indices,
                 "selected_candidates_uuid": winning_candidate["uuid"],
                 "candidate": final_score.to_dict(),
@@ -615,7 +632,7 @@ class PDLOptimizer:
                 ),
             )
 
-        matches = 0
+        score = 0
         exception_count = 0
         timeout_count = 0
         exceptions: list[BaseException | bool] = []
@@ -645,10 +662,10 @@ class PDLOptimizer:
                     answer = result.answer
 
                 logger.info(
-                    "Answer: %s Ground truth: %s Match: %s",
+                    "Answer: %s Ground truth: %s Score: %s",
                     answer,
                     result.groundtruth,
-                    result.correct,
+                    result.score,
                 )
 
                 if candidate["uuid"] not in self.candidate_results:
@@ -667,16 +684,16 @@ class PDLOptimizer:
                 if trial_result.exception is not None:
                     exceptions.append(trial_result.exception)
 
-                matches += int(trial_result.correct)
+                score += float(trial_result.score)
 
-                p_passing = matches / (index + 1)
+                p_passing = score / (index + 1)
 
         end_time = time.time()
         runtime = end_time - start_time
 
         logger.info(
             "Matches: %s Accuracy: %.2f Exceptions: %s (%s timeout, %s other) Total: %s",
-            f"{matches:,}",
+            f"{score:,}",
             p_passing * 100,
             f"{len(exceptions):,}",
             timeout_count,
@@ -695,7 +712,9 @@ class PDLOptimizer:
         )
 
     def benchmark(self, test_set_size: int, candidate: dict | None = None):
-        if self.num_demonstrations <= 0:
+        if self.num_demonstrations is None:
+            demo_size = 0
+        elif self.num_demonstrations <= 0:
             demo_size = len(self.dataset[self.train_set_name])
         else:
             demo_size = self.num_demonstrations
