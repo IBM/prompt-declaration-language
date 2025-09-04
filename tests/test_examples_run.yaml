@@ -30,7 +30,8 @@ skip:
   - examples/optimizer/mbpp.pdl
   - examples/optimizer/fever.pdl
   - examples/optimizer/gsm8k.pdl
-  - examples/optimizer/bea19.pdl
+  - examples/optimizer/grammar_correction.pdl
+  - examples/optimizer/optmized_grammar_correction.pdl
   - examples/optimizer/eval_levenshtein.pdl
   - examples/requirements/email.pdl
   - examples/skeleton-of-thought/tips.pdl

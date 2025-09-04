@@ -7,7 +7,9 @@ from datasets.load import load_dataset
 # Load dataset
 grammar_correction = load_dataset("agentlans/grammar-correction")
 if not isinstance(grammar_correction, DatasetDict):
-    raise TypeError(f"Expected grammar_correction to be a DatasetDict, but got: {type(grammar_correction)}")
+    raise TypeError(
+        f"Expected grammar_correction to be a DatasetDict, but got: {type(grammar_correction)}"
+    )
 
 # Create validation split from train (1024 examples)
 new_split = grammar_correction["train"].train_test_split(test_size=1024)
