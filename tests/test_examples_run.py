@@ -223,7 +223,7 @@ class ExamplesRun:
                 pdl_file_path,
                 scope=scope,
                 output="all",
-                config=pdl.InterpreterConfig(batch=0),
+                config=pdl.InterpreterConfig(batch=1),
             )
 
             exec_result.result = str(output["result"])
