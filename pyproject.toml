@@ -78,6 +78,7 @@ Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 [project.scripts]
 pdl = "pdl.pdl:main"
 pdl-lint = "pdl.pdl_linter:run_linter"
+pdl-optimize = "pdl.optimize.pdl_optimizer:run_optimizer"
 
 [tool.setuptools_scm]
 version_file = "src/pdl/_version.py"
