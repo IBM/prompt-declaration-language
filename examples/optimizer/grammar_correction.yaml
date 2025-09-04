@@ -1,0 +1,41 @@
+pdl_path: grammar_correction.pdl # Path to the PDL file to optimize
+dataset: 
+  train: grammar_correction_jsonl/train.jsonl # Path to the training split in JSONL format
+  test: grammar_correction_jsonl/test.jsonl # Path to the test split in JSONL format
+  validation: grammar_correction_jsonl/validation.jsonl # Path to the validation split in JSONL format
+
+demonstrations_variable_name: demonstrations # variable name to insert demonstrations into
+demonstration_columns:
+  - input # column name for the question in the dataset
+  - output # column name for the answer in the dataset
+
+instance_columns:
+  - input # column name for the question in the dataset
+
+groundtruth_column: output # column name for the ground truth in the dataset
+
+eval_pdl: eval_levenshtein.pdl # Path to the PDL file for evaluation
+
+#budget: 2h # Set a budget, can be number of iterations, or a duration string e.g. "2h"
+#budget_growth: double # double validation set size each iteration. ## 
+# or to_max: reach max_test_set_size by final iteration
+initial_validation_set_size: 2 # size of test set in first iteration
+max_validation_set_size: 10 # maximum test set size. 
+max_test_set_size: 10
+num_candidates: 10 # how many candidates to evaluate
+parallelism: 5 # how many threads to run evaluations across
+#shuffle_test: false # shuffling of test set
+#test_set_name: test # name of test set
+#train_set_name: train # name of train set
+#validation_set_name: validation # name of validation set
+variables: # define discrete options to sample from
+  model: # set ${ model } variable
+    - ollama_chat/granite3.3:8b
+    - ollama_chat/gpt-oss:20b
+  num_demonstrations: # overrides num demonstrations above
+    - 0
+    - 3
+    - 5
+  verify:
+    - true 
+    - false
