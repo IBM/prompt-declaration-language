@@ -1,7 +1,6 @@
-from typing import Any, Literal, Optional, TypedDict
 from pathlib import Path
+from typing import Any, Literal, Optional, TypedDict
 
-from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_ast import (
     PdlLocationType,
     Program,
@@ -10,8 +9,10 @@ from .pdl_ast import (
     empty_block_location,
     get_default_model_parameters,
 )
+from .pdl_interpreter import InterpreterState, process_prog
 from .pdl_lazy import PdlDict
 from .pdl_parser import parse_dict, parse_file, parse_str
+
 
 class InterpreterConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
