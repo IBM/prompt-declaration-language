@@ -1,0 +1,38 @@
+defs:
+  max_tokens: 1024
+  model: ollama_chat/gpt-oss:20b
+  num_demonstrations:
+    data: 0
+  verify:
+    data: false
+  demonstrations:
+    data: []
+lastOf:
+- |+
+  Here are examples of grammatically incorrect sentences and their corrected versions:
+
+- for:
+    example: ${ demonstrations }
+  repeat:
+    text: ${ example.broken } -> ${ example.sentence }
+  join:
+    with: |2+
+
+
+- |+
+  Correct the following sentence:
+
+  ${ broken }
+  Here's the corrected sentence:
+
+- def: response
+  model: ${ model }
+  parameters:
+    temperature: 0.0
+    max_tokens: ${ max_tokens }
+- if: ${ verify }
+  then:
+    lastOf:
+    - Do you think this was a correct answer? If not, generated a correct answer.
+    - model: ${ model }
+  else: ${ response }

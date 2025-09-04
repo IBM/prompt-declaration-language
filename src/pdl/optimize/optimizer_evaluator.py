@@ -6,8 +6,8 @@ from typing import Any
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
-from pdl.pdl import InterpreterConfig, exec_program
 from pdl.pdl_ast import Program, ScopeType
+from pdl.pdl_exec import InterpreterConfig, exec_program
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_lazy import PdlDict
 from pdl.pdl_location_utils import get_loc_string

@@ -1,4 +1,4 @@
-from pdl.pdl import exec_dict
+from pdl.pdl_exec import exec_dict
 
 model_data = {
     "description": "Hello world with a variable to call into a model",

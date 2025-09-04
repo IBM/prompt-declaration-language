@@ -1,5 +1,5 @@
-from pdl.pdl import exec_str
 from pdl.pdl_context import SerializeMode
+from pdl.pdl_exec import exec_str
 
 
 def test_message1():

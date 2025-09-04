@@ -1,4 +1,4 @@
-from pdl.pdl import exec_dict, exec_file, exec_str
+from pdl.pdl_exec import exec_dict, exec_file, exec_str
 
 hello_def = {
     "def": "hello",

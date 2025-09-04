@@ -1,5 +1,5 @@
-from pdl.pdl import exec_program
 from pdl.pdl_ast import LitellmModelBlock, LitellmParameters, Program, TextBlock
+from pdl.pdl_exec import exec_program
 
 
 def main():

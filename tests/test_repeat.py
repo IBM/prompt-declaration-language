@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from pdl.pdl import exec_dict, exec_str
+from pdl.pdl_exec import exec_dict, exec_str
 from pdl.pdl_interpreter import PDLRuntimeError
 
 hello = {

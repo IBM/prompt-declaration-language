@@ -1,7 +1,7 @@
 import pytest
 
-from pdl.pdl import exec_dict
 from pdl.pdl_context import SerializeMode
+from pdl.pdl_exec import exec_dict
 from pdl.pdl_interpreter import PDLRuntimeError
 
 var_data = {

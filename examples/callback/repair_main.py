@@ -1,7 +1,8 @@
 import re
 from typing import TypedDict, cast
 
-import pdl.pdl
+import pdl.pdl_ast
+import pdl.pdl_exec
 
 PDLScope = TypedDict("PDLScope", {"code_line": str, "error_msg": str})
 ParsedOutput = TypedDict("ParsedOutput", {"thought": str, "code_line": str | None})
@@ -27,8 +28,8 @@ if __name__ == "__main__":
         error_msg="SyntaxError: closing parenthesis ']' does not match opening '('",
     )
     print("---- before call to PDL ----")
-    pdl_output: PDLResult = pdl.pdl.exec_file(
-        "./repair_prompt.pdl", scope=cast(pdl.pdl.ScopeType, pdl_input)
+    pdl_output: PDLResult = pdl.pdl_exec.exec_file(
+        "./repair_prompt.pdl", scope=cast(pdl.pdl_ast.ScopeType, pdl_input)
     )
     print("---- after return from PDL ----")
     print(pdl_output)

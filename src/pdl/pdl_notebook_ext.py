@@ -5,10 +5,10 @@ from IPython.core.magic import Magics, cell_magic, magics_class, needs_local_sco
 from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
 from IPython.display import HTML, display_html
 
-from .pdl import InterpreterConfig, exec_str
 from .pdl_ast import get_default_model_parameters
 from .pdl_context import DependentContext
 from .pdl_dumper import block_to_dict
+from .pdl_exec import InterpreterConfig, exec_str
 from .pdl_lazy import PdlDict
 
 

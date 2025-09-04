@@ -1,4 +1,4 @@
-from pdl.pdl import exec_str
+from pdl.pdl_exec import exec_str
 
 HELLO = """
 text:

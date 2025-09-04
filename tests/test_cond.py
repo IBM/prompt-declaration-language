@@ -1,5 +1,5 @@
-from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_ast import ContributeTarget
+from pdl.pdl_exec import exec_dict, exec_str
 
 
 def test_bool():

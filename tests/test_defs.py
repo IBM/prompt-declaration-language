@@ -1,4 +1,4 @@
-from pdl.pdl import exec_dict
+from pdl.pdl_exec import exec_dict
 
 defs_data = {
     "description": "Hello world with variable use",

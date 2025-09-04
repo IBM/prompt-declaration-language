@@ -8,7 +8,7 @@ import warnings
 from enum import Enum
 from math import ceil, log2
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 from datasets.arrow_dataset import Dataset
@@ -22,6 +22,7 @@ from tqdm.rich import tqdm
 
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
+from pdl.optimize.pdl_evaluator import PdlEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
 from pdl.pdl_dumper import dump_program_exclude_internals
@@ -70,11 +71,12 @@ class PDLOptimizer:
         self,
         dataset: DatasetDict,
         config: OptimizationConfig,
-        trial_thread: type[OptimizerEvaluator],
+        trial_thread: Optional[type[OptimizerEvaluator]],
         yield_output: bool,
         experiment_path: Path,
     ) -> None:
-        self.trial_thread = trial_thread
+
+        self.trial_thread = PdlEvaluator if trial_thread is None else trial_thread
         self.yield_output = yield_output
 
         self.config = config

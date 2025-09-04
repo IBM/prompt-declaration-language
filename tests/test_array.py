@@ -1,4 +1,4 @@
-from pdl.pdl import exec_dict
+from pdl.pdl_exec import exec_dict
 
 array_data = {"description": "Array", "array": ["1", "2", "3", "4"]}
 

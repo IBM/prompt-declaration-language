@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 import yaml
 from pytest import CaptureFixture, MonkeyPatch
 
-from pdl import pdl
+from pdl import pdl, pdl_exec
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_lazy import PdlDict
 from pdl.pdl_parser import PDLParseError
@@ -219,7 +219,7 @@ class ExamplesRun:
 
         try:
             # Execute file
-            output = pdl.exec_file(
+            output = pdl_exec.exec_file(
                 pdl_file_path,
                 scope=scope,
                 output="all",

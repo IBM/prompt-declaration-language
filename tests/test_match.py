@@ -1,6 +1,6 @@
 import pytest
 
-from pdl.pdl import exec_str
+from pdl.pdl_exec import exec_str
 from pdl.pdl_interpreter import PDLRuntimeError
 
 

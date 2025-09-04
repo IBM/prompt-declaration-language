@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pdl.pdl import InterpreterConfig, exec_dict
+from pdl.pdl_exec import InterpreterConfig, exec_dict
 
 input_data = {
     "description": "Input block example",

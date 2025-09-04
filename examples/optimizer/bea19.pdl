@@ -1,3 +1,5 @@
+defs:
+  max_tokens: 1024
 lastOf:
   - "Here are examples of grammatically incorrect sentences and their corrected versions:\n\n"
   - for:
@@ -6,12 +8,23 @@ lastOf:
       text: "${ example.broken } -> ${ example.sentence }"
     join:
       with: "\n\n"
-  - "Correct the following sentence:\n\n${ broken }\nHere's the corrected sentence:\n\n"
+  - |+
+    Correct the following sentence:
+    
+    ${ broken }
+    Here's the corrected sentence:
+
   - model: ${ model }
+    def: response
     parameters:
-      max_tokens: 1024
+      max_tokens: ${ max_tokens }
       temperature: 0
-      stop:
-        - "<|endoftext|>"
-        - "Question:"
-      include_stop_sequence: false
+      
+
+  - if: ${ verify }
+    then:
+      lastOf:
+      - Do you think this was a correct answer? If not, generated a correct answer.
+      - model: ${ model }
+    else: ${ response }
+      

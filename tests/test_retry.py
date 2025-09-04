@@ -1,7 +1,7 @@
 import io
 from contextlib import redirect_stderr, redirect_stdout
 
-from pdl.pdl import exec_dict
+from pdl.pdl_exec import exec_dict
 
 
 def repeat_retry_data(n: int):

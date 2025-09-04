@@ -1,8 +1,8 @@
 import pytest
 import yaml
 
-from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_ast import pdl_type_adapter
+from pdl.pdl_exec import exec_dict, exec_str
 from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_parser import PDLParseError
 from pdl.pdl_schema_utils import pdltype_to_jsonschema

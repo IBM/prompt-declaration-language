@@ -1,4 +1,4 @@
-from pdl.pdl import exec_file
+from pdl.pdl_exec import exec_file
 
 
 def main():

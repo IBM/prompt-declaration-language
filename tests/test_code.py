@@ -1,5 +1,5 @@
-from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_context import SerializeMode
+from pdl.pdl_exec import exec_dict, exec_str
 
 python_data = {
     "description": "Hello world showing call out to python code",
