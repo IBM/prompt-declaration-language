@@ -1,19 +1,17 @@
 import pathlib
 
-from mu_ppl import Empirical, RejectionSampling, assume, infer
+from mu_ppl import Empirical, MetropolisHastings, infer
 
 from pdl.pdl import exec_file
 
 
-def coin(obs: list[int]):
+def coin():
     cwd = pathlib.Path(__file__).parent.resolve()
-    p, data = exec_file(cwd / "coin.pdl")
-    assume(data == obs)
+    p = exec_file(cwd / "coin.pdl")
     return p
 
 
-with RejectionSampling(num_samples=100):
-    dist1: Empirical[float] = infer(coin, [0, 0, 0, 0, 0, 0, 0, 0, 1, 1])  # type: ignore
+with MetropolisHastings(num_samples=10):
+    dist1: Empirical[float] = infer(coin)  # type: ignore
     print(dist1.stats())
     # viz(dist1)
-    # plt.show()

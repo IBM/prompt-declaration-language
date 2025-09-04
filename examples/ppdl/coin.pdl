@@ -7,6 +7,11 @@ defs:
       temperature: 1
     input: Generate a number between 0 and 1 that represents the bias of a coin that might returns head (represented with the value 1) more often than tail (represented with the value 0). DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
     parser: json
+    spec: number
+    fallback:
+      lastOf:
+      - factor: -1000
+      - data: 0.5
   data:
     lang: python
     code: |
