@@ -1,3 +1,4 @@
+import argparse
 import itertools
 import json
 import logging
@@ -11,6 +12,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import yaml
+from datasets import load_dataset
 from datasets.arrow_dataset import Dataset
 from datasets.dataset_dict import DatasetDict
 from duration_parser import parse as parse_duration
@@ -20,7 +22,7 @@ from rich.table import Table
 from tqdm import TqdmExperimentalWarning
 from tqdm.rich import tqdm
 
-from pdl.optimize.config_parser import OptimizationConfig
+from pdl.optimize.config_parser import JsonlDataset, OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.pdl_evaluator import PdlEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
@@ -765,3 +767,74 @@ class PDLOptimizer:
         self.pbar.close()
         logger.info("Score: %.4f%%", scores[0].metric * 100)
         logger.info("Saved exp. log to %s", exp_file)
+
+
+def run_optimizer():
+    parser = argparse.ArgumentParser("")
+
+    parser.add_argument(
+        "--config",
+        "-c",
+        help="Optimizer config file",
+        type=Path,
+        required=True,
+    )
+
+    parser.add_argument(
+        "--experiments-path",
+        help="Path where experiment results will be saved",
+        type=Path,
+        default=Path("experiments"),
+    )
+
+    parser.add_argument(
+        "--yield_output",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+    )
+
+    args = parser.parse_args()
+
+    if not args.config.exists():
+        print("Config file doesn't exist:", args.config)
+        sys.exit(1)
+
+    config_text = args.config.read_text()
+
+    try:
+        config_dict = yaml.safe_load(config_text)
+        config = OptimizationConfig(**config_dict)
+    except Exception:
+        print("Couldn't load config:", args.config)
+        sys.exit(1)
+
+    if not Path(config.pdl_path).exists():
+        print("PDL file doesn't exist:", config.pdl_path)
+        sys.exit(1)
+
+    # Set up dataset and trial thread based on benchmark
+    dataset: Any
+
+    if isinstance(config.dataset, (dict, JsonlDataset)):
+        dataset = load_dataset(
+            "json",
+            data_files={
+                "train": config.dataset.train,
+                "validation": config.dataset.validation,
+                "test": config.dataset.test,
+            },
+        )
+    else:
+        print(f"Unknown dataset: {config.dataset}")
+        sys.exit(1)
+
+    # Create optimizer instance
+    optimizer = PDLOptimizer(
+        dataset=dataset,
+        trial_thread=None,
+        yield_output=args.yield_output,
+        experiment_path=args.experiments_path,
+        config=config,
+    )
+    optimizer.run()
+    return 0
