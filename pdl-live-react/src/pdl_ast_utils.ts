@@ -46,7 +46,7 @@ export function map_block_children(
     new_block = { ...new_block, contribute }
   }
   new_block = match(new_block)
-    // .with(P.string, s => s)
+    .with(P.union(P.nullish, P.boolean, P.number, P.string), (v) => v)
     .with({ kind: "empty" }, (block) => block)
     .with({ kind: "function" }, (block) => {
       const return_ = f_block(block.return)
@@ -216,6 +216,7 @@ export function map_block_children(
     })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
+    .with({ kind: "aggregator" }, (block) => block)
     .with({ kind: P.nullish }, (block) => block)
     // @ts-expect-error: TODO
     .exhaustive()
@@ -311,6 +312,7 @@ export function iter_block_children(
     .with({ kind: "read" }, () => {})
     .with({ kind: "include" }, () => {})
     .with({ kind: "import" }, () => {})
+    .with({ kind: "aggregator" }, () => {})
     .with({ kind: undefined }, () => {})
     // @ts-expect-error: TODO
     .exhaustive()
