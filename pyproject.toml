@@ -18,6 +18,7 @@ dependencies = [
   "ipython>=8,<10",
   "json-repair~=0.35",
   "granite-io>=0.5,<0.6",
+  "mu-ppl @ git+https://github.com/gbdrt/mu-ppl",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
