@@ -73,7 +73,7 @@ Last but not least, `variables` indicates the domain of each variable that needs
 
 Notice that variable `input` in the PDL program is not given a domain. This is because it will hold the different instances that will be evaluated (it was included in the `instance_columns` field).
 
-For a complete list of available fields in the example configuration [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py).
+For a complete list of available fields in the configuration file is given in the configuration parser [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py).
 
 
 We are ready to run the optimizer!
