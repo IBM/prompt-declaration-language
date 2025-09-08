@@ -44,10 +44,10 @@ The final ingredient needed is a configuration file as explained in the next sec
 
 ### Writing a configuration file
 
-An AutoPDL configuration file describes the state-space and parameters for the search. In this example, the configuration is given in the following [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/grammar_correction_example.yml):
+An AutoPDL configuration file describes the state-space and parameters for the search. In this example, the configuration is given in the following [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/grammar_correction.yaml):
 
 ```yaml
---8<-- "./examples/optimizer/grammar_correction_example.yml"
+--8<-- "./examples/optimizer/grammar_correction.yaml"
 ```
 
 Field `pdl_path` is the path to the PDL program to optimize. `dataset` points to the dataset to be used. In this case, it's an object with paths for train/validation/test splits. In general, `dataset` could be a string pointing to Huggingface dataset (that would then be automatically downloaded). `demonstrations_variable_name` gives the name of the PDL variable that will hold the demonstrations in the optimized program. `demonstration_columns` indicates the field names in the dataset that will be used to create demonstrations, and `instance_columns` are those fields that will be used to formulate an instance query (see the query in the PDL program above, which uses `input`). The `groundtruth_column` holds the field with the ground truth (in this case `output`). `eval_pdl` is the path of the PDL program that encapsulates the loss function.
