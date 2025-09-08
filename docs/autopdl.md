@@ -21,11 +21,11 @@ cd prompt-declaration-language
 pip install -e '.[all]'
 ```
 
-### Writing a PDL program to optimize
+## Writing a PDL program to optimize
 
 The first step in using AutoPDL is to write a PDL program that has free variables. Consider for example, the following PDL program, which queries an LLM to correct a sentence with grammatical errors ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/grammar_correction.pdl)):
 
-```yaml
+```yaml linenums="1"
 --8<-- "./examples/optimizer/grammar_correction.pdl"
 ```
 
@@ -33,16 +33,30 @@ This program starts with a definition section. Note that a `defs` section is nec
 
 Notice that variables `input`, `model`, `demonstrations`, `verify` are not defined. The first of these is an instance variable that will help in holding different instances when the optimizer is running. The rest of them are parameters to be optimized. We can pick among different models, different demonstrations, and especially different prompting patterns. PDL supports first-class functions, so the program could be made to pick the optimal function to be used, thereby choosing the prompting pattern. In this example, finding an optimal value for `verify` will determine whether it's best to call the model once or twice.
 
-In addition to the PDL program, AutoPDL also needs a dataset and a loss function as inputs. These will be used to perform the optimization, and as a source of demonstrations. In this example, we can use [process_grammar_correction.py](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/process_grammar_correction.py) to obtain a dataset split into train/validation/test. The train split will be used to draw instances and demonstrations, the validation for checking during the optimization, and test to evaluate and obtain a final score at the end of the optimization run.
 
-To obtain this dataset simply run:
+
+## Dataset
+
+In addition to the PDL program, AutoPDL also needs a dataset. These will be used to perform the optimization, and as a source of demonstrations. The train split will be used to draw instances and demonstrations, the validation for checking during the optimization, and test to evaluate and obtain a final score at the end of the optimization run.
+
+ In this example, we need a dataset containing sentences with mistakes and the corrected version. We can use [process_grammar_correction.py](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/process_grammar_correction.py) to obtain a dataset split into train/validation/test. Simply run:
+
 ```
 python process_grammar_correction.py
 ```
 
+## Loss function
+
+The lost function is use to guide the optimizer towards the best solution and evaluate the final program. The loss function can must be a PDL function named `score` that takes as input the result of the program, the ground truth, and returns a floating point number.
+In our example, we are using the Levenshtein distance that we import from the `textdistance` Python module. The `score` function is defined in the [`eval_levenshtein.pdl` file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/eval_levenshtein.pdl):
+
+```yaml
+--8<-- "./examples/optimizer/eval_levenshtein.pdl"
+```
+
 The final ingredient needed is a configuration file as explained in the next section.
 
-### Writing a configuration file
+## Writing a configuration file
 
 An AutoPDL configuration file describes the state-space and parameters for the search. In this example, the configuration is given in the following [file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/grammar_correction.yaml):
 
@@ -50,7 +64,8 @@ An AutoPDL configuration file describes the state-space and parameters for the s
 --8<-- "./examples/optimizer/grammar_correction.yaml"
 ```
 
-Field `pdl_path` is the path to the PDL program to optimize. `dataset` points to the dataset to be used. In this case, it's an object with paths for train/validation/test splits. In general, `dataset` could be a string pointing to Huggingface dataset (that would then be automatically downloaded). `demonstrations_variable_name` gives the name of the PDL variable that will hold the demonstrations in the optimized program. `demonstration_columns` indicates the field names in the dataset that will be used to create demonstrations, and `instance_columns` are those fields that will be used to formulate an instance query (see the query in the PDL program above, which uses `input`). The `groundtruth_column` holds the field with the ground truth (in this case `output`). `eval_pdl` is the path of the PDL program that encapsulates the loss function.
+Field `pdl_path` is the path to the PDL program to optimize. `dataset` points to the dataset to be used. In this case, it's an object with paths for train/validation/test splits. 
+`demonstrations_variable_name` gives the name of the PDL variable that will hold the demonstrations in the optimized program. `demonstration_columns` indicates the field names in the dataset that will be used to create demonstrations, and `instance_columns` are those fields that will be used to formulate an instance query (see the query in the PDL program above, which uses `input`). The `groundtruth_column` holds the field with the ground truth (in this case `output`). `eval_pdl` is the path of the PDL program that encapsulates the loss function.
 
 `initial_validation_set_size` is the initial size of the validation set (i.e., the number of tests used initially to validate candidates). `max_validation_set_size` indicates the maximum to which this validation set will grow. For more details on the successive halving algorithm used in AutoPDL see [here](https://arxiv.org/abs/2504.04365). `max_test_set_size: 10` is the maximum of the test set used to evaluate at the end of the evaluation run. `num_candidates` indicates the number of candidates to consider (sampled randomly). `parallelism` indicates the level of parallelism used by the optimizer.
 
@@ -58,12 +73,12 @@ Last but not least, `variables` indicates the domain of each variable that needs
 
 Notice that variable `input` in the PDL program is not given a domain. This is because it will hold the different instances that will be evaluated (it was included in the `instance_columns` field).
 
-For a complete list of available fields in the configuration file, see [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py):
+For a complete list of available fields in the configuration file is given in the configuration parser [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py).
 
 
 We are ready to run the optimizer!
 
-### Running AutoPDL
+## Running AutoPDL
 
 To run the optimizer, execute the following command:
 
@@ -84,4 +99,4 @@ To run the optimized program, execute the command:
 pdl optimized_grammar_correction.pdl
 ```
 
-A log of the optimization process is written to experiments/ by default.
+A log of the optimization process is written to `experiments/` by default.
