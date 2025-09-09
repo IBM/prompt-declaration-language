@@ -4531,6 +4531,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Evaluate"
         },
         "transformContext": {
@@ -4548,13 +4549,12 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Transformcontext"
         }
       },
       "required": [
-        "description",
-        "evaluate",
-        "transformContext"
+        "description"
       ],
       "title": "RequirementType",
       "type": "object"

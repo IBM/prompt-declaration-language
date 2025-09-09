@@ -1,0 +1,101 @@
+defs:
+  model: ollama_chat/granite3.3:8b
+  llm_as_judge: ollama_chat/gpt-oss:20b
+
+  problem: |
+    Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, 
+    but 40% of the way through the download, Windows forces a restart to install updates, 
+    which takes 20 minutes. Then Carla has to restart the download from the beginning. 
+    How load does it take to download the file?
+
+  truth: "First find how many gigabytes are in 40% of the file: 200 GB * 40% = <<200*40*.01=80>>80 GB\nThen divide that number by the download rate to find the time until Windows restarts: 80 GB / 2 GB/minute = <<80/2=40>>40 minutes\nThen find the time to download the whole file after the restart: 200 GB / 2 GB/minute = <<200/2=100>>100 minutes\nThen add the time to download 40% of the file, to download the whole file, and to wait for Windows to update: 40 minutes + 100 minutes + 20 minutes = <<40+100+20=160>>160 minutes\n#### 160"
+
+  extract_answer:
+    function:
+      solution: string
+    return:
+      lastOf:
+      - ${ solution }
+      - Extract the result from the above solution into a JSON object with field "answer" and a float as value. Remove any dollar signs or other symbols.
+      - model: ${ model }
+        parser: json
+        spec: { "answer": number }
+
+  eval:
+    function:
+      requirement: string
+      response: string
+    return:
+      lastOf:
+      - model: ${ llm_as_judge }
+        def: evaluation
+        input: |
+          Is the following requirement satisfied in the solution below? Requirement: ${ requirement }
+          ${ response }
+
+          Respond with a JSON object that has a field result set to true if the requirement is satisfied and false otherwise.
+        parser: json
+      - lang: python
+        code: |
+          print(evaluation)
+          print(${ evaluation.result == false })
+          print(requirement)
+          print(response)
+          result = ""
+      - if: ${ evaluation.result }
+        then: 0
+        else: -1000000
+        
+
+  transform:
+    function:
+      requirement: string
+      response: string
+    return: 
+      lastOf:
+      - model: ${ model }
+        input: |
+          The following requirement is not satisfied, what instruction can be added to get the correct answer?
+          Requirement: ${ requirement }
+          Answer with only the instruction.
+      - lang: python
+        code: |
+          print(${pdl_context})
+          result = ""
+      - ${ pdl_context }
+
+  
+  
+  solve:
+    function:
+      problem: string
+    return:
+      defs:
+        solution:
+          text:
+          - ${ problem }
+          - "\n\n"
+          - model: ${ model }
+            parameters:
+              temperature: 0.1
+            requirements:
+            - description: "The solution to this problem should be correct. Problem: ${ problem }"
+              evaluate: ${ eval }
+              transformContext: ${ transform }
+            retry: 2
+        answer_obj:
+          call: ${ extract_answer }
+          args:
+            solution: ${ solution }
+            pdl_context: []
+        debug:
+          lang: python
+          code: |
+            print(answer_obj)    
+            result = ""
+      data: ${ answer_obj.answer }
+
+call: ${ solve }
+args:
+  problem: ${ problem }
+  pdl_context: []

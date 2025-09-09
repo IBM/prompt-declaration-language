@@ -341,10 +341,10 @@ class RequirementType(BaseModel):
     description: ExpressionType
     """English description of the requirement"""
 
-    evaluate: Optional[ExpressionType["FunctionBlock"]]
+    evaluate: Optional[ExpressionType["FunctionBlock"]] = None
     """Evaluation function for the requirement"""
 
-    transformContext: Optional[ExpressionType["FunctionBlock"]]
+    transformContext: Optional[ExpressionType["FunctionBlock"]] = None
     """Function to transform the context for the requirement"""
 
 
