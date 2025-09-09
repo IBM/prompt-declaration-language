@@ -1,6 +1,7 @@
 from typing import Callable, Sequence
 
 from .pdl_ast import (
+    AggregatorBlock,
     ArrayBlock,
     Block,
     BlockType,
@@ -103,6 +104,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
         case FactorBlock():
+            pass
+        case AggregatorBlock():
             pass
         case EmptyBlock():
             pass
@@ -217,6 +220,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             if block.pdl__trace is not None:
                 block.pdl__trace = f.f_block(block.pdl__trace)
         case FactorBlock():
+            pass
+        case AggregatorBlock():
             pass
         case EmptyBlock():
             pass

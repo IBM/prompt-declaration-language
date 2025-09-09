@@ -61,6 +61,8 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.FACTOR:
             color = None
+        case BlockKind.AGGREGATOR:
+            color = None
         case BlockKind.EMPTY:
             color = None
         case BlockKind.ERROR:

@@ -82,6 +82,7 @@ class BlockKind(StrEnum):
     INCLUDE = "include"
     IMPORT = "import"
     FACTOR = "factor"
+    AGGREGATOR = "aggregator"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -314,6 +315,8 @@ class ContributeTarget(StrEnum):
 
     RESULT = "result"
     CONTEXT = "context"
+    STDOUT = "stdout"
+    STDERR = "stderr"
 
 
 class ContributeValue(BaseModel):
@@ -321,12 +324,12 @@ class ContributeValue(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    value: ExpressionType[list[Any]]
+    value: ExpressionType[Any]
     """Value to contribute."""
 
 
-ContributeType = TypeAliasType(
-    "ContributeType", Sequence[Union[ContributeTarget, dict[str, ContributeValue]]]
+ContributeElement = TypeAliasType(
+    "ContributeElement", Union[ContributeTarget, str, dict[str, ContributeValue]]
 )
 """Type of the contribute field."""
 
@@ -409,7 +412,7 @@ class Block(BaseModel):
     def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: ContributeType = [
+    contribute: Sequence[ContributeElement] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -1089,6 +1092,45 @@ class FactorBlock(LeafBlock):
     factor: ExpressionType[float]
 
 
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: Optional[str] = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregatorConfig(AggregatorConfig):
+    file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: ExpressionType[str] = "w"
+    """File opening mode."""
+    encoding: ExpressionType[Optional[str]] = "utf-8"
+    """File encoding."""
+    prefix: ExpressionType[str] = ""
+    """Prefix to the contributed value."""
+    suffix: ExpressionType[str] = "\n"
+    """Suffix to the contributed value."""
+    flush: ExpressionType[bool] = False
+    """Whether to forcibly flush the stream."""
+
+
+AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
+
+
+class AggregatorBlock(LeafBlock):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
+
+
 class ErrorBlock(LeafBlock):
     """Block representing an error generated at runtime."""
 
@@ -1129,6 +1171,7 @@ AdvancedBlockType: TypeAlias = (
     | IncludeBlock
     | ImportBlock
     | FactorBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
 )

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Sequence, TypeAlias
 
 from ..pdl_ast import (
+    AggregatorBlock,
     Block,
     BlockType,
     CallBlock,
@@ -325,6 +326,8 @@ def compile_block(
         case ImportBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case FactorBlock():
+            regex = ReStar(ReAnyChar())  # XXX TODO XXX
+        case AggregatorBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case FunctionBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
