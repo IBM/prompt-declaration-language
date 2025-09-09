@@ -9,29 +9,26 @@ defs:
         - for:
             trajectory: ${ trajectory }
           repeat:
-            text:
-              - defs:
-                  type:
-                    text: ${ trajectory.keys()|first }
-              - match: ${ type }
-                with:
-                  - case: question
-                    then: |
-                      Question: ${ trajectory[type]|trim }
-                  - case: task
-                    then: |
-                      Task: ${ trajectory[type]|trim }
-                  - case: thought
-                    then: |
-                      Tho: ${ trajectory[type]|trim }
-                  - case: action
-                    then: |
-                      Act: ${ trajectory[type]|trim }
-                  - case: observation
-                    then: |
-                      Obs: ${ trajectory[type]|trim }
-                  - if: ${ type not in ['question', 'task', 'thought', 'action', 'observation'] }
-                    then: "${ type }: ${ trajectory[type]|trim }"
+            defs:
+              type: ${ trajectory.keys()|first }
+            match: ${ type }
+            with:
+              - case: question
+                then: |
+                  Question: ${ trajectory[type]|trim }
+              - case: task
+                then: |
+                  Task: ${ trajectory[type]|trim }
+              - case: thought
+                then: |
+                  Tho: ${ trajectory[type]|trim }
+              - case: action
+                then: |
+                  Act: ${ trajectory[type]|trim }
+              - case: observation
+                then: |
+                  Obs: ${ trajectory[type]|trim }
+              - then: "${ type }: ${ trajectory[type]|trim }"
         - "\n"
 
   react:
@@ -56,7 +53,6 @@ defs:
               Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
 
               ${ tool_schema }
-          contribute: [context]
         - "\n"
         - for:
             traj: ${ trajectories }
@@ -66,26 +62,24 @@ defs:
               args:
                 trajectory: ${ traj }
         - ${ task }
-        - def: prev_action
-          contribute: []
-          data: none
-        - def: exit
-          contribute: []
-          data: False
-        - def: tool_names
-          contribute: []
-          text: ${ tool_schema|map(attribute='name')|list }
-        - repeat:
+        - defs:
+            prev_action:
+              data: none
+            exit:
+              data: false
+            tool_names:
+              text: ${ tool_schema|map(attribute='name')|list }
+          repeat:
             text:
               - "\nTho: "
-              - def: thought
-                model: "${ model }"
-                contribute: []
-                parameters:
-                  stop:
-                    - "Act:"
-                  max_tokens: 256
-                  include_stop_sequence: false
+              - defs:
+                  thought:
+                    model: "${ model }"
+                    parameters:
+                      stop:
+                        - "Act:"
+                      max_tokens: 256
+                      include_stop_sequence: false
               - "${ thought|trim }"
               - "\nAct: "
               - def: action
@@ -96,26 +90,41 @@ defs:
                   stop: ["\n", "Obs:", "<|eom_id|>"]
                   include_stop_sequence: false
                 spec: { name: string, arguments: object }
-              - if: ${ action != prev_action }
-                then:
-                  def: observation
-                  if: ${ action.name.lower() != "finish" }
+                fallback:
+                  data:
+                    name: error
+                    arguments: failed to generate a valid action
+              - match: ${ action.name.lower() }
+                with:
+                - case: finish
                   then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action == prev_action }
+                  then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action.name.lower() in tools }
+                  then:
+                    def: observation
                     text:
                       - "\nObs: "
-                      - if: ${ action.name.lower() in tools }
-                        then:
-                          call: ${ tools[action.name.lower()] }
-                          args:
-                            arguments: ${ action.arguments }
-                        else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
-                else:
-                  def: exit
-                  contribute: []
-                  data: True
-              - def: prev_action
-                contribute: []
-                data: ${ action }
-          until: ${ action.name.lower() == "finish" or exit }
+                      - call: ${ tools[action.name.lower()] }
+                        args:
+                          arguments: ${ action.arguments }
+                - then:
+                    def: observation
+                    text:
+                      - "\nObs: "
+                      - "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+
+              - defs:
+                  prev_action: ${ action }
+          until: ${ exit }
         - data:
-            answer: ${ (action.arguments.answer|default("No answer found."))|trim }
+            answer: ${ action.arguments.answer | trim }
+          fallback: 
+            data:
+              answer: "No answer found."
