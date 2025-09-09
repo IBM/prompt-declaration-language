@@ -20,6 +20,7 @@ runs:
       run: |
         ollama pull granite3.2:2b
         ollama pull granite3.2:8b
+        ollama pull granite3.3:2b
         ollama pull granite3.3:8b
         ollama pull mxbai-embed-large
         ollama list

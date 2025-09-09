@@ -1,0 +1,20 @@
+defs:
+  log:
+    aggregator: 
+      file: /tmp/log.txt
+text:
+- Hello
+- model: ollama_chat/granite3.3:2b
+  parameters:
+    temperature: 0
+  contribute: [ result, context, log ]
+- nice to meet you.
+- model: ollama_chat/granite3.3:2b
+  parameters:
+    temperature: 0
+  modelResponse: raw_response
+  contribute:
+    - result
+    - log:
+        value: ${raw_response}
+- Bye

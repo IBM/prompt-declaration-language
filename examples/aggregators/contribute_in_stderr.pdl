@@ -1,0 +1,10 @@
+text:
+- Hello
+- text: Before model call
+  contribute: [ stderr ]
+- model: ollama_chat/granite3.3:2b
+  parameters:
+    temperature: 0
+- contribute:
+    - stderr:
+        value: After model call
