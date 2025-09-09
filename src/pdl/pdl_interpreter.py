@@ -487,22 +487,23 @@ def process_advanced_block(  # noqa:C901
                 requirements_satisfied = True
                 for req in block.requirements:
                     evalfn, _ = process_expr(scope, getattr(req, "evaluate"), loc)
+                    requirement, _ = process_expr(scope, getattr(req, "description"), loc)
                     evaluation = evalfn(
-                        requirement=getattr(req, "description"), response=result
+                        requirement=requirement, response=result
                     )
-                    if evaluation.result() is False:
+                    if evaluation.result() < -0.3:   
                         requirements_satisfied = False
                         transfn, _ = process_expr(
                             scope, getattr(req, "transformContext"), loc
                         )
                         new_context = transfn(
                             pdl_context=scope["pdl_context"],
-                            requirement=getattr(req, "description"),
+                            requirement=requirement,
                             response=result,
                         )
-                        scope = scope | {"pdl_context": new_context}
+                        if trial_idx < max_retry:
+                            scope = scope | {"pdl_context": new_context}
                 if requirements_satisfied is False:
-                    print("\nTrying again!")
                     continue
 
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
