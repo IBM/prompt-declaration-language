@@ -90,24 +90,41 @@ defs:
                   stop: ["\n", "Obs:", "<|eom_id|>"]
                   include_stop_sequence: false
                 spec: { name: string, arguments: object }
-              - if: ${ action == prev_action or action.name.lower() == "finish" }
-                then:
-                  defs:
-                    exit:
-                      data: true
-                else:
-                  def: observation
-                  text:
-                    - "\nObs: "
-                    - if: ${ action.name.lower() in tools }
-                      then:
-                        call: ${ tools[action.name.lower()] }
+                fallback:
+                  data:
+                    name: error
+                    arguments: failed to generate a valid action
+              - match: ${ action.name.lower() }
+                with:
+                - case: finish
+                  then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action == prev_action }
+                  then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action.name.lower() in tools }
+                  then:
+                    def: observation
+                    text:
+                      - "\nObs: "
+                      - call: ${ tools[action.name.lower()] }
                         args:
                           arguments: ${ action.arguments }
-                      else: "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+                - then:
+                    def: observation
+                    text:
+                      - "\nObs: "
+                      - "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+
               - defs:
-                  prev_action:
-                    data: ${ action }
+                  prev_action: ${ action }
           until: ${ exit }
         - data:
-            answer: ${ (action.arguments.answer|default("No answer found."))|trim }
+            answer: ${ action.arguments.answer | trim }
+          fallback: 
+            data:
+              answer: "No answer found."
