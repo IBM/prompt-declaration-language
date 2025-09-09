@@ -1,3 +1,4 @@
+import argparse
 import itertools
 import json
 import logging
@@ -11,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from datasets import load_dataset
 from datasets.arrow_dataset import Dataset
 from datasets.dataset_dict import DatasetDict
 from duration_parser import parse as parse_duration
@@ -20,8 +22,9 @@ from rich.table import Table
 from tqdm import TqdmExperimentalWarning
 from tqdm.rich import tqdm
 
-from pdl.optimize.config_parser import OptimizationConfig
+from pdl.optimize.config_parser import JsonlDataset, OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
+from pdl.optimize.pdl_evaluator import PdlEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
 from pdl.pdl_dumper import dump_program_exclude_internals
@@ -68,22 +71,22 @@ class PDLOptimizer:
     # pylint: disable=too-many-instance-attributes,too-many-arguments,too-many-positional-arguments
     def __init__(
         self,
-        pdl_path: Path,
         dataset: DatasetDict,
         config: OptimizationConfig,
         trial_thread: type[OptimizerEvaluator],
         yield_output: bool,
         experiment_path: Path,
     ) -> None:
-        self.pdl_path = pdl_path
         self.trial_thread = trial_thread
         self.yield_output = yield_output
 
         self.config = config
+        self.pdl_path = Path(config.pdl_path)
         self.parallelism = config.parallelism
         self.num_demonstrations = config.num_demonstrations
-        self.starting_validation_set_size = config.initial_test_set_size
-        self.ending_test_set_size = config.max_test_set_size
+        self.starting_validation_set_size = config.initial_validation_set_size
+        self.ending_validation_set_size = config.max_validation_set_size
+        self.max_test_set_size = config.max_test_set_size
         self.max_candidates = config.num_candidates
         self.timeout = config.timeout
         self.budget_growth = config.budget_growth
@@ -293,7 +296,7 @@ class PDLOptimizer:
             self.starting_validation_set_size,
             validation_set_size,
         )
-        ending_validation_set_size = self.ending_test_set_size
+        ending_validation_set_size = self.ending_validation_set_size
         num_iterations = ceil(log2(num_candidates))
 
         validation_set_multiplier = 0
@@ -494,7 +497,7 @@ class PDLOptimizer:
             # reset_usage_stats()
 
             range_end = min(
-                ending_validation_set_size,
+                self.max_test_set_size,
                 len(self.dataset[self.test_set_name]),
             )
             eval_set_indices = list(range(range_end))
@@ -519,7 +522,7 @@ class PDLOptimizer:
             self.pbar.close()
 
             self.experiment_log["final_iteration"] = {
-                "ending_test_set_size": ending_validation_set_size,
+                "ending_test_set_size": range_end,
                 "eval_set_indices": eval_set_indices,
                 "selected_candidates_uuid": winning_candidate["uuid"],
                 "candidate": final_score.to_dict(),
@@ -632,7 +635,7 @@ class PDLOptimizer:
                 ),
             )
 
-        matches = 0
+        score = 0
         exception_count = 0
         timeout_count = 0
         exceptions: list[BaseException | bool] = []
@@ -662,10 +665,10 @@ class PDLOptimizer:
                     answer = result.answer
 
                 logger.info(
-                    "Answer: %s Ground truth: %s Match: %s",
+                    "Answer: %s Ground truth: %s Score: %s",
                     answer,
                     result.groundtruth,
-                    result.correct,
+                    result.score,
                 )
 
                 if candidate["uuid"] not in self.candidate_results:
@@ -684,16 +687,16 @@ class PDLOptimizer:
                 if trial_result.exception is not None:
                     exceptions.append(trial_result.exception)
 
-                matches += int(trial_result.correct)
+                score += float(trial_result.score)
 
-                p_passing = matches / (index + 1)
+                p_passing = score / (index + 1)
 
         end_time = time.time()
         runtime = end_time - start_time
 
         logger.info(
             "Matches: %s Accuracy: %.2f Exceptions: %s (%s timeout, %s other) Total: %s",
-            f"{matches:,}",
+            f"{score:,}",
             p_passing * 100,
             f"{len(exceptions):,}",
             timeout_count,
@@ -712,7 +715,9 @@ class PDLOptimizer:
         )
 
     def benchmark(self, test_set_size: int, candidate: dict | None = None):
-        if self.num_demonstrations <= 0:
+        if self.num_demonstrations is None:
+            demo_size = 0
+        elif self.num_demonstrations <= 0:
             demo_size = len(self.dataset[self.train_set_name])
         else:
             demo_size = self.num_demonstrations
@@ -761,3 +766,74 @@ class PDLOptimizer:
         self.pbar.close()
         logger.info("Score: %.4f%%", scores[0].metric * 100)
         logger.info("Saved exp. log to %s", exp_file)
+
+
+def run_optimizer():
+    parser = argparse.ArgumentParser("")
+
+    parser.add_argument(
+        "--config",
+        "-c",
+        help="Optimizer config file",
+        type=Path,
+        required=True,
+    )
+
+    parser.add_argument(
+        "--experiments-path",
+        help="Path where experiment results will be saved",
+        type=Path,
+        default=Path("experiments"),
+    )
+
+    parser.add_argument(
+        "--yield_output",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+    )
+
+    args = parser.parse_args()
+
+    if not args.config.exists():
+        print("Config file doesn't exist:", args.config)
+        sys.exit(1)
+
+    config_text = args.config.read_text()
+
+    try:
+        config_dict = yaml.safe_load(config_text)
+        config = OptimizationConfig(**config_dict)
+    except Exception:
+        print("Couldn't load config:", args.config)
+        sys.exit(1)
+
+    if not Path(config.pdl_path).exists():
+        print("PDL file doesn't exist:", config.pdl_path)
+        sys.exit(1)
+
+    # Set up dataset and trial thread based on benchmark
+    dataset: Any
+
+    if isinstance(config.dataset, (dict, JsonlDataset)):
+        dataset = load_dataset(
+            "json",
+            data_files={
+                "train": config.dataset.train,
+                "validation": config.dataset.validation,
+                "test": config.dataset.test,
+            },
+        )
+    else:
+        print(f"Unknown dataset: {config.dataset}")
+        sys.exit(1)
+
+    # Create optimizer instance
+    optimizer = PDLOptimizer(
+        dataset=dataset,
+        trial_thread=PdlEvaluator,
+        yield_output=args.yield_output,
+        experiment_path=args.experiments_path,
+        config=config,
+    )
+    optimizer.run()
+    return 0

@@ -33,6 +33,7 @@ export type Program =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -87,30 +88,31 @@ export type BlockType =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
+export type ContributeElement =
+  | ContributeTarget
+  | string
+  | {
+      [k: string]: ContributeValue
+    }
 /**
  * Values allowed in the `contribute` field.
  */
-export type ContributeTarget = "result" | "context"
-export type Value = LocalizedExpression | unknown[] | string
-export type Path = string[]
-export type File = string
+export type ContributeTarget = "result" | "context" | "stdout" | "stderr"
 /**
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute = ContributeElement[]
 export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 export type Evaluate = LocalizedExpression | FunctionBlock | string | null
+export type Path = string[]
+export type File = string
 export type Transformcontext =
   | LocalizedExpression
   | FunctionBlock
@@ -135,12 +137,7 @@ export type Call = LocalizedExpression | FunctionBlock | string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType1 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute1 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -152,12 +149,7 @@ export type Kind1 = "model"
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType2 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute2 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -169,12 +161,7 @@ export type Kind2 = "model"
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType3 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute3 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -191,12 +178,7 @@ export type Lang = "python" | "command" | "jinja" | "pdl" | "ipython"
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType4 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute4 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -215,12 +197,7 @@ export type Args1 = ExpressionStr[]
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType5 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute5 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -236,12 +213,7 @@ export type Get = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType6 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute6 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -257,12 +229,7 @@ export type Raw = boolean
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType7 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute7 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -275,12 +242,7 @@ export type Kind7 = "if"
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType8 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute8 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -314,12 +276,7 @@ export type With = MatchCase[]
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType9 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute9 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -339,12 +296,7 @@ export type For = {
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType10 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute10 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -364,12 +316,7 @@ export type For1 = {
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType11 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute11 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -387,12 +334,7 @@ export type Text = BlockType | BlockType[]
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType12 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute12 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -409,12 +351,7 @@ export type Lastof = BlockType[]
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType13 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute13 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -431,12 +368,7 @@ export type Array1 = BlockType[]
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType14 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute14 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -454,12 +386,7 @@ export type Object2 =
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType15 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute15 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -471,12 +398,7 @@ export type Kind15 = "message"
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType16 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute16 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -493,12 +415,7 @@ export type Multiline = boolean
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType17 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute17 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -516,12 +433,7 @@ export type Include = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType18 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute18 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
@@ -538,19 +450,56 @@ export type Import = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType19 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute19 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
  */
 export type RequirementsType19 = RequirementType[]
 export type PdlIsLeaf19 = true
-export type Kind19 = "error"
+export type Kind19 = "aggregator"
+export type Aggregator = "context" | FileAggregatorConfig
+/**
+ * Documentation associated to the aggregator config.
+ *
+ */
+export type Description1 = string | null
+/**
+ * Name of the file to which contribute.
+ */
+export type File1 = LocalizedExpression | string
+/**
+ * File opening mode.
+ */
+export type Mode1 = LocalizedExpression | string
+/**
+ * File encoding.
+ */
+export type Encoding = LocalizedExpression | string | null
+/**
+ * Prefix to the contributed value.
+ */
+export type Prefix = LocalizedExpression | string
+/**
+ * Suffix to the contributed value.
+ */
+export type Suffix = LocalizedExpression | string
+/**
+ * Whether to forcibly flush the stream.
+ */
+export type Flush = LocalizedExpression | boolean | string
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute20 = ContributeElement[]
+/**
+ * Specify any requirements that the result of the block must satisfy.
+ *
+ */
+export type RequirementsType20 = RequirementType[]
+export type PdlIsLeaf20 = true
+export type Kind20 = "error"
 /**
  * Error message.
  *
@@ -560,19 +509,14 @@ export type Msg = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType20 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute21 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
  */
-export type RequirementsType20 = RequirementType[]
-export type PdlIsLeaf20 = true
-export type Kind20 = "empty"
+export type RequirementsType21 = RequirementType[]
+export type PdlIsLeaf21 = true
+export type Kind21 = "empty"
 export type ExpressionInt = LocalizedExpression | number | string
 /**
  * String concatenation of the result of each iteration.
@@ -690,19 +634,14 @@ export type MaxRetries = number | string | null
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type ContributeType21 = (
-  | ContributeTarget
-  | {
-      [k: string]: ContributeValue
-    }
-)[]
+export type Contribute22 = ContributeElement[]
 /**
  * Specify any requirements that the result of the block must satisfy.
  *
  */
-export type RequirementsType21 = RequirementType[]
-export type PdlIsLeaf21 = true
-export type Kind21 = "function"
+export type RequirementsType22 = RequirementType[]
+export type PdlIsLeaf22 = true
+export type Kind22 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -739,6 +678,7 @@ export type PdlBlock =
   | ReadBlock
   | IncludeBlock
   | ImportBlock
+  | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
   | null
@@ -787,7 +727,7 @@ export interface FunctionBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType21
+  contribute?: Contribute22
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -807,7 +747,7 @@ export interface FunctionBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType21
+  requirements?: RequirementsType22
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -828,8 +768,8 @@ export interface FunctionBlock {
    * Execution timing information.
    */
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf21
-  kind?: Kind21
+  pdl__is_leaf?: PdlIsLeaf22
+  kind?: Kind22
   function: Function
   /**
    * Body of the function.
@@ -860,6 +800,7 @@ export interface FunctionBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -945,7 +886,7 @@ export interface CallBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType
+  contribute?: Contribute
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1003,26 +944,7 @@ export interface Defs1 {
  * Contribution of a specific value instead of the default one.
  */
 export interface ContributeValue {
-  value: Value
-}
-export interface LocalizedExpression {
-  pdl__expr: PdlExpr
-  pdl__result?: unknown
-  pdl__location?: PdlLocationType | null
-}
-export interface PdlExpr {
-  [k: string]: unknown
-}
-/**
- * Internal data structure to keep track of the source location information.
- */
-export interface PdlLocationType {
-  path: Path
-  file: File
-  table: Table
-}
-export interface Table {
-  [k: string]: number
+  value: unknown
 }
 /**
  * Use a PDL program as a parser specification (experimental).
@@ -1097,6 +1019,25 @@ export interface RequirementType {
   evaluate: Evaluate
   transformContext: Transformcontext
 }
+export interface LocalizedExpression {
+  pdl__expr: PdlExpr
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+}
+export interface PdlExpr {
+  [k: string]: unknown
+}
+/**
+ * Internal data structure to keep track of the source location information.
+ */
+export interface PdlLocationType {
+  path: Path
+  file: File
+  table: Table
+}
+export interface Table {
+  [k: string]: number
+}
 /**
  * Internal data structure to record timing information in the trace.
  */
@@ -1157,7 +1098,7 @@ export interface LitellmModelBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType1
+  contribute?: Contribute1
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1228,6 +1169,7 @@ export interface LitellmModelBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -1301,7 +1243,7 @@ export interface GraniteioModelBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType2
+  contribute?: Contribute2
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1372,6 +1314,7 @@ export interface GraniteioModelBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -1450,7 +1393,7 @@ export interface CodeBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType3
+  contribute?: Contribute3
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1522,6 +1465,7 @@ export interface CodeBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -1585,7 +1529,7 @@ export interface ArgsBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType4
+  contribute?: Contribute4
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1684,7 +1628,7 @@ export interface GetBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType5
+  contribute?: Contribute5
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1801,7 +1745,7 @@ export interface DataBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType6
+  contribute?: Contribute6
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1908,7 +1852,7 @@ export interface IfBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType7
+  contribute?: Contribute7
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -1985,6 +1929,7 @@ export interface IfBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -2062,7 +2007,7 @@ export interface MatchBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType8
+  contribute?: Contribute8
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2225,7 +2170,7 @@ export interface RepeatBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType9
+  contribute?: Contribute9
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2308,6 +2253,7 @@ export interface RepeatBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -2400,7 +2346,7 @@ export interface MapBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType10
+  contribute?: Contribute10
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2478,6 +2424,7 @@ export interface MapBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -2549,7 +2496,7 @@ export interface TextBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType11
+  contribute?: Contribute11
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2646,7 +2593,7 @@ export interface LastOfBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType12
+  contribute?: Contribute12
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2743,7 +2690,7 @@ export interface ArrayBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType13
+  contribute?: Contribute13
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2840,7 +2787,7 @@ export interface ObjectBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType14
+  contribute?: Contribute14
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -2937,7 +2884,7 @@ export interface MessageBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType15
+  contribute?: Contribute15
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3007,6 +2954,7 @@ export interface MessageBlock {
     | ReadBlock
     | IncludeBlock
     | ImportBlock
+    | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
     | null
@@ -3082,7 +3030,7 @@ export interface ReadBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType16
+  contribute?: Contribute16
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3188,7 +3136,7 @@ export interface IncludeBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType17
+  contribute?: Contribute17
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3286,7 +3234,7 @@ export interface ImportBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType18
+  contribute?: Contribute18
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3340,9 +3288,9 @@ export interface Defs19 {
   [k: string]: BlockType
 }
 /**
- * Block representing an error generated at runtime.
+ * Create a new aggregator that can be use in the `contribute` field.
  */
-export interface ErrorBlock {
+export interface AggregatorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3383,7 +3331,7 @@ export interface ErrorBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType19
+  contribute?: Contribute19
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3426,38 +3374,7 @@ export interface ErrorBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf19
   kind?: Kind19
-  msg: Msg
-  /**
-   * Block that raised the error.
-   *
-   */
-  program:
-    | boolean
-    | number
-    | string
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | CodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | ErrorBlock
-    | EmptyBlock
-    | null
+  aggregator: Aggregator
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3466,10 +3383,19 @@ export interface ErrorBlock {
 export interface Defs20 {
   [k: string]: BlockType
 }
+export interface FileAggregatorConfig {
+  description?: Description1
+  file: File1
+  mode?: Mode1
+  encoding?: Encoding
+  prefix?: Prefix
+  suffix?: Suffix
+  flush?: Flush
+}
 /**
- * Block without an action. It can contain definitions.
+ * Block representing an error generated at runtime.
  */
-export interface EmptyBlock {
+export interface ErrorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3510,7 +3436,7 @@ export interface EmptyBlock {
    *
    */
   def?: string | null
-  contribute?: ContributeType20
+  contribute?: Contribute20
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -3553,12 +3479,140 @@ export interface EmptyBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf20
   kind?: Kind20
+  msg: Msg
+  /**
+   * Block that raised the error.
+   *
+   */
+  program:
+    | boolean
+    | number
+    | string
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | null
 }
 /**
  * Set of definitions executed before the execution of the block.
  *
  */
 export interface Defs21 {
+  [k: string]: BlockType
+}
+/**
+ * Block without an action. It can contain definitions.
+ */
+export interface EmptyBlock {
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
+      )
+    | EnumPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjectPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
+  defs?: Defs22
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: Contribute21
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
+  /**
+   * Block to execute in case of error.
+   *
+   */
+  fallback?: BlockType | null
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  requirements?: RequirementsType21
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context.
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block.
+   */
+  pdl__id?: string | null
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf21
+  kind?: Kind21
+}
+/**
+ * Set of definitions executed before the execution of the block.
+ *
+ */
+export interface Defs22 {
   [k: string]: BlockType
 }
 /**

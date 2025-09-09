@@ -1,0 +1,48 @@
+defs:
+  max_tokens: 1024
+  model: ollama_chat/gpt-oss:20b
+  num_demonstrations:
+    data: 5
+  verify:
+    data: false
+  demonstrations:
+    data:
+    - input: Related and Entities found using configured use relation direction. and Relation Type.
+      output: Related Entities found using configured relation direction and Relation Type.
+    - input: Thanks to Naumann IT Security Consulting's for reporting challenging the XSS got vulnerability.
+      output: Thanks to Naumann IT Security Consulting for reporting the XSS vulnerability.
+    - input: Besides he hates school, he is exhausted all the time, has no appetite, he has penalty of violent, depression, was not happy.
+      output: He hated school, he was exhausted all the time, had no appetite, he had outbreaks of violence, depression, and he was not happy.
+    - input: If your primary ID does not contain a signature, you can present a supplemental ID with photo and signature or a supple government ID with a photograph, as long as they are in the same name you used when you registerd.
+      output: If your primary ID does not contain a signature, you can present a supplemental ID with photo and signature or a supplemental government-issued ID with a photograph, as long as they are in the same name you used when you registered.
+    - input: We want to begin consultatiaon with public-use organisations who are users of these services to help brings experience, knowledge and information on user needs to shape the solution.
+      output: We want to begin consultations with public sector organisations who are users of these services to help bring experience, knowledge and information on user needs to shape the solution.
+lastOf:
+- |+
+  Here are examples of grammatically incorrect sentences and their corrected versions:
+
+- for:
+    example: ${ demonstrations }
+  repeat:
+    text: ${ example.input } -> ${ example.output }
+  join:
+    with: |2+
+
+
+- |+
+  Correct the following sentence:
+
+  ${ input }
+  Here's the corrected sentence:
+
+- def: response
+  model: ${ model }
+  parameters:
+    temperature: 0.0
+    max_tokens: ${ max_tokens }
+- if: ${ verify }
+  then:
+    lastOf:
+    - Do you think this was a correct answer? If not, generated a correct answer.
+    - model: ${ model }
+  else: ${ response }

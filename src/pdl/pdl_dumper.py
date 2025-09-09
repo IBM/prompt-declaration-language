@@ -8,6 +8,8 @@ from pydantic.main import BaseModel, IncEx
 
 from . import pdl_ast
 from .pdl_ast import (
+    AggregatorBlock,
+    AggregatorType,
     AnyPattern,
     ArgsBlock,
     ArrayBlock,
@@ -15,13 +17,14 @@ from .pdl_ast import (
     Block,
     CallBlock,
     CodeBlock,
+    ContributeElement,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     EnumPdlType,
     ErrorBlock,
     ExpressionType,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -219,6 +222,8 @@ def block_to_dict(  # noqa: C901
             d["import"] = block.import_
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
+        case AggregatorBlock():
+            d["aggregator"] = aggregator_to_dict(block.aggregator)
         case IfBlock():
             d["if"] = expr_to_dict(block.condition, json_compatible)
             d["then"] = block_to_dict(block.then, json_compatible)
@@ -259,6 +264,8 @@ def block_to_dict(  # noqa: C901
                 d["for"] = expr_to_dict(block.for_, json_compatible)
             if block.index is not None:
                 d["index"] = block.index
+            if block.maxWorkers is not None:
+                d["maxWorkers"] = expr_to_dict(block.maxWorkers, json_compatible)
             d["map"] = block_to_dict(block.map, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
@@ -488,7 +495,7 @@ def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
 
 
 def contribute_to_list(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+    contribute: Sequence[ContributeElement],
 ) -> list[str | dict[str, Any]]:
     acc: list[str | dict[str, Any]] = []
     for contrib in contribute:
@@ -497,6 +504,17 @@ def contribute_to_list(
         elif isinstance(contrib, dict):
             acc.append({str(k): v.model_dump() for k, v in contrib.items()})
     return acc
+
+
+def aggregator_to_dict(aggregator: AggregatorType):
+    match aggregator:
+        case "context":
+            result = aggregator
+        case FileAggregatorConfig():
+            result = aggregator.model_dump()
+        case _:
+            assert False, "Unexpected aggregator"
+    return result
 
 
 def build_exclude(obj: Any, regex: re.Pattern[str]) -> Any:

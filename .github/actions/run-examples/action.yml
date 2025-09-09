@@ -32,7 +32,7 @@ runs:
     - uses: ./.github/actions/ollama
 
     # Configure Run Examples environment
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         token: ${{ inputs.token }}
         ref: ${{ inputs.head-ref }}
@@ -50,7 +50,7 @@ runs:
 
     # Run tests
     - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }}
     - name: Cache pip
