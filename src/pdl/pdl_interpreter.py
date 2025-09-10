@@ -304,8 +304,19 @@ def process_prog(
         PDLRuntimeError: If the program raises an error.
     """
     scope = empty_scope | scope
+
+    # Process stdlib
+    stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
+    stdlib, loc = parse_file(stdlib_file)
+    _, _, stdlib_scope, _ = process_block(
+        state.with_yield_background(False).with_yield_result(False),
+        scope,
+        stdlib.root,
+        loc,
+    )
+    
     result, document, final_scope, trace = process_block(
-        state, scope, block=prog.root, loc=loc
+        state, stdlib_scope, block=prog.root, loc=loc
     )
     return result, document, final_scope, trace
 
@@ -486,15 +497,23 @@ def process_advanced_block(  # noqa:C901
             if block.requirements != []:
                 requirements_satisfied = True
                 for req in block.requirements:
-                    evalfn, _ = process_expr(scope, getattr(req, "evaluate"), loc)
+                    evaluate = getattr(req, "evaluate", None)
+                    if evaluate is None:
+                        evaluate = scope["__eval"]
+                    evalfn: Any
+                    evalfn, _ = process_expr(scope, evaluate, loc)
                     requirement, _ = process_expr(scope, getattr(req, "description"), loc)
                     evaluation = evalfn(
                         requirement=requirement, response=result
                     )
                     if evaluation.result() < -0.3:   
                         requirements_satisfied = False
+                        transformContext = getattr(req, "transformContext", None)
+                        if transformContext is None:
+                            transformContext = scope["__transformContext"]
+                        transfn: Any
                         transfn, _ = process_expr(
-                            scope, getattr(req, "transformContext"), loc
+                            scope, transformContext, loc
                         )
                         new_context = transfn(
                             pdl_context=scope["pdl_context"],

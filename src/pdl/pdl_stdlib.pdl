@@ -1,0 +1,40 @@
+
+defs: 
+    requirements:
+        object:
+            req_eval:
+                function:
+                    requirement: string
+                    response: string
+                    llm_as_judge: {optional: string}
+                return:
+                    lastOf:
+                    - model: ${ llm_as_judge | default('ollama_chat/gpt-oss:20b') }
+                      def: evaluation
+                      input: |
+                            Is the following requirement satisfied in the solution below? Requirement: ${ requirement }
+                            ${ response }
+
+                            Respond with a JSON object that has a field result set to true if the requirement is satisfied and false otherwise.
+                      parser: json
+                    - lang: python
+                      code: |
+                        print(evaluation)
+                        result = ""
+                    - if: ${ evaluation.result }
+                      then: 0
+                      else: -1000000
+                
+            req_transform:
+                function:
+                    requirement: string
+                    response: string
+                    model: {optional: string}
+                return: 
+                    lastOf:
+                    - model: ${ model | default('ollama_chat/granite3.3:8b') }
+                      input: |
+                        The following requirement is not satisfied, what instruction can be added to get the correct answer?
+                        Requirement: ${ requirement }
+                        Answer with only the instruction.
+                    - ${ pdl_context }
