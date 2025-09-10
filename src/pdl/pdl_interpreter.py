@@ -308,13 +308,15 @@ def process_prog(
     # Process stdlib
     stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
     stdlib, loc = parse_file(stdlib_file)
-    _, _, stdlib_scope, _ = process_block(
+    _, _, stdlib_dict, _ = process_block(
         state.with_yield_background(False).with_yield_result(False),
-        scope,
+        empty_scope,
         stdlib.root,
         loc,
     )
-    
+
+    stdlib_scope = scope | PdlDict({"stdlib": stdlib_dict})
+
     result, document, final_scope, trace = process_block(
         state, stdlib_scope, block=prog.root, loc=loc
     )
@@ -489,7 +491,7 @@ def process_advanced_block(  # noqa:C901
 
     max_retry = block.retry if block.retry else 0
     trial_total = max_retry + 1
-    for trial_idx in range(trial_total):
+    for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
             result, background, new_scope, trace = process_block_body(
                 state, scope, block, loc
@@ -498,23 +500,24 @@ def process_advanced_block(  # noqa:C901
                 requirements_satisfied = True
                 for req in block.requirements:
                     evaluate = getattr(req, "evaluate", None)
+                    stdlib_dict: Any = scope["stdlib"]
                     if evaluate is None:
-                        evaluate = scope["__eval"]
+                        evaluate = stdlib_dict["requirements"]["evaluation"]
                     evalfn: Any
                     evalfn, _ = process_expr(scope, evaluate, loc)
-                    requirement, _ = process_expr(scope, getattr(req, "description"), loc)
-                    evaluation = evalfn(
-                        requirement=requirement, response=result
+                    requirement, _ = process_expr(
+                        scope, getattr(req, "description"), loc
                     )
-                    if evaluation.result() < -0.3:   
+                    evaluation = evalfn(requirement=requirement, response=result)
+                    if evaluation.result() < -0.3:
                         requirements_satisfied = False
-                        transformContext = getattr(req, "transformContext", None)
-                        if transformContext is None:
-                            transformContext = scope["__transformContext"]
+                        transform_context = getattr(req, "transformContext", None)
+                        if transform_context is None:
+                            transform_context = stdlib_dict["requirements"][
+                                "transformContext"
+                            ]
                         transfn: Any
-                        transfn, _ = process_expr(
-                            scope, transformContext, loc
-                        )
+                        transfn, _ = process_expr(scope, transform_context, loc)
                         new_context = transfn(
                             pdl_context=scope["pdl_context"],
                             requirement=requirement,
@@ -688,7 +691,7 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             if state.yield_background:
                 yield_background(background)
-        case TextBlock():  # HERE
+        case TextBlock():
             result, background, scope, trace = process_blocks_of(
                 block,
                 "text",
