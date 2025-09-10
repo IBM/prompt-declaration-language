@@ -160,6 +160,14 @@ def exec_file(
     return result
 
 
+def pdl(func):
+    def pdl_wrapper(scope):
+        result = exec_str(prog=func.__doc__, scope=scope)
+        return result
+
+    return pdl_wrapper
+
+
 def main():
     parser = argparse.ArgumentParser("")
     parser.add_argument(
