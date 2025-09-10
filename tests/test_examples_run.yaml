@@ -35,6 +35,7 @@ skip:
   - examples/optimizer/eval_levenshtein.pdl
   - examples/requirements/email.pdl
   - examples/skeleton-of-thought/tips.pdl
+  - examples/tutorial/sdk/lib.pdl
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |
