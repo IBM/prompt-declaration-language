@@ -2,17 +2,13 @@ import argparse
 from pathlib import Path
 
 import yaml
-
-from mu_ppl import infer, viz, ImportanceSampling
-
-from .pdl import InterpreterConfig, exec_program
-from .pdl_parser import parse_file
-
-from .pdl_utils import validate_scope
-
-from .pdl_ast import get_default_model_parameters
+from mu_ppl import ImportanceSampling, infer, viz
 
 from ._version import version
+from .pdl import InterpreterConfig, exec_program
+from .pdl_ast import get_default_model_parameters
+from .pdl_parser import parse_file
+from .pdl_utils import validate_scope
 
 
 def main():
@@ -32,14 +28,12 @@ def main():
         "-n",
         "--num-particles",
         dest="num_particles",
+        type=int,
         help="Number of particles used during inference",
-        default=5
+        default=5,
     )
     parser.add_argument(
-        "-v",
-        "--viz",
-        help="Display the distribution of results",
-        default=False
+        "-v", "--viz", help="Display the distribution of results", default=False
     )
     parser.add_argument(
         "--version",
@@ -57,7 +51,6 @@ def main():
         print(f"PDL {version}")
         return 0
 
-
     if args.pdl is None:
         parser.print_help()
         return 0
@@ -71,13 +64,13 @@ def main():
     validate_scope(initial_scope)
 
     config = InterpreterConfig(
-        yield_result=False,
-        yield_background=False,
-        batch=1,
+        yield_result=False, yield_background=False, batch=1, cwd=Path(args.pdl).parent
     )
     program, loc = parse_file(args.pdl)
     with ImportanceSampling(num_particles=args.num_particles):
-        dist = infer(lambda: exec_program(program, config, initial_scope, loc, "result"))
+        dist = infer(
+            lambda: exec_program(program, config, initial_scope, loc, "result")
+        )
     if args.viz:
         viz(dist)
     print(dist.sample())
