@@ -1,0 +1,137 @@
+description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
+# See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
+defs:
+  react_block:
+    function:
+      trajectory: [ object ]
+    return:
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            defs:
+              type: ${ trajectory.keys()|first }
+            match: ${ type }
+            with:
+              - case: question
+                then: |
+                  Question: ${ trajectory[type]|trim }
+              - case: task
+                then: |
+                  Task: ${ trajectory[type]|trim }
+              - case: thought
+                then: |
+                  Tho: ${ trajectory[type]|trim }
+              - case: action
+                then: |
+                  Act: ${ trajectory[type]|trim }
+              - case: observation
+                then: |
+                  Obs: ${ trajectory[type]|trim }
+              - then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
+
+  react:
+    function:
+      task: string
+      model: string
+      tool_schema: [ object ]
+      tools: object
+      trajectories: [ array ]
+    return:
+      lastOf:
+        - role: system
+          text:
+            - "Today's Date: "
+            - lang: python
+              code: |
+                from datetime import datetime
+                result = datetime.today().strftime('%B %d, %Y.\n')
+            - |
+              You are a helpful assistant with access to the following function calls. Your task is to produce a sequence of function calls necessary to generate response to the user utterance. Use the following function calls as required.
+
+              Respond in the format {"name": function name, "arguments": dictionary of argument name and its value}. Do not use variables.
+
+              ${ tool_schema }
+        - "\n"
+        - for:
+            traj: ${ trajectories }
+          repeat:
+            text:
+              call: ${ react_block }
+              args:
+                trajectory: ${ traj }
+        - ${ task }
+        - defs:
+            prev_action: null
+            exit: false
+            tool_names: ${ tool_schema|map(attribute='name')|list }
+          repeat:
+            text:
+              - "\nTho: "
+              - defs:
+                  thought:
+                    model: "${ model }"
+                    parameters:
+                      stop:
+                        - "Act:"
+                      max_tokens: 256
+                      temperature: 0.7
+                      include_stop_sequence: false
+              - "${ thought|trim }"
+              - "\nAct: "
+              - defs:
+                  action:
+                    model: "${ model }"
+                    parser: json
+                    parameters:
+                      temperature: 0.7
+                      stop: ["\n", "Obs:", "<|eom_id|>"]
+                      include_stop_sequence: false
+                    spec: { name: string, arguments: object }
+                    fallback:
+                      defs:
+                        w:
+                          factor: ${ -100 }
+                      data:
+                        name: error
+                        arguments: { msg: "failed to generate a valid action" }
+              - "${ action|trim }"
+              - match: ${ action.name.lower() }
+                with:
+                - case: finish
+                  then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action == prev_action }
+                  then:
+                    def: exit
+                    data: true
+                    contribute: []
+                - if: ${ action.name.lower() in tools }
+                  then:
+                    def: observation
+                    text:
+                      - "\nObs: "
+                      - call: ${ tools[action.name.lower()] }
+                        args:
+                          arguments: ${ action.arguments }
+                - then:
+                    def: observation
+                    text:
+                      - factor: -100
+                      - "\nObs: "
+                      - "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
+
+              - defs:
+                  prev_action: ${ action }
+          until: ${ exit }
+        - data:
+            answer: ${ action.arguments.answer | trim }
+          fallback:
+            defs:
+              w:
+                factor: -10000
+            data:
+              answer: "No answer found."
