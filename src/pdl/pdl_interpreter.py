@@ -373,14 +373,6 @@ def process_block(
     return result, background, scope, trace
 
 
-def context_in_contribute(block: AdvancedBlockType) -> bool:
-    if ContributeTarget.CONTEXT.value in block.contribute:
-        return True
-    if get_contribute_context_value(block.contribute) is not None:
-        return True
-    return False
-
-
 # A start-end time wrapper around `process_advanced_block`
 def process_advanced_block_timed(
     state: InterpreterState,
@@ -520,7 +512,7 @@ def process_advanced_block(  # noqa:C901
                     result_with_type_checking,
                     spec=block.spec,
                     msg="Type errors during spec checking:",
-                    loc=loc,
+                    loc=append(loc, "spec"),
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
@@ -587,6 +579,14 @@ def process_advanced_block(  # noqa:C901
     if ContributeTarget.RESULT.value not in block.contribute:
         result = PdlConst("")
     return result, background, new_scope, trace
+
+
+def context_in_contribute(block: AdvancedBlockType) -> bool:
+    if ContributeTarget.CONTEXT.value in block.contribute:
+        return True
+    if get_contribute_context_value(block.contribute) is not None:
+        return True
+    return False
 
 
 ResultWithTypeCheckingT = TypeVar("ResultWithTypeCheckingT")
