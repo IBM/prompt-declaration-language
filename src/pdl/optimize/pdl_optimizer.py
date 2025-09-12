@@ -768,7 +768,7 @@ class PDLOptimizer:
         logger.info("Saved exp. log to %s", exp_file)
 
 
-def run_optimizer():
+def run_optimizer() -> int:
     parser = argparse.ArgumentParser("")
 
     parser.add_argument(
