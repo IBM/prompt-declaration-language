@@ -91,7 +91,7 @@ defs:
                     spec: { name: string, arguments: object }
                     fallback:
                       defs:
-                        w:
+                        _:
                           factor: ${ -100 }
                       data:
                         name: error
@@ -131,7 +131,7 @@ defs:
             answer: ${ action.arguments.answer | trim }
           fallback:
             defs:
-              w:
+              _:
                 factor: -10000
             data:
               answer: "No answer found."
