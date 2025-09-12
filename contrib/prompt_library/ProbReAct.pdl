@@ -1,7 +1,7 @@
 description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
 # See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
 defs:
-  react_block:
+  render_icl_sample:
     function:
       trajectory: [ object ]
     return:
@@ -58,7 +58,7 @@ defs:
             traj: ${ trajectories }
           repeat:
             text:
-              call: ${ react_block }
+              call: ${ render_icl_sample }
               args:
                 trajectory: ${ traj }
         - ${ task }
