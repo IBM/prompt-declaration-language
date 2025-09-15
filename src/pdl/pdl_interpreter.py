@@ -458,13 +458,15 @@ def process_advanced_block(
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
     new_scope, trace = process_contribute(trace, result, new_scope, loc)
-    background: LazyMessages = DependentContext([])
+    background: LazyMessages
     if ContributeTarget.CONTEXT.value not in block.contribute:
         background = DependentContext([])
     else:
         contribute_value, trace = process_contribute_context(trace, new_scope, loc)
         if contribute_value is not None:
             background = DependentContext([contribute_value])
+        else:
+            background = DependentContext([])
     if ContributeTarget.RESULT.value not in block.contribute:
         result = PdlConst("")
     return result, background, new_scope, trace
