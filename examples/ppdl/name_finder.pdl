@@ -44,8 +44,8 @@ defs:
       result = [ name for name in names_us.keys() ] + [ name for name in names_fr.keys() ]
   is_rare:
     function:
-      name: str
-      names: obj
+      name: string
+      names: object
     return:
       lang: python
       code: |
