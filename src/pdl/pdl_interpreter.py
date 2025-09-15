@@ -478,6 +478,7 @@ def process_advance_block_retry(
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
+    background: LazyMessages = DependentContext([])
     new_scope: ScopeType = PdlDict({})
     trace: AdvancedBlockType = EmptyBlock()
 
