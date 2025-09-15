@@ -2,7 +2,46 @@ from pdl.pdl import exec_str
 from pdl.pdl_context import SerializeMode
 
 
+def test_role0():
+    prog_str = """
+Hello
+"""
+    result = exec_str(prog_str, output="all")
+    assert result["result"] == "Hello"
+    scope = result["scope"]
+    assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
+        {"role": "user", "content": "Hello", "pdl__defsite": ""},
+    ]
+
+
 def test_role1():
+    prog_str = """
+text:
+- Hello
+"""
+    result = exec_str(prog_str, output="all")
+    assert result["result"] == "Hello"
+    scope = result["scope"]
+    assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
+        {"role": "user", "content": "Hello", "pdl__defsite": "text.0"},
+    ]
+
+
+def test_role2():
+    prog_str = """
+text:
+- Hello
+role: A
+"""
+    result = exec_str(prog_str, output="all")
+    assert result["result"] == "Hello"
+    scope = result["scope"]
+    assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
+        {"role": "A", "content": "Hello", "pdl__defsite": "text.0"},
+    ]
+
+
+def test_role3():
     prog_str = """
 description: Test role
 text:
