@@ -453,20 +453,19 @@ def process_advanced_block(
         scope, defs_trace = process_defs(state, scope, block.defs, loc)
         block = block.model_copy(update={"defs": defs_trace})
 
-    result, new_scope, trace = process_advance_block_retry(state, scope, block, loc)
+    result, background, new_scope, trace = process_advance_block_retry(
+        state, scope, block, loc
+    )
     if block.def_ is not None:
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
     new_scope, trace = process_contribute(trace, result, new_scope, loc)
-    background: LazyMessages
     if ContributeTarget.CONTEXT.value not in block.contribute:
         background = DependentContext([])
     else:
         contribute_value, trace = process_contribute_context(trace, new_scope, loc)
         if contribute_value is not None:
             background = DependentContext([contribute_value])
-        else:
-            background = DependentContext([])
     if ContributeTarget.RESULT.value not in block.contribute:
         result = PdlConst("")
     return result, background, new_scope, trace
@@ -477,7 +476,7 @@ def process_advance_block_retry(
     scope: ScopeType,
     block: AdvancedBlockType,
     loc: PdlLocationType,
-) -> tuple[PdlLazy[Any], ScopeType, AdvancedBlockType]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
     new_scope: ScopeType = PdlDict({})
     trace: AdvancedBlockType = EmptyBlock()
@@ -590,7 +589,7 @@ def process_advance_block_retry(
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    return result, new_scope, trace
+    return result, background, new_scope, trace
 
 
 def context_in_contribute(block: AdvancedBlockType) -> bool:
