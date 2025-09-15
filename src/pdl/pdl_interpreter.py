@@ -375,14 +375,6 @@ def process_block(
     return result, background, scope, trace
 
 
-def context_in_contribute(block: AdvancedBlockType) -> bool:
-    if ContributeTarget.CONTEXT.value in block.contribute:
-        return True
-    if get_contribute_context_value(block.contribute) is not None:
-        return True
-    return False
-
-
 # A start-end time wrapper around `process_advanced_block`
 def process_advanced_block_timed(
     state: InterpreterState,
@@ -451,7 +443,7 @@ def set_error_to_scope_for_retry(
     return scope
 
 
-def process_advanced_block(  # noqa:C901
+def process_advanced_block(
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
@@ -462,6 +454,36 @@ def process_advanced_block(  # noqa:C901
     if len(block.defs) > 0:
         scope, defs_trace = process_defs(state, scope, block.defs, loc)
         block = block.model_copy(update={"defs": defs_trace})
+
+    result, background, new_scope, trace = process_advance_block_retry(
+        state, scope, block, loc
+    )
+    if block.def_ is not None:
+        var = block.def_
+        new_scope = new_scope | PdlDict({var: result})
+    new_scope, trace = process_contribute(trace, result, new_scope, loc)
+    if ContributeTarget.CONTEXT.value not in block.contribute:
+        background = DependentContext([])
+    else:
+        contribute_value, trace = process_contribute_context(trace, new_scope, loc)
+        if contribute_value is not None:
+            background = DependentContext([contribute_value])
+    if ContributeTarget.RESULT.value not in block.contribute:
+        result = PdlConst("")
+    return result, background, new_scope, trace
+
+
+def process_advance_block_retry(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    result: PdlLazy[Any] = PdlConst(None)
+    background: LazyMessages = DependentContext([])
+    new_scope: ScopeType = PdlDict({})
+    trace: AdvancedBlockType = EmptyBlock()
+
     init_state = state
     state = state.with_yield_result(
         state.yield_result
@@ -471,12 +493,6 @@ def process_advanced_block(  # noqa:C901
     state = state.with_yield_background(
         state.yield_background and context_in_contribute(block)
     )
-
-    # Bind result variables here with empty values
-    result: PdlLazy[Any] = PdlConst(None)
-    background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
-    trace: AdvancedBlockType = EmptyBlock()
 
     max_retry = block.retry if block.retry else 0
     trial_total = max_retry + 1
@@ -522,7 +538,7 @@ def process_advanced_block(  # noqa:C901
                     result_with_type_checking,
                     spec=block.spec,
                     msg="Type errors during spec checking:",
-                    loc=loc,
+                    loc=append(loc, "spec"),
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
@@ -566,29 +582,25 @@ def process_advanced_block(  # noqa:C901
                 loc=loc,
             )
             if block.spec is not None and not isinstance(block, FunctionBlock):
-                loc = append(loc, "fallback")
+                fallback_loc = append(loc, "fallback")
                 # Use partial to create a function with fixed arguments
                 checker = partial(
                     result_with_type_checking,
                     spec=block.spec,
                     msg="Type errors during spec checking:",
-                    loc=loc,
+                    loc=append(fallback_loc, "spec"),
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    if block.def_ is not None:
-        var = block.def_
-        new_scope = new_scope | PdlDict({var: result})
-    new_scope, trace = process_contribute(trace, result, new_scope, loc)
-    if ContributeTarget.CONTEXT.value not in block.contribute:
-        background = DependentContext([])
-    else:
-        contribute_value, trace = process_contribute_context(trace, new_scope, loc)
-        if contribute_value is not None:
-            background = DependentContext([contribute_value])
-    if ContributeTarget.RESULT.value not in block.contribute:
-        result = PdlConst("")
     return result, background, new_scope, trace
+
+
+def context_in_contribute(block: AdvancedBlockType) -> bool:
+    if ContributeTarget.CONTEXT.value in block.contribute:
+        return True
+    if get_contribute_context_value(block.contribute) is not None:
+        return True
+    return False
 
 
 ResultWithTypeCheckingT = TypeVar("ResultWithTypeCheckingT")

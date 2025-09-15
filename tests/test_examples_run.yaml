@@ -118,3 +118,4 @@ expected_runtime_error:
   - tests/data/line/hello28.pdl
   - tests/data/line/hello29.pdl
   - tests/data/line/hello30.pdl
+  - tests/data/line/hello32.pdl
