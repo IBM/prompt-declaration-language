@@ -1,0 +1,10 @@
+lastOf:
+- "Hello, "
+- for:
+    name: [Alice, Bob, Charlie]
+  map:
+    lastOf:
+    - my name is ${ name }
+    - model: ollama/granite3.2:2b
+  join:
+    as: array
