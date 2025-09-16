@@ -23,6 +23,6 @@ lastOf:
   - if: ${ verify }
     then:
       lastOf:
-      - Do you think this was a correct answer? If not, generated a correct answer.
+      - Do you think this was a correct answer? If not, generate a correct answer. Please only generate the corrected sentence with no other explanations.
       - model: ${ model }
     else: ${ response }
