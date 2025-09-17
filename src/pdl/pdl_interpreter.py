@@ -307,7 +307,7 @@ def process_prog(
 
     # Process stdlib
     stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
-    stdlib, loc = parse_file(stdlib_file)
+    stdlib, _ = parse_file(stdlib_file)
     _, _, stdlib_dict, _ = process_block(
         state.with_yield_background(False).with_yield_result(False),
         empty_scope,
