@@ -462,7 +462,7 @@ def set_error_to_scope_for_retry(
     return scope
 
 
-def process_advanced_block(  # noqa:C901
+def process_advanced_block(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
@@ -484,7 +484,7 @@ def process_advanced_block(  # noqa:C901
     )
 
     # Bind result variables here with empty values
-    result: PdlLazy[Any] = PdlConst(None)
+    result: PdlLazy[Any] = PdlConst(None)  # noqa: C901
     background: LazyMessages = DependentContext([])
     new_scope: ScopeType = PdlDict({})
     trace: AdvancedBlockType = EmptyBlock()
