@@ -92,7 +92,7 @@ defs:
                     fallback:
                       defs:
                         _:
-                          factor: ${ -100 }
+                          factor: ${ -10 }
                       data:
                         name: error
                         arguments: { msg: "failed to generate a valid action" }
@@ -120,12 +120,13 @@ defs:
                 - then:
                     def: observation
                     text:
-                      - factor: -100
+                      - factor: -0.5
                       - "\nObs: "
                       - "Invalid action. Valid actions are ${ tool_names[:-1]|join(', ') }, and ${ tool_names[-1] }."
 
               - defs:
                   prev_action: ${ action }
+                factor: -0.05
           until: ${ exit }
         - data:
             answer: ${ action.arguments.answer | trim }
