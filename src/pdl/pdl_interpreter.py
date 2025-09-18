@@ -235,7 +235,7 @@ class ClosureBlock(FunctionBlock):
         result, _, _ = execute_call(
             state, current_context, self, kwargs, self.pdl__location
         )
-        return result
+        return result.result()
 
 
 ClosureBlock.model_rebuild()
