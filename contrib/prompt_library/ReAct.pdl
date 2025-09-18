@@ -1,7 +1,7 @@
 description: ReAct pattern from Yao et al., [ICLR 2023](https://openreview.net/forum?id=WE_vluYUL-X)
 # See alternative implementation here: https://smith.langchain.com/hub/hwchase17/react-chat
 defs:
-  react_block:
+  render_icl_sample:
     function:
       trajectory: [ object ]
     return:
@@ -58,17 +58,14 @@ defs:
             traj: ${ trajectories }
           repeat:
             text:
-              call: ${ react_block }
+              call: ${ render_icl_sample }
               args:
                 trajectory: ${ traj }
         - ${ task }
         - defs:
-            prev_action:
-              data: none
-            exit:
-              data: false
-            tool_names:
-              text: ${ tool_schema|map(attribute='name')|list }
+            prev_action: null
+            exit: false
+            tool_names: ${ tool_schema|map(attribute='name')|list }
           repeat:
             text:
               - "\nTho: "
@@ -82,18 +79,20 @@ defs:
                       include_stop_sequence: false
               - "${ thought|trim }"
               - "\nAct: "
-              - def: action
-                model: "${ model }"
-                parser: json
-                parameters:
-                  temperature: 0
-                  stop: ["\n", "Obs:", "<|eom_id|>"]
-                  include_stop_sequence: false
-                spec: { name: string, arguments: object }
-                fallback:
-                  data:
-                    name: error
-                    arguments: failed to generate a valid action
+              - defs:
+                  action:
+                    model: "${ model }"
+                    parser: json
+                    parameters:
+                      temperature: 1.0
+                      stop: ["\n", "Obs:", "<|eom_id|>"]
+                      include_stop_sequence: false
+                    spec: { name: string, arguments: object }
+                    fallback:
+                      data:
+                        name: error
+                        arguments: { msg: "failed to generate a valid action" }
+              - "${ action|trim }"
               - match: ${ action.name.lower() }
                 with:
                 - case: finish
@@ -125,6 +124,6 @@ defs:
           until: ${ exit }
         - data:
             answer: ${ action.arguments.answer | trim }
-          fallback: 
+          fallback:
             data:
               answer: "No answer found."

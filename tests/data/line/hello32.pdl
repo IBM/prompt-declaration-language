@@ -1,0 +1,5 @@
+defs:
+  x:
+    data: 1
+    spec: string
+text: ${x}
