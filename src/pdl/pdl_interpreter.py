@@ -484,7 +484,7 @@ def process_advanced_block(  # noqa: C901
     return result, background, new_scope, trace
 
 
-def process_advance_block_retry(
+def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
     block: AdvancedBlockType,
