@@ -505,15 +505,6 @@ def process_advance_block_retry(
         state.yield_background and context_in_contribute(block)
     )
 
-<<<<<<< HEAD
-    # Bind result variables here with empty values
-    result: PdlLazy[Any] = PdlConst(None)  # noqa: C901
-    background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
-    trace: AdvancedBlockType = EmptyBlock()
-
-=======
->>>>>>> main
     max_retry = block.retry if block.retry else 0
     trial_total = max_retry + 1
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
