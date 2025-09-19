@@ -152,7 +152,7 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
+empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([]), "__pdl_replay": {}})
 
 
 RefT = TypeVar("RefT")
@@ -622,6 +622,34 @@ def result_with_type_checking(
         )
     return result
 
+
+def process_block_body_with_replay(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    if isinstance(block, LeafBlock):
+        block_id = block.pdl__id
+        replay_scope = scope["__pdl_replay"]
+        assert(isinstance(block_id, str))
+        assert(isinstance(replay_scope, dict))
+        try:
+            result = replay_scope[block_id]
+            background = SingletonContext(
+                PdlDict({"role": state.role, "content": result})
+            )
+            if state.yield_result:
+                yield_result(result.result(), block.kind)
+            if state.yield_background:
+                yield_background(background)
+            trace = block
+        except KeyError:
+            result, background, scope, trace = process_block_body(state, scope, block, loc)
+            scope = scope | { "__pdl_replay": (replay_scope | {block_id: result}) }
+    else:
+        result, background, scope, trace = process_block_body(state, scope, block, loc)
+    return result, background, scope, trace
 
 def process_block_body(
     state: InterpreterState,
