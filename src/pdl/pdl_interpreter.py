@@ -638,7 +638,7 @@ def process_block_body_with_replay(
         assert isinstance(replay_scope, dict)
         try:
             result = replay_scope[block_id]
-            background = SingletonContext(
+            background: LazyMessages = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
             if state.yield_result:
