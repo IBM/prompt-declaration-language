@@ -338,7 +338,7 @@ class RequirementType(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    description: ExpressionType
+    expect: ExpressionType
     """English description of the requirement"""
 
     evaluate: Optional[ExpressionType["FunctionBlock"]] = None

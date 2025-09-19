@@ -32,7 +32,7 @@ defs:
             parameters:
               temperature: 0.1
             requirements:
-            - description: "The solution to this problem should be correct. Problem: ${ problem }"
+            - expect: "The solution to this problem should be correct. Problem: ${ problem }"
             retry: 1
         answer_obj:
           call: ${ extract_answer }

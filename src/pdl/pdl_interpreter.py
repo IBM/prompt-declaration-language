@@ -522,7 +522,7 @@ def process_advance_block_retry(  # noqa: C901
                     evalfn: Any
                     evalfn, _ = process_expr(scope, evaluate, loc)
                     requirement, _ = process_expr(
-                        scope, getattr(req, "description"), loc
+                        scope, getattr(req, "expect"), loc
                     )
                     evaluation = evalfn(requirement=requirement, response=result)
                     if evaluation < -0.3:

@@ -17,5 +17,5 @@ lastOf:
   parser: json
   spec: { "answer": number }
   requirements:
-    - description: "This solution to the following math problem is correct: ${ problem }"
+    - expect: "This solution to the following math problem is correct: ${ problem }"
 - ${ result.answer }

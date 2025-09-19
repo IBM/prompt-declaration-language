@@ -412,7 +412,7 @@ def usage_to_dict(usage: PdlUsage) -> dict:
 
 def requirement_to_dict(req: RequirementType, json_compatible: bool) -> dict:
     d: dict = {}
-    d["description"] = req.description
+    d["expect"] = req.expect
     if req.evaluate is not None:
         d["evaluate"] = expr_to_dict(req.evaluate, json_compatible)
     if req.transformContext is not None:
