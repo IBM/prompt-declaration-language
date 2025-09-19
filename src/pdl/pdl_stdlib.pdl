@@ -1,0 +1,69 @@
+
+defs: 
+  reward:
+    function:
+      response: 
+    return:
+      defs:
+        top_logprobs: ${ response.choices[0].logprobs.content[0].top_logprobs}
+      lastOf:
+      - for: 
+          tp: ${ top_logprobs }
+        repeat: 
+          match: ${ tp.token }
+          with:
+          - case: "Yes"
+            then:
+              data: ${ tp.logprob }
+              def: lp_y
+          - case: "No"
+            then: 
+              data: ${ tp.logprob }
+              def: lp_n
+      - lang: python  
+        code: |
+          import math 
+          result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
+
+  requirements:
+    object:
+      evaluation:
+        function:
+          requirement: string
+          response: string
+          llm_as_judge: {optional: string}
+        return:
+          lastOf:
+          - model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
+            def: evaluation
+            input: |
+                  Is the following requirement satisfied in the solution below? Requirement: ${ requirement }
+                  ${ response }
+
+                  Respond with only 'Yes' or 'No'.
+            modelResponse: out
+            parameters:
+              temperature: 0
+              logprobs: true
+              top_logprobs: 5
+          - ${ reward(out) }
+          
+          
+      transformContext:
+        function:
+          requirement: string
+          response: string
+          model: {optional: string}
+        return: 
+          lastOf:
+          - model: ${ model | default('ollama_chat/granite3.3:8b') }
+            input: |
+              The following requirement is not satisfied, what instruction can be added to get the correct answer?
+              Requirement: ${ requirement }
+              Answer with only the instruction.
+          - ${ pdl_context }
+
+
+
+  
+

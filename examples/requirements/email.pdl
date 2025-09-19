@@ -12,7 +12,9 @@ defs:
           Does the following email end with Kind regards. Answer with a JSON object and a result field with value True or False only.
           Email: ${ response }
         parser: json
-      - ${ result.result }
+      - if: ${ result.result }
+        then: 0
+        else: -1000000
       
   fix:
     function:
@@ -36,7 +38,7 @@ text:
 - "Write an email to ${ name } using the notes following: ${ notes }"
 - model: ollama_chat/granite3.2:2b
   requirements:
-  - description: The email should end with Kind regards
+  - expect: The email should end with Kind regards
     evaluate:  ${ eval }
     transformContext: ${ fix }
   retry: 5

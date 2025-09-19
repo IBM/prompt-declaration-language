@@ -87,7 +87,7 @@ version_file = "src/pdl/_version.py"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pdl = ["pdl-schema.json"]
+pdl = ["pdl-schema.json", "pdl_stlib.pdl"]
 
 [tool.pyright]
 include = ["src", "tests", "examples", "docs"]

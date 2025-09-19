@@ -4504,7 +4504,7 @@
       "additionalProperties": false,
       "description": "Single requirement definition.",
       "properties": {
-        "description": {
+        "expect": {
           "anyOf": [
             {
               "$ref": "#/$defs/LocalizedExpression_TypeVar_"
@@ -4514,7 +4514,7 @@
               "type": "string"
             }
           ],
-          "title": "Description"
+          "title": "Expect"
         },
         "evaluate": {
           "anyOf": [
@@ -4531,6 +4531,7 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Evaluate"
         },
         "transformContext": {
@@ -4548,13 +4549,12 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Transformcontext"
         }
       },
       "required": [
-        "description",
-        "evaluate",
-        "transformContext"
+        "expect"
       ],
       "title": "RequirementType",
       "type": "object"
