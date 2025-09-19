@@ -188,6 +188,7 @@ class InterpreterState(BaseModel):
     """Event loop to schedule LLM calls."""
     current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
     """Current value of the context set at the beginning of the execution of the block."""
+    replay: dict[str, Any] = {}
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -509,7 +510,7 @@ def process_advance_block_retry(  # noqa: C901
     trial_total = max_retry + 1
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
-            result, background, new_scope, trace = process_block_body(
+            result, background, new_scope, trace = process_block_body_with_replay(
                 state, scope, block, loc
             )
             if block.requirements != []:
@@ -642,6 +643,35 @@ def result_with_type_checking(
             fallback=result,
         )
     return result
+
+
+def process_block_body_with_replay(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    if isinstance(block, LeafBlock):
+        block_id = block.pdl__id
+        assert isinstance(block_id, str)
+        try:
+            result = state.replay[block_id]
+            background: LazyMessages = SingletonContext(
+                PdlDict({"role": state.role, "content": result})
+            )
+            if state.yield_result:
+                yield_result(result.result(), block.kind)
+            if state.yield_background:
+                yield_background(background)
+            trace = block
+        except KeyError:
+            result, background, scope, trace = process_block_body(
+                state, scope, block, loc
+            )
+            state.replay[block_id] = result
+    else:
+        result, background, scope, trace = process_block_body(state, scope, block, loc)
+    return result, background, scope, trace
 
 
 def process_block_body(
