@@ -525,7 +525,7 @@ def process_advance_block_retry(  # noqa: C901
                         scope, getattr(req, "description"), loc
                     )
                     evaluation = evalfn(requirement=requirement, response=result)
-                    if evaluation.result() < -0.3:
+                    if evaluation < -0.3:
                         requirements_satisfied = False
                         transform_context = getattr(req, "transformContext", None)
                         if transform_context is None:

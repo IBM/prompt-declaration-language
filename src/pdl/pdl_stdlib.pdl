@@ -1,5 +1,30 @@
 
 defs: 
+  reward:
+    function:
+      response: 
+    return:
+      defs:
+        top_logprobs: ${ response.choices[0].logprobs.content[0].top_logprobs}
+      lastOf:
+      - for: 
+          tp: ${ top_logprobs }
+        repeat: 
+          match: ${ tp.token }
+          with:
+          - case: "Yes"
+            then:
+              data: ${ tp.logprob }
+              def: lp_y
+          - case: "No"
+            then: 
+              data: ${ tp.logprob }
+              def: lp_n
+      - lang: python  
+        code: |
+          import math 
+          result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
+
   requirements:
     object:
       evaluation:
@@ -9,21 +34,20 @@ defs:
           llm_as_judge: {optional: string}
         return:
           lastOf:
-          - model: ${ llm_as_judge | default('ollama_chat/gpt-oss:20b') }
+          - model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
             def: evaluation
             input: |
                   Is the following requirement satisfied in the solution below? Requirement: ${ requirement }
                   ${ response }
 
-                  Respond with a JSON object that has a field result set to true if the requirement is satisfied and false otherwise.
-            parser: json
-          - lang: python
-            code: |
-              print(evaluation)
-              result = ""
-          - if: ${ evaluation.result }
-            then: 0
-            else: -1000000
+                  Respond with only 'Yes' or 'No'.
+            modelResponse: out
+            parameters:
+              temperature: 0
+              logprobs: true
+              top_logprobs: 5
+          - ${ reward(out) }
+          
           
       transformContext:
         function:
@@ -38,3 +62,8 @@ defs:
               Requirement: ${ requirement }
               Answer with only the instruction.
           - ${ pdl_context }
+
+
+
+  
+
