@@ -152,9 +152,7 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict(
-    {"pdl_context": DependentContext([]), "__pdl_replay": {}}
-)
+empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
 
 
 RefT = TypeVar("RefT")
@@ -190,6 +188,7 @@ class InterpreterState(BaseModel):
     """Event loop to schedule LLM calls."""
     current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
     """Current value of the context set at the beginning of the execution of the block."""
+    replay: dict[str, Any] = {}
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -498,7 +497,7 @@ def process_advance_block_retry(
     trial_total = max_retry + 1
     for trial_idx in range(trial_total):
         try:
-            result, background, new_scope, trace = process_block_body(
+            result, background, new_scope, trace = process_block_body_with_replay(
                 state, scope, block, loc
             )
             if block.requirements != []:
@@ -633,11 +632,9 @@ def process_block_body_with_replay(
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     if isinstance(block, LeafBlock):
         block_id = block.pdl__id
-        replay_scope = scope["__pdl_replay"]
         assert isinstance(block_id, str)
-        assert isinstance(replay_scope, dict)
         try:
-            result = replay_scope[block_id]
+            result = state.replay[block_id]
             background: LazyMessages = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
@@ -650,7 +647,7 @@ def process_block_body_with_replay(
             result, background, scope, trace = process_block_body(
                 state, scope, block, loc
             )
-            scope = scope | {"__pdl_replay": (replay_scope | {block_id: result})}
+            state.replay[block_id] = result
     else:
         result, background, scope, trace = process_block_body(state, scope, block, loc)
     return result, background, scope, trace
