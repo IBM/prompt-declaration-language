@@ -152,7 +152,9 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([]), "__pdl_replay": {}})
+empty_scope: ScopeType = PdlDict(
+    {"pdl_context": DependentContext([]), "__pdl_replay": {}}
+)
 
 
 RefT = TypeVar("RefT")
@@ -632,8 +634,8 @@ def process_block_body_with_replay(
     if isinstance(block, LeafBlock):
         block_id = block.pdl__id
         replay_scope = scope["__pdl_replay"]
-        assert(isinstance(block_id, str))
-        assert(isinstance(replay_scope, dict))
+        assert isinstance(block_id, str)
+        assert isinstance(replay_scope, dict)
         try:
             result = replay_scope[block_id]
             background = SingletonContext(
@@ -645,11 +647,14 @@ def process_block_body_with_replay(
                 yield_background(background)
             trace = block
         except KeyError:
-            result, background, scope, trace = process_block_body(state, scope, block, loc)
-            scope = scope | { "__pdl_replay": (replay_scope | {block_id: result}) }
+            result, background, scope, trace = process_block_body(
+                state, scope, block, loc
+            )
+            scope = scope | {"__pdl_replay": (replay_scope | {block_id: result})}
     else:
         result, background, scope, trace = process_block_body(state, scope, block, loc)
     return result, background, scope, trace
+
 
 def process_block_body(
     state: InterpreterState,
