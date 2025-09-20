@@ -512,6 +512,28 @@ def process_advance_block_retry(  # noqa: C901
             result, background, new_scope, trace = process_block_body(
                 state, scope, block, loc
             )
+
+            result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
+            add_done_callback(
+                id_with_set_first_use_nanos(block.pdl__timing), background
+            )
+            trace = trace.model_copy(update={"pdl__result": result})
+            if block.parser is not None:
+                parser_func = partial(parse_result, block.parser)
+                result = lazy_apply(parser_func, result)
+                if init_state.yield_result:
+                    yield_result(result, block.kind)
+            if block.spec is not None and not isinstance(block, FunctionBlock):
+                checker = partial(
+                    result_with_type_checking,
+                    spec=block.spec,
+                    msg="Type errors during spec checking:",
+                    loc=append(loc, "spec"),
+                    trace=trace,
+                )
+                result = lazy_apply(checker, result)
+            if block.fallback is not None:
+                result.result()
             if block.requirements != []:
                 requirements_satisfied = True
                 for req in block.requirements:
@@ -541,28 +563,6 @@ def process_advance_block_retry(  # noqa: C901
                             scope = scope | {"pdl_context": new_context}
                 if requirements_satisfied is False:
                     continue
-
-            result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
-            add_done_callback(
-                id_with_set_first_use_nanos(block.pdl__timing), background
-            )
-            trace = trace.model_copy(update={"pdl__result": result})
-            if block.parser is not None:
-                parser_func = partial(parse_result, block.parser)
-                result = lazy_apply(parser_func, result)
-                if init_state.yield_result:
-                    yield_result(result, block.kind)
-            if block.spec is not None and not isinstance(block, FunctionBlock):
-                checker = partial(
-                    result_with_type_checking,
-                    spec=block.spec,
-                    msg="Type errors during spec checking:",
-                    loc=append(loc, "spec"),
-                    trace=trace,
-                )
-                result = lazy_apply(checker, result)
-            if block.fallback is not None:
-                result.result()
             break
         except Exception as exc:
             err_msg = traceback.format_exc()
