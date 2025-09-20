@@ -3,10 +3,18 @@ defs:
   reward:
     function:
       response: 
+      evaluation: string
     return:
       defs:
-        top_logprobs: ${ response.choices[0].logprobs.content[0].top_logprobs}
+        contents: ${ response['choices'][0].logprobs.content}
       lastOf:
+      - for: 
+          content: ${ contents }
+        repeat: 
+          if: ${ content.token == evaluation }
+          then: 
+            def: top_logprobs
+            data: ${ content.top_logprobs }
       - for: 
           tp: ${ top_logprobs }
         repeat: 
@@ -23,6 +31,14 @@ defs:
       - lang: python  
         code: |
           import math 
+          try:
+            lp_y
+          except NameError:
+            lp_y = -10
+          try:
+            lp_n
+          except NameError:
+            lp_n = -10
           result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
 
   requirements:
@@ -34,19 +50,21 @@ defs:
           llm_as_judge: {optional: string}
         return:
           lastOf:
-          - model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
+          - #model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
+            model: ${ llm_as_judge | default('watsonx/openai/gpt-oss-120b') }
             def: evaluation
             input: |
-                  Is the following requirement satisfied in the solution below? Requirement: ${ requirement }
-                  ${ response }
-
-                  Respond with only 'Yes' or 'No'.
+              Problem: ${ requirement }
+              Solution: ${ response }
+              
+              Respond with only ('Yes'/'No')
             modelResponse: out
             parameters:
               temperature: 0
               logprobs: true
               top_logprobs: 5
-          - ${ reward(out) }
+            spec: {enum: ['Yes', 'No']}
+          - ${ reward(response=out, evaluation=evaluation) }
           
           
       transformContext:
