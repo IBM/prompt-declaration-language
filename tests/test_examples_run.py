@@ -4,7 +4,7 @@ import pathlib
 import random
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import yaml
 from pytest import CaptureFixture, MonkeyPatch
@@ -104,6 +104,7 @@ class FailedResults:
     wrong_results: Dict[str, str] = field(default_factory=lambda: {})
     unexpected_parse_error: Dict[str, str] = field(default_factory=lambda: {})
     unexpected_runtime_error: Dict[str, str] = field(default_factory=lambda: {})
+    wrong_replay_results: Dict[str, str] = field(default_factory=lambda: {})
 
 
 # pylint: disable=too-many-instance-attributes
@@ -161,7 +162,9 @@ class ExamplesRun:
         self.__collect_expected_results()
 
         # Inits execution results for each PDL file
-        self.execution_results: Dict[str, ExecutionResult] = {}
+        self.execution_results: Dict[
+            str, Tuple[ExecutionResult, ExecutionResult | None]
+        ] = {}
 
         # Init failed results
         self.failed_results = FailedResults()
@@ -199,12 +202,10 @@ class ExamplesRun:
 
             self.expected_results[file] = expected_result
 
-    def __execute_file(self, pdl_file_name: str) -> None:
+    def __execute_and_replay_file(self, pdl_file_name: str) -> None:
         """
         Tests the result of a single file and returns the result output and the error code
         """
-
-        exec_result = ExecutionResult()
 
         pdl_file_path = pathlib.Path(pdl_file_name)
         scope: ScopeType = PdlDict({})
@@ -217,13 +218,27 @@ class ExamplesRun:
             if inputs.scope is not None:
                 scope = inputs.scope
 
+        exec_result, output = self.__execute_file(pdl_file_path, scope, replay={})
+
+        if output is not None:
+            replay_result, _ = self.__execute_file(
+                pdl_file_path, scope, replay=output["replay"]
+            )
+        else:
+            replay_result = None
+
+        self.execution_results[pdl_file_name] = exec_result, replay_result
+
+    def __execute_file(self, pdl_file_path, scope, replay):
+        exec_result = ExecutionResult()
+        output = None
         try:
             # Execute file
             output = pdl.exec_file(
                 pdl_file_path,
                 scope=scope,
                 output="all",
-                config=pdl.InterpreterConfig(batch=1),
+                config=pdl.InterpreterConfig(batch=1, replay=replay),
             )
 
             exec_result.result = str(output["result"])
@@ -235,8 +250,7 @@ class ExamplesRun:
         except Exception as exc:
             exec_result.result = str(exc)
             exec_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
-
-        self.execution_results[pdl_file_name] = exec_result
+        return exec_result, output
 
     def populate_exec_result_for_checks(self) -> None:
         """
@@ -245,7 +259,7 @@ class ExamplesRun:
 
         for file in self.check:
             if file not in self.skip:
-                self.__execute_file(file)
+                self.__execute_and_replay_file(file)
 
     def validate_expected_and_actual(self) -> None:
         """
@@ -256,11 +270,12 @@ class ExamplesRun:
         wrong_result: Dict[str, str] = {}
         unexpected_parse_error: Dict[str, str] = {}
         unexpected_runtime_error: Dict[str, str] = {}
+        wrong_replay_result: Dict[str, str] = {}
 
         for file in self.check:
             if file not in self.skip:
                 expected_result = self.expected_results[file]
-                actual_result = self.execution_results[file]
+                actual_result, replay_result = self.execution_results[file]
                 match = expected_result.compare_to_execution(actual_result)
 
                 if not match:
@@ -274,7 +289,14 @@ class ExamplesRun:
                         if actual_result.result is not None:
                             wrong_result[file] = actual_result.result
 
+                if replay_result is not None:
+                    match_replay = expected_result.compare_to_execution(replay_result)
+                    if not match_replay:
+                        if replay_result.result is not None:
+                            wrong_replay_result[file] = replay_result.result
+
         self.failed_results.wrong_results = wrong_result
+        self.failed_results.wrong_replay_results = wrong_replay_result
         self.failed_results.unexpected_parse_error = unexpected_parse_error
         self.failed_results.unexpected_runtime_error = unexpected_runtime_error
 
@@ -345,6 +367,16 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
         print(f"File that produced wrong result: {file}")
         print(
             f"Actual result (copy everything below this line):\n✂️ ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+        )
+
+    # Print the actual results for wrong replay results
+    for file, actual in background.failed_results.wrong_replay_results.items():
+        print(
+            "\n============================================================================"
+        )
+        print(f"File that produced wrong REPLAY result: {file}")
+        print(
+            f"Actual result:\n ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
         )
 
     assert (
