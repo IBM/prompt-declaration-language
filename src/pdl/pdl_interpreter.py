@@ -509,6 +509,7 @@ def process_advance_block_retry(  # noqa: C901
 
     max_retry = block.retry if block.retry else 0
     trial_total = max_retry + 1
+    score = 0
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
             result, background, new_scope, trace = process_block_body(
@@ -547,6 +548,7 @@ def process_advance_block_retry(  # noqa: C901
                     evalfn, _ = process_expr(scope, evaluate, loc)
                     requirement, _ = process_expr(scope, getattr(req, "expect"), loc)
                     evaluation = evalfn(requirement=requirement, response=result)
+                    score = evaluation
                     if evaluation < -0.3:
                         requirements_satisfied = False
                         transform_context = getattr(req, "transformContext", None)
@@ -613,6 +615,7 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
+    factor(score)
     return result, background, new_scope, trace
 
 
