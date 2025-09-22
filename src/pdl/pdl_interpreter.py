@@ -897,9 +897,10 @@ def process_block_body(
             background = DependentContext([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
-            iteration_state = state.with_yield_result(
+            iteration_state_init = state.with_yield_result(
                 state.yield_result and isinstance(block.join, JoinText)
             )
+            iteration_state = iteration_state_init
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
             block = _evaluate_join_field(scope, block, loc)
@@ -918,7 +919,7 @@ def process_block_body(
                     stay, _ = process_condition_of(block, "while_", scope, loc, "while")
                     if not stay:
                         break
-                    iteration_state = iteration_state.with_iter(iidx)
+                    iteration_state = iteration_state_init.with_iter(iidx)
                     if first:
                         first = False
                     elif isinstance(block.join, JoinText):
@@ -1347,9 +1348,10 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     results = []
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
-        iteration_state = state.with_yield_result(
+        iteration_state_init = state.with_yield_result(
             state.yield_result and isinstance(join_type, (JoinLastOf, JoinText))
         )
+        iteration_state = iteration_state_init
         new_loc = None
         background = DependentContext([])
         saved_background: LazyMessages = DependentContext([])
@@ -1357,7 +1359,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         pdl_context_init: LazyMessages = scope.data["pdl_context"]
         try:
             for i, block in enumerate(blocks):
-                iteration_state = iteration_state.with_iter(i)
+                iteration_state = iteration_state_init.with_iter(i)
                 scope = scope | {
                     "pdl_context": DependentContext([pdl_context_init, background])
                 }
