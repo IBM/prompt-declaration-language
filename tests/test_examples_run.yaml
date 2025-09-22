@@ -38,7 +38,8 @@ skip:
   - examples/requirements/gsm8k_short.pdl
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
-  - src/pdl/pdl_stdlib.pdl
+  - build/lib/pdl/pdl_stdlib.pdl
+
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
     stdin: |
