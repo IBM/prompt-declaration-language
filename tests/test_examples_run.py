@@ -388,3 +388,6 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     assert (
         len(background.failed_results.wrong_results) == 0
     ), f"Wrong results: {background.failed_results.wrong_results}"
+    assert (
+        len(background.failed_results.wrong_replay_results) == 0
+    ), f"Wrong replay results: {background.failed_results.wrong_results}"
