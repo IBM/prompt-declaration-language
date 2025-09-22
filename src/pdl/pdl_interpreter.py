@@ -740,7 +740,7 @@ def process_block_body(
                         value, value_background, scope, value_trace = process_blocks(
                             JoinLastOf(as_="lastOf"),  # pyright: ignore
                             context,
-                            iteration_state,
+                            iteration_state.with_id(k),
                             scope,
                             value_blocks,
                             block.kind,
@@ -1251,14 +1251,13 @@ def process_defs(
     defs_trace: dict[str, BlockType] = {}
     defloc = append(loc, "defs")
     state = state.with_id("defs")
+    state = state.with_yield_result(False)
+    state = state.with_yield_background(False)
     for x, block in defs.items():
         newloc = append(defloc, x)
-        state = state.with_id(x)
-        state = state.with_yield_result(False)
-        state = state.with_yield_background(False)
         if isinstance(block, FunctionBlock) and block.def_ is None:
             block = block.model_copy(update={"def_": x})
-        result, _, _, block_trace = process_block(state, scope, block, newloc)
+        result, _, _, block_trace = process_block(state.with_id(x), scope, block, newloc)
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace
     return scope, defs_trace
