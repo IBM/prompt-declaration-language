@@ -207,10 +207,6 @@ class InterpreterState(BaseModel):
     def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
         return self.with_id(str(i))
 
-    def with_pop(self: "InterpreterState") -> "InterpreterState":
-        stack = self.id_stack if self.id_stack is not None else []
-        return self.model_copy(update={"id_stack": stack[:-1]})
-
 
 class ClosureBlock(FunctionBlock):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
@@ -350,7 +346,7 @@ def process_block(
                         "role": state.role,
                         "content": result,
                         "pdl__defsite": ".".join(
-                            state.id_stack
+                            state.id_stack  # XXXX check
                         ),  # Warning: pdl__defsite for a literal value
                     }
                 )
@@ -359,7 +355,7 @@ def process_block(
                 data=expr,
                 pdl__result=result,
                 pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
-                pdl__id=".".join(state.id_stack),
+                pdl__id=".".join(state.id_stack),  # XXX move earlier
             )
             if state.yield_background:
                 yield_background(background)
@@ -754,7 +750,7 @@ def process_block_body(
                         value, value_background, scope, value_trace = process_blocks(
                             JoinLastOf(as_="lastOf"),  # pyright: ignore
                             context,
-                            iteration_state,
+                            iteration_state.with_id(k),
                             scope,
                             value_blocks,
                             block.kind,
@@ -820,17 +816,13 @@ def process_block_body(
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:
-                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "then", state, scope, loc
                 )
-                state = state.with_pop()
             elif block.else_ is not None:
-                state = state.with_iter(0)
                 result, background, scope, trace = process_block_of(
                     block, "else_", state, scope, loc, "else"
                 )
-                state = state.with_pop()
             else:
                 result = PdlConst("")
                 background = DependentContext([])
@@ -915,9 +907,10 @@ def process_block_body(
             background = DependentContext([])
             iter_trace: list[BlockType] = []
             pdl_context_init = scope_init.data["pdl_context"]
-            iteration_state = state.with_yield_result(
+            iteration_state_init = state.with_yield_result(
                 state.yield_result and isinstance(block.join, JoinText)
             )
+            iteration_state = iteration_state_init
             block, items, length = _evaluate_for_field(scope, block, loc)
             block, max_iterations = _evaluate_max_iterations_field(scope, block, loc)
             block = _evaluate_join_field(scope, block, loc)
@@ -936,7 +929,7 @@ def process_block_body(
                     stay, _ = process_condition_of(block, "while_", scope, loc, "while")
                     if not stay:
                         break
-                    iteration_state = iteration_state.with_iter(iidx)
+                    iteration_state = iteration_state_init.with_iter(iidx)
                     if first:
                         first = False
                     elif isinstance(block.join, JoinText):
@@ -981,7 +974,6 @@ def process_block_body(
                         )
                     results.append(iteration_result)
                     iter_trace.append(body_trace)
-                    iteration_state = iteration_state.with_pop()
                     stop, _ = process_condition_of(block, "until", scope, loc)
                     iidx = iidx + 1
                     if stop:
@@ -1275,19 +1267,18 @@ def process_defs(
 ) -> tuple[ScopeType, dict[str, BlockType]]:
     defs_trace: dict[str, BlockType] = {}
     defloc = append(loc, "defs")
-    idx = 0
+    state = state.with_id("defs")
+    state = state.with_yield_result(False)
+    state = state.with_yield_background(False)
     for x, block in defs.items():
         newloc = append(defloc, x)
-        state = state.with_iter(idx)
-        state = state.with_yield_result(False)
-        state = state.with_yield_background(False)
         if isinstance(block, FunctionBlock) and block.def_ is None:
             block = block.model_copy(update={"def_": x})
-        result, _, _, block_trace = process_block(state, scope, block, newloc)
+        result, _, _, block_trace = process_block(
+            state.with_id(x), scope, block, newloc
+        )
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace
-        idx = idx + 1
-        state = state.with_pop()
     return scope, defs_trace
 
 
@@ -1306,7 +1297,7 @@ def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlockOf]:
     try:
         result, background, scope, child_trace = process_block(
-            state,
+            state.with_id(field),
             scope,
             getattr(block, field),
             append(loc, field_alias or field),
@@ -1375,9 +1366,10 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
     results = []
     if not isinstance(blocks, str) and isinstance(blocks, Sequence):
         # Is a list of blocks
-        iteration_state = state.with_yield_result(
+        iteration_state_init = state.with_yield_result(
             state.yield_result and isinstance(join_type, (JoinLastOf, JoinText))
         )
+        iteration_state = iteration_state_init
         new_loc = None
         background = DependentContext([])
         saved_background: LazyMessages = DependentContext([])
@@ -1385,7 +1377,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         pdl_context_init: LazyMessages = scope.data["pdl_context"]
         try:
             for i, block in enumerate(blocks):
-                iteration_state = iteration_state.with_iter(i)
+                iteration_state = iteration_state_init.with_iter(i)
                 scope = scope | {
                     "pdl_context": DependentContext([pdl_context_init, background])
                 }
@@ -1411,7 +1403,6 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 if context == IndependentEnum.DEPENDENT:
                     background = saved_background
                 trace.append(t)  # type: ignore
-                iteration_state = iteration_state.with_pop()
             if context == IndependentEnum.INDEPENDENT:
                 background = saved_background
         except PDLRuntimeError as exc:
