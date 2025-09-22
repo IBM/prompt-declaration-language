@@ -1257,7 +1257,9 @@ def process_defs(
         newloc = append(defloc, x)
         if isinstance(block, FunctionBlock) and block.def_ is None:
             block = block.model_copy(update={"def_": x})
-        result, _, _, block_trace = process_block(state.with_id(x), scope, block, newloc)
+        result, _, _, block_trace = process_block(
+            state.with_id(x), scope, block, newloc
+        )
         scope = scope | PdlDict({x: result})
         defs_trace[x] = block_trace
     return scope, defs_trace
