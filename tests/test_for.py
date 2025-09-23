@@ -171,6 +171,28 @@ join:
         assert result == [["11", "12"], ["21", "22"], ["31", "32"]]
 
 
+def test_for_object():
+    for loop_kind in ["repeat", "map"]:
+        prog_str = f"""
+description: for loop creating an object
+defs:
+  numbers:
+    data: [1, 2, 3, 4]
+  names:
+    data: ["Bob", "Carol", "David", "Ernest"]
+for:
+  number: ${{ numbers }}
+  name: ${{ names }}
+{loop_kind}:
+  data:
+    ${{ name }}: ${{ number }}
+join:
+  as: object
+"""
+        result = exec_str(prog_str)
+        assert result == {"Bob": 1, "Carol": 2, "David": 3, "Ernest": 4}
+
+
 def test_for_nested_text():
     for loop_kind1 in ["repeat", "map"]:
         for loop_kind2 in ["repeat", "map"]:
