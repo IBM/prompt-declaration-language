@@ -47,6 +47,9 @@ class InterpreterConfig(TypedDict, total=False):
     """
     cwd: Path
     """Path considered as the current working directory for file reading."""
+    replay: dict[str, Any]
+    """Execute the program reusing some already computed values.
+    """
 
 
 def exec_program(
@@ -66,9 +69,10 @@ def exec_program(
         output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
-        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
+        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, `trace`, and `replay`.
     """
-    config = config or {}
+    config = config or InterpreterConfig()
+    config["replay"] = dict(config.get("replay", {}))
     state = InterpreterState(**config)
     if not isinstance(scope, PdlDict):
         scope = PdlDict(scope or {})
@@ -83,7 +87,12 @@ def exec_program(
             return result
         case "all":
             scope = future_scope.result()
-            return {"result": result, "scope": scope, "trace": trace}
+            return {
+                "result": result,
+                "scope": scope,
+                "trace": trace,
+                "replay": state.replay,
+            }
         case _:
             assert False, 'The `output` variable should be "result" or "all"'
 
