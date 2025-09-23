@@ -660,6 +660,13 @@ def process_block_body_with_replay(
             if state.yield_background:
                 yield_background(background)
             trace = block
+            # Special case
+            match block:
+                case ModelBlock():
+                    if block.modelResponse is not None:
+                        assert block.pdl__id is not None
+                        raw_result = state.replay[block.pdl__id + ".modelResponse"]
+                        scope = scope | {block.modelResponse: raw_result}
         except KeyError:
             result, background, scope, trace = process_block_body(
                 state, scope, block, loc
@@ -1845,6 +1852,8 @@ def process_call_model(
         )
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
+            assert block.pdl__id is not None
+            state.replay[block.pdl__id + ".modelResponse"] = raw_result
         trace: BlockTypeTVarProcessCallModel = concrete_block.model_copy(
             update={"pdl__result": result}
         )  # pyright: ignore

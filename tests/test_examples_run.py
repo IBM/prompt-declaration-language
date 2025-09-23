@@ -376,7 +376,7 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
         )
         print(f"File that produced wrong REPLAY result: {file}")
         print(
-            f"Actual result:\n ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+            f"Replay result:\n ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
         )
 
     assert (
