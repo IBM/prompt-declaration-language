@@ -220,7 +220,7 @@ class ExamplesRun:
 
         exec_result, output = self.__execute_file(pdl_file_path, scope, replay={})
 
-        if False and output is not None:  # XXXXX REMOVE `False and`
+        if output is not None:
             replay_result, _ = self.__execute_file(
                 pdl_file_path, scope, replay=output["replay"]
             )
@@ -388,7 +388,6 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     assert (
         len(background.failed_results.wrong_results) == 0
     ), f"Wrong results: {background.failed_results.wrong_results}"
-    # XXXXXXX REMOVE comments
-    # assert (
-    #     len(background.failed_results.wrong_replay_results) == 0
-    # ), f"Wrong replay results: {background.failed_results.wrong_results}"
+    assert (
+        len(background.failed_results.wrong_replay_results) == 0
+    ), f"Wrong replay results: {background.failed_results.wrong_results}"

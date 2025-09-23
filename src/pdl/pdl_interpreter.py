@@ -652,8 +652,6 @@ def process_block_body_with_replay(
         assert isinstance(block_id, str)
         try:
             result = state.replay[block_id]
-            # XXX TO REMOVE
-            assert False, "XXXXXXXXXXXXX"
             background: LazyMessages = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
