@@ -1,0 +1,37 @@
+defs:
+  step:
+    function:
+      pre_x: number
+      y: number
+    return:
+      defs:
+        x:
+          lang: python
+          code: |
+            from mu_ppl import Gaussian
+            result = Gaussian(pre_x, 1).sample()
+        score: 
+          lang: python
+          code: |
+            from mu_ppl import Gaussian
+            result = Gaussian(x, 1).log_prob(y)
+      lastOf:
+        - factor: ${score}
+        - data: ${x}
+  obs:
+    array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+  pre_x: 0
+
+for:
+  y: ${obs}
+repeat:
+  defs:
+    pre_x: ${step(pre_x, y)}
+  data: ${pre_x}
+join:
+  as: array  
+  
+
+
+

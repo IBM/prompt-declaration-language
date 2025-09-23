@@ -8,7 +8,9 @@ from ._version import version
 from .pdl import InterpreterConfig, exec_program
 from .pdl_ast import get_default_model_parameters
 from .pdl_parser import parse_file
+from .pdl_smc import SMC
 from .pdl_utils import validate_scope
+from matplotlib import pyplot as plt
 
 
 def main():
@@ -33,7 +35,7 @@ def main():
         default=5,
     )
     parser.add_argument(
-        "-v", "--viz", help="Display the distribution of results", default=False
+        "-v", "--viz", help="Display the distribution of results", default=False, action="store_true"
     )
     parser.add_argument(
         "--version",
@@ -67,12 +69,23 @@ def main():
         yield_result=False, yield_background=False, batch=1, cwd=Path(args.pdl).parent
     )
     program, loc = parse_file(args.pdl)
-    with ImportanceSampling(num_particles=args.num_particles):
-        dist = infer(
-            lambda: exec_program(program, config, initial_scope, loc, "result")
-        )
+    # with ImportanceSampling(num_particles=args.num_particles):
+    # dist = infer(
+    #     lambda: exec_program(program, config, initial_scope, loc, "result")
+    # )
+    with SMC(num_particles=args.num_particles) as smc:
+
+        def model(replay):
+            config["replay"] = replay
+            result = exec_program(program, config, initial_scope, loc, "all")
+            state = result["replay"]
+            return result["result"], state
+
+        dist = smc.infer_smc(model)
+
     if args.viz:
         viz(dist)
+        plt.show()
     print(dist.sample())
     return 0
 

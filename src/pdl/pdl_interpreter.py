@@ -144,6 +144,7 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
+from .pdl_smc import Resample
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
     apply_defaults,
@@ -1149,6 +1150,9 @@ def process_block_body(
             factor(weight)
             result = PdlConst(None)
             background = DependentContext([])
+            assert block.pdl__id is not None
+            state.replay[block.pdl__id] = None
+            raise Resample(state.replay)
         case EmptyBlock():
             result = PdlConst("")
             background = DependentContext([])
