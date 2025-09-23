@@ -147,3 +147,48 @@ array:
             "pdl__defsite": "array.0.message",
         }
     ]
+
+
+def test_messages6():
+    prog_str = """
+description: Message block scope
+defs:
+    x: 1
+array:
+  - content:
+        defs:
+            x: 2
+        text: ${ x }
+  - content:
+        text: ${ x }
+"""
+    result = exec_str(prog_str, output="all")
+    context = result["scope"]["pdl_context"]
+    assert [m.serialize(SerializeMode.LITELLM) for m in result["result"]] == [
+        [
+            {
+                "role": "user",
+                "content": "2",
+                "pdl__defsite": "array.0.message",
+            }
+        ],
+        [
+            {
+                "role": "user",
+                "content": "1",
+                "pdl__defsite": "array.1.message",
+            }
+        ],
+    ]
+    assert context.serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": "2",
+            "pdl__defsite": "array.0.message",
+        },
+        {
+            "role": "user",
+            "content": "1",
+            "pdl__defsite": "array.1.message",
+        },
+    ]

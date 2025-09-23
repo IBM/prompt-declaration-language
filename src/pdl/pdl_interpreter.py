@@ -783,7 +783,7 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
         case MessageBlock():
-            content, _, scope, trace = process_block_of(
+            content, _, _, trace = process_block_of(
                 block,
                 "content",
                 state,
