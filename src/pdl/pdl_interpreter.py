@@ -190,6 +190,7 @@ class InterpreterState(BaseModel):
     """Event loop to schedule LLM calls."""
     current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
     """Current value of the context set at the beginning of the execution of the block."""
+    replay: dict[str, Any] = {}
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
@@ -307,7 +308,7 @@ def process_prog(
     stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
     stdlib, _ = parse_file(stdlib_file)
     _, _, stdlib_dict, _ = process_block(
-        state.with_yield_background(False).with_yield_result(False),
+        state.with_yield_background(False).with_yield_result(False).with_id("stdlib"),
         empty_scope,
         stdlib.root,
         loc,
@@ -508,7 +509,7 @@ def process_advance_block_retry(  # noqa: C901
     score = 0
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
-            result, background, new_scope, trace = process_block_body(
+            result, background, new_scope, trace = process_block_body_with_replay(
                 state, scope, block, loc
             )
 
@@ -643,6 +644,42 @@ def result_with_type_checking(
             fallback=result,
         )
     return result
+
+
+def process_block_body_with_replay(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: AdvancedBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    if isinstance(block, LeafBlock):
+        block_id = block.pdl__id
+        assert isinstance(block_id, str)
+        try:
+            result = state.replay[block_id]
+            background: LazyMessages = SingletonContext(
+                PdlDict({"role": state.role, "content": result})
+            )
+            if state.yield_result:
+                yield_result(result.result(), block.kind)
+            if state.yield_background:
+                yield_background(background)
+            trace = block
+            # Special case
+            match block:
+                case ModelBlock():
+                    if block.modelResponse is not None:
+                        assert block.pdl__id is not None
+                        raw_result = state.replay[block.pdl__id + ".modelResponse"]
+                        scope = scope | {block.modelResponse: raw_result}
+        except KeyError:
+            result, background, scope, trace = process_block_body(
+                state, scope, block, loc
+            )
+            state.replay[block_id] = result
+    else:
+        result, background, scope, trace = process_block_body(state, scope, block, loc)
+    return result, background, scope, trace
 
 
 def process_block_body(
@@ -1832,6 +1869,8 @@ def process_call_model(
         )
         if block.modelResponse is not None:
             scope = scope | {block.modelResponse: raw_result}
+            assert block.pdl__id is not None
+            state.replay[block.pdl__id + ".modelResponse"] = raw_result
         trace: BlockTypeTVarProcessCallModel = concrete_block.model_copy(
             update={"pdl__result": result}
         )  # pyright: ignore
