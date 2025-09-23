@@ -306,14 +306,14 @@ def process_prog(
     scope = empty_scope | scope
 
     # Process stdlib
-    # stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
-    # stdlib, _ = parse_file(stdlib_file)
-    # _, _, stdlib_dict, _ = process_block(
-    #     state.with_yield_background(False).with_yield_result(False).with_id("stdlib"),
-    #     empty_scope,
-    #     stdlib.root,
-    #     loc,
-    # )
+    stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
+    stdlib, _ = parse_file(stdlib_file)
+    _, _, stdlib_dict, _ = process_block(
+        state.with_yield_background(False).with_yield_result(False).with_id("stdlib"),
+        empty_scope,
+        stdlib.root,
+        loc,
+    )
 
     stdlib_scope = scope  # | PdlDict({"stdlib": stdlib_dict})
 
