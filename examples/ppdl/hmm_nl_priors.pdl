@@ -1,0 +1,48 @@
+defs:
+  step:
+    function:
+      pre_x: number
+      y: number
+    return:
+      defs:
+        x:
+          model: ollama_chat/granite3.3:2b
+          parameters:
+            temperature: 1
+          input: We are modeling a random walk along a line. Generate a random number that is Gaussian distributed around ${pre_x}. We do not now the parameters of the random walk but we suspect that the new value should be greater than ${pre_x}. DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
+          parser: json
+          spec: number
+          fallback:
+            lang: python
+            code: |
+              from mu_ppl import Gaussian
+              result = Gaussian(pre_x, 1).sample()
+        score: 
+          lang: python
+          code: |
+            from mu_ppl import Gaussian
+            result = Gaussian(x, 1).log_prob(y)
+      lastOf:
+        - factor: ${score}
+        - data: ${x}
+  obs:
+    array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+  pre_x: 0
+
+for:
+  y: ${obs}
+repeat:
+  defs:
+    pre_x:
+      call: ${step}
+      args:
+        pre_x: ${pre_x}
+        y: ${y}
+  data: ${pre_x}
+join:
+  as: array  
+  
+
+
+
