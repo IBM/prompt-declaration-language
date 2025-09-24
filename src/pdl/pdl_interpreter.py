@@ -306,16 +306,16 @@ def process_prog(
     scope = empty_scope | scope
 
     # Process stdlib
-    stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
-    stdlib, _ = parse_file(stdlib_file)
-    _, _, stdlib_dict, _ = process_block(
-        state.with_yield_background(False).with_yield_result(False).with_id("stdlib"),
-        empty_scope,
-        stdlib.root,
-        loc,
-    )
+    # stdlib_file = Path(__file__).parent / "pdl_stdlib.pdl"
+    # stdlib, _ = parse_file(stdlib_file)
+    # _, _, stdlib_dict, _ = process_block(
+    #     state.with_yield_background(False).with_yield_result(False).with_id("stdlib"),
+    #     empty_scope,
+    #     stdlib.root,
+    #     loc,
+    # )
 
-    stdlib_scope = scope | PdlDict({"stdlib": stdlib_dict})
+    stdlib_scope = scope  # | PdlDict({"stdlib": stdlib_dict})
 
     result, document, final_scope, trace = process_block(
         state, stdlib_scope, block=prog.root, loc=loc
@@ -566,6 +566,8 @@ def process_advance_block_retry(  # noqa: C901
                 if requirements_satisfied is False:
                     continue
             break
+        except Resample as exc:
+            raise exc from exc
         except Exception as exc:
             err_msg = traceback.format_exc()
             do_retry = (
@@ -613,7 +615,8 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    factor(score)
+    if score != 0:
+        factor(score)
     return result, background, new_scope, trace
 
 
