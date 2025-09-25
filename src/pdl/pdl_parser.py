@@ -1,4 +1,5 @@
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Optional
 
@@ -20,6 +21,7 @@ def parse_file(pdl_file: str | Path) -> tuple[Program, PdlLocationType]:
     return parse_str(prog_str, file_name=str(pdl_file))
 
 
+@lru_cache(maxsize=128)
 def parse_str(
     pdl_str: str, file_name: Optional[str] = None
 ) -> tuple[Program, PdlLocationType]:
