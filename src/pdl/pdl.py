@@ -69,7 +69,7 @@ def exec_program(
         output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
-        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, `trace`, and `replay`.
+        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, `trace`, `replay`, and `score`.
     """
     config = config or InterpreterConfig()
     config["replay"] = dict(config.get("replay", {}))
@@ -92,6 +92,7 @@ def exec_program(
                 "scope": scope,
                 "trace": trace,
                 "replay": state.replay,
+                "score": state.score,
             }
         case _:
             assert False, 'The `output` variable should be "result" or "all"'

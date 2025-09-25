@@ -9,11 +9,14 @@
             "type": "python",
             "request": "launch",
             "module": "src.pdl.pdl",
-            "justMyCode": true,
+            "justMyCode": false,
             "args": [
                 // "/Users/lmandel/ml4code/pdl-internal/talks/2024-0819-pdl-examples/03_chatbot.pdl",
                 // "-i", "ast",
-                "examples/tutorial/include.pdl",
+                // "examples/demos/react.pdl",
+                // "examples/granite-io/granite_io_thinking.pdl",
+                // "examples/tools/search.pdl",
+                // "examples/tutorial/include.pdl",
                 // "examples/hello/hello.pdl",
                 // "examples/arith/Arith.pdl"
                 // "examples/hello/weather.pdl"
@@ -21,9 +24,14 @@
                 // "examples/thing/Thing.yaml"
                 // "examples/teacher/teacher.pdl"
                 // "examples/talk/5-hello.pdl",
-                // "/tmp/a.pdl",
+                // "examples/aggregators/contribute_in_file.pdl",
+                // "examples/gsm8k/gsm8k.pdl",
+                // "examples/tutorial/defs.pdl",
+                // "/Users/lmandel/ml4code/ppdl-paper/ppdl/benchmarks/gsm8k/gsm8k_logprop.pdl",
+                "tests/data/function.pdl",
+                // "/tmp/j.pdl",
                 // "a.pdl"
-                // "--stream", "none",
+                "--stream", "none",
                 "--trace",
             ]
         }
