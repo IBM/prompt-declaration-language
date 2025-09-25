@@ -466,6 +466,12 @@ class StructuredBlock(Block):
     context: IndependentEnum = IndependentEnum.DEPENDENT
 
 
+class EmptyBlock(LeafBlock):
+    """Block without an action. It can contain definitions."""
+
+    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
+
+
 class FunctionBlock(LeafBlock):
     """Function declaration."""
 
@@ -750,6 +756,97 @@ class DataBlock(LeafBlock):
     """Do not evaluate expressions inside strings."""
 
 
+class MessageBlock(LeafBlock):
+    """Create a message."""
+
+    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
+    content: "BlockType"
+    """Content of the message."""
+    name: OptionalExpressionStr = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: OptionalExpressionStr = None
+    """The id of the tool invocation for which this message is the tool response."""
+
+
+class ReadBlock(LeafBlock):
+    """Read from a file or standard input.
+
+    Example. Read from the standard input with a prompt starting with `> `.
+    ```PDL
+    read:
+    message: "> "
+    ```
+
+    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+    ```PDL
+    read: ./data.yaml
+    parser: yaml
+    ```
+    """
+
+    kind: Literal[BlockKind.READ] = BlockKind.READ
+    read: OptionalExpressionStr
+    """Name of the file to read. If `None`, read the standard input.
+    """
+    message: OptionalStr = None
+    """Message to prompt the user to enter a value.
+    """
+    multiline: bool = False
+    """Indicate if one or multiple lines should be read.
+    """
+
+
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: Optional[str] = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregatorConfig(AggregatorConfig):
+    file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: ExpressionType[str] = "w"
+    """File opening mode."""
+    encoding: ExpressionType[Optional[str]] = "utf-8"
+    """File encoding."""
+    prefix: ExpressionType[str] = ""
+    """Prefix to the contributed value."""
+    suffix: ExpressionType[str] = "\n"
+    """Suffix to the contributed value."""
+    flush: ExpressionType[bool] = False
+    """Whether to forcibly flush the stream."""
+
+
+AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
+
+
+class AggregatorBlock(LeafBlock):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
+
+
+class ErrorBlock(LeafBlock):
+    """Block representing an error generated at runtime."""
+
+    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
+    msg: str
+    """Error message.
+    """
+    program: "BlockType"
+    """Block that raised the error.
+    """
+
+
 class TextBlock(StructuredBlock):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
@@ -780,18 +877,6 @@ class ObjectBlock(StructuredBlock):
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
     object: dict[str, "BlockType"] | list["BlockType"]
-
-
-class MessageBlock(LeafBlock):
-    """Create a message."""
-
-    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    content: "BlockType"
-    """Content of the message."""
-    name: OptionalExpressionStr = None
-    """For example, the name of the tool that was invoked, for which this message is the tool response."""
-    tool_call_id: OptionalExpressionStr = None
-    """The id of the tool invocation for which this message is the tool response."""
 
 
 class IfBlock(StructuredBlock):
@@ -1032,34 +1117,6 @@ class MapBlock(StructuredBlock):
     pdl__trace: Optional[list["BlockType"]] = None
 
 
-class ReadBlock(LeafBlock):
-    """Read from a file or standard input.
-
-    Example. Read from the standard input with a prompt starting with `> `.
-    ```PDL
-    read:
-    message: "> "
-    ```
-
-    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
-    ```PDL
-    read: ./data.yaml
-    parser: yaml
-    ```
-    """
-
-    kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: OptionalExpressionStr
-    """Name of the file to read. If `None`, read the standard input.
-    """
-    message: OptionalStr = None
-    """Message to prompt the user to enter a value.
-    """
-    multiline: bool = False
-    """Indicate if one or multiple lines should be read.
-    """
-
-
 class IncludeBlock(StructuredBlock):
     """Include a PDL file."""
 
@@ -1071,7 +1128,7 @@ class IncludeBlock(StructuredBlock):
     pdl__trace: OptionalBlockType = None
 
 
-class ImportBlock(LeafBlock):
+class ImportBlock(StructuredBlock):
     """Import a PDL file."""
 
     kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
@@ -1080,63 +1137,6 @@ class ImportBlock(LeafBlock):
     """
     # Field for internal use
     pdl__trace: OptionalBlockType = None
-
-
-class AggregatorConfig(BaseModel):
-    """Common fields for all aggregator configurations."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        use_attribute_docstrings=True,
-        arbitrary_types_allowed=True,
-    )
-
-    description: Optional[str] = None
-    """Documentation associated to the aggregator config.
-    """
-
-
-class FileAggregatorConfig(AggregatorConfig):
-    file: ExpressionType[str]
-    """Name of the file to which contribute."""
-    mode: ExpressionType[str] = "w"
-    """File opening mode."""
-    encoding: ExpressionType[Optional[str]] = "utf-8"
-    """File encoding."""
-    prefix: ExpressionType[str] = ""
-    """Prefix to the contributed value."""
-    suffix: ExpressionType[str] = "\n"
-    """Suffix to the contributed value."""
-    flush: ExpressionType[bool] = False
-    """Whether to forcibly flush the stream."""
-
-
-AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
-
-
-class AggregatorBlock(LeafBlock):
-    """Create a new aggregator that can be use in the `contribute` field."""
-
-    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
-    aggregator: AggregatorType
-
-
-class ErrorBlock(LeafBlock):
-    """Block representing an error generated at runtime."""
-
-    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
-    msg: str
-    """Error message.
-    """
-    program: "BlockType"
-    """Block that raised the error.
-    """
-
-
-class EmptyBlock(LeafBlock):
-    """Block without an action. It can contain definitions."""
-
-    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 
 AdvancedBlockType: TypeAlias = (
