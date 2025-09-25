@@ -1,4 +1,5 @@
-from typing import Any, Callable, ParamSpec, TypeVar
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Callable, Optional, ParamSpec, TypeVar
 
 from mu_ppl.distributions import Categorical
 from typing_extensions import TypeAliasType
@@ -25,7 +26,7 @@ ModelStateT = TypeAliasType("ModelStateT", dict[str, Any])
 
 def _process_particle(
     state, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
-):
+) -> tuple[Optional[T], ModelStateT, float]:
     """Process a single particle and return (result, state, score)"""
     try:
         result, new_state, score = model(state)
@@ -59,28 +60,33 @@ def infer_smc(
 
 # Warning: Parallel version conflict with the context managers for inference. Need fix!
 
-# def infer_smc(num_particles: int, model) -> Categorical[Any]:
-#     """Parallelized version using ThreadPoolExecutor"""
-#     particles = [{} for _ in range(num_particles)]  # initialise the particles
-#     results: list[Any] = []
-#     scores: list[float] = []
-#     while len(results) < num_particles:
-#         states = []
-#         scores = []
-#         results = []
-#         with ThreadPoolExecutor() as executor:
-#             future_to_particle = {
-#                 executor.submit(_process_particle, state, model, num_particles): state
-#                 for state in particles
-#             }
-#             for future in future_to_particle:
-#                 result, state, score = future.result()
-#                 if result is not None:
-#                     results.append(result)  # execute all the particles
-#                 states.append(state)
-#                 scores.append(score)
-#         particles = resample(states, scores)
-#     return Categorical(list(zip(results, scores)))
+
+def infer_smc_parallel(
+    num_particles: int, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
+) -> Categorical[T]:
+    """Parallelized version using ThreadPoolExecutor"""
+    particles: list[ModelStateT] = [
+        {} for _ in range(num_particles)
+    ]  # initialise the particles
+    results: list[T] = []
+    scores: list[float] = []
+    while len(results) < num_particles:
+        states = []
+        scores = []
+        results = []
+        with ThreadPoolExecutor() as executor:
+            future_to_particle = {
+                executor.submit(_process_particle, state, model): state
+                for state in particles
+            }
+            for future in future_to_particle:
+                result, state, score = future.result()
+                if result is not None:
+                    results.append(result)  # execute all the particles
+                states.append(state)
+                scores.append(score)
+        particles = resample(states, scores)
+    return Categorical(list(zip(results, scores)))
 
 
 # async def _process_particle_async(state, model, num_particles):
