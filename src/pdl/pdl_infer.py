@@ -9,7 +9,7 @@ from ._version import version
 from .pdl import InterpreterConfig, exec_program
 from .pdl_ast import get_default_model_parameters
 from .pdl_parser import parse_file
-from .pdl_smc import infer_smc
+from .pdl_smc import infer_smc, infer_smc_parallel
 from .pdl_utils import validate_scope
 
 
@@ -25,6 +25,12 @@ def main():
         "-d",
         "--data",
         help="initial values to add to the scope",
+    )
+    parser.add_argument(
+        "--algo",
+        choices=["smc", "parallel-smc"],
+        help="Choose inference algorithm.",
+        default="smc",
     )
     parser.add_argument(
         "-n",
@@ -89,7 +95,13 @@ def main():
         score = result["score"]
         return result["result"], state, score
 
-    dist = infer_smc(args.num_particles, model)
+    match args.algo:
+        case "smc":
+            dist = infer_smc(args.num_particles, model)
+        case "parallel-smc":
+            dist = infer_smc_parallel(args.num_particles, model)
+        case _:
+            assert False, f"Unexpected algo: {args.algo}"
 
     if args.viz:
         viz(dist)
