@@ -46,10 +46,13 @@ class InterpreterConfig(TypedDict, total=False):
     """Default role.
     """
     cwd: Path
-    """Path considered as the current working directory for file reading."""
+    """Path considered as the current working directory for file reading.
+    """
     replay: dict[str, Any]
     """Execute the program reusing some already computed values.
     """
+    with_resample: bool
+    """Allow the interpreter to raise the `Resample` exception."""
 
 
 def exec_program(
