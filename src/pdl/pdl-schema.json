@@ -1868,11 +1868,6 @@
           "default": null,
           "description": "Variable where to store the raw response of the model.\n    "
         },
-        "sampling": {
-          "default": true,
-          "title": "Sampling",
-          "type": "boolean"
-        },
         "pdl__trace": {
           "$ref": "#/$defs/OptionalBlockType",
           "default": null
@@ -2741,11 +2736,6 @@
           "$ref": "#/$defs/OptionalStr",
           "default": null,
           "description": "Variable where to store the raw response of the model.\n    "
-        },
-        "sampling": {
-          "default": true,
-          "title": "Sampling",
-          "type": "boolean"
         },
         "pdl__trace": {
           "$ref": "#/$defs/OptionalBlockType",

@@ -602,7 +602,6 @@ class ModelBlock(LeafBlock):
     modelResponse: OptionalStr = None
     """Variable where to store the raw response of the model.
     """
-    sampling: bool = True
     # Field for internal use
     pdl__trace: OptionalBlockType = None
     pdl__usage: OptionalPdlUsage = None

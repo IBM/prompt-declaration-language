@@ -1,6 +1,7 @@
-from typing import Any, Callable, ParamSpec, TypeAliasType, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 
 from mu_ppl.distributions import Categorical
+from typing_extensions import TypeAliasType
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -58,7 +59,7 @@ def infer_smc(
 
 # Warning: Parallel version conflict with the context managers for inference. Need fix!
 
-# def infer_smc(num_particles:int, model) -> Categorical[Any]:
+# def infer_smc(num_particles: int, model) -> Categorical[Any]:
 #     """Parallelized version using ThreadPoolExecutor"""
 #     particles = [{} for _ in range(num_particles)]  # initialise the particles
 #     results: list[Any] = []
