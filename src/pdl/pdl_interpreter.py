@@ -561,16 +561,14 @@ def process_advance_block_retry(  # noqa: C901
                 if requirements_satisfied is False:
                     continue
             break
+        except KeyboardInterrupt as exc:
+            raise exc from exc
         except Exception as exc:
-            err_msg = traceback.format_exc()
-            do_retry = (
-                block.retry
-                and trial_idx + 1 < trial_total
-                and "Keyboard Interrupt" not in err_msg
-            )
+            do_retry = block.retry and trial_idx + 1 < trial_total
             if block.fallback is None and not do_retry:
                 raise exc from exc
             if do_retry:
+                err_msg = traceback.format_exc()
                 error = f"An error occurred in a PDL block. Error details: {err_msg}"
                 print(
                     f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n",
@@ -1395,6 +1393,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         saved_background: LazyMessages = DependentContext([])
         trace = []
         pdl_context_init: LazyMessages = scope.data["pdl_context"]
+        is_last_of = isinstance(join_type, JoinLastOf)
         try:
             for i, block in enumerate(blocks):
                 iteration_state = iteration_state_init.with_iter(i)
@@ -1402,7 +1401,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                     "pdl_context": DependentContext([pdl_context_init, background])
                 }
                 new_loc = append(loc, "[" + str(i) + "]")
-                if isinstance(join_type, JoinLastOf) and state.yield_result:
+                if is_last_of and state.yield_result:
                     iteration_state = state.with_yield_result(i + 1 == len(blocks))
                 (
                     iteration_result,
