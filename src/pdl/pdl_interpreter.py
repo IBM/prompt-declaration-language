@@ -184,6 +184,8 @@ class InterpreterState(BaseModel):
     """Current working directory."""
     id_stack: list[str] = []
     """Id generator for the UI."""
+    with_resample: bool = False
+    """Allow the interpreter to raise the `Resample` exception."""
 
     # The following are shared variable that should be modified by side effects
     score: float = 0.0
@@ -1147,8 +1149,9 @@ def process_block_body(
             result = PdlConst(None)
             background = DependentContext([])
             assert block.pdl__id is not None
-            state.replay[block.pdl__id] = None
-            raise Resample(state.replay, state.score)
+            state.replay[block.pdl__id] = result
+            if state.with_resample:
+                raise Resample(state.replay, state.score)
         case EmptyBlock():
             result = PdlConst("")
             background = DependentContext([])

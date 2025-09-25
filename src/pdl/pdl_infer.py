@@ -70,7 +70,11 @@ def main():
     validate_scope(initial_scope)
 
     config = InterpreterConfig(
-        yield_result=False, yield_background=False, batch=1, cwd=Path(args.pdl).parent
+        yield_result=False,
+        yield_background=False,
+        batch=1,
+        cwd=Path(args.pdl).parent,
+        with_resample=True,
     )
     program, loc = parse_file(args.pdl)
     # with ImportanceSampling(num_particles=args.num_particles):
