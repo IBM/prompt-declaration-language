@@ -2,7 +2,8 @@ import argparse
 from pathlib import Path
 
 import yaml
-from mu_ppl import ImportanceSampling, infer, viz
+from matplotlib import pyplot as plt
+from mu_ppl import viz
 
 from ._version import version
 from .pdl import InterpreterConfig, exec_program
@@ -10,7 +11,6 @@ from .pdl_ast import get_default_model_parameters
 from .pdl_parser import parse_file
 from .pdl_smc import infer_smc
 from .pdl_utils import validate_scope
-from matplotlib import pyplot as plt
 
 
 def main():
@@ -82,7 +82,8 @@ def main():
         config["replay"] = replay
         result = exec_program(program, config, initial_scope, loc, "all")
         state = result["replay"]
-        return result["result"], state
+        score = result["score"]
+        return result["result"], state, score
 
     dist = infer_smc(args.num_particles, model)
 

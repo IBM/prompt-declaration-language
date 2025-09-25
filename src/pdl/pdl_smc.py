@@ -1,19 +1,15 @@
-from typing import TypeVar, ParamSpec, Callable, Any
-from mu_ppl.distributions import Categorical
-from mu_ppl import ImportanceSampling
-from tqdm import tqdm
-from copy import deepcopy
-from concurrent.futures import ThreadPoolExecutor
-import asyncio
+from typing import Any, Callable, ParamSpec, TypeAliasType, TypeVar
 
+from mu_ppl.distributions import Categorical
 
 T = TypeVar("T")
 P = ParamSpec("P")
 
 
 class Resample(Exception):
-    def __init__(self, state):
+    def __init__(self, state, score):
         self.state = state
+        self.score = score
 
 
 def resample(particles: list[Any], scores: list[float]) -> list[Any]:
@@ -23,19 +19,27 @@ def resample(particles: list[Any], scores: list[float]) -> list[Any]:
     ]  # resample a new set of particles
 
 
-def _process_particle(state, model, num_particles):
+ModelStateT = TypeAliasType("ModelStateT", dict[str, Any])
+
+
+def _process_particle(
+    state, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
+):
     """Process a single particle and return (result, state, score)"""
-    with ImportanceSampling(0) as sampler:
-        try:
-            result, new_state = model(state)
-            return result, new_state, sampler.score
-        except Resample as exn:
-            return None, exn.state, sampler.score
+    try:
+        result, new_state, score = model(state)
+        return result, new_state, score
+    except Resample as exn:
+        return None, exn.state, exn.score
 
 
-def infer_smc(num_particles: int, model) -> Categorical[Any]:
+def infer_smc(
+    num_particles: int, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
+) -> Categorical[T]:
     """Sequential version"""
-    particles = [{} for _ in range(num_particles)]  # initialise the particles
+    particles: list[ModelStateT] = [
+        {} for _ in range(num_particles)
+    ]  # initialise the particles
     results: list[Any] = []
     scores: list[float] = []
     while len(results) < num_particles:
@@ -43,7 +47,7 @@ def infer_smc(num_particles: int, model) -> Categorical[Any]:
         scores = []
         results = []
         for state in particles:
-            result, state, score = _process_particle(state, model, num_particles)
+            result, state, score = _process_particle(state, model)
             if result is not None:
                 results.append(result)
             states.append(state)

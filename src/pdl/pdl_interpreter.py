@@ -45,7 +45,6 @@ from jinja2 import (  # noqa: E402
 )
 from jinja2.nodes import TemplateData  # noqa: E402
 from jinja2.runtime import Undefined  # noqa: E402
-from mu_ppl import Distribution, factor, sample  # noqa: E402
 from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
 from pydantic.json_schema import SkipJsonSchema  # noqa: E402
 
@@ -144,7 +143,7 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
-from .pdl_smc import Resample
+from .pdl_smc import Resample  # noqa: E402
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
     apply_defaults,
@@ -187,6 +186,8 @@ class InterpreterState(BaseModel):
     """Id generator for the UI."""
 
     # The following are shared variable that should be modified by side effects
+    score: float = 0.0
+    """Log probability of the execution."""
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
     """Event loop to schedule LLM calls."""
     current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
@@ -315,7 +316,7 @@ def process_prog(
         loc,
     )
 
-    stdlib_scope = scope  # | PdlDict({"stdlib": stdlib_dict})
+    stdlib_scope = scope | PdlDict({"stdlib": stdlib_dict})
 
     result, document, final_scope, trace = process_block(
         state, stdlib_scope, block=prog.root, loc=loc
@@ -613,8 +614,7 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    if score != 0:
-        factor(score)
+    state.score += score
     return result, background, new_scope, trace
 
 
@@ -697,14 +697,9 @@ def process_block_body(
     block.pdl__location = loc
     match block:
         case ModelBlock():
-            if block.sampling:
-                result, background, scope, trace = sample(
-                    MuPplModel(state, scope, block, loc), name=block.pdl__id
-                )
-            else:
-                result, background, scope, trace = process_call_model(
-                    state, scope, block, loc
-                )
+            result, background, scope, trace = process_call_model(
+                state, scope, block, loc
+            )
         case ArgsBlock() | CodeBlock():
             result, background, scope, trace = process_call_code(
                 state, scope, block, loc
@@ -1148,12 +1143,12 @@ def process_block_body(
             weight, trace = process_expr_of(
                 block, "factor", scope, append(loc, "factor")
             )
-            factor(weight)
+            state.score += weight
             result = PdlConst(None)
             background = DependentContext([])
             assert block.pdl__id is not None
             state.replay[block.pdl__id] = None
-            raise Resample(state.replay)
+            raise Resample(state.replay, state.score)
         case EmptyBlock():
             result = PdlConst("")
             background = DependentContext([])
@@ -2677,62 +2672,3 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
 def get_var(var: str, scope: ScopeType, loc: PdlLocationType) -> Any:
     v, _ = process_expr(scope, f"{EXPR_START_STRING} {var} {EXPR_END_STRING}", loc)
     return v
-
-
-class MuPplModel(Distribution[Any]):
-    """
-    Call an LLM via mu-ppl
-    """
-
-    def __init__(
-        self, state: InterpreterState, scope: ScopeType, block, loc: PdlLocationType
-    ):
-        self.state = state
-        self.scope = scope
-        self.block = block
-        self.loc = loc
-
-    def sample(self) -> Any:
-        return process_call_model(self.state, self.scope, self.block, self.loc)
-
-    def log_prob(self, x: Any) -> float:
-
-        res, _, _, _ = x
-
-        prompt = f"""
-Given a prompt I want you to estimate the logprob of a response that you already gave. Ready?
-Here is the context:
-
-```
-{self.scope["pdl_context"]}
-```
-
-And here is the response:
-
-```
-{res.result()}
-```
-
-Answer with a json object in a single code block WITHOUT EXPLANATIONS! For instance, here is a valid answer:
-
-```
-{{"logprob": 0.0}}
-```
-
-What is the logprob of this response?
-"""
-        block = self.block.model_copy(update={"input": prompt})
-        block.parser = "json"
-        # block.spec = {"logprob": "float"}
-        block.sampling = False
-        score, _, _, _ = process_block(self.state, self.scope, block, self.loc)
-        match score.result():
-            case list():
-                return score.result()[0]["logprob"]
-            case dict():
-                return score.result()["logprob"]
-            case _:
-                return 0.0
-
-    def stats(self) -> Tuple[float, float]:
-        raise RuntimeError("stats not defined for PDL_model")
