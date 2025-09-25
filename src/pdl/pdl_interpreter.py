@@ -144,6 +144,7 @@ from .pdl_scheduler import (  # noqa: E402
 )
 from .pdl_schema_utils import get_json_schema  # noqa: E402
 from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
+from .pdl_smc import Resample
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
     apply_defaults,
@@ -314,7 +315,7 @@ def process_prog(
         loc,
     )
 
-    stdlib_scope = scope | PdlDict({"stdlib": stdlib_dict})
+    stdlib_scope = scope  # | PdlDict({"stdlib": stdlib_dict})
 
     result, document, final_scope, trace = process_block(
         state, stdlib_scope, block=prog.root, loc=loc
@@ -567,6 +568,8 @@ def process_advance_block_retry(  # noqa: C901
             break
         except KeyboardInterrupt as exc:
             raise exc from exc
+        except Resample as exc:
+            raise exc from exc
         except Exception as exc:
             do_retry = block.retry and trial_idx + 1 < trial_total
             if block.fallback is None and not do_retry:
@@ -610,7 +613,8 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    factor(score)
+    if score != 0:
+        factor(score)
     return result, background, new_scope, trace
 
 
@@ -1147,6 +1151,9 @@ def process_block_body(
             factor(weight)
             result = PdlConst(None)
             background = DependentContext([])
+            assert block.pdl__id is not None
+            state.replay[block.pdl__id] = None
+            raise Resample(state.replay)
         case EmptyBlock():
             result = PdlConst("")
             background = DependentContext([])
