@@ -48,6 +48,13 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "-w",
+        "--workers",
+        type=int,
+        help="Maximal number of workers for parallel execution of the inference algorithms",
+        default=None,
+    )
+    parser.add_argument(
         "--version",
         action="store_true",
         help="print the version number and exit",
@@ -99,7 +106,7 @@ def main():
         case "smc":
             dist = infer_smc(args.num_particles, model)
         case "parallel-smc":
-            dist = infer_smc_parallel(args.num_particles, model)
+            dist = infer_smc_parallel(args.num_particles, model, args.workers)
         case _:
             assert False, f"Unexpected algo: {args.algo}"
 
