@@ -62,7 +62,9 @@ def infer_smc(
 
 
 def infer_smc_parallel(
-    num_particles: int, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
+    num_particles: int,
+    model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
+    max_workers: Optional[int],
 ) -> Categorical[T]:
     """Parallelized version using ThreadPoolExecutor"""
     particles: list[ModelStateT] = [
@@ -74,7 +76,7 @@ def infer_smc_parallel(
         states = []
         scores = []
         results = []
-        with ThreadPoolExecutor() as executor:
+        with ThreadPoolExecutor(max_workers) as executor:
             future_to_particle = {
                 executor.submit(_process_particle, state, model): state
                 for state in particles
