@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from asyncio import AbstractEventLoop
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
 
@@ -53,6 +54,8 @@ class InterpreterConfig(TypedDict, total=False):
     """
     with_resample: bool
     """Allow the interpreter to raise the `Resample` exception."""
+    event_loop: AbstractEventLoop
+    """Event loop to schedule LLM calls."""
 
 
 def exec_program(
