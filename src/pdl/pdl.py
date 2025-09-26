@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+from asyncio import AbstractEventLoop
 from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
 
@@ -50,6 +51,8 @@ class InterpreterConfig(TypedDict, total=False):
     replay: dict[str, Any]
     """Execute the program reusing some already computed values.
     """
+    event_loop: AbstractEventLoop
+    """Event loop to schedule LLM calls."""
 
 
 def exec_program(
