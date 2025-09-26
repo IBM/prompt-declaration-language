@@ -12,6 +12,7 @@ from .pdl import InterpreterConfig
 from .pdl import exec_program as pdl_exec_program
 from .pdl_ast import PdlLocationType, Program, ScopeType, get_default_model_parameters
 from .pdl_parser import parse_dict, parse_file, parse_str
+from .pdl_scheduler import create_event_loop_thread
 from .pdl_smc import infer_smc, infer_smc_parallel
 from .pdl_utils import validate_scope
 
@@ -38,6 +39,7 @@ def exec_program(
     config["yield_background"] = False
     config["batch"] = 1
     config["with_resample"] = True
+    config["event_loop"] = create_event_loop_thread()
 
     def model(replay):
         assert config is not None
@@ -180,9 +182,7 @@ def main():
         algo=args.algo, num_particles=args.num_particles, max_workers=args.workers
     )
 
-    program, loc = parse_file(args.pdl)
-
-    dist = exec_program(program, config, ppdl_config, initial_scope, loc)
+    dist = exec_file(args.pdl, config, ppdl_config, initial_scope)
 
     if args.viz:
         viz(dist)
