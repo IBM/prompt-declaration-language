@@ -1,16 +1,107 @@
 import argparse
 from pathlib import Path
+from typing import Any, Literal, Optional, TypedDict
 
 import yaml
 from matplotlib import pyplot as plt
 from mu_ppl import viz
+from mu_ppl.distributions import Categorical
 
 from ._version import version
-from .pdl import InterpreterConfig, exec_program
-from .pdl_ast import get_default_model_parameters
-from .pdl_parser import parse_file
+from .pdl import InterpreterConfig
+from .pdl import exec_program as pdl_exec_program
+from .pdl_ast import PdlLocationType, Program, ScopeType, get_default_model_parameters
+from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_smc import infer_smc, infer_smc_parallel
 from .pdl_utils import validate_scope
+
+
+class PpdlConfig(TypedDict, total=False):
+    """Configuration parameters of the PDL interpreter."""
+
+    algo: Literal["smc", "parallel-smc"]
+    num_particles: int
+    max_workers: int
+
+
+def exec_program(
+    prog: Program,
+    config: Optional[InterpreterConfig] = None,
+    ppdl_config: Optional[PpdlConfig] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
+    loc: Optional[PdlLocationType] = None,
+    # output: Literal["result", "all"] = "result",
+) -> Categorical[Any]:
+
+    config = config or InterpreterConfig()
+    config["yield_result"] = False
+    config["yield_background"] = False
+    config["batch"] = 1
+    config["with_resample"] = True
+
+    def model(replay):
+        assert config is not None
+        config["replay"] = replay
+        result = pdl_exec_program(prog, config, scope, loc, "all")
+        state = result["replay"]
+        score = result["score"]
+        return result["result"], state, score
+
+    ppdl_config = ppdl_config or PpdlConfig()
+
+    algo = ppdl_config.get("algo")
+    num_particles = ppdl_config.get("num_particles") or 5
+    max_workers = ppdl_config.get("max_workers")
+
+    match algo:
+        case None | "smc":
+            dist = infer_smc(num_particles, model)
+        case "parallel-smc":
+            dist = infer_smc_parallel(num_particles, model, max_workers)
+        case _:
+            assert False, f"Unexpected algo: {algo}"
+    return dist
+
+
+def exec_dict(
+    prog: dict[str, Any],
+    config: Optional[InterpreterConfig] = None,
+    ppdl_config: Optional[PpdlConfig] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
+    loc: Optional[PdlLocationType] = None,
+    # output: Literal["result", "all"] = "result",
+) -> Any:
+    program = parse_dict(prog)
+    result = exec_program(program, config, ppdl_config, scope, loc)
+    return result
+
+
+def exec_str(
+    prog: str,
+    config: Optional[InterpreterConfig] = None,
+    ppdl_config: Optional[PpdlConfig] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
+    # output: Literal["result", "all"] = "result",
+) -> Any:
+    program, loc = parse_str(prog)
+    result = exec_program(program, config, ppdl_config, scope, loc)
+    return result
+
+
+def exec_file(
+    prog: str | Path,
+    config: Optional[InterpreterConfig] = None,
+    ppdl_config: Optional[PpdlConfig] = None,
+    scope: Optional[ScopeType | dict[str, Any]] = None,
+    # output: Literal["result", "all"] = "result",
+) -> Any:
+    program, loc = parse_file(prog)
+    if config is None:
+        config = InterpreterConfig()
+    if config.get("cwd") is None:
+        config["cwd"] = Path(prog).parent
+    result = exec_program(program, config, ppdl_config, scope, loc)
+    return result
 
 
 def main():
@@ -83,32 +174,15 @@ def main():
     validate_scope(initial_scope)
 
     config = InterpreterConfig(
-        yield_result=False,
-        yield_background=False,
-        batch=1,
         cwd=Path(args.pdl).parent,
-        with_resample=True,
     )
+    ppdl_config = PpdlConfig(
+        algo=args.algo, num_particles=args.num_particles, max_workers=args.workers
+    )
+
     program, loc = parse_file(args.pdl)
-    # with ImportanceSampling(num_particles=args.num_particles):
-    # dist = infer(
-    #     lambda: exec_program(program, config, initial_scope, loc, "result")
-    # )
 
-    def model(replay):
-        config["replay"] = replay
-        result = exec_program(program, config, initial_scope, loc, "all")
-        state = result["replay"]
-        score = result["score"]
-        return result["result"], state, score
-
-    match args.algo:
-        case "smc":
-            dist = infer_smc(args.num_particles, model)
-        case "parallel-smc":
-            dist = infer_smc_parallel(args.num_particles, model, args.workers)
-        case _:
-            assert False, f"Unexpected algo: {args.algo}"
+    dist = exec_program(program, config, ppdl_config, initial_scope, loc)
 
     if args.viz:
         viz(dist)
