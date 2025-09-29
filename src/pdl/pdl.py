@@ -98,7 +98,7 @@ def exec_program(
                 "scope": scope,
                 "trace": trace,
                 "replay": state.replay,
-                "score": state.score,
+                "score": state.score.ref,
             }
         case _:
             assert False, 'The `output` variable should be "result" or "all"'

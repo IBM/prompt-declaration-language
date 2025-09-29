@@ -188,7 +188,7 @@ class InterpreterState(BaseModel):
     """Allow the interpreter to raise the `Resample` exception."""
 
     # The following are shared variable that should be modified by side effects
-    score: float = 0.0
+    score: Ref[float] = Ref(0.0)
     """Log probability of the execution."""
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
     """Event loop to schedule LLM calls."""
@@ -616,7 +616,7 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
-    state.score += score
+    state.score.ref += score
     return result, background, new_scope, trace
 
 
@@ -1145,13 +1145,13 @@ def process_block_body(
             weight, trace = process_expr_of(
                 block, "factor", scope, append(loc, "factor")
             )
-            state.score += weight
+            state.score.ref += weight
             result = PdlConst(None)
             background = DependentContext([])
             assert block.pdl__id is not None
             state.replay[block.pdl__id] = result
             if state.with_resample:
-                raise Resample(state.replay, state.score)
+                raise Resample(state.replay, state.score.ref)
         case EmptyBlock():
             result = PdlConst("")
             background = DependentContext([])
