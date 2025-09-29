@@ -24,6 +24,36 @@ def resample(particles: list[Any], scores: list[float]) -> list[Any]:
 ModelStateT = TypeAliasType("ModelStateT", dict[str, Any])
 
 
+def infer_importance_sampling(
+    num_particles: int, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
+) -> Categorical[T]:
+    """Sequential version"""
+    results: list[T] = []
+    scores: list[float] = []
+    for _ in range(num_particles):
+        result, _, score = model({})
+        results.append(result)
+        scores.append(score)
+    return Categorical(list(zip(results, scores)))
+
+
+def infer_importance_sampling_parallel(
+    num_particles: int,
+    model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
+    max_workers: Optional[int],
+) -> Categorical[T]:
+    """Parallelized version using ThreadPoolExecutor"""
+    results: list[T] = []
+    scores: list[float] = []
+    with ThreadPoolExecutor(max_workers) as executor:
+        future_to_particle = (executor.submit(model, {}) for _ in range(num_particles))
+        for future in future_to_particle:
+            result, _, score = future.result()
+            results.append(result)
+            scores.append(score)
+    return Categorical(list(zip(results, scores)))
+
+
 def _process_particle(
     state, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
 ) -> tuple[Optional[T], ModelStateT, float]:
@@ -56,9 +86,6 @@ def infer_smc(
             scores.append(score)
         particles = resample(states, scores)
     return Categorical(list(zip(results, scores)))
-
-
-# Warning: Parallel version conflict with the context managers for inference. Need fix!
 
 
 def infer_smc_parallel(
