@@ -13,14 +13,19 @@ from .pdl import exec_program as pdl_exec_program
 from .pdl_ast import PdlLocationType, Program, ScopeType, get_default_model_parameters
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_scheduler import create_event_loop_thread
-from .pdl_smc import infer_smc, infer_smc_parallel
+from .pdl_smc import (
+    infer_importance_sampling,
+    infer_importance_sampling_parallel,
+    infer_smc,
+    infer_smc_parallel,
+)
 from .pdl_utils import validate_scope
 
 
 class PpdlConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
 
-    algo: Literal["smc", "parallel-smc"]
+    algo: Literal["is", "parallel-is", "smc", "parallel-smc"]
     num_particles: int
     max_workers: int
 
@@ -33,6 +38,11 @@ def exec_program(
     loc: Optional[PdlLocationType] = None,
     # output: Literal["result", "all"] = "result",
 ) -> Categorical[Any]:
+    ppdl_config = ppdl_config or PpdlConfig()
+
+    algo = ppdl_config.get("algo")
+    num_particles = ppdl_config.get("num_particles") or 5
+    max_workers = ppdl_config.get("max_workers")
 
     config = config or InterpreterConfig()
     config["yield_result"] = False
@@ -40,6 +50,14 @@ def exec_program(
     config["batch"] = 1
     config["with_resample"] = True
     config["event_loop"] = create_event_loop_thread()
+
+    match algo:
+        case "is" | "parallel-is":
+            config["with_resample"] = False
+        case None | "smc" | "parallel-smc":
+            config["with_resample"] = True
+        case _:
+            assert False, f"Unexpected algo: {algo}"
 
     def model(replay):
         assert config is not None
@@ -49,13 +67,11 @@ def exec_program(
         score = result["score"]
         return result["result"], state, score
 
-    ppdl_config = ppdl_config or PpdlConfig()
-
-    algo = ppdl_config.get("algo")
-    num_particles = ppdl_config.get("num_particles") or 5
-    max_workers = ppdl_config.get("max_workers")
-
     match algo:
+        case "is":
+            dist = infer_importance_sampling(num_particles, model)
+        case "parallel-is":
+            dist = infer_importance_sampling_parallel(num_particles, model, max_workers)
         case None | "smc":
             dist = infer_smc(num_particles, model)
         case "parallel-smc":
@@ -121,7 +137,7 @@ def main():
     )
     parser.add_argument(
         "--algo",
-        choices=["smc", "parallel-smc"],
+        choices=["is", "parallel-is", "smc", "parallel-smc"],
         help="Choose inference algorithm.",
         default="smc",
     )
