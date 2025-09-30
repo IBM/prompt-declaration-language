@@ -184,6 +184,8 @@ class InterpreterState(BaseModel):
     """Id generator for the UI."""
 
     # The following are shared variable that should be modified by side effects
+    imported: dict[str, tuple[ScopeType, BlockType]] = {}
+    """Cache containing the imported files."""
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
     """Event loop to schedule LLM calls."""
     current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
@@ -2383,15 +2385,22 @@ def process_import(
         path += ".pdl"
     file = state.cwd / path
     try:
-        prog, new_loc = parse_file(file)
-        _, _, new_scope, trace = process_block(
-            state.with_yield_background(False).with_yield_result(False),
-            empty_scope,
-            prog.root,
-            new_loc,
-        )
-        if state.yield_result:
-            yield_result(new_scope, block.kind)
+        with open(file, "r", encoding="utf-8") as pdl_fp:
+            prog_str = pdl_fp.read()
+        prog, new_loc = parse_str(prog_str, file_name=str(file))
+        cache = state.imported.get(prog_str)
+        if cache is None:
+            _, _, new_scope, trace = process_block(
+                state.with_yield_background(False).with_yield_result(False),
+                empty_scope,
+                prog.root,
+                new_loc,
+            )
+            state.imported[prog_str] = (new_scope, trace)
+            if state.yield_result:
+                yield_result(new_scope, block.kind)
+        else:
+            new_scope, trace = cache
         import_trace = block.model_copy(update={"pdl__trace": trace})
         return new_scope, DependentContext([]), scope, import_trace
     except PDLParseError as exc:
