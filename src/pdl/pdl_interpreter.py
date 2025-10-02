@@ -568,7 +568,9 @@ def process_advance_block_retry(  # noqa: C901
                         )
                         if trial_idx < max_retry:
                             scope = scope | {"pdl_context": new_context}
-                if requirements_satisfied is False:
+                if (
+                    requirements_satisfied is False
+                ):  # This is needed, otherwise we don't retry
                     continue
             break
         except KeyboardInterrupt as exc:
