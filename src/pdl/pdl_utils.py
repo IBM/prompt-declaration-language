@@ -114,11 +114,6 @@ def message_post_processing(message: dict) -> dict[str, Any]:
     for key, value in message.items():
         if key == "content" and value is not None:
             ret[key] = value
-        elif (
-            key == "reasoning_content" and value is not None
-        ):  # TODO: replacing reasoning_content with content here
-            key = "content"
-            ret[key] = value
         if value is not None:
             if isinstance(value, dict):
                 ret[key] = message_post_processing(value)

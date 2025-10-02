@@ -5,7 +5,7 @@ from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_lazy import PdlDict
 
 model_parser = {
-    "model": "watsonx_text/ibm/granite-20b-code-instruct",
+    "model": "watsonx/ibm/granite-20b-code-instruct",
     "spec": {"bob": "integer", "carol": "integer"},
     "input": {
         "text": [

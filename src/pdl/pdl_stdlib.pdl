@@ -18,13 +18,13 @@ defs:
       - for: 
           tp: ${ top_logprobs }
         repeat: 
-          match: ${ tp.token }
+          match: ${ tp.token | lower }
           with:
-          - case: "Yes"
+          - case: "true"
             then:
               data: ${ tp.logprob }
               def: lp_y
-          - case: "No"
+          - case: "false"
             then: 
               data: ${ tp.logprob }
               def: lp_n
@@ -57,13 +57,12 @@ defs:
               Problem: ${ requirement }
               Solution: ${ response }
               
-              Respond with only ('Yes'/'No')
+              Is the solution correct? Respond with only ('true'/'false')
             modelResponse: out
             parameters:
-              temperature: 0
               logprobs: true
               top_logprobs: 5
-            spec: {enum: ['Yes', 'No']}
+              response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
           - ${ reward(response=out, evaluation=evaluation) }
           
           
