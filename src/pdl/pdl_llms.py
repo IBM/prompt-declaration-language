@@ -172,9 +172,8 @@ def set_structured_decoding_parameters(
     if parameters is None:
         parameters = {}
 
-    if (
-        spec is not None
-        and ("response_format" not in parameters or parameters["response_format"] is None)
+    if spec is not None and (
+        "response_format" not in parameters or parameters["response_format"] is None
     ):
         schema = pdltype_to_jsonschema(spec, True)
         parameters["guided_json"] = schema
