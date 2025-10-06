@@ -2645,6 +2645,11 @@
           "default": null,
           "description": "Parameters to send to the model.\n    ",
           "title": "Parameters"
+        },
+        "structuredDecoding": {
+          "$ref": "#/$defs/OptionalBool",
+          "default": true,
+          "description": "Perform structured decoding if possible (i.e., `parser` and `spec` are provided and the inference platform supports it)."
         }
       },
       "required": [
@@ -3430,40 +3435,16 @@
           "$ref": "#/$defs/BlockType"
         },
         "pdl__case_result": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pdl  Case Result"
+          "$ref": "#/$defs/OptionalBool",
+          "default": null
         },
         "pdl__if_result": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pdl  If Result"
+          "$ref": "#/$defs/OptionalBool",
+          "default": null
         },
         "pdl__matched": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Pdl  Matched"
+          "$ref": "#/$defs/OptionalBool",
+          "default": null
         }
       },
       "required": [
@@ -3792,6 +3773,16 @@
       "anyOf": [
         {
           "$ref": "#/$defs/BlockType"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalBool": {
+      "anyOf": [
+        {
+          "type": "boolean"
         },
         {
           "type": "null"

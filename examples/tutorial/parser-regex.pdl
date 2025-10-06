@@ -5,7 +5,6 @@ text:
   parameters:
     # Tell the LLM to stop after generating an exclamation point.
     stop: ['!']
-  spec: {"name": string}
   parser:
     spec:
       name: string

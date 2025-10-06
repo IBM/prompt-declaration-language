@@ -23,6 +23,7 @@ text:
             Question: Generate only a JSON object with fields 'name' and 'age' and set them appropriately. Write the age all in letters. Only generate a single JSON object and nothing else.
     spec: {name: string, age: integer}
     parser: json
+    structuredDecoding: false
     parameters:
       stop: ["Question"]
       temperature: 0
