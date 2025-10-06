@@ -33,7 +33,8 @@ class LitellmModel:
     ) -> tuple[dict[str, Any], Any]:
         try:
             spec = block.spec
-            parameters = set_structured_decoding_parameters(spec, parameters)
+            if block.structuredDecoding:
+                parameters = set_structured_decoding_parameters(spec, parameters)
             if parameters.get("mock_response") is not None:
                 import litellm
 
@@ -140,12 +141,14 @@ class LitellmModel:
 
     @staticmethod
     def generate_text_stream(
+        block: LitellmModelBlock,
         model_id: str,
         messages: ModelInput,
-        spec: Any,
         parameters: dict[str, Any],
     ) -> Generator[dict[str, Any], Any, Any]:
-        parameters = set_structured_decoding_parameters(spec, parameters)
+        spec = block.spec
+        if block.structuredDecoding:
+            parameters = set_structured_decoding_parameters(spec, parameters)
         from litellm import completion
 
         response = completion(

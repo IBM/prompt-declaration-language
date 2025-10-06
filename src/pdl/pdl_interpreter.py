@@ -1923,9 +1923,9 @@ def generate_client_response_streaming(
                 scope.get("pdl_model_default_parameters", []),
             )
             msg_stream = LitellmModel.generate_text_stream(
+                block,
                 model_id=value_of_expr(block.model),
                 messages=model_input,
-                spec=block.spec,
                 parameters=litellm_parameters_to_dict(parameters),
             )
         case GraniteioModelBlock():

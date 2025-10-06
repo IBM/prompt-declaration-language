@@ -8,7 +8,6 @@ defs:
 text:
   - model: ollama_chat/granite3.2:2b
     def: model_output
-    spec: {name: string, age: integer}
     input:
       array:
       - role: user
@@ -22,7 +21,7 @@ text:
               ${ answer }
           - >
             Question: Generate only a JSON object with fields 'name' and 'age' and set them appropriately. Write the age all in letters. Only generate a single JSON object and nothing else.
-    parser: yaml
+    parser: json
     parameters:
       stop: ["Question"]
       temperature: 0

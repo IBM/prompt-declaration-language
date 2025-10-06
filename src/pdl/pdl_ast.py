@@ -41,6 +41,8 @@ OptionalStr = TypeAliasType("OptionalStr", Optional[str])
 """Optional string."""
 OptionalInt = TypeAliasType("OptionalInt", Optional[int])
 """Optional integer."""
+OptionalBool = TypeAliasType("OptionalBool", Optional[bool])
+"""Optional Boolean."""
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
 """Optional boolean or string."""
 OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
@@ -629,6 +631,8 @@ class LitellmModelBlock(ModelBlock):
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
     """Parameters to send to the model.
     """
+    structuredDecoding: OptionalBool = True
+    """Perform structured decoding if possible (i.e., `parser` and `spec` are provided and the inference platform supports it)."""
 
 
 class GraniteioProcessor(BaseModel):
@@ -835,9 +839,9 @@ class MatchCase(BaseModel):
     """Branch to execute if the value is matched and the condition is satisfied.
     """
     # Field for internal use
-    pdl__case_result: Optional[bool] = None
-    pdl__if_result: Optional[bool] = None
-    pdl__matched: Optional[bool] = None
+    pdl__case_result: OptionalBool = None
+    pdl__if_result: OptionalBool = None
+    pdl__matched: OptionalBool = None
 
 
 class MatchBlock(StructuredBlock):

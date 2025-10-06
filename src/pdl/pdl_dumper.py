@@ -154,6 +154,8 @@ def block_to_dict(  # noqa: C901
                     d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if not block.structuredDecoding:
+                d["structuredDecoding"] = block.structuredDecoding
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
             if block.pdl__model_input is not None:
