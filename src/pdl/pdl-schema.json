@@ -60,10 +60,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -205,10 +205,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -332,10 +332,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -567,10 +567,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -713,10 +713,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -893,10 +893,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1025,10 +1025,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1151,10 +1151,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1213,6 +1213,53 @@
       ],
       "title": "ErrorBlock",
       "type": "object"
+    },
+    "ExpectationType": {
+      "additionalProperties": false,
+      "description": "Single expectation definition.",
+      "properties": {
+        "expect": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {},
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Expect"
+        },
+        "feedback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+            },
+            {
+              "$ref": "#/$defs/FunctionBlock"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Feedback"
+        }
+      },
+      "required": [
+        "expect"
+      ],
+      "title": "ExpectationType",
+      "type": "object"
+    },
+    "ExpectationsType": {
+      "items": {
+        "$ref": "#/$defs/ExpectationType"
+      },
+      "type": "array"
     },
     "ExpressionBool": {
       "anyOf": [
@@ -1416,10 +1463,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1564,10 +1611,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1682,10 +1729,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -1890,10 +1937,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -2021,10 +2068,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -2143,10 +2190,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -2422,10 +2469,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -2547,10 +2594,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -3142,10 +3189,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -3328,10 +3375,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -3532,10 +3579,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -3666,10 +3713,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -4206,10 +4253,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -4369,10 +4416,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
@@ -4500,71 +4547,6 @@
       "title": "RepeatBlock",
       "type": "object"
     },
-    "RequirementType": {
-      "additionalProperties": false,
-      "description": "Single requirement definition.",
-      "properties": {
-        "expect": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {},
-            {
-              "type": "string"
-            }
-          ],
-          "title": "Expect"
-        },
-        "evaluate": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Evaluate"
-        },
-        "transformContext": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
-            },
-            {
-              "$ref": "#/$defs/FunctionBlock"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null,
-          "title": "Transformcontext"
-        }
-      },
-      "required": [
-        "expect"
-      ],
-      "title": "RequirementType",
-      "type": "object"
-    },
-    "RequirementsType": {
-      "items": {
-        "$ref": "#/$defs/RequirementType"
-      },
-      "type": "array"
-    },
     "TextBlock": {
       "additionalProperties": false,
       "description": "Create the concatenation of the stringify version of the result of each block of the list of blocks.",
@@ -4625,10 +4607,10 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
-        "requirements": {
-          "$ref": "#/$defs/RequirementsType",
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
           "default": [],
-          "description": "Specify any requirements that the result of the block must satisfy.\n    "
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
         },
         "role": {
           "$ref": "#/$defs/OptionalStr",
