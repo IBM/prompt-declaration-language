@@ -1,0 +1,21 @@
+defs:
+  problem: |+
+    Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, 
+    but 40% of the way through the download, Windows forces a restart to install updates, 
+    which takes 20 minutes. Then Carla has to restart the download from the beginning. 
+    How load does it take to download the file?
+
+lastOf:
+- ${ problem }
+- model: ollama_chat/granite3.3:8b
+  parameters:
+    temperature: 0.2
+  expectations:
+   - expect: "This solution to the following math problem is correct: ${ problem }"
+  retry: 0
+- Extract the result from the above solution into a JSON object with field "answer" and a float as value. Remove any dollar signs or other symbols.
+- model: ollama_chat/granite3.3:8b
+  def: result
+  parser: json
+  spec: { "answer": number }
+- ${ result.answer }
