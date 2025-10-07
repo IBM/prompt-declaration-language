@@ -212,9 +212,12 @@ class InterpreterState(BaseModel):
 class ClosureBlock(FunctionBlock):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
     pdl__state: SkipJsonSchema[InterpreterState] = Field(repr=False)
+    pdl__instance_id: SkipJsonSchema[int] = Field(repr=False, default=0)
 
     def __call__(self, *args, **kwargs):
         state = self.pdl__state.with_yield_result(False).with_yield_background(False)
+        state = state.with_id(f"instance{self.pdl__instance_id}")
+        self.pdl__instance_id += 1
         current_context = state.current_pdl_context.ref
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
@@ -483,16 +486,6 @@ def process_advanced_block(  # noqa: C901
     return result, background, new_scope, trace
 
 
-def reset_replay(state: InterpreterState, pdlid: Optional[str]):
-    if pdlid is None:
-        return
-    keys_list = list(state.replay.keys())
-    # delete key id and all suffixes
-    for key in keys_list:
-        if key.startswith(pdlid):
-            del state.replay[key]
-
-
 def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
@@ -514,12 +507,16 @@ def process_advance_block_retry(  # noqa: C901
         state.yield_background and context_in_contribute(block)
     )
 
-    max_retry = block.retry if block.retry else 0
+    max_retry = block.retry if block.retry is not None else 0
     trial_total = max_retry + 1
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
+            if block.retry is not None:
+                iteration_state = state.with_id(f"retry{trial_idx}")
+            else:
+                iteration_state = state
             result, background, new_scope, trace = process_block_body_with_replay(
-                state, scope, block, loc
+                iteration_state, scope, block, loc
             )
 
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
@@ -556,7 +553,9 @@ def process_advance_block_retry(  # noqa: C901
                         args={"expectation": expectation, "response": result.result()},
                     )
                     feedback, _, _, _ = process_call(
-                        state.with_yield_result(False).with_yield_background(False),
+                        iteration_state.with_yield_result(False).with_yield_background(
+                            False
+                        ),
                         scope,
                         call_block,
                         append(loc, "feedback"),
@@ -576,7 +575,6 @@ def process_advance_block_retry(  # noqa: C901
                                     [scope["pdl_context"], {"role": "user", "content": instruction}]  # type: ignore
                                 )
                             }
-                            reset_replay(state, block.pdl__id)
                             expectations_satisfied = False
 
                 if (
@@ -599,13 +597,9 @@ def process_advance_block_retry(  # noqa: C901
                 )
                 if block.trace_error_on_retry:
                     scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
-                reset_replay(state, block.pdl__id)
                 continue
-            state = init_state.with_yield_result(
+            state = state.with_yield_result(
                 init_state.yield_result and ContributeTarget.RESULT in block.contribute
-            )
-            state = state.with_yield_background(
-                state.yield_background and context_in_contribute(block)
             )
             (
                 result,
@@ -669,7 +663,7 @@ def process_block_body_with_replay(
     block: AdvancedBlockType,
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
-    if isinstance(block, LeafBlock):
+    if isinstance(block, LeafBlock) and not isinstance(block, CallBlock):
         block_id = block.pdl__id
         assert isinstance(block_id, str)
         try:

@@ -257,3 +257,20 @@ array:
 """
     result = exec_str(prog)
     assert result == [1, 1, 1]
+
+
+def test_call_from_code_06():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      data: ${x}
+text:
+- ${ f("Hello") }
+- " "
+- ${ f("Bye") }
+"""
+    result = exec_str(prog)
+    assert result == "Hello Bye"
