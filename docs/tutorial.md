@@ -979,7 +979,7 @@ parameters:
        post_message: <insert text here>
 ```
 
-## Type Checking
+## Type Checking and Structured Decoding
 
 Consider the following PDL program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_checking.pdl)). It first reads the data
 found [here](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_checking_data.yaml) to form few-shot examples. These demonstrations show how to create
@@ -991,17 +991,30 @@ some JSON data.
 
 Upon reading the data we use a parser to parse it into a YAML. The `spec` field indicates the expected type for the data, which is an object with 2 fields: `questions` and `answers` that are an array of string and an array of objects, respectively. When the interpreter is executed, it checks this type dynamically and throws errors if necessary.
 
-Similarly, the output of the model call is parsed as YAML, and the `spec` indicates that we expect an object with two fields: `name` of type string, and `age` of type integer.
-
 When we run this program, we obtain the output:
 
 ```
-{'name': 'John', 'age': '30'}
-type_checking.pdl:9 - Type errors during spec checking:
-type_checking.pdl:9 - twentyfive should be of type <class 'int'>
+{'name': 'John', 'age': 'twentyfive'}
 ```
 
-Notice that since we asked the age to be produced in letters, we got a string back and this causes a type error indicated above.
+If we add the type annotation `spec: {name: string, age: integer}` on the model block (see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/structured_decoding.pdl)), even if we asked the model to produce the age in letters, we are getting the following output:
+
+```
+{'name': 'John', 'age': 30}
+```
+
+We are getting the age as an integer because the model block automatically enable structured decoding. The fields `guided_json` and `response_format` are added automatically by the interpreter to the LiteLLM request with the JSON Schema value obtained from the type. Models on platforms that support structured decoding then use this to generate JSON of the correct format.
+
+
+If we disable structured decoding by setting yhe field `structuredDecoding` to false (see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_error.pdl)), we are getting a type error:
+
+```
+{'name': 'John', 'age': 'twentyfive'}
+examples/tutorial/type_error.pdl:24 - Type errors during spec checking:
+examples/tutorial/type_error.pdl:24 - twentyfive should be of type <class 'int'>
+```
+
+
 
 In general, `spec` definitions can be a subset of JSON schema, or use a shorthand notation as illustrated by the examples below:
 
@@ -1028,23 +1041,6 @@ In general, `spec` definitions can be a subset of JSON schema, or use a shorthan
 
 Another example of type checking a list can be found [here](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_list.pdl).
 
-## Structured Decoding
-
-When a type is specified in a PDL block, it is used for structured decoding with models that support it. The fields `guided_json` and `response_format` are added automatically by the interpreter with a JSON Schema value obtained from the type. Models on platforms that support structured decoding will then use this to generate JSON of the correct format.
-
-The following [program](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/structured-decoding.pdl):
-
-```yaml
---8<-- "./examples/tutorial/structured_decoding.pdl"
-```
-
-produces the output:
-
-```
-
-What is the color of the sky?
-{'color': 'blue'}
-```
 
 ## Python SDK
 
