@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import sys
 from asyncio import AbstractEventLoop
 from pathlib import Path
@@ -27,6 +28,8 @@ from .pdl_utils import (  # pylint: disable=unused-import # noqa: F401
     validate_scope,
     write_trace,
 )
+
+os.environ["DISABLE_AIOHTTP_TRANSPORT"] = "True"
 
 
 class InterpreterConfig(TypedDict, total=False):

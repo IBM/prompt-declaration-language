@@ -489,6 +489,16 @@ def process_advanced_block(  # noqa: C901
     return result, background, new_scope, trace
 
 
+def reset_replay(state: InterpreterState, pdlid: Optional[str]):
+    if pdlid is None:
+        return
+    keys_list = list(state.replay.keys())
+    # delete key id and all suffixes
+    for key in keys_list:
+        if key.startswith(pdlid):
+            del state.replay[key]
+
+
 def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
@@ -540,36 +550,48 @@ def process_advance_block_retry(  # noqa: C901
                 result = lazy_apply(checker, result)
             if block.fallback is not None:
                 result.result()
-            if block.requirements != []:
-                requirements_satisfied = True
-                for req in block.requirements:
-                    evaluate = getattr(req, "evaluate", None)
+            if block.expectations != []:
+                expectations_satisfied = True
+                for req in block.expectations:
+                    evaluate = getattr(req, "feedback", None)
                     stdlib_dict: Any = scope["stdlib"]
                     if evaluate is None:
-                        evaluate = stdlib_dict["requirements"]["evaluation"]
-                    evalfn: Any
-                    evalfn, _ = process_expr(scope, evaluate, loc)
-                    requirement, _ = process_expr(scope, getattr(req, "expect"), loc)
-                    evaluation = evalfn(requirement=requirement, response=result)
-                    score = evaluation
-                    if evaluation < -0.3:
-                        requirements_satisfied = False
-                        transform_context = getattr(req, "transformContext", None)
-                        if transform_context is None:
-                            transform_context = stdlib_dict["requirements"][
-                                "transformContext"
-                            ]
-                        transfn: Any
-                        transfn, _ = process_expr(scope, transform_context, loc)
-                        new_context = transfn(
-                            pdl_context=scope["pdl_context"],
-                            requirement=requirement,
-                            response=result,
-                        )
-                        if trial_idx < max_retry:
-                            scope = scope | {"pdl_context": new_context}
+                        evaluate = stdlib_dict["expectations"]["feedback"]
+                    expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
+                    call_block = CallBlock(
+                        call=evaluate,
+                        args={"expectation": expectation, "response": result.result()},
+                    )
+                    feedback, _, _, _ = process_call(
+                        state.with_yield_result(False).with_yield_background(False),
+                        scope,
+                        call_block,
+                        append(loc, "feedback"),
+                    )
+                    feedback_result = feedback.result()
+                    if feedback_result is not None:
+                        if isinstance(feedback_result, str):
+                            instruction = feedback_result
+                        elif isinstance(feedback_result, float):
+                            score = feedback_result
+                            instruction = ""
+                        elif isinstance(feedback_result, tuple):
+                            score = feedback_result[0]
+                            instruction = feedback_result[1]
+                        else:
+                            instruction = ""
+
+                        if trial_idx < max_retry and instruction != "":
+                            scope = scope | {
+                                "pdl_context": DependentContext(
+                                    [scope["pdl_context"], {"role": "user", "content": instruction}]  # type: ignore
+                                )
+                            }
+                            reset_replay(state, block.pdl__id)
+                            expectations_satisfied = False
+
                 if (
-                    requirements_satisfied is False
+                    expectations_satisfied is False
                 ):  # This is needed, otherwise we don't retry
                     continue
             break
@@ -590,6 +612,7 @@ def process_advance_block_retry(  # noqa: C901
                 )
                 if block.trace_error_on_retry:
                     scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
+                reset_replay(state, block.pdl__id)
                 continue
             state = init_state.with_yield_result(
                 init_state.yield_result and ContributeTarget.RESULT in block.contribute
@@ -1945,9 +1968,9 @@ def generate_client_response_streaming(
                 scope.get("pdl_model_default_parameters", []),
             )
             msg_stream = LitellmModel.generate_text_stream(
+                block,
                 model_id=value_of_expr(block.model),
                 messages=model_input,
-                spec=block.spec,
                 parameters=litellm_parameters_to_dict(parameters),
             )
         case GraniteioModelBlock():
@@ -2256,6 +2279,7 @@ def process_call(
     background: LazyMessages = DependentContext([])
     args, block = process_expr_of(block, "args", scope, loc)
     closure, _ = process_expr_of(block, "call", scope, loc)
+
     if not isinstance(closure, ClosureBlock):
         msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
         if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):

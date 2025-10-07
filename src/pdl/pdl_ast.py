@@ -41,6 +41,8 @@ OptionalStr = TypeAliasType("OptionalStr", Optional[str])
 """Optional string."""
 OptionalInt = TypeAliasType("OptionalInt", Optional[int])
 """Optional integer."""
+OptionalBool = TypeAliasType("OptionalBool", Optional[bool])
+"""Optional Boolean."""
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
 """Optional boolean or string."""
 OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
@@ -334,23 +336,20 @@ ContributeElement = TypeAliasType(
 """Type of the contribute field."""
 
 
-class RequirementType(BaseModel):
-    """Single requirement definition."""
+class ExpectationType(BaseModel):
+    """Single expectation definition."""
 
     model_config = ConfigDict(extra="forbid")
 
     expect: ExpressionType
-    """English description of the requirement"""
+    """English description of the expectation"""
 
-    evaluate: Optional[ExpressionType["FunctionBlock"]] = None
-    """Evaluation function for the requirement"""
-
-    transformContext: Optional[ExpressionType["FunctionBlock"]] = None
-    """Function to transform the context for the requirement"""
+    feedback: Optional[ExpressionType["FunctionBlock"]] = None
+    """Feedback function for the expectation"""
 
 
-RequirementsType = TypeAliasType("RequirementsType", Sequence[RequirementType])
-"""Type of requirements field"""
+ExpectationsType = TypeAliasType("ExpectationsType", Sequence[ExpectationType])
+"""Type of expectations field"""
 
 
 class PdlTiming(BaseModel):
@@ -430,8 +429,8 @@ class Block(BaseModel):
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
 
-    requirements: RequirementsType = []
-    """Specify any requirements that the result of the block must satisfy.
+    expectations: ExpectationsType = []
+    """Specify any expectations that the result of the block must satisfy.
     """
 
     role: RoleType = None
@@ -631,6 +630,8 @@ class LitellmModelBlock(ModelBlock):
     parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
     """Parameters to send to the model.
     """
+    structuredDecoding: OptionalBool = True
+    """Perform structured decoding if possible (i.e., `parser` and `spec` are provided and the inference platform supports it)."""
 
 
 class GraniteioProcessor(BaseModel):
@@ -837,9 +838,9 @@ class MatchCase(BaseModel):
     """Branch to execute if the value is matched and the condition is satisfied.
     """
     # Field for internal use
-    pdl__case_result: Optional[bool] = None
-    pdl__if_result: Optional[bool] = None
-    pdl__matched: Optional[bool] = None
+    pdl__case_result: OptionalBool = None
+    pdl__if_result: OptionalBool = None
+    pdl__matched: OptionalBool = None
 
 
 class MatchBlock(StructuredBlock):

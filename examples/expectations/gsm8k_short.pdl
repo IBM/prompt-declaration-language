@@ -5,17 +5,17 @@ defs:
     which takes 20 minutes. Then Carla has to restart the download from the beginning. 
     How load does it take to download the file?
 
-
 lastOf:
 - ${ problem }
 - model: ollama_chat/granite3.3:8b
   parameters:
     temperature: 0.2
+  expectations:
+   - expect: "This solution to the following math problem is correct: ${ problem }"
+  retry: 0
 - Extract the result from the above solution into a JSON object with field "answer" and a float as value. Remove any dollar signs or other symbols.
 - model: ollama_chat/granite3.3:8b
   def: result
   parser: json
   spec: { "answer": number }
-  requirements:
-    - expect: "This solution to the following math problem is correct: ${ problem }"
 - ${ result.answer }

@@ -264,9 +264,6 @@ export type Anyof = PatternType[]
 export type Array = PatternType[]
 export type Any = null
 export type ExpressionBool = LocalizedExpression | boolean | string
-export type PdlCaseResult = boolean | null
-export type PdlIfResult = boolean | null
-export type PdlMatched = boolean | null
 /**
  * List of cases to match.
  *
@@ -463,7 +460,7 @@ export type Aggregator = "context" | FileAggregatorConfig
  * Documentation associated to the aggregator config.
  *
  */
-export type Description1 = string | null
+export type Description = string | null
 /**
  * Name of the file to which contribute.
  */
@@ -1015,9 +1012,9 @@ export interface RegexParser {
  * Single requirement definition.
  */
 export interface RequirementType {
-  description: unknown
-  evaluate: Evaluate
-  transformContext: Transformcontext
+  expect: unknown
+  evaluate?: Evaluate
+  transformContext?: Transformcontext
 }
 export interface LocalizedExpression {
   pdl__expr: PdlExpr
@@ -1191,6 +1188,10 @@ export interface LitellmModelBlock {
    */
   model: LocalizedExpression | string
   parameters?: Parameters1
+  /**
+   * Perform structured decoding if possible (i.e., `parser` and `spec` are provided and the inference platform supports it).
+   */
+  structuredDecoding?: boolean | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2068,9 +2069,9 @@ export interface MatchCase {
   case?: PatternType | null
   if?: ExpressionBool | null
   then: BlockType
-  pdl__case_result?: PdlCaseResult
-  pdl__if_result?: PdlIfResult
-  pdl__matched?: PdlMatched
+  pdl__case_result?: boolean | null
+  pdl__if_result?: boolean | null
+  pdl__matched?: boolean | null
 }
 /**
  * Match any of the patterns.
@@ -3384,7 +3385,7 @@ export interface Defs20 {
   [k: string]: BlockType
 }
 export interface FileAggregatorConfig {
-  description?: Description1
+  description?: Description
   file: File1
   mode?: Mode1
   encoding?: Encoding

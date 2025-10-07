@@ -23,6 +23,7 @@ from .pdl_ast import (
     EmptyBlock,
     EnumPdlType,
     ErrorBlock,
+    ExpectationType,
     ExpressionType,
     FactorBlock,
     FileAggregatorConfig,
@@ -63,7 +64,6 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
-    RequirementType,
     StructuredBlock,
     TextBlock,
 )
@@ -155,6 +155,8 @@ def block_to_dict(  # noqa: C901
                     d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if not block.structuredDecoding:
+                d["structuredDecoding"] = block.structuredDecoding
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
             if block.pdl__model_input is not None:
@@ -308,9 +310,9 @@ def block_to_dict(  # noqa: C901
         d["pdl__result"] = data_to_dict(block.pdl__result.result(), json_compatible)
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
-    if block.requirements is not None:
-        d["requirements"] = [
-            requirement_to_dict(b, json_compatible) for b in block.requirements
+    if block.expectations is not None:
+        d["expectations"] = [
+            expectation_to_dict(b, json_compatible) for b in block.expectations
         ]
     # if block.pdl__location is not None:
     #     d["pdl__location"] = location_to_dict(block.pdl__location)
@@ -413,13 +415,11 @@ def usage_to_dict(usage: PdlUsage) -> dict:
     return d
 
 
-def requirement_to_dict(req: RequirementType, json_compatible: bool) -> dict:
+def expectation_to_dict(req: ExpectationType, json_compatible: bool) -> dict:
     d: dict = {}
     d["expect"] = req.expect
-    if req.evaluate is not None:
-        d["evaluate"] = expr_to_dict(req.evaluate, json_compatible)
-    if req.transformContext is not None:
-        d["transformContext"] = expr_to_dict(req.transformContext, json_compatible)
+    if req.feedback is not None:
+        d["feedback"] = expr_to_dict(req.feedback, json_compatible)
     return d
 
 

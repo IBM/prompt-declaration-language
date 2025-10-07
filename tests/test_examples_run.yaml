@@ -15,7 +15,6 @@ skip:
   - examples/rag/pdf_index.pdl
   - examples/rag/pdf_query.pdl
   - examples/rag/rag_library1.pdl
-  - examples/tutorial/structured_decoding.pdl
   - pdl-live-react/src-tauri/tests/cli/code-python.pdl
   - pdl-live-react/demos/error.pdl
   - pdl-live-react/demos/demo1.pdl
@@ -33,9 +32,9 @@ skip:
   - examples/optimizer/grammar_correction.pdl
   - examples/optimizer/optimized_grammar_correction.pdl
   - examples/optimizer/eval_levenshtein.pdl
-  - examples/requirements/email.pdl
-  - examples/requirements/gsm8k.pdl
-  - examples/requirements/gsm8k_short.pdl
+  - examples/expectations/email.pdl
+  - examples/expectations/gsm8k.pdl
+  - examples/expectations/gsm8k_short.pdl
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
@@ -101,7 +100,7 @@ expected_runtime_error:
   - examples/callback/repair_prompt.pdl
   - examples/demos/repair_prompt.pdl
   - examples/tutorial/type_list.pdl
-  - examples/tutorial/type_checking.pdl
+  - examples/tutorial/type_error.pdl
   - tests/data/line/hello3.pdl
   - tests/data/line/hello9.pdl
   - tests/data/line/hello12.pdl

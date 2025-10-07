@@ -41,20 +41,21 @@ defs:
             lp_n = -10
           result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
 
-  requirements:
+  expectations:
     object:
-      evaluation:
+      feedback:
         function:
-          requirement: string
-          response: string
+          expectation: string
+          response: 
           llm_as_judge: {optional: string}
+          model: {optional: string}
         return:
           lastOf:
           - #model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
             model: ${ llm_as_judge | default('watsonx/openai/gpt-oss-120b') }
             def: evaluation
             input: |
-              Problem: ${ requirement }
+              Problem: ${ expectation }
               Solution: ${ response }
               
               Is the solution correct? Respond with only ('true'/'false')
@@ -63,24 +64,25 @@ defs:
               logprobs: true
               top_logprobs: 5
               response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
-          - ${ reward(response=out, evaluation=evaluation) }
+          - def: score
+            data: ${ reward(response=out, evaluation=evaluation) }
+          - if: ${ score < -0.3 }
+            then:
+              lastOf:
+              - model: ${ model | default('ollama_chat/granite3.3:8b') }
+                def: instruction
+                input: |
+                  The following requirement is not satisfied, what instruction can be added to get the correct answer?
+                  requirement: ${ expectation }
+                  Answer with only the instruction.
+              - data:
+                  array:
+                  - score
+                  - instruction
+            else:
+              score
           
           
-      transformContext:
-        function:
-          requirement: string
-          response: string
-          model: {optional: string}
-        return: 
-          lastOf:
-          - model: ${ model | default('ollama_chat/granite3.3:8b') }
-            input: |
-              The following requirement is not satisfied, what instruction can be added to get the correct answer?
-              Requirement: ${ requirement }
-              Answer with only the instruction.
-          - ${ pdl_context }
-
-
 
   
 
