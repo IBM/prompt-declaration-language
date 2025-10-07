@@ -335,23 +335,20 @@ ContributeElement = TypeAliasType(
 """Type of the contribute field."""
 
 
-class RequirementType(BaseModel):
-    """Single requirement definition."""
+class ExpectationType(BaseModel):
+    """Single expectation definition."""
 
     model_config = ConfigDict(extra="forbid")
 
     expect: ExpressionType
-    """English description of the requirement"""
+    """English description of the expectation"""
 
-    evaluate: Optional[ExpressionType["FunctionBlock"]] = None
-    """Evaluation function for the requirement"""
-
-    transformContext: Optional[ExpressionType["FunctionBlock"]] = None
-    """Function to transform the context for the requirement"""
+    feedback: Optional[ExpressionType["FunctionBlock"]] = None
+    """Feedback function for the expectation"""
 
 
-RequirementsType = TypeAliasType("RequirementsType", Sequence[RequirementType])
-"""Type of requirements field"""
+ExpectationsType = TypeAliasType("ExpectationsType", Sequence[ExpectationType])
+"""Type of expectations field"""
 
 
 class PdlTiming(BaseModel):
@@ -431,8 +428,8 @@ class Block(BaseModel):
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
 
-    requirements: RequirementsType = []
-    """Specify any requirements that the result of the block must satisfy.
+    expectations: ExpectationsType = []
+    """Specify any expectations that the result of the block must satisfy.
     """
 
     role: RoleType = None

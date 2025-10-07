@@ -1,8 +1,8 @@
 description: Hello world calling a model
 defs:
-  eval: 
+  feedback: 
     function:
-      requirement: string
+      expectation: string
       response: string
     return:
       lastOf:
@@ -13,32 +13,26 @@ defs:
           Email: ${ response }
         parser: json
       - if: ${ result.result }
+        def: eval
         then: 0
-        else: -1000000
-      
-  fix:
-    function:
-      requirement: string
-      response: string
-    return: 
-      lastOf:
-      - model: ollama_chat/mistral-small:latest 
-        def: instruction
-        input: |
-          A model responded with the following response: ${ response }
-          In order to satisfy the following requirement: ${ requirement }
-          what should be added to the prompt as an instruction?
+        else: -10
+      - if: ${ eval < -0.3 }
+        then:
+          model: ollama_chat/mistral-small:latest 
+          def: instruction
+          input: |
+            A model responded with the following response: ${ response }
+            In order to satisfy the following expectation: ${ expectation }
+            what should be added to the prompt as an instruction?
 
-          Respond with only with the instruction.
-      - ${ pdl_context }
+            Respond with only with the instruction.
 
   notes: Olivia helped the lab over the last few weeks by organizing intern events, advertising the speaker series, and handling issues with snack delivery.
   name: Olivia
-text:
+lastOf:
 - "Write an email to ${ name } using the notes following: ${ notes }"
 - model: ollama_chat/granite3.2:2b
-  requirements:
+  expectations:
   - expect: The email should end with Kind regards
-    evaluate:  ${ eval }
-    transformContext: ${ fix }
-  retry: 5
+    feedback:  ${ feedback }
+  retry: 1

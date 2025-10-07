@@ -32,9 +32,9 @@ skip:
   - examples/optimizer/grammar_correction.pdl
   - examples/optimizer/optimized_grammar_correction.pdl
   - examples/optimizer/eval_levenshtein.pdl
-  - examples/requirements/email.pdl
-  - examples/requirements/gsm8k.pdl
-  - examples/requirements/gsm8k_short.pdl
+  - examples/expectations/email.pdl
+  - examples/expectations/gsm8k.pdl
+  - examples/expectations/gsm8k_short.pdl
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
