@@ -520,7 +520,7 @@ def process_advance_block_retry(  # noqa: C901
 
     max_retry = block.retry if block.retry is not None else 0
     trial_total = max_retry + 1
-    score = 0
+    score: float = 0.0
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
             if block.retry is not None:
