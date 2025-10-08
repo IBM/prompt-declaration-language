@@ -1149,6 +1149,8 @@ class EmptyBlock(LeafBlock):
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 
+ExpressionBlock = TypeAliasType("ExpressionBlock", Union[None, bool, int, float, str])
+"""Expression as blocks"""
 AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
@@ -1177,9 +1179,7 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType = TypeAliasType(
-    "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
-)
+BlockType = TypeAliasType("BlockType", Union[ExpressionBlock, AdvancedBlockType])
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore

@@ -11,7 +11,7 @@
             "module": "src.pdl.pdl",
             "justMyCode": false,
             "args": [
-                "a.pdl",
+                "examples/expectations/email.pdl",
                 "--stream", "none",
                 "--trace",
             ]

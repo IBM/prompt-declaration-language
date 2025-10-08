@@ -422,16 +422,7 @@
     "BlockType": {
       "anyOf": [
         {
-          "type": "boolean"
-        },
-        {
-          "type": "integer"
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
+          "$ref": "#/$defs/ExpressionBlock"
         },
         {
           "$ref": "#/$defs/FunctionBlock"
@@ -504,9 +495,6 @@
         },
         {
           "$ref": "#/$defs/EmptyBlock"
-        },
-        {
-          "type": "null"
         }
       ]
     },
@@ -1263,6 +1251,25 @@
         "$ref": "#/$defs/ExpectationType"
       },
       "type": "array"
+    },
+    "ExpressionBlock": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "ExpressionBool": {
       "anyOf": [

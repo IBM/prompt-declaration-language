@@ -10,7 +10,7 @@ Hello
     assert result["result"] == "Hello"
     scope = result["scope"]
     assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": "Hello", "pdl__defsite": ""},
+        {"role": "user", "content": "Hello", "pdl__defsite": "data"},
     ]
 
 
@@ -23,7 +23,7 @@ text:
     assert result["result"] == "Hello"
     scope = result["scope"]
     assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
-        {"role": "user", "content": "Hello", "pdl__defsite": "text.0"},
+        {"role": "user", "content": "Hello", "pdl__defsite": "text.0.data"},
     ]
 
 
@@ -37,7 +37,7 @@ role: A
     assert result["result"] == "Hello"
     scope = result["scope"]
     assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
-        {"role": "A", "content": "Hello", "pdl__defsite": "text.0"},
+        {"role": "A", "content": "Hello", "pdl__defsite": "text.0.data"},
     ]
 
 
@@ -60,12 +60,12 @@ role: Top
     scope = result["scope"]
     assert result["result"] == "AHiB"
     assert scope["pdl_context"].serialize(SerializeMode.LITELLM) == [
-        {"role": "A", "content": "A", "pdl__defsite": "text.0.text"},
-        {"role": "Top", "content": "Hi", "pdl__defsite": "text.1"},
-        {"role": "B", "content": "B", "pdl__defsite": "text.2.text"},
+        {"role": "A", "content": "A", "pdl__defsite": "text.0.text.data"},
+        {"role": "Top", "content": "Hi", "pdl__defsite": "text.1.data"},
+        {"role": "B", "content": "B", "pdl__defsite": "text.2.text.data"},
     ]
     assert scope["ctx1"].serialize(SerializeMode.LITELLM) == []
     assert scope["ctx2"].serialize(SerializeMode.LITELLM) == [
-        {"role": "A", "content": "A", "pdl__defsite": "text.0.text"},
-        {"role": "Top", "content": "Hi", "pdl__defsite": "text.1"},
+        {"role": "A", "content": "A", "pdl__defsite": "text.0.text.data"},
+        {"role": "Top", "content": "Hi", "pdl__defsite": "text.1.data"},
     ]

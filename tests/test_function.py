@@ -170,9 +170,9 @@ lastOf:
 """
     result = exec_str(prog)
     assert [ctx.serialize("litellm") for ctx in result] == [
-        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+        [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
     ]
 
 
@@ -230,9 +230,9 @@ lastOf:
 """
     result = exec_str(prog)
     assert result == [
-        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1'}]",
-        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0'}]",
-        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1.data'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0.data'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
     ]
 
 
@@ -257,3 +257,122 @@ array:
 """
     result = exec_str(prog)
     assert result == [1, 1, 1]
+
+
+def test_call_from_code_06():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      data: ${x}
+text:
+- ${ f("Hello") }
+- " "
+- ${ f("Bye") }
+"""
+    result = exec_str(prog)
+    assert result == "Hello Bye"
+
+
+def test_call_from_code_07():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      data: ${x}
+text:
+- ${ f('Hello') + ' ' + f('Bye') }
+"""
+    result = exec_str(prog)
+    assert result == "Hello Bye"
+
+
+def test_call_from_code_08():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      lastOf:
+      - ${ x }
+      - ${ pdl_context }
+text:
+- call: ${ f }
+  args:
+    x: Hello
+    pdl_context: []
+  role: A
+- "\n"
+- data: ${ f("Hello", pdl_context=[]) }
+  role: A
+"""
+    result = exec_str(prog)
+    assert (
+        result
+        == "[{'role': 'A', 'content': 'Hello', 'pdl__defsite': 'text.0.call.lastOf.0.data'}] [{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'text.defs.f.function.instance0.lastOf.0.data'}]"
+    )  # XXX The second message should have role `A`
+
+
+def test_call_from_code_09():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      lastOf:
+      - ${ x }
+      - ${ pdl_context }
+lastOf:
+- defs:
+    d:
+      call: ${ f }
+      args:
+        x: Hello
+        pdl_context: []
+  data: ${ d }
+- data: ${ f("Bye", pdl_context=[]) }
+- ${ pdl_context }"""
+    result = exec_str(prog)
+    assert (
+        str(result)
+        == "[{'role': 'user', 'content': [{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data.defs.d.call.lastOf.0.data'}]},{'role': 'user', 'content': [{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.defs.f.function.instance0.lastOf.0.data'}]}]"
+    )
+
+
+def test_call_from_code_10():
+    prog = """
+defs:
+  f:
+    function:
+      x: string
+    return:
+      lastOf:
+      - ${ x }
+      - ${ pdl_context }
+text:
+- defs:
+    d:
+      call: ${ f }
+      args:
+        x: Hello
+        pdl_context: []
+  data: ${ d }
+- "\\n------\\n"
+- data: ${ f("Bye", pdl_context=[]) }
+- "\\n------\\n"
+- ${ pdl_context }"""
+    result = exec_str(prog)
+    assert (
+        result
+        == """[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'text.0.data.defs.d.call.lastOf.0.data'}]
+------
+[{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'text.defs.f.function.instance0.lastOf.0.data'}]
+------
+[{'role': 'user', 'content': [{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'text.0.data.defs.d.call.lastOf.0.data'}]},{'role': 'user', 'content': '\\n------\\n', 'pdl__defsite': 'text.1.data'},{'role': 'user', 'content': [{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'text.defs.f.function.instance0.lastOf.0.data'}]},{'role': 'user', 'content': '\\n------\\n', 'pdl__defsite': 'text.3.data'}]"""
+    )
