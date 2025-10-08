@@ -673,9 +673,14 @@ def process_block_body_with_replay(
     block.pdl__id = block_id
     if isinstance(block, LeafBlock) and not isinstance(block, CallBlock):
         assert isinstance(block_id, str)
-        try:
+        if block_id not in state.replay:
+            result, background, scope, trace = process_block_body(
+                state, scope, block, loc
+            )
+            state.replay[block_id] = result
+        else:
             result = state.replay[block_id]
-            background: LazyMessages = SingletonContext(
+            background = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
             if state.yield_result:
@@ -690,11 +695,6 @@ def process_block_body_with_replay(
                         assert block.pdl__id is not None
                         raw_result = state.replay[block.pdl__id + ".modelResponse"]
                         scope = scope | {block.modelResponse: raw_result}
-        except KeyError:
-            result, background, scope, trace = process_block_body(
-                state, scope, block, loc
-            )
-            state.replay[block_id] = result
     else:
         result, background, scope, trace = process_block_body(state, scope, block, loc)
     return result, background, scope, trace
@@ -2099,6 +2099,14 @@ def process_call_code(
                         }
                     )
                 )
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    f"Python Code error: {exc.message}",
+                    loc=loc,
+                    trace=block.model_copy(
+                        update={"code": code_s, "pdl__defsite": block.pdl__id}
+                    ),
+                ) from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Python Code error: {traceback.format_exc()}",
@@ -2198,9 +2206,14 @@ __PDL_SESSION = types.SimpleNamespace()
 def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy[Any]:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
     sys.path.append(str(state.cwd))
-    exec(code, my_namespace.__dict__)  # nosec B102
-    # [B102:exec_used] Use of exec detected.
-    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
+    try:
+        c = compile(code, "<code-block>", "exec")
+        exec(c, my_namespace.__dict__)  # nosec B102
+        # [B102:exec_used] Use of exec detected.
+        # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
+    except Exception as exc:
+        message = traceback.format_exc()
+        raise PDLRuntimeExpressionError(message) from exc
     result = my_namespace.result
     sys.path.pop()
     return PdlConst(result)
