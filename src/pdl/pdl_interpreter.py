@@ -66,6 +66,7 @@ from .pdl_ast import (  # noqa: E402
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    ExpressionBlock,
     ExpressionType,
     FileAggregatorConfig,
     FunctionBlock,
@@ -334,37 +335,9 @@ def process_block(
     try:
         state.current_pdl_context.ref = scope["pdl_context"]  # type: ignore
         if not isinstance(block, Block):
-            start = time.time_ns()
-            try:
-                v, expr = process_expr(scope, block, loc)
-            except PDLRuntimeExpressionError as exc:
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or loc,
-                    trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
-                ) from exc
-            result = PdlConst(v)
-            background = SingletonContext(
-                PdlDict(
-                    {
-                        "role": state.role,
-                        "content": result,
-                        "pdl__defsite": ".".join(
-                            state.id_stack  # XXXX check
-                        ),  # Warning: pdl__defsite for a literal value
-                    }
-                )
+            result, background, scope, trace = process_expression_block(
+                state, scope, block, loc
             )
-            trace = DataBlock(
-                data=expr,
-                pdl__result=result,
-                pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
-                pdl__id=".".join(state.id_stack),  # XXX move earlier
-            )
-            if state.yield_background:
-                yield_background(background)
-            if state.yield_result:
-                yield_result(result.result(), BlockKind.DATA)
 
         else:
             result, background, scope, trace = process_advanced_block_timed(
@@ -388,6 +361,40 @@ def process_block(
     return result, background, scope, trace
 
 
+def process_expression_block(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: ExpressionBlock,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
+    start = time.time_ns()
+    state = state.with_id("expr")
+    block_id = ".".join(state.id_stack)
+    try:
+        v, expr = process_expr(scope, block, loc)
+    except PDLRuntimeExpressionError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+        ) from exc
+    result = PdlConst(v)
+    background = SingletonContext(
+        PdlDict({"role": state.role, "content": result, "pdl__defsite": block_id})
+    )
+    trace = DataBlock(
+        data=expr,
+        pdl__result=result,
+        pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
+        pdl__id=block_id,
+    )
+    if state.yield_background:
+        yield_background(background)
+    if state.yield_result:
+        yield_result(result.result(), BlockKind.DATA)
+    return result, background, scope, trace
+
+
 # A start-end time wrapper around `process_advanced_block`
 def process_advanced_block_timed(
     state: InterpreterState,
@@ -396,8 +403,6 @@ def process_advanced_block_timed(
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     state = state.with_id(str(block.kind))
-    if state.id_stack is not None:
-        block.pdl__id = ".".join(state.id_stack)
     block.pdl__timing = PdlTiming()
     block.pdl__timing.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
@@ -663,8 +668,10 @@ def process_block_body_with_replay(
     block: AdvancedBlockType,
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    assert state.id_stack is not None
+    block_id = ".".join(state.id_stack)
+    block.pdl__id = block_id
     if isinstance(block, LeafBlock) and not isinstance(block, CallBlock):
-        block_id = block.pdl__id
         assert isinstance(block_id, str)
         try:
             result = state.replay[block_id]
@@ -2476,7 +2483,7 @@ class ContextAggregator(Aggregator):
             case None | StructuredBlock():
                 return self
             case LeafBlock():
-                block_id = ".".join(block.pdl__id or [])
+                block_id = block.pdl__id
                 msg = {"role": role, "content": result, "pdl__defsite": block_id}
             case _:
                 msg = {"role": role, "content": result}

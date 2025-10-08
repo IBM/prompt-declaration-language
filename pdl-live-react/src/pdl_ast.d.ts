@@ -10,9 +10,7 @@ export type PDLSchemas = Program | PdlBlock
  * Prompt Declaration Language program (PDL)
  */
 export type Program =
-  | boolean
-  | number
-  | string
+  | ExpressionBlock
   | FunctionBlock
   | CallBlock
   | LitellmModelBlock
@@ -36,7 +34,7 @@ export type Program =
   | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
-  | null
+export type ExpressionBlock = boolean | number | string | null
 export type Enum = unknown[]
 export type PdlTypeType =
   | (
@@ -65,9 +63,7 @@ export type PdlTypeType =
   | null
 export type Type = string | string[]
 export type BlockType =
-  | boolean
-  | number
-  | string
+  | ExpressionBlock
   | FunctionBlock
   | CallBlock
   | LitellmModelBlock
@@ -91,7 +87,6 @@ export type BlockType =
   | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
-  | null
 export type ContributeElement =
   | ContributeTarget
   | string
@@ -110,19 +105,14 @@ export type Contribute = ContributeElement[]
 export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
-export type Evaluate = LocalizedExpression | FunctionBlock | string | null
+export type Feedback = LocalizedExpression | FunctionBlock | string | null
 export type Path = string[]
 export type File = string
-export type Transformcontext =
-  | LocalizedExpression
-  | FunctionBlock
-  | string
-  | null
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType = RequirementType[]
+export type ExpectationsType = ExpectationType[]
 export type ModelInput = {
   [k: string]: unknown
 }[]
@@ -139,10 +129,10 @@ export type Call = LocalizedExpression | FunctionBlock | string
  */
 export type Contribute1 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType1 = RequirementType[]
+export type ExpectationsType1 = ExpectationType[]
 export type PdlIsLeaf1 = true
 export type Kind1 = "model"
 /**
@@ -151,10 +141,10 @@ export type Kind1 = "model"
  */
 export type Contribute2 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType2 = RequirementType[]
+export type ExpectationsType2 = ExpectationType[]
 export type PdlIsLeaf2 = true
 export type Kind2 = "model"
 /**
@@ -163,10 +153,10 @@ export type Kind2 = "model"
  */
 export type Contribute3 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType3 = RequirementType[]
+export type ExpectationsType3 = ExpectationType[]
 export type PdlIsLeaf3 = true
 export type Kind3 = "code"
 /**
@@ -180,10 +170,10 @@ export type Lang = "python" | "command" | "jinja" | "pdl" | "ipython"
  */
 export type Contribute4 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType4 = RequirementType[]
+export type ExpectationsType4 = ExpectationType[]
 export type PdlIsLeaf4 = true
 export type Kind4 = "code"
 export type Lang1 = "command"
@@ -199,10 +189,10 @@ export type Args1 = ExpressionStr[]
  */
 export type Contribute5 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType5 = RequirementType[]
+export type ExpectationsType5 = ExpectationType[]
 export type PdlIsLeaf5 = true
 export type Kind5 = "get"
 /**
@@ -215,10 +205,10 @@ export type Get = string
  */
 export type Contribute6 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType6 = RequirementType[]
+export type ExpectationsType6 = ExpectationType[]
 export type PdlIsLeaf6 = true
 export type Kind6 = "data"
 /**
@@ -231,10 +221,10 @@ export type Raw = boolean
  */
 export type Contribute7 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType7 = RequirementType[]
+export type ExpectationsType7 = ExpectationType[]
 export type PdlIsLeaf7 = false
 export type IndependentEnum = "independent" | "dependent"
 export type Kind7 = "if"
@@ -244,10 +234,10 @@ export type Kind7 = "if"
  */
 export type Contribute8 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType8 = RequirementType[]
+export type ExpectationsType8 = ExpectationType[]
 export type PdlIsLeaf8 = false
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind8 = "match"
@@ -275,10 +265,10 @@ export type With = MatchCase[]
  */
 export type Contribute9 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType9 = RequirementType[]
+export type ExpectationsType9 = ExpectationType[]
 export type PdlIsLeaf9 = false
 export type IndependentEnum2 = "independent" | "dependent"
 export type Kind9 = "repeat"
@@ -295,10 +285,10 @@ export type For = {
  */
 export type Contribute10 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType10 = RequirementType[]
+export type ExpectationsType10 = ExpectationType[]
 export type PdlIsLeaf10 = false
 export type IndependentEnum3 = "independent" | "dependent"
 export type Kind10 = "map"
@@ -315,10 +305,10 @@ export type For1 = {
  */
 export type Contribute11 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType11 = RequirementType[]
+export type ExpectationsType11 = ExpectationType[]
 export type PdlIsLeaf11 = false
 export type IndependentEnum4 = "independent" | "dependent"
 export type Kind11 = "text"
@@ -333,10 +323,10 @@ export type Text = BlockType | BlockType[]
  */
 export type Contribute12 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType12 = RequirementType[]
+export type ExpectationsType12 = ExpectationType[]
 export type PdlIsLeaf12 = false
 export type IndependentEnum5 = "independent" | "dependent"
 export type Kind12 = "lastOf"
@@ -350,10 +340,10 @@ export type Lastof = BlockType[]
  */
 export type Contribute13 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType13 = RequirementType[]
+export type ExpectationsType13 = ExpectationType[]
 export type PdlIsLeaf13 = false
 export type IndependentEnum6 = "independent" | "dependent"
 export type Kind13 = "array"
@@ -367,10 +357,10 @@ export type Array1 = BlockType[]
  */
 export type Contribute14 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType14 = RequirementType[]
+export type ExpectationsType14 = ExpectationType[]
 export type PdlIsLeaf14 = false
 export type IndependentEnum7 = "independent" | "dependent"
 export type Kind14 = "object"
@@ -385,10 +375,10 @@ export type Object2 =
  */
 export type Contribute15 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType15 = RequirementType[]
+export type ExpectationsType15 = ExpectationType[]
 export type PdlIsLeaf15 = true
 export type Kind15 = "message"
 /**
@@ -397,10 +387,10 @@ export type Kind15 = "message"
  */
 export type Contribute16 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType16 = RequirementType[]
+export type ExpectationsType16 = ExpectationType[]
 export type PdlIsLeaf16 = true
 export type Kind16 = "read"
 /**
@@ -414,10 +404,10 @@ export type Multiline = boolean
  */
 export type Contribute17 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType17 = RequirementType[]
+export type ExpectationsType17 = ExpectationType[]
 export type PdlIsLeaf17 = false
 export type IndependentEnum8 = "independent" | "dependent"
 export type Kind17 = "include"
@@ -432,10 +422,10 @@ export type Include = string
  */
 export type Contribute18 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType18 = RequirementType[]
+export type ExpectationsType18 = ExpectationType[]
 export type PdlIsLeaf18 = true
 export type Kind18 = "import"
 /**
@@ -449,10 +439,10 @@ export type Import = string
  */
 export type Contribute19 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType19 = RequirementType[]
+export type ExpectationsType19 = ExpectationType[]
 export type PdlIsLeaf19 = true
 export type Kind19 = "aggregator"
 export type Aggregator = "context" | FileAggregatorConfig
@@ -491,10 +481,10 @@ export type Flush = LocalizedExpression | boolean | string
  */
 export type Contribute20 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType20 = RequirementType[]
+export type ExpectationsType20 = ExpectationType[]
 export type PdlIsLeaf20 = true
 export type Kind20 = "error"
 /**
@@ -508,10 +498,10 @@ export type Msg = string
  */
 export type Contribute21 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType21 = RequirementType[]
+export type ExpectationsType21 = ExpectationType[]
 export type PdlIsLeaf21 = true
 export type Kind21 = "empty"
 export type ExpressionInt = LocalizedExpression | number | string
@@ -633,10 +623,10 @@ export type MaxRetries = number | string | null
  */
 export type Contribute22 = ContributeElement[]
 /**
- * Specify any requirements that the result of the block must satisfy.
+ * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type RequirementsType22 = RequirementType[]
+export type ExpectationsType22 = ExpectationType[]
 export type PdlIsLeaf22 = true
 export type Kind22 = "function"
 /**
@@ -652,9 +642,7 @@ export type Function = {
  */
 export type Signature = string | null
 export type PdlBlock =
-  | boolean
-  | number
-  | string
+  | ExpressionBlock
   | FunctionBlock
   | CallBlock
   | LitellmModelBlock
@@ -678,7 +666,6 @@ export type PdlBlock =
   | AggregatorBlock
   | ErrorBlock
   | EmptyBlock
-  | null
 
 /**
  * Function declaration.
@@ -744,7 +731,7 @@ export interface FunctionBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType22
+  expectations?: ExpectationsType22
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -773,10 +760,7 @@ export interface FunctionBlock {
    *
    */
   return:
-    | boolean
-    | number
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -800,7 +784,6 @@ export interface FunctionBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   signature?: Signature
 }
 /**
@@ -903,7 +886,7 @@ export interface CallBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType
+  expectations?: ExpectationsType
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1009,12 +992,11 @@ export interface RegexParser {
   mode?: Mode
 }
 /**
- * Single requirement definition.
+ * Single expectation definition.
  */
-export interface RequirementType {
+export interface ExpectationType {
   expect: unknown
-  evaluate?: Evaluate
-  transformContext?: Transformcontext
+  feedback?: Feedback
 }
 export interface LocalizedExpression {
   pdl__expr: PdlExpr
@@ -1115,7 +1097,7 @@ export interface LitellmModelBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType1
+  expectations?: ExpectationsType1
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1143,9 +1125,7 @@ export interface LitellmModelBlock {
    *
    */
   input?:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -1169,7 +1149,6 @@ export interface LitellmModelBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * Variable where to store the raw response of the model.
    *
@@ -1264,7 +1243,7 @@ export interface GraniteioModelBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType2
+  expectations?: ExpectationsType2
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1292,9 +1271,7 @@ export interface GraniteioModelBlock {
    *
    */
   input?:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -1318,7 +1295,6 @@ export interface GraniteioModelBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * Variable where to store the raw response of the model.
    *
@@ -1414,7 +1390,7 @@ export interface CodeBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType3
+  expectations?: ExpectationsType3
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1443,9 +1419,7 @@ export interface CodeBlock {
    *
    */
   code:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -1469,7 +1443,6 @@ export interface CodeBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -1550,7 +1523,7 @@ export interface ArgsBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType4
+  expectations?: ExpectationsType4
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1649,7 +1622,7 @@ export interface GetBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType5
+  expectations?: ExpectationsType5
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1766,7 +1739,7 @@ export interface DataBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType6
+  expectations?: ExpectationsType6
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1873,7 +1846,7 @@ export interface IfBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType7
+  expectations?: ExpectationsType7
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -1907,9 +1880,7 @@ export interface IfBlock {
    *
    */
   then:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -1933,7 +1904,6 @@ export interface IfBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * Branch to execute if the condition is false.
    *
@@ -2028,7 +1998,7 @@ export interface MatchBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType8
+  expectations?: ExpectationsType8
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2191,7 +2161,7 @@ export interface RepeatBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType9
+  expectations?: ExpectationsType9
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2231,9 +2201,7 @@ export interface RepeatBlock {
    *
    */
   repeat:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -2257,7 +2225,6 @@ export interface RepeatBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * Condition to exit at the end of the loop.
    *
@@ -2367,7 +2334,7 @@ export interface MapBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType10
+  expectations?: ExpectationsType10
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2402,9 +2369,7 @@ export interface MapBlock {
    *
    */
   map:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -2428,7 +2393,6 @@ export interface MapBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * Maximal number of iterations to perform.
    *
@@ -2517,7 +2481,7 @@ export interface TextBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType11
+  expectations?: ExpectationsType11
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2614,7 +2578,7 @@ export interface LastOfBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType12
+  expectations?: ExpectationsType12
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2711,7 +2675,7 @@ export interface ArrayBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType13
+  expectations?: ExpectationsType13
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2808,7 +2772,7 @@ export interface ObjectBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType14
+  expectations?: ExpectationsType14
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2905,7 +2869,7 @@ export interface MessageBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType15
+  expectations?: ExpectationsType15
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -2932,9 +2896,7 @@ export interface MessageBlock {
    * Content of the message.
    */
   content:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -2958,7 +2920,6 @@ export interface MessageBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
   /**
    * For example, the name of the tool that was invoked, for which this message is the tool response.
    */
@@ -3051,7 +3012,7 @@ export interface ReadBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType16
+  expectations?: ExpectationsType16
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3157,7 +3118,7 @@ export interface IncludeBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType17
+  expectations?: ExpectationsType17
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3255,7 +3216,7 @@ export interface ImportBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType18
+  expectations?: ExpectationsType18
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3352,7 +3313,7 @@ export interface AggregatorBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType19
+  expectations?: ExpectationsType19
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3457,7 +3418,7 @@ export interface ErrorBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType20
+  expectations?: ExpectationsType20
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -3486,9 +3447,7 @@ export interface ErrorBlock {
    *
    */
   program:
-    | boolean
-    | number
-    | string
+    | ExpressionBlock
     | FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -3512,7 +3471,6 @@ export interface ErrorBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
-    | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3585,7 +3543,7 @@ export interface EmptyBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  requirements?: RequirementsType21
+  expectations?: ExpectationsType21
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
