@@ -230,8 +230,8 @@ lastOf:
 """
     result = exec_str(prog)
     assert result == [
-        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1'}]",
-        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'How are you?', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.0.text.0.call.lastOf.1.data'}]",
+        "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.1.text.0.data'}]",
         "Bye[{'role': 'user', 'content': 'Hello', 'pdl__defsite': 'lastOf.0.data'},{'role': 'user', 'content': 'Bye', 'pdl__defsite': 'lastOf.1.array.2.text.0.code'}]",
     ]
 

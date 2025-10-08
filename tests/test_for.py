@@ -275,7 +275,13 @@ def test_for_context():
         match loop_kind:
             case "repeat":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
                     [
                         {
                             "role": "user",
@@ -337,9 +343,27 @@ def test_for_context():
                 ]
             case "map":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
                 ]
 
 
