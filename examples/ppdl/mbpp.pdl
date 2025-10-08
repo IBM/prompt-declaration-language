@@ -79,7 +79,7 @@ defs:
         result = errors_and_warnings
   eval_number_of_errors:
     function:
-      requirement:
+      expectation:
       response:
     return:
       defs:
@@ -93,7 +93,7 @@ text:
 - model:  watsonx/openai/gpt-oss-120b
   parameters:
     temperature: 0.8
-  requirements:
+  expectations:
     - expect: |
         This solution is likely to be a correct solution to the following problem?
 
@@ -105,8 +105,8 @@ text:
   parser:
       regex: (.|\n)*```python\n(?P<code>(.|\n)*)```(.|\n)*
       spec: { code: string }
-  requirements:
+  expectations:
     - expect: The code is Pythonic.
     - expect: There are not tool many errors.
-      evaluate: ${ eval_number_of_errors }
+      feedback: ${ eval_number_of_errors }
 - ${output.code}
