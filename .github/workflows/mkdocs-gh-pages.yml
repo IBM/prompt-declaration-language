@@ -44,7 +44,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.13'
+          python-version: '3.14'
       - name: Install required packages
         run: pip install -U mkdocs "mkdocstrings[python]" mkdocs-material pymdown-extensions
       - name: Build site (_site directory name is used for Jekyll compatiblity)
