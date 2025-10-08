@@ -368,7 +368,7 @@ def process_expression_block(
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     start = time.time_ns()
-    state = state.with_id("expr")
+    state = state.with_id("data")
     block_id = ".".join(state.id_stack)
     try:
         v, expr = process_expr(scope, block, loc)

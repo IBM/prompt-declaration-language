@@ -275,12 +275,12 @@ def test_for_context():
         match loop_kind:
             case "repeat":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
                     [
                         {
                             "role": "user",
                             "content": "Hello",
-                            "pdl__defsite": "lastOf.0",
+                            "pdl__defsite": "lastOf.0.data",
                         },
                         {
                             "role": "user",
@@ -288,17 +288,17 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 }
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.0",
+                            "pdl__defsite": "lastOf.1.repeat.0.data",
                         },
                     ],
                     [
                         {
                             "role": "user",
                             "content": "Hello",
-                            "pdl__defsite": "lastOf.0",
+                            "pdl__defsite": "lastOf.0.data",
                         },
                         {
                             "role": "user",
@@ -306,10 +306,10 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 }
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.0",
+                            "pdl__defsite": "lastOf.1.repeat.0.data",
                         },
                         {
                             "role": "user",
@@ -317,7 +317,7 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 },
                                 {
                                     "role": "user",
@@ -325,21 +325,21 @@ def test_for_context():
                                         {
                                             "role": "user",
                                             "content": "Hello",
-                                            "pdl__defsite": "lastOf.0",
+                                            "pdl__defsite": "lastOf.0.data",
                                         }
                                     ],
-                                    "pdl__defsite": "lastOf.1.repeat.0",
+                                    "pdl__defsite": "lastOf.1.repeat.0.data",
                                 },
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.1",
+                            "pdl__defsite": "lastOf.1.repeat.1.data",
                         },
                     ],
                 ]
             case "map":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
+                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0.data"}],
                 ]
 
 
