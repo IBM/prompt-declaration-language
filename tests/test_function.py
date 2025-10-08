@@ -285,7 +285,7 @@ defs:
     return:
       data: ${x}
 text:
-- ${ f("Hello") f("Bye") }
+- ${ f('Hello') + ' ' + f('Bye') }
 """
     result = exec_str(prog)
     assert result == "Hello Bye"
