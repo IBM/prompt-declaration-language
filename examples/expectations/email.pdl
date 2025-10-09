@@ -12,11 +12,7 @@ defs:
           Does the following email end with Kind regards. Answer with a JSON object and a result field with value True or False only.
           Email: ${ response }
         parser: json
-      - if: ${ result.result }
-        def: eval
-        then: 0
-        else: -10
-      - if: ${ eval < -0.3 }
+      - if: ${ not(result.result) }
         then:
           model: ollama_chat/mistral-small:latest 
           def: instruction
