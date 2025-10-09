@@ -569,7 +569,7 @@ def process_advance_block_retry(  # noqa: C901
                     if feedback_result is not None:
                         if isinstance(feedback_result, str):
                             instruction = feedback_result
-                        elif isinstance(feedback_result, tuple):
+                        elif isinstance(feedback_result, list):
                             instruction = feedback_result[1]
                         else:
                             instruction = ""
