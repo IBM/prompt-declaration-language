@@ -2427,9 +2427,10 @@ def process_import(
         prog, new_loc = parse_str(prog_str, file_name=str(file))
         cache = state.imported.get(prog_str)
         if cache is None:
+            import_scope = empty_scope | {"stdlib": scope["stdlib"]}
             _, _, new_scope, trace = process_block(
                 state.with_yield_background(False).with_yield_result(False),
-                empty_scope,
+                import_scope,
                 prog.root,
                 new_loc,
             )
