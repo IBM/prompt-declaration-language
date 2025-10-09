@@ -1174,7 +1174,7 @@ def process_block_body(
                 block, "factor", scope, append(loc, "factor")
             )
             state.score.ref += weight
-            result = PdlConst(None)
+            result = PdlConst("")
             background = DependentContext([])
             assert block.pdl__id is not None
             state.replay[block.pdl__id] = result

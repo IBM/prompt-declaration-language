@@ -40,8 +40,8 @@ def exec_program(
 ) -> Categorical[Any]:
     ppdl_config = ppdl_config or PpdlConfig()
 
-    algo = ppdl_config.get("algo")
-    num_particles = ppdl_config.get("num_particles") or 5
+    algo = ppdl_config.get("algo", "parallel-smc")
+    num_particles = ppdl_config.get("num_particles", 5)
     max_workers = ppdl_config.get("max_workers")
 
     config = config or InterpreterConfig()
@@ -54,7 +54,7 @@ def exec_program(
     match algo:
         case "is" | "parallel-is":
             config["with_resample"] = False
-        case None | "smc" | "parallel-smc":
+        case "smc" | "parallel-smc":
             config["with_resample"] = True
         case _:
             assert False, f"Unexpected algo: {algo}"
@@ -72,7 +72,7 @@ def exec_program(
             dist = infer_importance_sampling(num_particles, model)
         case "parallel-is":
             dist = infer_importance_sampling_parallel(num_particles, model, max_workers)
-        case None | "smc":
+        case "smc":
             dist = infer_smc(num_particles, model)
         case "parallel-smc":
             dist = infer_smc_parallel(num_particles, model, max_workers)
