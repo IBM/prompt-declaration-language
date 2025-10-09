@@ -87,7 +87,7 @@ defs:
               lang: python
               code: 
                 raise Exception("Llm-as-judge failed!")
-          - if: ${ score < -0.3 }
+          - if: ${ score < -0.7 }
             then:
               lastOf:
               - model: ${ model | default('ollama_chat/granite3.3:8b') }
