@@ -1367,6 +1367,11 @@
           "default": null,
           "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
         },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
         "role": {
           "$ref": "#/$defs/OptionalStr",
           "default": null,
