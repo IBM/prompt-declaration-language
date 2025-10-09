@@ -5,41 +5,54 @@ defs:
       response: 
       evaluation: string
     return:
-      defs:
-        contents: ${ response['choices'][0].logprobs.content}
-      lastOf:
-      - for: 
-          content: ${ contents }
-        repeat: 
-          if: ${ content.token == evaluation }
-          then: 
-            def: top_logprobs
-            data: ${ content.top_logprobs }
-      - for: 
-          tp: ${ top_logprobs }
-        repeat: 
-          match: ${ tp.token | lower }
-          with:
-          - case: "true"
-            then:
-              data: ${ tp.logprob }
-              def: lp_y
-          - case: "false"
-            then: 
-              data: ${ tp.logprob }
-              def: lp_n
-      - lang: python  
-        code: |
-          import math 
-          try:
-            lp_y
-          except NameError:
-            lp_y = -10
-          try:
-            lp_n
-          except NameError:
-            lp_n = -10
-          result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
+      lang: python  
+      code: |
+        import math
+
+        if (evaluation != 'true' and evaluation != 'false'):
+          raise Exception("Wrong value")
+
+        contents =  response['choices'][0]['logprobs']['content']
+        top_logprobs = []
+
+        exact_match = False
+        contents_keys = {c["token"] for c in contents}
+        if evaluation in contents_keys:
+          exact_match = True
+
+        def match(v, c, exact):
+          if exact:
+            return v == c
+          return v.startswith(c)
+
+        for content in contents:
+          if match(evaluation, content['token'], exact_match):
+            top_logprobs = content['top_logprobs']
+            lp_evaluation = content['logprob']
+            break
+        
+        if evaluation == 'true':
+          lp_y = lp_evaluation
+          other = 'false'
+        else: 
+          lp_n = lp_evaluation
+          other = 'true'
+        
+        for tp in top_logprobs:
+          if match(other, tp['token'], exact_match):
+            lp_other = tp['logprob']
+        
+        #try:
+        #  lp_other
+        #except NameError:
+        #  lp_other = -100000
+
+        if other == 'true':
+          lp_y = lp_other
+        else: 
+          lp_n = lp_other
+
+        result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
 
   expectations:
     object:
@@ -51,21 +64,29 @@ defs:
           model: {optional: string}
         return:
           lastOf:
-          - #model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
-            model: ${ llm_as_judge | default('watsonx/openai/gpt-oss-120b') }
-            def: evaluation
-            input: |
-              Problem: ${ expectation }
-              Solution: ${ response }
-              
-              Is the solution correct? Respond with only ('true'/'false')
-            modelResponse: out
-            parameters:
-              logprobs: true
-              top_logprobs: 5
-              response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
-          - def: score
-            data: ${ reward(response=out, evaluation=evaluation) }
+          - lastOf:
+            - #model: ${ llm_as_judge | default('watsonx/ibm/granite-3-8b-instruct') }
+              #model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
+              model: ${ llm_as_judge | default('watsonx/openai/gpt-oss-120b') }
+              def: evaluation
+              input: |
+                Problem: ${ expectation }
+                Solution: ${ response }
+                
+                Is the solution correct? Respond with only ('true'/'false')
+              modelResponse: out
+              parameters:
+                temperature: 0
+                logprobs: true
+                top_logprobs: 5
+                response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
+            - def: score
+              data: ${ reward(response=out, evaluation=evaluation) }
+            retry: 3
+            fallback:
+              lang: python
+              code: 
+                raise Exception("Llm-as-judge failed!")
           - if: ${ score < -0.3 }
             then:
               lastOf:
@@ -75,12 +96,11 @@ defs:
                   The following requirement is not satisfied, what instruction can be added to get the correct answer?
                   requirement: ${ expectation }
                   Answer with only the instruction.
-              - data:
-                  array:
-                  - score
-                  - instruction
+              - array:
+                - ${ score }
+                - ${ instruction }
             else:
-              score
+              ${ score }
           
           
 
