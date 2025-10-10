@@ -22,7 +22,7 @@ export default function Welcome(props: Props) {
     <Page breadcrumb1={props.breadcrumb1}>
       <PageSection>
         <Flex>
-          <Title headingLevel="h1">Prompt Declaration Language (PDL)</Title>{" "}
+          <Title headingLevel="h1">Prompt Declaration Language (PDL)</Title>
           <FlexItem flex={flex1}>
             <Toolbar />
           </FlexItem>
