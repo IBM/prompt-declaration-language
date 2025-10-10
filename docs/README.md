@@ -35,7 +35,7 @@ See below for a quick reference, followed by [installation notes](#interpreter-i
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python versions **3.11**, **3.12**, and **3.13**, on macOS and Linux. For Windows, please use WSL.
+The interpreter has been tested with Python versions **3.11**, **3.12**, **3.13**, and **3.14**, on macOS and Linux. For Windows, please use WSL.
 
 To install the requirements for `pdl`, execute the command:
 
