@@ -153,9 +153,13 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([]),
-                                  "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
-                                  "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b"})
+empty_scope: ScopeType = PdlDict(
+    {
+        "pdl_context": DependentContext([]),
+        "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
+        "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
+    }
+)
 
 
 RefT = TypeVar("RefT")
@@ -559,10 +563,14 @@ def process_advance_block_retry(  # noqa: C901
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
                     args = {"expectation": expectation, "response": result.result()}
                     keys = evaluate_closure.signature["parameters"]["properties"].keys()
-                    if "pdl_llm_as_judge" in evaluate_closure.signature["parameters"]["properties"].keys():
+                    if "pdl_llm_as_judge" in keys:
                         args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
-                    if "pdl_llm_context_transformer" in evaluate_closure.signature["parameters"]["properties"].keys():
-                        args = args | {"pdl_llm_context_transformer": scope["pdl_llm_context_transformer"]}
+                    if "pdl_llm_context_transformer" in keys:
+                        args = args | {
+                            "pdl_llm_context_transformer": scope[
+                                "pdl_llm_context_transformer"
+                            ]
+                        }
                     call_block = CallBlock(
                         call=evaluate_closure,
                         args=args,
