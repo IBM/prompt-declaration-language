@@ -155,7 +155,13 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
+empty_scope: ScopeType = PdlDict(
+    {
+        "pdl_context": DependentContext([]),
+        "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
+        "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
+    }
+)
 
 
 RefT = TypeVar("RefT")
@@ -558,11 +564,23 @@ def process_advance_block_retry(  # noqa: C901
                     evaluate = getattr(req, "feedback", None)
                     stdlib_dict: Any = scope["stdlib"]
                     if evaluate is None:
-                        evaluate = stdlib_dict["expectations"]["feedback"]
+                        evaluate_closure = stdlib_dict["expectations"]["feedback"]
+                    else:
+                        evaluate_closure, _ = process_expr(scope, evaluate, loc)
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
+                    args = {"expectation": expectation, "response": result.result()}
+                    keys = evaluate_closure.signature["parameters"]["properties"].keys()
+                    if "pdl_llm_as_judge" in keys:
+                        args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
+                    if "pdl_llm_context_transformer" in keys:
+                        args = args | {
+                            "pdl_llm_context_transformer": scope[
+                                "pdl_llm_context_transformer"
+                            ]
+                        }
                     call_block = CallBlock(
-                        call=evaluate,
-                        args={"expectation": expectation, "response": result.result()},
+                        call=evaluate_closure,
+                        args=args,
                     )
                     feedback, _, _, _ = process_call(
                         iteration_state.with_yield_result(False).with_yield_background(
@@ -579,7 +597,7 @@ def process_advance_block_retry(  # noqa: C901
                         elif isinstance(feedback_result, float):
                             score = feedback_result
                             instruction = ""
-                        elif isinstance(feedback_result, tuple):
+                        elif isinstance(feedback_result, list):
                             score = feedback_result[0]
                             instruction = feedback_result[1]
                         else:

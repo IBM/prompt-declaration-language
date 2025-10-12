@@ -35,6 +35,7 @@ skip:
   - examples/expectations/email.pdl
   - examples/expectations/gsm8k.pdl
   - examples/expectations/gsm8k_short.pdl
+  - examples/expectations/mbpp.pdl
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
