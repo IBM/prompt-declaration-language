@@ -110,6 +110,14 @@ defs:
           Here is the solution: ${ response }
 
           Is the statement correct? Respond with only ('true'/'false')
+      - then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
 
 
 
