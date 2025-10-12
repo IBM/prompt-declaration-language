@@ -83,20 +83,6 @@ defs:
         code: 
           raise Exception("Llm-as-judge failed!")
 
-  llm_as_judge_gpt_prompt: 
-    function:
-      expectation: string
-      response: string
-    return:
-      text: |
-        Your task is to determine if the following statement is true:
-                
-        ${ expectation }
-        
-        Here is the solution: ${ response }
-
-        Is the statement correct? Respond with only ('true'/'false')
-
   get_judge_prompt:
     function:
       model: string
