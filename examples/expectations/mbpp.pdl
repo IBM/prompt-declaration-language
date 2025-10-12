@@ -1,4 +1,7 @@
 defs:
+  pdl_llm_as_judge: watsonx/ibm/granite-4-h-small
+  pdl_llm_context_transformer: watsonx/ibm/granite-4-h-small
+  model: watsonx/ibm/granite-4-h-small
   log:
     lang: python
     code: |
@@ -91,7 +94,7 @@ defs:
 
 lastOf:
 - ${ problem }
-- model:  watsonx/openai/gpt-oss-120b
+- model:  ${ model }
   parameters:
     temperature: 0.8
   expectations:
@@ -101,7 +104,7 @@ lastOf:
         ${ problem}
 
 - Extract only the Python code from the above solution.
-- model: watsonx/openai/gpt-oss-120b
+- model: ${ model }
   def: output
   parser:
       regex: (.|\n)*```python\n(?P<code>(.|\n)*)```(.|\n)*

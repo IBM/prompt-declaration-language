@@ -41,11 +41,7 @@ defs:
         for tp in top_logprobs:
           if match(other, tp['token'], exact_match):
             lp_other = tp['logprob']
-        
-        #try:
-        #  lp_other
-        #except NameError:
-        #  lp_other = -100000
+            break
 
         if other == 'true':
           lp_y = lp_other
@@ -54,43 +50,102 @@ defs:
 
         result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
 
+
+        # print(f"evaluation: { evaluation }")
+        # print(f"exact_match: { exact_match }")
+        # print(f"lp_y: { lp_y }")
+        # print(f"lp_n: { lp_n }")
+        # print(f"reward: { result }")
+        # print(contents_keys)
+
+
+  llm_as_judge: 
+    function:
+      model: string
+      prompt: string
+    return:
+      lastOf:
+      - model: ${ model }
+        def: evaluation
+        input: |
+          ${ prompt }
+        modelResponse: out
+        parameters:
+          temperature: 0
+          logprobs: true
+          top_logprobs: 5
+          response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
+      - def: score
+        data: ${ reward(response=out, evaluation=evaluation) }
+      retry: 3
+      fallback:
+        lang: python
+        code: 
+          raise Exception("Llm-as-judge failed!")
+
+  llm_as_judge_gpt_prompt: 
+    function:
+      expectation: string
+      response: string
+    return:
+      text: |
+        Your task is to determine if the following statement is true:
+                
+        ${ expectation }
+        
+        Here is the solution: ${ response }
+
+        Is the statement correct? Respond with only ('true'/'false')
+
+  get_judge_prompt:
+    function:
+      model: string
+      expectation: string
+      response: string
+    return:
+      match: ${ model }
+      with: 
+      - case: watsonx/ibm/granite-4-h-small
+        then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
+
+      - case: watsonx/openai/gpt-oss-120b
+        then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
+
+
+
   expectations:
     object:
       feedback:
         function:
           expectation: string
           response: 
-          llm_as_judge: {optional: string}
-          model: {optional: string}
+          pdl_llm_as_judge: string
+          pdl_llm_context_transformer: string
         return:
           lastOf:
-          - lastOf:
-            - #model: ${ llm_as_judge | default('watsonx/ibm/granite-3-8b-instruct') }
-              #model: ${ llm_as_judge | default('watsonx/meta-llama/llama-3-3-70b-instruct') }
-              model: ${ llm_as_judge | default('watsonx/openai/gpt-oss-120b') }
-              def: evaluation
-              input: |
-                Problem: ${ expectation }
-                Solution: ${ response }
-                
-                Is the solution correct? Respond with only ('true'/'false')
-              modelResponse: out
-              parameters:
-                temperature: 0
-                logprobs: true
-                top_logprobs: 5
-                response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
-            - def: score
-              data: ${ reward(response=out, evaluation=evaluation) }
-            retry: 3
-            fallback:
-              lang: python
-              code: 
-                raise Exception("Llm-as-judge failed!")
-          - if: ${ score < -0.7 }
+          - def: score
+            call: ${ llm_as_judge }
+            args:
+              model: ${ pdl_llm_as_judge }
+              prompt: ${ get_judge_prompt(pdl_llm_as_judge, expectation, response) }
+          - if: ${ score < -0.69 }
             then:
               lastOf:
-              - model: ${ model | default('ollama_chat/granite3.3:8b') }
+              - model: ${ pdl_llm_context_transformer }
                 def: instruction
                 input: |
                   The following requirement is not satisfied, what instruction can be added to get the correct answer?
@@ -104,5 +159,7 @@ defs:
           
           
 
-  
+
+
+
 

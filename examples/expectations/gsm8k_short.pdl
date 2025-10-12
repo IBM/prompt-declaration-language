@@ -5,14 +5,16 @@ defs:
     which takes 20 minutes. Then Carla has to restart the download from the beginning. 
     How load does it take to download the file?
 
+  pdl_llm_as_judge: watsonx/ibm/granite-4-h-small
+  pdl_llm_context_transformer: watsonx/ibm/granite-4-h-small
 lastOf:
 - ${ problem }
 - model: ollama_chat/granite3.3:8b
   parameters:
-    temperature: 0.2
+    temperature: 1.5
   expectations:
    - expect: "This solution to the following math problem is correct: ${ problem }"
-  retry: 0
+  retry: 1
 - Extract the result from the above solution into a JSON object with field "answer" and a float as value. Remove any dollar signs or other symbols.
 - model: ollama_chat/granite3.3:8b
   def: result
