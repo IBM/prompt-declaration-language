@@ -30,6 +30,9 @@ class PpdlConfig(TypedDict, total=False):
     max_workers: int
 
 
+_LOOP = create_event_loop_thread()
+
+
 def exec_program(
     prog: Program,
     config: Optional[InterpreterConfig] = None,
@@ -49,7 +52,7 @@ def exec_program(
     config["yield_background"] = False
     config["batch"] = 1
     config["with_resample"] = True
-    config["event_loop"] = create_event_loop_thread()
+    config["event_loop"] = _LOOP
 
     match algo:
         case "is" | "parallel-is":
