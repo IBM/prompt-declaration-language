@@ -80,8 +80,8 @@ defs:
       retry: 3
       fallback:
         lang: python
-        code: 
-          raise Exception("Llm-as-judge failed!")
+        code: |
+          raise Exception(f"Llm-as-judge failed!\n judge prompt: {prompt}")
 
   get_judge_prompt:
     function:
