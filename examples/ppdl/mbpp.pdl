@@ -11,8 +11,8 @@ defs:
         def __init__(self, p: float):
           self.p = p
     
-        def cdf(self, x: int):
-          return 1 * (1 - self.p) ** (x + 1)
+        def log_prob(self, x: int):
+          return log(1 - self.p) * x + log(self.p)
 
       result = Geometric
 
@@ -77,36 +77,35 @@ defs:
           return result
         errors_and_warnings = _lint_lines_flake8(code.split())
         result = errors_and_warnings
-  eval_number_of_errors:
+  eval_number_of_warnings:
     function:
       expectation:
       response:
     return:
       defs:
-        errors: ${ flake8(response.code) }
-        score: ${ Geometric(0.5).cdf(errors | length) }
-      data: ${ log(score) }
+        warnings: ${ flake8(response.code) }
+      data: ${ Geometric(0.5).log_prob(warnings | length) }
   problem: |
     Write a python function to find the last digit when factorial of a divides factorial of b.
-text:
+lastOf:
 - ${ problem }
-- model:  watsonx/openai/gpt-oss-120b
+- model: watsonx/openai/gpt-oss-120b
   parameters:
     temperature: 0.8
   expectations:
     - expect: |
-        This solution is likely to be a correct solution to the following problem?
+        This solution is a correct solution to the following problem?
 
         ${ problem}
 
 - Extract only the Python code from the above solution.
 - model: watsonx/openai/gpt-oss-120b
-  def: output
+  def: solution
   parser:
       regex: (.|\n)*```python\n(?P<code>(.|\n)*)```(.|\n)*
       spec: { code: string }
   expectations:
     - expect: The code is Pythonic.
-    - expect: There are not tool many errors.
-      feedback: ${ eval_number_of_errors }
-- ${output.code}
+    - expect: There are not too many warnings.
+      feedback: ${ eval_number_of_warnings }
+- ${solution.code | default("")}
