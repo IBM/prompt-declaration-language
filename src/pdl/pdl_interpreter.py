@@ -627,8 +627,12 @@ def process_advance_block_retry(  # noqa: C901
             if do_retry:
                 err_msg = traceback.format_exc()
                 error = f"An error occurred in a PDL block. Error details: {err_msg}"
+                if loc is None:
+                    message = error
+                else:
+                    message = get_loc_string(loc) + error
                 print(
-                    f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n",
+                    f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {message}\033[0m\n",
                     file=sys.stderr,
                 )
                 if block.trace_error_on_retry:
