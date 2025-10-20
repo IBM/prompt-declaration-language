@@ -195,13 +195,15 @@ class InterpreterState(BaseModel):
     """Allow the interpreter to raise the `Resample` exception."""
 
     # The following are shared variable that should be modified by side effects
-    score: Ref[float] = Ref(0.0)
+    score: Ref[float] = Field(default_factory=lambda: Ref(0.0))
     """Log probability of the execution."""
     imported: dict[str, tuple[ScopeType, BlockType]] = {}
     """Cache containing the imported files."""
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
     """Event loop to schedule LLM calls."""
-    current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
+    current_pdl_context: Ref[LazyMessages] = Field(
+        default_factory=lambda: Ref(DependentContext([]))
+    )
     """Current value of the context set at the beginning of the execution of the block."""
     replay: dict[str, Any] = {}
 
