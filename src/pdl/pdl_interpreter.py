@@ -24,7 +24,6 @@ from typing import (  # noqa: E402
     IO,
     Any,
     Generator,
-    Generic,
     Iterable,
     Optional,
     Sequence,
@@ -147,6 +146,7 @@ from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
 from .pdl_smc import Resample  # noqa: E402
 from .pdl_utils import (  # noqa: E402
     GeneratorWrapper,
+    Ref,
     apply_defaults,
     get_contribute_context_value,
     replace_contribute_value,
@@ -162,14 +162,6 @@ empty_scope: ScopeType = PdlDict(
         "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
     }
 )
-
-
-RefT = TypeVar("RefT")
-
-
-class Ref(Generic[RefT]):
-    def __init__(self, ref: RefT):
-        self.ref = ref
 
 
 class InterpreterState(BaseModel):

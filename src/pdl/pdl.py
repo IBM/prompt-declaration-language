@@ -25,6 +25,7 @@ from .pdl_lazy import PdlDict
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import (  # pylint: disable=unused-import # noqa: F401
+    Ref,
     validate_scope,
     write_trace,
 )
@@ -57,6 +58,8 @@ class InterpreterConfig(TypedDict, total=False):
     """
     with_resample: bool
     """Allow the interpreter to raise the `Resample` exception."""
+    score: float | Ref[float]
+    """Initial value of the score."""
     event_loop: AbstractEventLoop
     """Event loop to schedule LLM calls."""
 
@@ -82,7 +85,11 @@ def exec_program(
     """
     config = config or InterpreterConfig()
     config["replay"] = dict(config.get("replay", {}))
-    state = InterpreterState(**config)
+    score = config.get("score")
+    if score is not None and not isinstance(score, Ref):
+        config["score"] = Ref(score)
+    assert config.get("score") is None or isinstance(config.get("score"), Ref)
+    state = InterpreterState(**config)  # pyright: ignore
     if not isinstance(scope, PdlDict):
         scope = PdlDict(scope or {})
     loc = loc or empty_block_location
@@ -300,9 +307,14 @@ def main():
         batch=batch,
         cwd=pdl_file.parent,
     )
+    score = config.get("score")
+    if score is not None and not isinstance(score, Ref):
+        config["score"] = Ref(score)
+    assert config.get("score") is None or isinstance(config.get("score"), Ref)
+
     exit_code = pdl_interpreter.generate(
         pdl_file,
-        InterpreterState(**config),
+        InterpreterState(**config),  # pyright: ignore
         PdlDict(initial_scope),
         trace_file,
     )

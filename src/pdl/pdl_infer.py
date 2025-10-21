@@ -16,10 +16,10 @@ from .pdl_scheduler import create_event_loop_thread
 from .pdl_smc import (
     infer_importance_sampling,
     infer_importance_sampling_parallel,
-    infer_smc,
-    infer_smc_parallel,
     infer_rejection,
     infer_rejection_parallel,
+    infer_smc,
+    infer_smc_parallel,
 )
 from .pdl_utils import validate_scope
 
