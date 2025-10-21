@@ -1,11 +1,10 @@
+import math
+import random
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable, Optional, ParamSpec, TypeVar
 
 from mu_ppl.distributions import Categorical, Empirical
 from typing_extensions import TypeAliasType
-import math
-import random
-
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -121,19 +120,6 @@ def infer_smc_parallel(
     return Categorical(list(zip(results, scores)))
 
 
-def infer_importance_sampling(
-    num_particles: int, model: Callable[[ModelStateT], tuple[T, ModelStateT, float]]
-) -> Categorical[T]:
-    """Sequential version"""
-    results: list[T] = []
-    scores: list[float] = []
-    for _ in range(num_particles):
-        result, _, score = model({})
-        results.append(result)
-        scores.append(score)
-    return Categorical(list(zip(results, scores)))
-
-
 def infer_rejection(
     num_samples: int,
     model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
@@ -144,7 +130,9 @@ def infer_rejection(
         while True:
             result, _, score = model({})
             alpha = math.exp(min(0, score - max_score))
-            u = random.random()
+            u = random.random()  # nosec B311
+            # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+            # We are not using this random number for cryptography purpose.
             if u <= alpha:
                 return result
 
@@ -165,7 +153,9 @@ def infer_rejection_parallel(
         while True:
             result, _, score = model({})
             alpha = math.exp(min(0, score - max_score))
-            u = random.random()
+            u = random.random()  # nosec B311
+            # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+            # We are not using this random number for cryptography purpose.
             if u <= alpha:
                 return result
 
