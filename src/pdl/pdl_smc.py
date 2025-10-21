@@ -3,7 +3,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable, Optional, ParamSpec, TypeVar
 
-from mu_ppl.distributions import Categorical, Empirical
+from mu_ppl.distributions import Categorical
 from typing_extensions import TypeAliasType
 
 T = TypeVar("T")
@@ -156,7 +156,7 @@ def infer_smc_parallel(
 def infer_rejection(
     num_samples: int,
     model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
-) -> Empirical[T]:
+) -> Categorical[T]:
     max_score = 0
 
     def gen():
@@ -169,8 +169,8 @@ def infer_rejection(
             if u <= alpha:
                 return result
 
-    samples = [gen() for _ in range(num_samples)]
-    return Empirical(samples)
+    samples = [(gen(), 0.0) for _ in range(num_samples)]
+    return Categorical(samples)
 
 
 def infer_rejection_parallel(
@@ -192,13 +192,13 @@ def infer_rejection_parallel(
             if u <= alpha:
                 return result
 
-    results: list[T] = []
+    results: list[tuple[T, float]] = []
     with ThreadPoolExecutor(max_workers) as executor:
         future_to_particle = (executor.submit(gen) for _ in range(num_samples))
         for future in future_to_particle:
             result = future.result()
-            results.append(result)
-    return Empirical(results)
+            results.append((result, 0.0))
+    return Categorical(results)
 
 
 # async def _process_particle_async(state, model, num_particles):
