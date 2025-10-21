@@ -37,20 +37,52 @@ def infer_importance_sampling(
     return Categorical(list(zip(results, scores)))
 
 
+# def infer_importance_sampling_parallel(
+#     num_particles: int,
+#     model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
+#     max_workers: Optional[int],
+# ) -> Categorical[T]:
+#     """Parallelized version using ThreadPoolExecutor"""
+#     results: list[T] = []
+#     scores: list[float] = []
+#     with ThreadPoolExecutor(max_workers) as executor:
+#         future_to_particle = (executor.submit(model, {}) for _ in range(num_particles))
+#         for future in future_to_particle:
+#             result, _, score = future.result()
+#             results.append(result)
+#             scores.append(score)
+#     return Categorical(list(zip(results, scores)))
+
+
 def infer_importance_sampling_parallel(
     num_particles: int,
     model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
     max_workers: Optional[int],
 ) -> Categorical[T]:
     """Parallelized version using ThreadPoolExecutor"""
+    particles: list[ModelStateT] = [
+        {} for _ in range(num_particles)
+    ]  # initialise the particles
     results: list[T] = []
     scores: list[float] = []
-    with ThreadPoolExecutor(max_workers) as executor:
-        future_to_particle = (executor.submit(model, {}) for _ in range(num_particles))
-        for future in future_to_particle:
-            result, _, score = future.result()
-            results.append(result)
-            scores.append(score)
+    while len(results) < num_particles:
+        states = []
+        scores = []
+        results = []
+        with ThreadPoolExecutor(max_workers) as executor:
+            future_to_particle = {
+                executor.submit(_process_particle, state, model): state
+                for state in particles
+            }
+            for future in future_to_particle:
+                result, state, score = future.result()
+                if result is not None:
+                    results.append(result)  # execute all the particles
+                states.append(state)
+                scores.append(score)
+        particles = states
+        # particles = resample(states, scores)
+        # particles = [ state.copy() for state in particles ]
     return Categorical(list(zip(results, scores)))
 
 

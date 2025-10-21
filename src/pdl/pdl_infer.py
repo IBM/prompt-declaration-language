@@ -51,13 +51,12 @@ def exec_program(
     config["yield_result"] = False
     config["yield_background"] = False
     config["batch"] = 1
-    config["with_resample"] = True
     config["event_loop"] = _LOOP
 
     match algo:
-        case "is" | "parallel-is":
+        case "is":
             config["with_resample"] = False
-        case "smc" | "parallel-smc":
+        case "smc" | "parallel-smc" | "parallel-is":
             config["with_resample"] = True
         case _:
             assert False, f"Unexpected algo: {algo}"

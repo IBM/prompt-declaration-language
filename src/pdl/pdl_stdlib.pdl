@@ -10,7 +10,7 @@ defs:
         import math
 
         if (evaluation != 'true' and evaluation != 'false'):
-          raise Exception("Wrong value")
+          raise Exception(f'Wrong value: {evaluation}')
 
         contents =  response['choices'][0]['logprobs']['content']
         top_logprobs = []
@@ -49,6 +49,8 @@ defs:
           lp_n = lp_other
 
         result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
+
+        # print(f"XXXX { result= } ({math.exp(result)})")
 
 
         # print(f"evaluation: { evaluation }")
