@@ -18,6 +18,8 @@ from .pdl_smc import (
     infer_importance_sampling_parallel,
     infer_smc,
     infer_smc_parallel,
+    infer_rejection,
+    infer_rejection_parallel,
 )
 from .pdl_utils import validate_scope
 
@@ -25,7 +27,9 @@ from .pdl_utils import validate_scope
 class PpdlConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
 
-    algo: Literal["is", "parallel-is", "smc", "parallel-smc"]
+    algo: Literal[
+        "is", "parallel-is", "smc", "parallel-smc", "rejection", "parallel-rejection"
+    ]
     num_particles: int
     max_workers: int
 
@@ -54,7 +58,7 @@ def exec_program(
     config["event_loop"] = _LOOP
 
     match algo:
-        case "is":
+        case "is" | "rejection" | "parallel-rejection":
             config["with_resample"] = False
         case "smc" | "parallel-smc" | "parallel-is":
             config["with_resample"] = True
@@ -78,6 +82,10 @@ def exec_program(
             dist = infer_smc(num_particles, model)
         case "parallel-smc":
             dist = infer_smc_parallel(num_particles, model, max_workers)
+        case "rejection":
+            dist = infer_rejection(num_particles, model)
+        case "parallel-rejection":
+            dist = infer_rejection_parallel(num_particles, model, max_workers=4)
         case _:
             assert False, f"Unexpected algo: {algo}"
     return dist
@@ -139,7 +147,14 @@ def main():
     )
     parser.add_argument(
         "--algo",
-        choices=["is", "parallel-is", "smc", "parallel-smc"],
+        choices=[
+            "is",
+            "parallel-is",
+            "smc",
+            "parallel-smc",
+            "rejection",
+            "parallel-rejection",
+        ],
         help="Choose inference algorithm.",
         default="smc",
     )
