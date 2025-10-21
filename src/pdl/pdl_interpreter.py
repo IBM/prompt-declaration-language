@@ -1752,6 +1752,8 @@ def _process_expr(  # pylint: disable=too-many-return-statements
                 {x: scope[x] for x in free_vars if x in scope}
             )  # pyright: ignore
             return result
+        except KeyboardInterrupt as exc:
+            raise exc from exc
         except PDLRuntimeError as exc:
             raise exc from exc
         except TemplateSyntaxError as exc:
@@ -1904,6 +1906,8 @@ def process_call_model(
             update={"pdl__result": result}
         )  # pyright: ignore
         return result, background, scope, trace
+    except KeyboardInterrupt as exc:
+        raise exc from exc
     except httpx.RequestError as exc:
         message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
         raise PDLRuntimeError(
@@ -2129,6 +2133,8 @@ def process_call_code(
                         update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
                 ) from exc
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Python Code error: {traceback.format_exc()}",
@@ -2151,6 +2157,8 @@ def process_call_code(
                         ),
                     ],  # type: ignore
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {exc!r}",
@@ -2169,6 +2177,8 @@ def process_call_code(
                         }
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Shell Code error: {repr(exc)}",
@@ -2187,6 +2197,8 @@ def process_call_code(
                         }
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Jinja Code error: {repr(exc)}",
@@ -2205,6 +2217,8 @@ def process_call_code(
                         ]
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"PDL Code error: {repr(exc)}",
@@ -2233,6 +2247,8 @@ def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy
         exec(c, my_namespace.__dict__)  # nosec B102
         # [B102:exec_used] Use of exec detected.
         # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
+    except KeyboardInterrupt as exc:
+        raise exc from exc
     except Exception as exc:
         message = traceback.format_exc()
         raise PDLRuntimeExpressionError(message) from exc
@@ -2365,6 +2381,8 @@ def process_input(
         try:
             with open(file, encoding="utf-8") as f:
                 s = f.read()
+        except KeyboardInterrupt as exc:
+            raise exc from exc
         except Exception as exc:
             if isinstance(exc, FileNotFoundError):
                 msg = f"file {str(file)} not found"
@@ -2649,6 +2667,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 if text == "True":
                     return json.loads("true")
                 result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
@@ -2660,6 +2680,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                     if line == "":
                         continue
                     result.append(json.loads(line))
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
@@ -2667,6 +2689,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
         case "yaml":
             try:
                 result = yaml.safe_load(text)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed YAML: {repr(exc)}"
@@ -2686,6 +2710,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                     assert False
             try:
                 m = matcher(regex, text, flags=re.M)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 msg = f"Fail to parse with regex {regex}: {repr(exc)}"
                 raise PDLRuntimeParserError(msg) from exc
