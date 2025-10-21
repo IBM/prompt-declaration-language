@@ -15,10 +15,11 @@ defs:
         contents =  response['choices'][0]['logprobs']['content']
         top_logprobs = []
 
-        exact_match = False
         contents_keys = {c["token"] for c in contents}
         if evaluation in contents_keys:
           exact_match = True
+        else:
+          exact_match = False
 
         def match(v, c, exact):
           if exact:
@@ -37,7 +38,11 @@ defs:
         else: 
           lp_n = lp_evaluation
           other = 'true'
-        
+        if evaluation in contents_keys:
+          exact_match = True
+        else:
+          exact_match = False
+
         for tp in top_logprobs:
           if match(other, tp['token'], exact_match):
             lp_other = tp['logprob']
