@@ -55,20 +55,20 @@ def exec_program(
     config["yield_result"] = False
     config["yield_background"] = False
     config["batch"] = 1
-    config["with_resample"] = True
     config["event_loop"] = _LOOP
 
     match algo:
-        case "is" | "parallel-is" | "rejection" | "parallel-rejection":
+        case "is" | "rejection" | "parallel-rejection":
             config["with_resample"] = False
-        case "smc" | "parallel-smc":
+        case "smc" | "parallel-smc" | "parallel-is":
             config["with_resample"] = True
         case _:
             assert False, f"Unexpected algo: {algo}"
 
-    def model(replay):
+    def model(replay, score):
         assert config is not None
         config["replay"] = replay
+        config["score"] = score
         result = pdl_exec_program(prog, config, scope, loc, "all")
         state = result["replay"]
         score = result["score"]
