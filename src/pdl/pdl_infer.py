@@ -65,9 +65,10 @@ def exec_program(
         case _:
             assert False, f"Unexpected algo: {algo}"
 
-    def model(replay):
+    def model(replay, score):
         assert config is not None
         config["replay"] = replay
+        config["score"] = score
         result = pdl_exec_program(prog, config, scope, loc, "all")
         state = result["replay"]
         score = result["score"]
