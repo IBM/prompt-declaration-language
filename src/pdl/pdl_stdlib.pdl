@@ -38,23 +38,38 @@ defs:
         else: 
           lp_n = lp_evaluation
           other = 'true'
-        if evaluation in contents_keys:
+
+        if other in contents_keys:
           exact_match = True
         else:
           exact_match = False
 
+        lp_other = -math.inf
         for tp in top_logprobs:
           if match(other, tp['token'], exact_match):
             lp_other = tp['logprob']
             break
+
+        # if math.isinf(lp_other):
+        #   print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        #   print("XXXX lp_other is not defined")
+        #   print(f"{evaluation=}")
+        #   print(f"{other=}")
+        #   print(f"{exact_match=}")
+        #   print(f"top_logprobs tokens:")
+        #   for tp in top_logprobs:
+        #     print(f"    {tp['token']}")
+        #   print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
         if other == 'true':
           lp_y = lp_other
         else: 
           lp_n = lp_other
 
-        result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
-
+        if math.exp(lp_y) == 0.0:
+          result = -math.inf
+        else:
+          result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
 
         # print(f"evaluation: { evaluation }")
         # print(f"exact_match: { exact_match }")
