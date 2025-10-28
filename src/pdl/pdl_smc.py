@@ -201,6 +201,29 @@ def infer_rejection_parallel(
     return Categorical(results)
 
 
+def infer_independent_mh(
+    num_samples: int,
+    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
+) -> Categorical[T]:
+    samples = []
+
+    new_value, _, new_score = model({}, 0.0)
+
+    for _ in range(num_samples):
+        old_score = new_score  # store state
+        old_value = new_value  # store current value
+        new_value, _, new_score = model({}, 0.0)  # generate a candidate
+        alpha = math.exp(min(0, new_score - old_score))
+        u = random.random()  # nosec B311
+        # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+        if not (u < alpha):
+            new_score = old_score  # rollback
+            new_value = old_value
+        samples.append((new_value, 0.0))
+
+    return Categorical(samples)
+
+
 # async def _process_particle_async(state, model, num_particles):
 #     with ImportanceSampling(num_particles) as sampler:
 #         try:
