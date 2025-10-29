@@ -1194,7 +1194,7 @@ def process_block_body(
             background = DependentContext([])
             assert block.pdl__id is not None
             state.replay[block.pdl__id] = result
-            if state.with_resample:
+            if state.with_resample and block.resample:
                 raise Resample(state.replay, state.score.ref)
         case EmptyBlock():
             result = PdlConst("")

@@ -1426,6 +1426,11 @@
             }
           ],
           "title": "Factor"
+        },
+        "resample": {
+          "default": true,
+          "title": "Resample",
+          "type": "boolean"
         }
       },
       "required": [

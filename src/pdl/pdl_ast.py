@@ -1090,6 +1090,7 @@ class FactorBlock(LeafBlock):
 
     kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
     factor: ExpressionType[float]
+    resample: bool = True
 
 
 class AggregatorConfig(BaseModel):
