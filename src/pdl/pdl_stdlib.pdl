@@ -44,11 +44,12 @@ defs:
         else:
           exact_match = False
 
-        lp_other = -math.inf
+        lp_other = math.inf
         for tp in top_logprobs:
           if match(other, tp['token'], exact_match):
             lp_other = tp['logprob']
             break
+          lp_other = min(lp_other, tp['logprob'])
 
         # if math.isinf(lp_other):
         #   print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")

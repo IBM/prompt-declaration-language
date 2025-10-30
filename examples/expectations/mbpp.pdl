@@ -78,7 +78,7 @@ defs:
                       )
                   )
           return result
-        errors_and_warnings = _lint_lines_flake8(code.split())
+        errors_and_warnings = _lint_lines_flake8(code.split("\n"))
         result = errors_and_warnings
   eval_number_of_warnings:
     function:
