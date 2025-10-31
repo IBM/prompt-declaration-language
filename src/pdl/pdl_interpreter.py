@@ -2165,16 +2165,18 @@ def process_call_code(
         case "ipython":
             try:
                 result = call_ipython(code_s, scope)
-                background = PdlList(
-                    [
-                        PdlDict(  # type: ignore
-                            {
-                                "role": state.role,
-                                "content": lazy_apply(str, result),
-                                "pdl__defsite": block.pdl__id,
-                            },
-                        ),
-                    ],  # type: ignore
+                background = SingletonContext(
+                    PdlList(
+                        [
+                            PdlDict(  # type: ignore
+                                {
+                                    "role": state.role,
+                                    "content": lazy_apply(str, result),
+                                    "pdl__defsite": block.pdl__id,
+                                },
+                            ),
+                        ],  # type: ignore
+                    )
                 )
             except KeyboardInterrupt as exc:
                 raise exc from exc
