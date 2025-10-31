@@ -1,19 +1,17 @@
 import math
 import random
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Optional, ParamSpec, TypeVar
+from typing import Any, Callable, Literal, Optional, TypeVar
 
 from mu_ppl.distributions import Categorical
 from typing_extensions import TypeAliasType
 
+from .pdl import InterpreterConfig
+from .pdl import exec_program as pdl_exec_program
+from .pdl_ast import PdlLocationType, Program, ScopeType
+from .pdl_utils import Resample
+
 T = TypeVar("T")
-P = ParamSpec("P")
-
-
-class Resample(Exception):
-    def __init__(self, state, score):
-        self.state = state
-        self.score = score
 
 
 def resample(particles: list[Any], scores: list[float]) -> list[Any]:
@@ -26,11 +24,36 @@ def resample(particles: list[Any], scores: list[float]) -> list[Any]:
 ModelStateT = TypeAliasType("ModelStateT", dict[str, Any])
 
 
-def infer_importance_sampling(
+def make_model(
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+) -> Callable[[ModelStateT, float], tuple[Any, ModelStateT, float]]:
+    def model(replay, score):
+        assert config is not None
+        config["replay"] = replay
+        config["score"] = score
+        result = pdl_exec_program(prog, config, scope, loc, "all")
+        state = result["replay"]
+        score = result["score"]
+        return result["result"], state, score
+
+    return model
+
+
+def infer_importance_sampling(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_particles: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
 ) -> Categorical[T]:
     """Sequential version"""
+    config["with_resample"] = False
+    model = make_model(prog, config, scope, loc)
     results: list[T] = []
     scores: list[float] = []
     for _ in range(num_particles):
@@ -57,12 +80,19 @@ def infer_importance_sampling(
 #     return Categorical(list(zip(results, scores)))
 
 
-def infer_importance_sampling_parallel(
+def infer_importance_sampling_parallel(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_particles: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
     max_workers: Optional[int],
 ) -> Categorical[T]:
     """Parallelized version using ThreadPoolExecutor"""
+    config["with_resample"] = True
+    model = make_model(prog, config, scope, loc)
     particles: list[tuple[ModelStateT, float]] = [
         ({}, 0.0) for _ in range(num_particles)
     ]  # initialise the particles
@@ -99,11 +129,18 @@ def _process_particle(
         return None, exn.state, exn.score
 
 
-def infer_smc(
+def infer_smc(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_particles: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
 ) -> Categorical[T]:
     """Sequential version"""
+    config["with_resample"] = True
+    model = make_model(prog, config, scope, loc)
     particles: list[ModelStateT] = [
         {} for _ in range(num_particles)
     ]  # initialise the particles
@@ -123,12 +160,19 @@ def infer_smc(
     return Categorical(list(zip(results, scores)))
 
 
-def infer_smc_parallel(
+def infer_smc_parallel(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_particles: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
     max_workers: Optional[int],
 ) -> Categorical[T]:
     """Parallelized version using ThreadPoolExecutor"""
+    config["with_resample"] = True
+    model = make_model(prog, config, scope, loc)
     particles: list[ModelStateT] = [
         {} for _ in range(num_particles)
     ]  # initialise the particles
@@ -153,10 +197,17 @@ def infer_smc_parallel(
     return Categorical(list(zip(results, scores)))
 
 
-def infer_rejection(
+def infer_rejection(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_samples: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
 ) -> Categorical[T]:
+    config["with_resample"] = False
+    model = make_model(prog, config, scope, loc)
     max_score = 0
 
     def gen():
@@ -173,13 +224,19 @@ def infer_rejection(
     return Categorical(samples)
 
 
-def infer_rejection_parallel(
+def infer_rejection_parallel(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    output: Literal["result", "all"],
+    *,
     num_samples: int,
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
     max_workers: Optional[int],
 ) -> Categorical[T]:
     """Parallelized version using ThreadPoolExecutor"""
-
+    config["with_resample"] = False
+    model = make_model(prog, config, scope, loc)
     max_score = 0
 
     def gen():
