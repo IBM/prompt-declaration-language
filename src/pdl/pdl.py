@@ -70,6 +70,7 @@ class Result(TypedDict):
     scope: dict[str, Any]
     trace: BlockType
     replay: dict[str, Any]
+    score: float
 
 
 def exec_program(
