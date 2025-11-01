@@ -10,9 +10,7 @@ from mu_ppl.distributions import Categorical
 from ._version import version
 from .pdl import InterpreterConfig
 from .pdl_ast import PdlLocationType, Program, ScopeType, get_default_model_parameters
-from .pdl_parser import parse_dict, parse_file, parse_str
-from .pdl_scheduler import create_event_loop_thread
-from .pdl_smc import (
+from .pdl_inference import (
     infer_importance_sampling,
     infer_importance_sampling_parallel,
     infer_rejection,
@@ -20,6 +18,8 @@ from .pdl_smc import (
     infer_smc,
     infer_smc_parallel,
 )
+from .pdl_parser import parse_dict, parse_file, parse_str
+from .pdl_scheduler import create_event_loop_thread
 from .pdl_utils import validate_scope
 
 
