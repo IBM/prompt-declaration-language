@@ -230,3 +230,9 @@ RefT = TypeVar("RefT")
 class Ref(Generic[RefT]):
     def __init__(self, ref: RefT):
         self.ref = ref
+
+
+class Resample(Exception):
+    def __init__(self, state, score):
+        self.state = state
+        self.score = score
