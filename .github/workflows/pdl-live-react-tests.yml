@@ -23,7 +23,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
       - name: Install dependencies
         run: |
           npm ci & sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core
