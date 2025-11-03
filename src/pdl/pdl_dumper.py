@@ -226,7 +226,7 @@ def block_to_dict(  # noqa: C901
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
         case FactorBlock():
-            d["factor"] = block.factor
+            d["factor"] = expr_to_dict(block.factor, json_compatible)
             if not block.resample:
                 d["resample"] = block.resample
         case AggregatorBlock():
