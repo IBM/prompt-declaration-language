@@ -1,24 +1,23 @@
 import math
 import random
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Literal, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
-from mu_ppl.distributions import Categorical
 from typing_extensions import TypeAliasType
 
-from .pdl import InterpreterConfig
+from .pdl import InterpreterConfig, Result
 from .pdl import exec_program as pdl_exec_program
-from .pdl_ast import PdlLocationType, Program, ScopeType
+from .pdl_ast import BlockType, PdlLocationType, Program, ScopeType
+from .pdl_distributions import Categorical
 from .pdl_utils import Resample
 
 T = TypeVar("T")
 
 
 def resample(particles: list[Any], scores: list[float]) -> list[Any]:
-    d = Categorical(list(zip(particles, scores)))
-    return [
-        d.sample() for _ in range(len(particles))
-    ]  # resample a new set of particles
+    n = len(particles)
+    d = Categorical(list(zip(particles, scores, [[] for _ in range(n)])))
+    return [d.sample() for _ in range(n)]  # resample a new set of particles
 
 
 ModelStateT = TypeAliasType("ModelStateT", dict[str, Any])
@@ -29,15 +28,13 @@ def make_model(
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-) -> Callable[[ModelStateT, float], tuple[Any, ModelStateT, float]]:
+) -> Callable[[ModelStateT, float], Result]:
     def model(replay, score):
         assert config is not None
         config["replay"] = replay
         config["score"] = score
         result = pdl_exec_program(prog, config, scope, loc, "all")
-        state = result["replay"]
-        score = result["score"]
-        return result["result"], state, score
+        return result
 
     return model
 
@@ -47,37 +44,17 @@ def infer_importance_sampling(  # pylint: disable=too-many-arguments
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_particles: int,
 ) -> Categorical[T]:
     """Sequential version"""
     config["with_resample"] = False
-    model = make_model(prog, config, scope, loc)
-    results: list[T] = []
-    scores: list[float] = []
+    dist: list[tuple[T, float, list[BlockType]]] = []
     for _ in range(num_particles):
-        result, _, score = model({}, 0.0)
-        results.append(result)
-        scores.append(score)
-    return Categorical(list(zip(results, scores)))
-
-
-# def infer_importance_sampling_parallel(
-#     num_particles: int,
-#     model: Callable[[ModelStateT], tuple[T, ModelStateT, float]],
-#     max_workers: Optional[int],
-# ) -> Categorical[T]:
-#     """Parallelized version using ThreadPoolExecutor"""
-#     results: list[T] = []
-#     scores: list[float] = []
-#     with ThreadPoolExecutor(max_workers) as executor:
-#         future_to_particle = (executor.submit(model, {}) for _ in range(num_particles))
-#         for future in future_to_particle:
-#             result, _, score = future.result()
-#             results.append(result)
-#             scores.append(score)
-#     return Categorical(list(zip(results, scores)))
+        result = pdl_exec_program(prog, config, scope, loc, "all")
+        dist.append((result["result"], result["score"], [result["trace"]]))
+    return Categorical(dist)
 
 
 def infer_importance_sampling_parallel(  # pylint: disable=too-many-arguments
@@ -85,7 +62,7 @@ def infer_importance_sampling_parallel(  # pylint: disable=too-many-arguments
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_particles: int,
     max_workers: Optional[int],
@@ -96,37 +73,42 @@ def infer_importance_sampling_parallel(  # pylint: disable=too-many-arguments
     particles: list[tuple[ModelStateT, float]] = [
         ({}, 0.0) for _ in range(num_particles)
     ]  # initialise the particles
-    results: list[T] = []
+    results: list[Result] = []
     new_particles: list[tuple[ModelStateT, float]] = []
-    while len(results) < num_particles:
-        new_particles = []
-        results = []
-        with ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
+        while len(results) < num_particles:
+            new_particles = []
+            results = []
             future_to_particle = {
                 executor.submit(_process_particle, model, state, score): state
                 for state, score in particles
             }
             for future in future_to_particle:
-                result, new_state, new_score = future.result()
-                if result is not None:
-                    results.append(result)  # execute all the particles
-                new_particles.append((new_state, new_score))
-        particles = new_particles
-    scores = [score for _, score in new_particles]
-    return Categorical(list(zip(results, scores)))
+                result = future.result()
+                match result:
+                    case Resample():
+                        new_particles.append((result.state, result.score))
+                    case _:  # Result()
+                        results.append(result)
+                        new_particles.append((result["replay"], result["score"]))
+            particles = new_particles
+    dist = [
+        (result["result"], result["score"], [result["trace"]]) for result in results
+    ]
+    return Categorical(dist)
 
 
 def _process_particle(
-    model: Callable[[ModelStateT, float], tuple[T, ModelStateT, float]],
+    model: Callable[[ModelStateT, float], Result],
     state: ModelStateT,
     score: float,
-) -> tuple[Optional[T], ModelStateT, float]:
+) -> Result | Resample:
     """Process a single particle and return (result, state, score)"""
     try:
-        result, new_state, new_score = model(state, score)
-        return result, new_state, new_score
+        result = model(state, score)
+        return result
     except Resample as exn:
-        return None, exn.state, exn.score
+        return exn
 
 
 def infer_smc(  # pylint: disable=too-many-arguments
@@ -134,7 +116,7 @@ def infer_smc(  # pylint: disable=too-many-arguments
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_particles: int,
 ) -> Categorical[T]:
@@ -151,13 +133,20 @@ def infer_smc(  # pylint: disable=too-many-arguments
         scores = []
         results = []
         for state in particles:
-            result, state, score = _process_particle(model, state, 0.0)
-            if result is not None:
-                results.append(result)
-            states.append(state)
-            scores.append(score)
+            result = _process_particle(model, state, 0.0)
+            match result:
+                case Resample():
+                    states.append(result.state)
+                    scores.append(result.score)
+                case _:  # Result()
+                    results.append(result)
+                    states.append(result["replay"])
+                    scores.append(result["score"])
         particles = resample(states, scores)
-    return Categorical(list(zip(results, scores)))
+    dist = [
+        (result["result"], result["score"], [result["trace"]]) for result in results
+    ]
+    return Categorical(dist)
 
 
 def infer_smc_parallel(  # pylint: disable=too-many-arguments
@@ -165,7 +154,7 @@ def infer_smc_parallel(  # pylint: disable=too-many-arguments
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_particles: int,
     max_workers: Optional[int],
@@ -176,33 +165,40 @@ def infer_smc_parallel(  # pylint: disable=too-many-arguments
     particles: list[ModelStateT] = [
         {} for _ in range(num_particles)
     ]  # initialise the particles
-    results: list[T] = []
+    results: list[Result] = []
     scores: list[float] = []
-    while len(results) < num_particles:
-        states = []
-        scores = []
-        results = []
-        with ThreadPoolExecutor(max_workers) as executor:
+    with ThreadPoolExecutor(max_workers) as executor:
+        while len(results) < num_particles:
+            states = []
+            scores = []
+            results = []
             future_to_particle = {
                 executor.submit(_process_particle, model, state, 0.0): state
                 for state in particles
             }
             for future in future_to_particle:
-                result, state, score = future.result()
-                if result is not None:
-                    results.append(result)  # execute all the particles
-                states.append(state)
-                scores.append(score)
-        particles = resample(states, scores)
-    return Categorical(list(zip(results, scores)))
+                result = future.result()
+                match result:
+                    case Resample():
+                        states.append(result.state)
+                        scores.append(result.score)
+                    case _:  # Result()
+                        results.append(result)
+                        states.append(result["replay"])
+                        scores.append(result["score"])
+            particles = resample(states, scores)
+    dist = [
+        (result["result"], result["score"], [result["trace"]]) for result in results
+    ]
+    return Categorical(dist)
 
 
-def infer_rejection(  # pylint: disable=too-many-arguments
+def infer_rejection_sampling(  # pylint: disable=too-many-arguments
     prog: Program,
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_samples: int,
 ) -> Categorical[T]:
@@ -212,7 +208,8 @@ def infer_rejection(  # pylint: disable=too-many-arguments
 
     def gen():
         while True:
-            result, _, score = model({}, 0.0)
+            result = model({}, 0.0)
+            score = result["score"]
             alpha = math.exp(min(0, score - max_score))
             u = random.random()  # nosec B311
             # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
@@ -220,16 +217,19 @@ def infer_rejection(  # pylint: disable=too-many-arguments
             if u <= alpha:
                 return result
 
-    samples = [(gen(), 0.0) for _ in range(num_samples)]
+    samples = []
+    for _ in range(num_samples):
+        result = gen()
+        samples.append((result["result"], 0.0, [result["trace"]]))
     return Categorical(samples)
 
 
-def infer_rejection_parallel(  # pylint: disable=too-many-arguments
+def infer_rejection_sampling_parallel(  # pylint: disable=too-many-arguments
     prog: Program,
     config: InterpreterConfig,
     scope: Optional[ScopeType | dict[str, Any]],
     loc: Optional[PdlLocationType],
-    output: Literal["result", "all"],
+    # output: Literal["result", "all"],
     *,
     num_samples: int,
     max_workers: Optional[int],
@@ -241,7 +241,8 @@ def infer_rejection_parallel(  # pylint: disable=too-many-arguments
 
     def gen():
         while True:
-            result, _, score = model({}, 0.0)
+            result = model({}, 0.0)
+            score = result["score"]
             alpha = math.exp(min(0, score - max_score))
             u = random.random()  # nosec B311
             # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
@@ -249,13 +250,14 @@ def infer_rejection_parallel(  # pylint: disable=too-many-arguments
             if u <= alpha:
                 return result
 
-    results: list[tuple[T, float]] = []
+    samples = []
     with ThreadPoolExecutor(max_workers) as executor:
         future_to_particle = (executor.submit(gen) for _ in range(num_samples))
         for future in future_to_particle:
             result = future.result()
-            results.append((result, 0.0))
-    return Categorical(results)
+            samples.append((result["result"], 0.0, [result["trace"]]))
+
+    return Categorical(samples)
 
 
 # async def _process_particle_async(state, model, num_particles):
