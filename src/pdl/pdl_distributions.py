@@ -1,12 +1,14 @@
 # Adapted from mu-ppl: https://github.com/gbdrt/mu-ppl/blob/main/mu_ppl/distributions.py
 
 from typing import Any, Generic, TypeVar
+
 import numpy as np
 import numpy.random as rand
-from scipy.special import logsumexp
 import seaborn as sns
+from scipy.special import logsumexp
 
 T = TypeVar("T")
+
 
 class Categorical(Generic[T]):
     """
@@ -35,12 +37,10 @@ class Categorical(Generic[T]):
                 res[v] = (w, m)
         return Categorical([(v, w, m) for v, (w, m) in res.items()])
 
-
     def sample(self) -> T:
         u = rand.rand()
         i = np.searchsorted(np.cumsum(self.probs), u)
         return self.values[i]
-
 
     def sort(self) -> "Categorical[T]":
         d = self.shrink()
