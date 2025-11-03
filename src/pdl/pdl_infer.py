@@ -5,16 +5,16 @@ from typing import Any, Literal, Optional, TypedDict
 import yaml
 from matplotlib import pyplot as plt
 from mu_ppl import viz
-from mu_ppl.distributions import Categorical
 
 from ._version import version
 from .pdl import InterpreterConfig
 from .pdl_ast import PdlLocationType, Program, ScopeType, get_default_model_parameters
+from .pdl_distributions import Categorical
 from .pdl_inference import (
     infer_importance_sampling,
     infer_importance_sampling_parallel,
-    infer_rejection,
-    infer_rejection_parallel,
+    infer_rejection_sampling,
+    infer_rejection_sampling_parallel,
     infer_smc,
     infer_smc_parallel,
 )
@@ -42,7 +42,7 @@ def exec_program(  # pylint: disable=too-many-arguments, too-many-positional-arg
     ppdl_config: Optional[PpdlConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
     loc: Optional[PdlLocationType] = None,
-    output: Literal["result", "all"] = "result",
+    # output: Literal["result", "all"] = "result",
 ) -> Categorical[Any]:
     ppdl_config = ppdl_config or PpdlConfig()
 
@@ -56,10 +56,11 @@ def exec_program(  # pylint: disable=too-many-arguments, too-many-positional-arg
     config["batch"] = 1
     config["event_loop"] = _LOOP
 
+    dist: Categorical[Any]
     match algo:
         case "is":
             dist = infer_importance_sampling(
-                prog, config, scope, loc, output, num_particles=num_particles
+                prog, config, scope, loc, num_particles=num_particles
             )
         case "parallel-is":
             dist = infer_importance_sampling_parallel(
@@ -67,35 +68,30 @@ def exec_program(  # pylint: disable=too-many-arguments, too-many-positional-arg
                 config,
                 scope,
                 loc,
-                output,
                 num_particles=num_particles,
                 max_workers=max_workers,
             )
         case "smc":
-            dist = infer_smc(
-                prog, config, scope, loc, output, num_particles=num_particles
-            )
+            dist = infer_smc(prog, config, scope, loc, num_particles=num_particles)
         case "parallel-smc":
             dist = infer_smc_parallel(
                 prog,
                 config,
                 scope,
                 loc,
-                output,
                 num_particles=num_particles,
                 max_workers=max_workers,
             )
         case "rejection":
-            dist = infer_rejection(
-                prog, config, scope, loc, output, num_samples=num_particles
+            dist = infer_rejection_sampling(
+                prog, config, scope, loc, num_samples=num_particles
             )
         case "parallel-rejection":
-            dist = infer_rejection_parallel(
+            dist = infer_rejection_sampling_parallel(
                 prog,
                 config,
                 scope,
                 loc,
-                output,
                 num_samples=num_particles,
                 max_workers=max_workers,
             )
@@ -110,10 +106,10 @@ def exec_dict(  # pylint: disable=too-many-arguments, too-many-positional-argume
     ppdl_config: Optional[PpdlConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
     loc: Optional[PdlLocationType] = None,
-    output: Literal["result", "all"] = "result",
+    # output: Literal["result", "all"] = "result",
 ) -> Any:
     program = parse_dict(prog)
-    result = exec_program(program, config, ppdl_config, scope, loc, output)
+    result = exec_program(program, config, ppdl_config, scope, loc)
     return result
 
 
@@ -122,10 +118,10 @@ def exec_str(
     config: Optional[InterpreterConfig] = None,
     ppdl_config: Optional[PpdlConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
-    output: Literal["result", "all"] = "result",
+    # output: Literal["result", "all"] = "result",
 ) -> Any:
     program, loc = parse_str(prog)
-    result = exec_program(program, config, ppdl_config, scope, loc, output)
+    result = exec_program(program, config, ppdl_config, scope, loc)
     return result
 
 
@@ -134,14 +130,14 @@ def exec_file(
     config: Optional[InterpreterConfig] = None,
     ppdl_config: Optional[PpdlConfig] = None,
     scope: Optional[ScopeType | dict[str, Any]] = None,
-    output: Literal["result", "all"] = "result",
+    # output: Literal["result", "all"] = "result",
 ) -> Any:
     program, loc = parse_file(prog)
     if config is None:
         config = InterpreterConfig()
     if config.get("cwd") is None:
         config["cwd"] = Path(prog).parent
-    result = exec_program(program, config, ppdl_config, scope, loc, output)
+    result = exec_program(program, config, ppdl_config, scope, loc)
     return result
 
 
