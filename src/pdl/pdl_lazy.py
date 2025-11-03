@@ -31,7 +31,7 @@ class PdlConst(PdlLazy[PdlConstT]):
         return self._data
 
     def __repr__(self):
-        return self.result().__repr__()
+        return repr(self.result())
 
     def result(self) -> PdlConstT:
         while isinstance(self._data, (Future, PdlLazy)):
@@ -74,7 +74,7 @@ class PdlList(Sequence[PdlListElemT], PdlLazy[list[PdlListElemT]]):
         return len(self.data)
 
     def __repr__(self):
-        return self.result().__repr__()
+        return repr(self.result())
 
     def __add__(self, value: Union["PdlList", list]):
         if isinstance(value, PdlList):
@@ -128,7 +128,7 @@ class PdlDict(
         return len(self.data)
 
     def __repr__(self):
-        return self.result().__repr__()
+        return repr(self.result())
 
     def __or__(self, value: Union["PdlLazy", dict]):
         if isinstance(value, PdlLazy):
@@ -164,7 +164,7 @@ class PdlApply(PdlLazy[ApplyOutputT]):
         return self._data
 
     def __repr__(self):
-        return self.result().__repr__()
+        return repr(self.result())
 
     def result(self) -> ApplyOutputT:
         data = self.data
@@ -220,7 +220,7 @@ class PdlApply2(PdlLazy[Apply2OutputT]):
         return self._data
 
     def __repr__(self):
-        return self.result().__repr__()
+        return repr(self.result())
 
     def result(self) -> Apply2OutputT:
         data = self.data
