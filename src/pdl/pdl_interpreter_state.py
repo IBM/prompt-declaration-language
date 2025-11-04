@@ -60,5 +60,6 @@ class InterpreterState(BaseModel):
         return self.with_id(str(i))
 
     def add_usage(self, *, completion_tokens: int, prompt_tokens: int):
-        self.llm_usage.completion_tokens = completion_tokens
-        self.llm_usage.prompt_tokens = prompt_tokens
+        self.llm_usage.model_calls += 1
+        self.llm_usage.completion_tokens += completion_tokens
+        self.llm_usage.prompt_tokens += prompt_tokens

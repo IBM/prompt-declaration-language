@@ -537,6 +537,9 @@ export type As4 = "reduce"
 export type Reduce = LocalizedExpression | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
+export type ModelCalls = number
+export type CompletionTokens = number
+export type PromptTokens = number
 /**
  * Optional field to ensure that the block is using granite-io.
  *
@@ -3610,8 +3613,9 @@ export interface JoinReduce {
  * Internal data structure to record token consumption usage information.
  */
 export interface PdlUsage {
-  completion_tokens?: number | null
-  prompt_tokens?: number | null
+  model_calls?: ModelCalls
+  completion_tokens?: CompletionTokens
+  prompt_tokens?: PromptTokens
   [k: string]: unknown
 }
 /**
