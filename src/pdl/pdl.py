@@ -15,6 +15,7 @@ from .pdl_ast import (
     BlockType,
     PdlBlock,
     PdlLocationType,
+    PdlUsage,
     Program,
     RoleType,
     ScopeType,
@@ -64,6 +65,7 @@ class Result(TypedDict):
     scope: dict[str, Any]
     trace: BlockType
     replay: dict[str, Any]
+    usage: PdlUsage
 
 
 def exec_program(
@@ -105,6 +107,7 @@ def exec_program(
                 "scope": future_scope.result(),
                 "trace": trace,
                 "replay": state.replay,
+                "usage": state.llm_usage,
             }
             return result_all
         case _:

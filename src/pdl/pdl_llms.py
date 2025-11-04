@@ -1,5 +1,5 @@
 # pylint: disable=import-outside-toplevel
-from asyncio import AbstractEventLoop, run_coroutine_threadsafe
+from asyncio import run_coroutine_threadsafe
 from os import environ
 from sys import stderr
 from typing import Any, Generator, Optional, TypeVar
@@ -15,6 +15,7 @@ from .pdl_ast import (
     PDLRuntimeError,
     PdlTypeType,
 )
+from .pdl_interpreter_state import InterpreterState
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
 from .pdl_schema_utils import pdltype_to_jsonschema
 from .pdl_utils import message_post_processing
@@ -70,11 +71,11 @@ class LitellmModel:
 
     @staticmethod
     def generate_text(
+        state: InterpreterState,
         block: LitellmModelBlock,
         model_id: str,
         messages: ModelInput,
         parameters: dict[str, Any],
-        event_loop: AbstractEventLoop,
     ) -> tuple[LazyMessage, PdlLazy[Any]]:
         if "PDL_VERBOSE_ASYNC" in environ:
             print(f"Asynchronous model call started to {model_id}", file=stderr)
@@ -85,7 +86,7 @@ class LitellmModel:
                 messages,
                 parameters,
             ),
-            event_loop,
+            state.event_loop,
         )
         pdl_future: PdlLazy[tuple[dict[str, Any], Any]] = PdlConst(future)
         message = lazy_apply((lambda x: x[0]), pdl_future)
@@ -102,10 +103,15 @@ class LitellmModel:
                 and result["usage"]["completion_tokens"] is not None
                 and result["usage"]["prompt_tokens"] is not None
             ):
+                block.pdl__usage.model_calls = 1
                 block.pdl__usage.completion_tokens = result["usage"][
                     "completion_tokens"
                 ]
                 block.pdl__usage.prompt_tokens = result["usage"]["prompt_tokens"]
+                state.add_usage(
+                    completion_tokens=result["usage"]["completion_tokens"],
+                    prompt_tokens=result["usage"]["prompt_tokens"],
+                )
 
             if block.pdl__timing is not None:
                 block.pdl__timing.end_nanos = time.time_ns()

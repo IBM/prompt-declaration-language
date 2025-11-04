@@ -16,6 +16,14 @@ from .pdl_ast import (
 )
 from .pdl_dumper import as_json, block_to_dict
 
+RefT = TypeVar("RefT")
+
+
+class Ref(Generic[RefT]):
+    def __init__(self, ref: RefT):
+        self.ref = ref
+
+
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
 GeneratorWrapperReturnT = TypeVar("GeneratorWrapperReturnT")
