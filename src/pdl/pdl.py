@@ -62,7 +62,6 @@ class InterpreterConfig(TypedDict, total=False):
     """Data structure where to accumulate LLMs usage."""
 
 
-
 class Result(TypedDict):
     result: Any
     scope: dict[str, Any]
