@@ -64,6 +64,8 @@ class InterpreterConfig(TypedDict, total=False):
     """Initial value of the score."""
     event_loop: AbstractEventLoop
     """Event loop to schedule LLM calls."""
+    llm_usage: PdlUsage
+    """Data structure where to accumulate LLMs usage."""
 
 
 class Result(TypedDict):

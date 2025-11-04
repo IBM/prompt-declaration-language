@@ -38,12 +38,14 @@ class InterpreterState(BaseModel):
     """Cache containing the imported files."""
     event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
     """Event loop to schedule LLM calls."""
-    current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
+    current_pdl_context: Ref[LazyMessages] = Field(
+        default_factory=lambda: Ref(DependentContext([]))
+    )
     """Current value of the context set at the beginning of the execution of the block."""
     replay: dict[str, Any] = {}
     """Dictionary that associate runtime block ids with their values to be able to replay an execution."""
     llm_usage: PdlUsage = PdlUsage()
-    """Record statistics about LLM usage."""
+    """Data structure where to accumulate LLMs usage."""
     score: Ref[float] = Field(default_factory=lambda: Ref(0.0))
     """Log Probability of the execution."""
 
