@@ -412,6 +412,7 @@ def timing_to_dict(timing: PdlTiming) -> dict:
 
 def usage_to_dict(usage: PdlUsage) -> dict:
     d: dict = {}
+    d["model_calls"] = usage.model_calls
     d["completion_tokens"] = usage.completion_tokens
     d["prompt_tokens"] = usage.prompt_tokens
     return d

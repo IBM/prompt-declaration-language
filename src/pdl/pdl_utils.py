@@ -16,6 +16,14 @@ from .pdl_ast import (
 )
 from .pdl_dumper import as_json, block_to_dict
 
+RefT = TypeVar("RefT")
+
+
+class Ref(Generic[RefT]):
+    def __init__(self, ref: RefT):
+        self.ref = ref
+
+
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
 GeneratorWrapperReturnT = TypeVar("GeneratorWrapperReturnT")
@@ -222,14 +230,6 @@ def write_trace(
             json.dump(d, fp)
     except Exception as e:
         print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
-
-
-RefT = TypeVar("RefT")
-
-
-class Ref(Generic[RefT]):
-    def __init__(self, ref: RefT):
-        self.ref = ref
 
 
 class Resample(Exception):

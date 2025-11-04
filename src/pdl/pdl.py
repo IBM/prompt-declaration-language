@@ -15,6 +15,7 @@ from .pdl_ast import (
     BlockType,
     PdlBlock,
     PdlLocationType,
+    PdlUsage,
     Program,
     RoleType,
     ScopeType,
@@ -71,6 +72,7 @@ class Result(TypedDict):
     trace: BlockType
     replay: dict[str, Any]
     score: float
+    usage: PdlUsage
 
 
 def exec_program(
@@ -117,6 +119,7 @@ def exec_program(
                 "trace": trace,
                 "replay": state.replay,
                 "score": state.score.ref,
+                "usage": state.llm_usage,
             }
             return result_all
         case _:

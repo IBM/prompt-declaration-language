@@ -4317,13 +4317,20 @@
     "PdlUsage": {
       "description": "Internal data structure to record token consumption usage information.",
       "properties": {
+        "model_calls": {
+          "default": 0,
+          "title": "Model Calls",
+          "type": "integer"
+        },
         "completion_tokens": {
-          "$ref": "#/$defs/OptionalInt",
-          "default": 0
+          "default": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
         },
         "prompt_tokens": {
-          "$ref": "#/$defs/OptionalInt",
-          "default": 0
+          "default": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
         }
       },
       "title": "PdlUsage",
