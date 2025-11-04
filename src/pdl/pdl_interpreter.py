@@ -11,20 +11,15 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from abc import ABC, abstractmethod
-from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
 from itertools import count
 from os import getenv
-
-warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
-
-from pathlib import Path  # noqa: E402
-from typing import (  # noqa: E402
+from pathlib import Path
+from typing import (
     IO,
     Any,
     Generator,
-    Generic,
     Iterable,
     Optional,
     Sequence,
@@ -32,10 +27,10 @@ from typing import (  # noqa: E402
     TypeVar,
 )
 
-import httpx  # noqa: E402
-import json_repair  # noqa: E402
-import yaml  # noqa: E402
-from jinja2 import (  # noqa: E402
+import httpx
+import json_repair
+import yaml
+from jinja2 import (
     Environment,
     StrictUndefined,
     Template,
@@ -43,12 +38,12 @@ from jinja2 import (  # noqa: E402
     UndefinedError,
     meta,
 )
-from jinja2.nodes import TemplateData  # noqa: E402
-from jinja2.runtime import Undefined  # noqa: E402
-from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
-from pydantic.json_schema import SkipJsonSchema  # noqa: E402
+from jinja2.nodes import TemplateData
+from jinja2.runtime import Undefined
+from pydantic import Field
+from pydantic.json_schema import SkipJsonSchema
 
-from .pdl_ast import (  # noqa: E402
+from .pdl_ast import (
     AdvancedBlockType,
     AggregatorBlock,
     AnyPattern,
@@ -121,7 +116,7 @@ from .pdl_ast import (  # noqa: E402
     TextBlock,
     empty_block_location,
 )
-from .pdl_context import (  # noqa: E402
+from .pdl_context import (
     DependentContext,
     IndependentContext,
     PDLContext,
@@ -131,19 +126,19 @@ from .pdl_context import (  # noqa: E402
     deserialize,
     ensure_context,
 )
-from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
-from .pdl_llms import LitellmModel  # noqa: E402
-from .pdl_location_utils import append, get_loc_string  # noqa: E402
-from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
-from .pdl_python_repl import PythonREPL  # noqa: E402
-from .pdl_scheduler import (  # noqa: E402
-    create_event_loop_thread,
+from .pdl_interpreter_state import InterpreterState
+from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
+from .pdl_llms import LitellmModel
+from .pdl_location_utils import append, get_loc_string
+from .pdl_parser import PDLParseError, parse_file, parse_str
+from .pdl_python_repl import PythonREPL
+from .pdl_scheduler import (
     yield_background,
     yield_result,
 )
-from .pdl_schema_utils import get_json_schema  # noqa: E402
-from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
-from .pdl_utils import (  # noqa: E402
+from .pdl_schema_utils import get_json_schema
+from .pdl_schema_validator import type_check_args, type_check_spec
+from .pdl_utils import (
     GeneratorWrapper,
     apply_defaults,
     get_contribute_context_value,
@@ -153,6 +148,8 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
+warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
+
 empty_scope: ScopeType = PdlDict(
     {
         "pdl_context": DependentContext([]),
@@ -160,60 +157,6 @@ empty_scope: ScopeType = PdlDict(
         "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
     }
 )
-
-
-RefT = TypeVar("RefT")
-
-
-class Ref(Generic[RefT]):
-    def __init__(self, ref: RefT):
-        self.ref = ref
-
-
-class InterpreterState(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    yield_result: bool = False
-    """Stream the result on the standard output as soon as possible."""
-    yield_background: bool = False
-    """Stream the toplevel pdl_context on the standard output as soon as possible."""
-    batch: int = 1
-    """
-    Stream the output of the LLM
-    - batch=0: streaming
-    - batch=1: call to generate with `input`
-    """
-    role: RoleType = "user"
-    """Current role to add messages in the context."""
-    cwd: Path = Path.cwd()
-    """Current working directory."""
-    id_stack: list[str] = []
-    """Id generator for the UI."""
-
-    # The following are shared variable that should be modified by side effects
-    imported: dict[str, tuple[ScopeType, BlockType]] = {}
-    """Cache containing the imported files."""
-    event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
-    """Event loop to schedule LLM calls."""
-    current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
-    """Current value of the context set at the beginning of the execution of the block."""
-    replay: dict[str, Any] = {}
-
-    def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
-        return self.model_copy(update={"yield_result": b})
-
-    def with_yield_background(self: "InterpreterState", b: bool) -> "InterpreterState":
-        return self.model_copy(update={"yield_background": b})
-
-    def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
-        return self.model_copy(update={"role": role})
-
-    def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
-        stack = self.id_stack if self.id_stack is not None else []
-        return self.model_copy(update={"id_stack": stack + [n]})
-
-    def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
-        return self.with_id(str(i))
 
 
 class ClosureBlock(FunctionBlock):
@@ -2017,9 +1960,11 @@ def generate_client_response_streaming(
                 and usage["prompt_tokens"] is not None
             ):
                 block.pdl__usage = PdlUsage(
+                    model_calls=1,
                     completion_tokens=usage["completion_tokens"],
                     prompt_tokens=usage["prompt_tokens"],
                 )
+                state.add_usage(block.pdl__usage)
     return PdlConst(complete_msg), PdlConst(raw_result)
 
 
@@ -2057,11 +2002,11 @@ def generate_client_response_single(
     match block:
         case LitellmModelBlock():
             message, response = LitellmModel.generate_text(
+                state=state,
                 block=block,
                 model_id=value_of_expr(block.model),
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(parameters),
-                event_loop=state.event_loop,
             )
         case GraniteioModelBlock():
             from .pdl_granite_io import GraniteioModel
