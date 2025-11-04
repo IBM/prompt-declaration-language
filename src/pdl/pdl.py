@@ -58,6 +58,9 @@ class InterpreterConfig(TypedDict, total=False):
     """
     event_loop: AbstractEventLoop
     """Event loop to schedule LLM calls."""
+    llm_usage: PdlUsage
+    """Data structure where to accumulate LLMs usage."""
+
 
 
 class Result(TypedDict):
