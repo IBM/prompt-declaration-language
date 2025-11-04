@@ -108,10 +108,7 @@ class LitellmModel:
                     "completion_tokens"
                 ]
                 block.pdl__usage.prompt_tokens = result["usage"]["prompt_tokens"]
-                state.add_usage(
-                    completion_tokens=result["usage"]["completion_tokens"],
-                    prompt_tokens=result["usage"]["prompt_tokens"],
-                )
+                state.add_usage(block.pdl__usage)
 
             if block.pdl__timing is not None:
                 block.pdl__timing.end_nanos = time.time_ns()

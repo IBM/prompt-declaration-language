@@ -1964,10 +1964,7 @@ def generate_client_response_streaming(
                     completion_tokens=usage["completion_tokens"],
                     prompt_tokens=usage["prompt_tokens"],
                 )
-                state.add_usage(
-                    completion_tokens=usage["completion_tokens"],
-                    prompt_tokens=usage["prompt_tokens"],
-                )
+                state.add_usage(block.pdl__usage)
     return PdlConst(complete_msg), PdlConst(raw_result)
 
 
