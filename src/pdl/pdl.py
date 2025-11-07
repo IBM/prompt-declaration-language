@@ -60,6 +60,8 @@ class InterpreterConfig(TypedDict, total=False):
     """
     with_resample: bool
     """Allow the interpreter to raise the `Resample` exception."""
+    ignore_factor: bool
+    """Do not evaluate the expression associated to the `factor` block but use `0` instead (so resample if `with_resample` is true)."""
     score: float | Ref[float]
     """Initial value of the score."""
     event_loop: AbstractEventLoop

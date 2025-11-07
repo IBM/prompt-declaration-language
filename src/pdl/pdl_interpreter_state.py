@@ -32,6 +32,8 @@ class InterpreterState(BaseModel):
     """Id generator for the UI."""
     with_resample: bool = False
     """Allow the interpreter to raise the `Resample` exception."""
+    ignore_factor: bool = False
+    """Do not evaluate the expression associated to the `factor` block but use `0` instead (so resample if `with_resample` is true)."""
 
     # The following are shared variable that should be modified by side effects
     imported: dict[str, tuple[ScopeType, BlockType]] = {}

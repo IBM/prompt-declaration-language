@@ -18,6 +18,8 @@ from .pdl_distributions import Categorical, viz
 from .pdl_inference import (
     infer_importance_sampling,
     infer_importance_sampling_parallel,
+    infer_majority_voting,
+    infer_majority_voting_parallel,
     infer_rejection_sampling,
     infer_rejection_sampling_parallel,
     infer_smc,
@@ -32,7 +34,14 @@ class PpdlConfig(TypedDict, total=False):
     """Configuration parameters of the PDL interpreter."""
 
     algo: Literal[
-        "is", "parallel-is", "smc", "parallel-smc", "rejection", "parallel-rejection"
+        "is",
+        "parallel-is",
+        "smc",
+        "parallel-smc",
+        "rejection",
+        "parallel-rejection",
+        "maj",
+        "parallel-maj",
     ]
     num_particles: int
     max_workers: int
@@ -101,6 +110,20 @@ def exec_program(  # pylint: disable=too-many-arguments, too-many-positional-arg
                 num_samples=num_particles,
                 max_workers=max_workers,
             )
+        case "maj":
+            dist = infer_majority_voting(
+                prog, config, scope, loc, num_particles=num_particles
+            )
+        case "parallel-maj":
+            dist = infer_majority_voting_parallel(
+                prog,
+                config,
+                scope,
+                loc,
+                num_particles=num_particles,
+                max_workers=max_workers,
+            )
+
         case _:
             assert False, f"Unexpected algo: {algo}"
     match output:
@@ -183,6 +206,8 @@ def main():
             "parallel-smc",
             "rejection",
             "parallel-rejection",
+            "maj",
+            "parallel-maj",
         ],
         help="Choose inference algorithm.",
         default="smc",
