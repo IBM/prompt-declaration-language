@@ -1131,9 +1131,13 @@ def process_block_body(
         case CallBlock():
             result, background, scope, trace = process_call(state, scope, block, loc)
         case FactorBlock():
-            weight, trace = process_expr_of(
-                block, "factor", scope, append(loc, "factor")
-            )
+            if state.ignore_factor:
+                weight = 0.0
+                trace = block.model_copy()
+            else:
+                weight, trace = process_expr_of(
+                    block, "factor", scope, append(loc, "factor")
+                )
             state.score.ref += weight
             result = PdlConst("")
             background = DependentContext([])
