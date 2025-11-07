@@ -260,6 +260,37 @@ def infer_rejection_sampling_parallel(  # pylint: disable=too-many-arguments
     return Categorical(samples)
 
 
+def infer_majority_voting(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    # output: Literal["result", "all"],
+    *,
+    num_particles: int,
+) -> Categorical[T]:
+    config["ignore_factor"] = True
+    return infer_importance_sampling(
+        prog, config, scope, loc, num_particles=num_particles
+    )
+
+
+def infer_majority_voting_parallel(  # pylint: disable=too-many-arguments
+    prog: Program,
+    config: InterpreterConfig,
+    scope: Optional[ScopeType | dict[str, Any]],
+    loc: Optional[PdlLocationType],
+    # output: Literal["result", "all"],
+    *,
+    num_particles: int,
+    max_workers: Optional[int],
+) -> Categorical[T]:
+    config["ignore_factor"] = True
+    return infer_importance_sampling_parallel(
+        prog, config, scope, loc, num_particles=num_particles, max_workers=max_workers
+    )
+
+
 # async def _process_particle_async(state, model, num_particles):
 #     with ImportanceSampling(num_particles) as sampler:
 #         try:
