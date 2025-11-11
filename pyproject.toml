@@ -38,7 +38,7 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
   "pre-commit>=3,<5",
-  "pytest~=8.0",
+  "pytest~=9.0",
   "pydantic~=2.9"
 ]
 examples = [
