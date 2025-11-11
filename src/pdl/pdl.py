@@ -12,8 +12,10 @@ from pydantic.json_schema import models_json_schema
 from . import pdl_interpreter
 from ._version import version
 from .pdl_ast import (
+    BlockType,
     PdlBlock,
     PdlLocationType,
+    PdlUsage,
     Program,
     RoleType,
     ScopeType,
@@ -56,6 +58,16 @@ class InterpreterConfig(TypedDict, total=False):
     """
     event_loop: AbstractEventLoop
     """Event loop to schedule LLM calls."""
+    llm_usage: PdlUsage
+    """Data structure where to accumulate LLMs usage."""
+
+
+class Result(TypedDict):
+    result: Any
+    scope: dict[str, Any]
+    trace: BlockType
+    replay: dict[str, Any]
+    usage: PdlUsage
 
 
 def exec_program(
@@ -92,13 +104,14 @@ def exec_program(
         case "result":
             return result
         case "all":
-            scope = future_scope.result()
-            return {
+            result_all: Result = {
                 "result": result,
-                "scope": scope,
+                "scope": future_scope.result(),
                 "trace": trace,
                 "replay": state.replay,
+                "usage": state.llm_usage,
             }
+            return result_all
         case _:
             assert False, 'The `output` variable should be "result" or "all"'
 

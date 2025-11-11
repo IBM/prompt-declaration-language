@@ -179,4 +179,4 @@ def add_done_callback(
         case IndependentContext(context=c):
             p.context = PdlApply(f, c)
         case _:
-            assert False
+            assert False, f"Unexpected context type {type(p)}: {p}"

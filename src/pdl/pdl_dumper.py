@@ -303,7 +303,7 @@ def block_to_dict(  # noqa: C901
         [ContributeTarget.CONTEXT, ContributeTarget.RESULT],
     ]:
         d["contribute"] = contribute_to_list(block.contribute)
-    if block.pdl__result is not None:
+    if block.pdl__result is not None and not isinstance(block, ImportBlock):
         d["pdl__result"] = data_to_dict(block.pdl__result.result(), json_compatible)
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
@@ -407,6 +407,7 @@ def timing_to_dict(timing: PdlTiming) -> dict:
 
 def usage_to_dict(usage: PdlUsage) -> dict:
     d: dict = {}
+    d["model_calls"] = usage.model_calls
     d["completion_tokens"] = usage.completion_tokens
     d["prompt_tokens"] = usage.prompt_tokens
     return d
@@ -470,6 +471,8 @@ def as_json(value: Any) -> JsonType:
         return {str(k): as_json(v) for k, v in value.items()}
     if isinstance(value, Iterable):
         return [as_json(v) for v in value]
+    if isinstance(value, Block):
+        return as_json(block_to_dict(value, json_compatible=True))  # pyright: ignore
     return str(value)
 
 
@@ -493,7 +496,7 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
 
 
 def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
-    return {"path": location.path, "file": location.file, "table": location.table}
+    return {"path": location.path, "file": location.file, "table": {}}
 
 
 def contribute_to_list(

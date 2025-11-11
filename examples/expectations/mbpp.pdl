@@ -1,0 +1,115 @@
+defs:
+  pdl_llm_as_judge: watsonx/ibm/granite-4-h-small
+  pdl_llm_context_transformer: watsonx/ibm/granite-4-h-small
+  model: watsonx/ibm/granite-4-h-small
+  log:
+    lang: python
+    code: |
+      import math
+      result = math.log
+  Geometric:
+    lang: python
+    code: |
+      class Geometric():
+        def __init__(self, p: float):
+          self.p = p
+    
+        def log_prob(self, x: int):
+          return log(1 - self.p) * x + log(self.p)
+
+      result = Geometric
+
+  flake8:
+    function:
+      code: string
+    return:
+      lang: python
+      code: |
+        import subprocess
+        import re
+        from pydantic import BaseModel
+
+        _FLAKE8_HARD_ERRORS = {"F821", "F822", "F831", "E112", "E113", "E999", "E902"}
+
+        class LinterErrorOrWarning(BaseModel):
+          # uses 0-based line and column numbers
+          lineno: int
+          colno: int
+          end_lineno: int
+          end_colno: int
+          line_content: str
+          errwarn_code: str
+          message: str
+          is_error: bool
+
+        def _lint_lines_flake8(lines: list[str]) -> list[LinterErrorOrWarning]:
+          # https://flake8.pycqa.org/en/latest/user/error-codes.html
+          # https://pycodestyle.pycqa.org/en/latest/intro.html#error-codes
+          completed_process = subprocess.run(
+              "flake8 --isolated --extend-ignore E111,E2,E3,E501,W1,W2,W3 -",
+              input="\n".join(lines),
+              capture_output=True,
+              shell=True,
+              text=True,
+              encoding="utf-8",
+              errors="surrogateescape",
+              executable="/bin/bash",
+              check=False,
+          )
+          result = []
+          assert "flake8: command not found" not in completed_process.stderr, (
+              "please install flake8 to properly run the editing agent"
+          )
+          for line in completed_process.stdout.split("\n"):
+              match = re.match(r"[^:]+:([0-9]+):([0-9]+): ([EF][0-9]+) (.+)", line)
+              if match:
+                  # flake8 uses 1-based line and column numbers and only gives the start
+                  lineno, colno = int(match.group(1)) - 1, int(match.group(2)) - 1
+                  result.append(
+                      LinterErrorOrWarning(
+                          lineno=lineno,
+                          colno=colno,
+                          end_lineno=lineno,
+                          end_colno=colno,
+                          line_content=lines[lineno],
+                          errwarn_code=match.group(3),
+                          message=match.group(4),
+                          is_error=match.group(3) in _FLAKE8_HARD_ERRORS,
+                      )
+                  )
+          return result
+        errors_and_warnings = _lint_lines_flake8(code.split("\n"))
+        result = errors_and_warnings
+  eval_number_of_warnings:
+    function:
+      expectation:
+      response:
+    return:
+      defs:
+        warnings: ${ flake8(response.code) }
+      data: ${ Geometric(0.5).log_prob(warnings | length) }
+  problem: |
+     Write a python function to find the last digit when factorial of a divides factorial of b.
+
+lastOf:
+- ${ problem }
+- model:  ${ model }
+  parameters:
+    temperature: 0.8
+  expectations:
+    - expect: |
+        This solution is a correct solution to the following problem?
+
+        ${ problem}
+
+- Extract only the Python code from the above solution.
+- model: ${ model }
+  def: solution
+  parser:
+      regex: (.|\n)*```python\n(?P<code>(.|\n)*)```(.|\n)*
+      spec: { code: string }
+  expectations:
+    - expect: The code is Pythonic.
+    - expect: There are not too many warnings.
+      feedback: ${ eval_number_of_warnings }
+- ${solution.code | default("")}

@@ -376,11 +376,14 @@ OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
 class PdlUsage(BaseModel):
     """Internal data structure to record token consumption usage information."""
 
-    completion_tokens: OptionalInt = 0
-    """Completion tokens consumed
+    model_calls: int = 0
+    """Number of calls to LLMs.
     """
-    prompt_tokens: OptionalInt = 0
-    """Prompt tokens consumed
+    completion_tokens: int = 0
+    """Completion tokens consumed.
+    """
+    prompt_tokens: int = 0
+    """Prompt tokens consumed.
     """
 
 
@@ -1140,6 +1143,8 @@ class EmptyBlock(LeafBlock):
     kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
 
 
+ExpressionBlock = TypeAliasType("ExpressionBlock", Union[None, bool, int, float, str])
+"""Expression as blocks"""
 AdvancedBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
@@ -1167,9 +1172,7 @@ AdvancedBlockType: TypeAlias = (
 )
 """Different types of structured blocks.
 """
-BlockType = TypeAliasType(
-    "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
-)
+BlockType = TypeAliasType("BlockType", Union[ExpressionBlock, AdvancedBlockType])
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore

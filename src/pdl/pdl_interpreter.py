@@ -11,20 +11,15 @@ import types
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from abc import ABC, abstractmethod
-from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
 from itertools import count
 from os import getenv
-
-warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
-
-from pathlib import Path  # noqa: E402
-from typing import (  # noqa: E402
+from pathlib import Path
+from typing import (
     IO,
     Any,
     Generator,
-    Generic,
     Iterable,
     Optional,
     Sequence,
@@ -32,10 +27,10 @@ from typing import (  # noqa: E402
     TypeVar,
 )
 
-import httpx  # noqa: E402
-import json_repair  # noqa: E402
-import yaml  # noqa: E402
-from jinja2 import (  # noqa: E402
+import httpx
+import json_repair
+import yaml
+from jinja2 import (
     Environment,
     StrictUndefined,
     Template,
@@ -43,12 +38,12 @@ from jinja2 import (  # noqa: E402
     UndefinedError,
     meta,
 )
-from jinja2.nodes import TemplateData  # noqa: E402
-from jinja2.runtime import Undefined  # noqa: E402
-from pydantic import BaseModel, ConfigDict, Field  # noqa: E402
-from pydantic.json_schema import SkipJsonSchema  # noqa: E402
+from jinja2.nodes import TemplateData
+from jinja2.runtime import Undefined
+from pydantic import Field
+from pydantic.json_schema import SkipJsonSchema
 
-from .pdl_ast import (  # noqa: E402
+from .pdl_ast import (
     AdvancedBlockType,
     AggregatorBlock,
     AnyPattern,
@@ -66,6 +61,7 @@ from .pdl_ast import (  # noqa: E402
     DataBlock,
     EmptyBlock,
     ErrorBlock,
+    ExpressionBlock,
     ExpressionType,
     FileAggregatorConfig,
     FunctionBlock,
@@ -120,7 +116,7 @@ from .pdl_ast import (  # noqa: E402
     TextBlock,
     empty_block_location,
 )
-from .pdl_context import (  # noqa: E402
+from .pdl_context import (
     DependentContext,
     IndependentContext,
     PDLContext,
@@ -130,19 +126,19 @@ from .pdl_context import (  # noqa: E402
     deserialize,
     ensure_context,
 )
-from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply  # noqa: E402
-from .pdl_llms import LitellmModel  # noqa: E402
-from .pdl_location_utils import append, get_loc_string  # noqa: E402
-from .pdl_parser import PDLParseError, parse_file, parse_str  # noqa: E402
-from .pdl_python_repl import PythonREPL  # noqa: E402
-from .pdl_scheduler import (  # noqa: E402
-    create_event_loop_thread,
+from .pdl_interpreter_state import InterpreterState
+from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
+from .pdl_llms import LitellmModel
+from .pdl_location_utils import append, get_loc_string
+from .pdl_parser import PDLParseError, parse_file, parse_str
+from .pdl_python_repl import PythonREPL
+from .pdl_scheduler import (
     yield_background,
     yield_result,
 )
-from .pdl_schema_utils import get_json_schema  # noqa: E402
-from .pdl_schema_validator import type_check_args, type_check_spec  # noqa: E402
-from .pdl_utils import (  # noqa: E402
+from .pdl_schema_utils import get_json_schema
+from .pdl_schema_validator import type_check_args, type_check_spec
+from .pdl_utils import (
     GeneratorWrapper,
     apply_defaults,
     get_contribute_context_value,
@@ -152,69 +148,26 @@ from .pdl_utils import (  # noqa: E402
     write_trace,
 )
 
-empty_scope: ScopeType = PdlDict({"pdl_context": DependentContext([])})
+warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-
-RefT = TypeVar("RefT")
-
-
-class Ref(Generic[RefT]):
-    def __init__(self, ref: RefT):
-        self.ref = ref
-
-
-class InterpreterState(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    yield_result: bool = False
-    """Stream the result on the standard output as soon as possible."""
-    yield_background: bool = False
-    """Stream the toplevel pdl_context on the standard output as soon as possible."""
-    batch: int = 1
-    """
-    Stream the output of the LLM
-    - batch=0: streaming
-    - batch=1: call to generate with `input`
-    """
-    role: RoleType = "user"
-    """Current role to add messages in the context."""
-    cwd: Path = Path.cwd()
-    """Current working directory."""
-    id_stack: list[str] = []
-    """Id generator for the UI."""
-
-    # The following are shared variable that should be modified by side effects
-    imported: dict[str, tuple[ScopeType, BlockType]] = {}
-    """Cache containing the imported files."""
-    event_loop: AbstractEventLoop = Field(default_factory=create_event_loop_thread)
-    """Event loop to schedule LLM calls."""
-    current_pdl_context: Ref[LazyMessages] = Ref(DependentContext([]))
-    """Current value of the context set at the beginning of the execution of the block."""
-    replay: dict[str, Any] = {}
-
-    def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
-        return self.model_copy(update={"yield_result": b})
-
-    def with_yield_background(self: "InterpreterState", b: bool) -> "InterpreterState":
-        return self.model_copy(update={"yield_background": b})
-
-    def with_role(self: "InterpreterState", role: RoleType) -> "InterpreterState":
-        return self.model_copy(update={"role": role})
-
-    def with_id(self: "InterpreterState", n: str) -> "InterpreterState":
-        stack = self.id_stack if self.id_stack is not None else []
-        return self.model_copy(update={"id_stack": stack + [n]})
-
-    def with_iter(self: "InterpreterState", i: int) -> "InterpreterState":
-        return self.with_id(str(i))
+empty_scope: ScopeType = PdlDict(
+    {
+        "pdl_context": DependentContext([]),
+        "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
+        "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
+    }
+)
 
 
 class ClosureBlock(FunctionBlock):
     pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
     pdl__state: SkipJsonSchema[InterpreterState] = Field(repr=False)
+    pdl__instance_id: SkipJsonSchema[int] = Field(repr=False, default=0)
 
     def __call__(self, *args, **kwargs):
         state = self.pdl__state.with_yield_result(False).with_yield_background(False)
+        state = state.with_id(f"instance{self.pdl__instance_id}")
+        self.pdl__instance_id += 1
         current_context = state.current_pdl_context.ref
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
@@ -331,37 +284,9 @@ def process_block(
     try:
         state.current_pdl_context.ref = scope["pdl_context"]  # type: ignore
         if not isinstance(block, Block):
-            start = time.time_ns()
-            try:
-                v, expr = process_expr(scope, block, loc)
-            except PDLRuntimeExpressionError as exc:
-                raise PDLRuntimeError(
-                    exc.message,
-                    loc=exc.loc or loc,
-                    trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
-                ) from exc
-            result = PdlConst(v)
-            background = SingletonContext(
-                PdlDict(
-                    {
-                        "role": state.role,
-                        "content": result,
-                        "pdl__defsite": ".".join(
-                            state.id_stack  # XXXX check
-                        ),  # Warning: pdl__defsite for a literal value
-                    }
-                )
+            result, background, scope, trace = process_expression_block(
+                state, scope, block, loc
             )
-            trace = DataBlock(
-                data=expr,
-                pdl__result=result,
-                pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
-                pdl__id=".".join(state.id_stack),  # XXX move earlier
-            )
-            if state.yield_background:
-                yield_background(background)
-            if state.yield_result:
-                yield_result(result.result(), BlockKind.DATA)
 
         else:
             result, background, scope, trace = process_advanced_block_timed(
@@ -385,6 +310,40 @@ def process_block(
     return result, background, scope, trace
 
 
+def process_expression_block(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: ExpressionBlock,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
+    start = time.time_ns()
+    state = state.with_id("data")
+    block_id = ".".join(state.id_stack)
+    try:
+        v, expr = process_expr(scope, block, loc)
+    except PDLRuntimeExpressionError as exc:
+        raise PDLRuntimeError(
+            exc.message,
+            loc=exc.loc or loc,
+            trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+        ) from exc
+    result = PdlConst(v)
+    background = SingletonContext(
+        PdlDict({"role": state.role, "content": result, "pdl__defsite": block_id})
+    )
+    trace = DataBlock(
+        data=expr,
+        pdl__result=result,
+        pdl__timing=PdlTiming(start_nanos=start, end_nanos=time.time_ns()),
+        pdl__id=block_id,
+    )
+    if state.yield_background:
+        yield_background(background)
+    if state.yield_result:
+        yield_result(result.result(), BlockKind.DATA)
+    return result, background, scope, trace
+
+
 # A start-end time wrapper around `process_advanced_block`
 def process_advanced_block_timed(
     state: InterpreterState,
@@ -393,8 +352,6 @@ def process_advanced_block_timed(
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockType]:
     state = state.with_id(str(block.kind))
-    if state.id_stack is not None:
-        block.pdl__id = ".".join(state.id_stack)
     block.pdl__timing = PdlTiming()
     block.pdl__timing.start_nanos = time.time_ns()
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
@@ -483,16 +440,6 @@ def process_advanced_block(  # noqa: C901
     return result, background, new_scope, trace
 
 
-def reset_replay(state: InterpreterState, pdlid: Optional[str]):
-    if pdlid is None:
-        return
-    keys_list = list(state.replay.keys())
-    # delete key id and all suffixes
-    for key in keys_list:
-        if key.startswith(pdlid):
-            del state.replay[key]
-
-
 def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
@@ -514,12 +461,16 @@ def process_advance_block_retry(  # noqa: C901
         state.yield_background and context_in_contribute(block)
     )
 
-    max_retry = block.retry if block.retry else 0
+    max_retry = block.retry if block.retry is not None else 0
     trial_total = max_retry + 1
     for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
         try:
+            if block.retry is not None:
+                iteration_state = state.with_id(f"retry{trial_idx}")
+            else:
+                iteration_state = state
             result, background, new_scope, trace = process_block_body_with_replay(
-                state, scope, block, loc
+                iteration_state, scope, block, loc
             )
 
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
@@ -549,14 +500,28 @@ def process_advance_block_retry(  # noqa: C901
                     evaluate = getattr(req, "feedback", None)
                     stdlib_dict: Any = scope["stdlib"]
                     if evaluate is None:
-                        evaluate = stdlib_dict["expectations"]["feedback"]
+                        evaluate_closure = stdlib_dict["expectations"]["feedback"]
+                    else:
+                        evaluate_closure, _ = process_expr(scope, evaluate, loc)
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
+                    args = {"expectation": expectation, "response": result.result()}
+                    keys = evaluate_closure.signature["parameters"]["properties"].keys()
+                    if "pdl_llm_as_judge" in keys:
+                        args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
+                    if "pdl_llm_context_transformer" in keys:
+                        args = args | {
+                            "pdl_llm_context_transformer": scope[
+                                "pdl_llm_context_transformer"
+                            ]
+                        }
                     call_block = CallBlock(
-                        call=evaluate,
-                        args={"expectation": expectation, "response": result.result()},
+                        call=evaluate_closure,
+                        args=args,
                     )
                     feedback, _, _, _ = process_call(
-                        state.with_yield_result(False).with_yield_background(False),
+                        iteration_state.with_yield_result(False).with_yield_background(
+                            False
+                        ),
                         scope,
                         call_block,
                         append(loc, "feedback"),
@@ -565,7 +530,7 @@ def process_advance_block_retry(  # noqa: C901
                     if feedback_result is not None:
                         if isinstance(feedback_result, str):
                             instruction = feedback_result
-                        elif isinstance(feedback_result, tuple):
+                        elif isinstance(feedback_result, list):
                             instruction = feedback_result[1]
                         else:
                             instruction = ""
@@ -576,7 +541,6 @@ def process_advance_block_retry(  # noqa: C901
                                     [scope["pdl_context"], {"role": "user", "content": instruction}]  # type: ignore
                                 )
                             }
-                            reset_replay(state, block.pdl__id)
                             expectations_satisfied = False
 
                 if (
@@ -593,19 +557,19 @@ def process_advance_block_retry(  # noqa: C901
             if do_retry:
                 err_msg = traceback.format_exc()
                 error = f"An error occurred in a PDL block. Error details: {err_msg}"
+                if loc is None:
+                    message = error
+                else:
+                    message = get_loc_string(loc) + error
                 print(
-                    f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {error}\033[0m\n",
+                    f"\n\033[0;31m[Retry {trial_idx+1}/{max_retry}] {message}\033[0m\n",
                     file=sys.stderr,
                 )
                 if block.trace_error_on_retry:
                     scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
-                reset_replay(state, block.pdl__id)
                 continue
-            state = init_state.with_yield_result(
+            state = state.with_yield_result(
                 init_state.yield_result and ContributeTarget.RESULT in block.contribute
-            )
-            state = state.with_yield_background(
-                state.yield_background and context_in_contribute(block)
             )
             (
                 result,
@@ -669,12 +633,19 @@ def process_block_body_with_replay(
     block: AdvancedBlockType,
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
-    if isinstance(block, LeafBlock):
-        block_id = block.pdl__id
+    assert state.id_stack is not None
+    block_id = ".".join(state.id_stack)
+    block.pdl__id = block_id
+    if isinstance(block, LeafBlock) and not isinstance(block, CallBlock):
         assert isinstance(block_id, str)
-        try:
+        if block_id not in state.replay:
+            result, background, scope, trace = process_block_body(
+                state, scope, block, loc
+            )
+            state.replay[block_id] = result
+        else:
             result = state.replay[block_id]
-            background: LazyMessages = SingletonContext(
+            background = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
             if state.yield_result:
@@ -689,11 +660,6 @@ def process_block_body_with_replay(
                         assert block.pdl__id is not None
                         raw_result = state.replay[block.pdl__id + ".modelResponse"]
                         scope = scope | {block.modelResponse: raw_result}
-        except KeyError:
-            result, background, scope, trace = process_block_body(
-                state, scope, block, loc
-            )
-            state.replay[block_id] = result
     else:
         result, background, scope, trace = process_block_body(state, scope, block, loc)
     return result, background, scope, trace
@@ -1729,6 +1695,8 @@ def _process_expr(  # pylint: disable=too-many-return-statements
                 {x: scope[x] for x in free_vars if x in scope}
             )  # pyright: ignore
             return result
+        except KeyboardInterrupt as exc:
+            raise exc from exc
         except PDLRuntimeError as exc:
             raise exc from exc
         except TemplateSyntaxError as exc:
@@ -1881,6 +1849,8 @@ def process_call_model(
             update={"pdl__result": result}
         )  # pyright: ignore
         return result, background, scope, trace
+    except KeyboardInterrupt as exc:
+        raise exc from exc
     except httpx.RequestError as exc:
         message = f"model '{model_id}' encountered {repr(exc)} trying to {exc.request.method} against {exc.request.url}"
         raise PDLRuntimeError(
@@ -1990,9 +1960,11 @@ def generate_client_response_streaming(
                 and usage["prompt_tokens"] is not None
             ):
                 block.pdl__usage = PdlUsage(
+                    model_calls=1,
                     completion_tokens=usage["completion_tokens"],
                     prompt_tokens=usage["prompt_tokens"],
                 )
+                state.add_usage(block.pdl__usage)
     return PdlConst(complete_msg), PdlConst(raw_result)
 
 
@@ -2030,11 +2002,11 @@ def generate_client_response_single(
     match block:
         case LitellmModelBlock():
             message, response = LitellmModel.generate_text(
+                state=state,
                 block=block,
                 model_id=value_of_expr(block.model),
                 messages=model_input,
                 parameters=litellm_parameters_to_dict(parameters),
-                event_loop=state.event_loop,
             )
         case GraniteioModelBlock():
             from .pdl_granite_io import GraniteioModel
@@ -2098,6 +2070,16 @@ def process_call_code(
                         }
                     )
                 )
+            except PDLRuntimeExpressionError as exc:
+                raise PDLRuntimeError(
+                    f"Python Code error: {exc.message}",
+                    loc=loc,
+                    trace=block.model_copy(
+                        update={"code": code_s, "pdl__defsite": block.pdl__id}
+                    ),
+                ) from exc
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Python Code error: {traceback.format_exc()}",
@@ -2109,17 +2091,21 @@ def process_call_code(
         case "ipython":
             try:
                 result = call_ipython(code_s, scope)
-                background = PdlList(
-                    [
-                        PdlDict(  # type: ignore
-                            {
-                                "role": state.role,
-                                "content": lazy_apply(str, result),
-                                "pdl__defsite": block.pdl__id,
-                            },
-                        ),
-                    ],  # type: ignore
+                background = SingletonContext(
+                    PdlList(
+                        [
+                            PdlDict(  # type: ignore
+                                {
+                                    "role": state.role,
+                                    "content": lazy_apply(str, result),
+                                    "pdl__defsite": block.pdl__id,
+                                },
+                            ),
+                        ],  # type: ignore
+                    )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Code error: {exc!r}",
@@ -2138,6 +2124,8 @@ def process_call_code(
                         }
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Shell Code error: {repr(exc)}",
@@ -2156,6 +2144,8 @@ def process_call_code(
                         }
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"Jinja Code error: {repr(exc)}",
@@ -2174,6 +2164,8 @@ def process_call_code(
                         ]
                     )
                 )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeError(
                     f"PDL Code error: {repr(exc)}",
@@ -2197,9 +2189,16 @@ __PDL_SESSION = types.SimpleNamespace()
 def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy[Any]:
     my_namespace = types.SimpleNamespace(PDL_SESSION=__PDL_SESSION, **scope)
     sys.path.append(str(state.cwd))
-    exec(code, my_namespace.__dict__)  # nosec B102
-    # [B102:exec_used] Use of exec detected.
-    # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
+    try:
+        c = compile(code, "<code-block>", "exec")
+        exec(c, my_namespace.__dict__)  # nosec B102
+        # [B102:exec_used] Use of exec detected.
+        # This is the code that the user asked to execute. It can be executed in a docker container with the option `--sandbox`
+    except KeyboardInterrupt as exc:
+        raise exc from exc
+    except Exception as exc:
+        message = traceback.format_exc()
+        raise PDLRuntimeExpressionError(message) from exc
     result = my_namespace.result
     sys.path.pop()
     return PdlConst(result)
@@ -2329,6 +2328,8 @@ def process_input(
         try:
             with open(file, encoding="utf-8") as f:
                 s = f.read()
+        except KeyboardInterrupt as exc:
+            raise exc from exc
         except Exception as exc:
             if isinstance(exc, FileNotFoundError):
                 msg = f"file {str(file)} not found"
@@ -2413,9 +2414,10 @@ def process_import(
         prog, new_loc = parse_str(prog_str, file_name=str(file))
         cache = state.imported.get(prog_str)
         if cache is None:
+            import_scope = empty_scope | {"stdlib": scope["stdlib"]}
             _, _, new_scope, trace = process_block(
                 state.with_yield_background(False).with_yield_result(False),
-                empty_scope,
+                import_scope,
                 prog.root,
                 new_loc,
             )
@@ -2482,7 +2484,7 @@ class ContextAggregator(Aggregator):
             case None | StructuredBlock():
                 return self
             case LeafBlock():
-                block_id = ".".join(block.pdl__id or [])
+                block_id = block.pdl__id
                 msg = {"role": role, "content": result, "pdl__defsite": block_id}
             case _:
                 msg = {"role": role, "content": result}
@@ -2612,6 +2614,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 if text == "True":
                     return json.loads("true")
                 result = json_repair.loads(text)  # type: ignore[reportAssignmentType]
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
@@ -2623,6 +2627,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                     if line == "":
                         continue
                     result.append(json.loads(line))
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed JSON: {repr(exc)}"
@@ -2630,6 +2636,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
         case "yaml":
             try:
                 result = yaml.safe_load(text)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed YAML: {repr(exc)}"
@@ -2649,6 +2657,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                     assert False
             try:
                 m = matcher(regex, text, flags=re.M)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
             except Exception as exc:
                 msg = f"Fail to parse with regex {regex}: {repr(exc)}"
                 raise PDLRuntimeParserError(msg) from exc
