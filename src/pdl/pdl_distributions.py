@@ -51,6 +51,15 @@ class Categorical(Generic[T]):
         d.metadata = [d.metadata[i] for i in sorted_indices]
         return d
 
+    def prob(self, x: T) -> float:
+        dist = self.shrink()
+        try:
+            i = dist.values.index(x)
+            p = dist.probs[i]
+        except ValueError:
+            p = 0.0
+        return p
+
 
 def viz(dist: Categorical[float], **kwargs):
     """
