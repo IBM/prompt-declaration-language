@@ -35,7 +35,7 @@ class Categorical(Generic[T]):
                 res[v] = (w_v + w, m_v + m)
             else:
                 res[v] = (w, m)
-        return Categorical([(v, w, m) for v, (w, m) in res.items()])
+        return Categorical([(v, np.log(w), m) for v, (w, m) in res.items()])
 
     def sample(self) -> T:
         u = rand.rand()
