@@ -152,6 +152,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
       .with({ kind: "empty" }, (data) =>
         data.defs ? Object.values(data.defs) : [],
       )
+      .with({ kind: "factor" }, () => [])
       .with({ kind: "error" }, () => []) // TODO show errors in trace
       .with({ kind: P.nullish }, () => [])
       // @ts-expect-error: TODO
