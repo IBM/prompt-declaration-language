@@ -217,6 +217,10 @@ export function map_block_children(
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
     .with({ kind: "aggregator" }, (block) => block)
+    .with({ kind: "factor" }, (block) => {
+      const factor = f_expr(block.factor)
+      return { ...block, factor }
+    })
     .with({ kind: P.nullish }, (block) => block)
     // @ts-expect-error: TODO
     .exhaustive()
@@ -313,6 +317,9 @@ export function iter_block_children(
     .with({ kind: "include" }, () => {})
     .with({ kind: "import" }, () => {})
     .with({ kind: "aggregator" }, () => {})
+    .with({ kind: "factor" }, (block) => {
+      if (block.factor) f(block.factor)
+    })
     .with({ kind: undefined }, () => {})
     // @ts-expect-error: TODO
     .exhaustive()
