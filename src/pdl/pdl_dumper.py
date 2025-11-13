@@ -229,6 +229,8 @@ def block_to_dict(  # noqa: C901
             d["factor"] = expr_to_dict(block.factor, json_compatible)
             if not block.resample:
                 d["resample"] = block.resample
+            if block.pdl__score is not None:
+                d["pdl__score"] = block.pdl__score
         case AggregatorBlock():
             d["aggregator"] = aggregator_to_dict(block.aggregator)
         case IfBlock():

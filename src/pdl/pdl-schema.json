@@ -1425,12 +1425,18 @@
               "type": "string"
             }
           ],
+          "description": "Score to condition the model.\n    ",
           "title": "Factor"
         },
         "resample": {
           "default": true,
+          "description": "Allow to raise the Resampling exception during the execution of the block.\n    ",
           "title": "Resample",
           "type": "boolean"
+        },
+        "pdl__score": {
+          "$ref": "#/$defs/OptionalFloat",
+          "default": null
         }
       },
       "required": [
@@ -4023,6 +4029,16 @@
       "anyOf": [
         {
           "$ref": "#/$defs/ExpressionStr"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalFloat": {
+      "anyOf": [
+        {
+          "type": "number"
         },
         {
           "type": "null"

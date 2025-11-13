@@ -41,6 +41,8 @@ OptionalStr = TypeAliasType("OptionalStr", Optional[str])
 """Optional string."""
 OptionalInt = TypeAliasType("OptionalInt", Optional[int])
 """Optional integer."""
+OptionalFloat = TypeAliasType("OptionalFloat", Optional[float])
+"""Optional floating point number."""
 OptionalBool = TypeAliasType("OptionalBool", Optional[bool])
 """Optional Boolean."""
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
@@ -1093,7 +1095,13 @@ class FactorBlock(LeafBlock):
 
     kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
     factor: ExpressionType[float]
+    """Score to condition the model.
+    """
     resample: bool = True
+    """Allow to raise the Resampling exception during the execution of the block.
+    """
+    # Field for internal use
+    pdl__score: OptionalFloat = None
 
 
 class AggregatorConfig(BaseModel):

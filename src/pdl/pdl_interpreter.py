@@ -1138,6 +1138,7 @@ def process_block_body(
                 weight, trace = process_expr_of(
                     block, "factor", scope, append(loc, "factor")
                 )
+            trace.pdl__score = weight
             state.score.ref += weight
             result = PdlConst("")
             background = DependentContext([])
