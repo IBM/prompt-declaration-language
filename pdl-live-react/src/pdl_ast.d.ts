@@ -447,7 +447,15 @@ export type Contribute19 = ContributeElement[]
 export type ExpectationsType19 = ExpectationType[]
 export type PdlIsLeaf19 = true
 export type Kind19 = "factor"
+/**
+ * Score to condition the model.
+ *
+ */
 export type Factor = LocalizedExpression | number | string
+/**
+ * Allow to raise the Resampling exception during the execution of the block.
+ *
+ */
 export type Resample = boolean
 /**
  * Indicate if the block contributes to the result and background context.
@@ -3368,6 +3376,7 @@ export interface FactorBlock {
   kind?: Kind19
   factor: Factor
   resample?: Resample
+  pdl__score?: number | null
 }
 /**
  * Set of definitions executed before the execution of the block.
