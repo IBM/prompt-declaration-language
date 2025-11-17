@@ -301,7 +301,7 @@ class RegexParser(Parser):
 
 
 ParserType = TypeAliasType(
-    "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
+    "ParserType", Union[Literal["json", "jsonl", "yaml", "csv"], PdlParser, RegexParser]
 )
 """Different parsers."""
 OptionalParserType = TypeAliasType("OptionalParserType", Optional[ParserType])

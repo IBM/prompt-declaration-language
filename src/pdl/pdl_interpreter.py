@@ -1,4 +1,5 @@
 # pylint: disable=import-outside-toplevel
+from io import StringIO
 import json
 import re
 import shlex
@@ -7,6 +8,7 @@ import sys
 import time
 import traceback
 import types
+import csv
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
@@ -2646,6 +2648,18 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed YAML: {repr(exc)}"
+                ) from exc
+        case "csv":
+            try:
+                result = []
+                reader = csv.reader(StringIO(text))
+                for row in reader:
+                    result.append(row)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
+            except Exception as exc:
+                raise PDLRuntimeParserError(
+                    f"Attempted to parse ill-formed CSV: {repr(exc)}"
                 ) from exc
         case PdlParser():
             assert False, "TODO"
