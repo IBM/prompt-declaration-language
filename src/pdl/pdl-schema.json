@@ -4157,7 +4157,8 @@
           "enum": [
             "json",
             "jsonl",
-            "yaml"
+            "yaml",
+            "csv"
           ],
           "type": "string"
         },

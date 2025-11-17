@@ -1,4 +1,5 @@
 # pylint: disable=import-outside-toplevel
+import csv
 import json
 import re
 import shlex
@@ -13,6 +14,7 @@ import warnings
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
+from io import StringIO
 from itertools import count
 from os import getenv
 from pathlib import Path
@@ -2672,6 +2674,18 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
             except Exception as exc:
                 raise PDLRuntimeParserError(
                     f"Attempted to parse ill-formed YAML: {repr(exc)}"
+                ) from exc
+        case "csv":
+            try:
+                result = []
+                reader = csv.reader(StringIO(text))
+                for row in reader:
+                    result.append(row)
+            except KeyboardInterrupt as exc:
+                raise exc from exc
+            except Exception as exc:
+                raise PDLRuntimeParserError(
+                    f"Attempted to parse ill-formed CSV: {repr(exc)}"
                 ) from exc
         case PdlParser():
             assert False, "TODO"
