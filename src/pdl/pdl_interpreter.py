@@ -1,5 +1,5 @@
 # pylint: disable=import-outside-toplevel
-from io import StringIO
+import csv
 import json
 import re
 import shlex
@@ -8,13 +8,13 @@ import sys
 import time
 import traceback
 import types
-import csv
 
 # TODO: temporarily disabling warnings to mute a pydantic warning from liteLLM
 import warnings
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial, reduce
+from io import StringIO
 from itertools import count
 from os import getenv
 from pathlib import Path
