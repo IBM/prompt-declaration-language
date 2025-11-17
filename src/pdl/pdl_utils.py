@@ -15,6 +15,7 @@ from .pdl_ast import (
     get_sampling_defaults,
 )
 from .pdl_dumper import as_json, block_to_dict
+from .pdl_lazy import PdlLazy
 
 RefT = TypeVar("RefT")
 
@@ -64,6 +65,8 @@ async def to_async(value: ToAsyncT) -> ToAsyncT:
 
 
 def stringify(result):
+    if isinstance(result, PdlLazy):
+        result = result.result()
     if isinstance(result, str):
         s = result
     elif isinstance(result, FunctionBlock):

@@ -2509,7 +2509,12 @@ class FileAggregator(Aggregator):
         loc: Optional[PdlLocationType] = None,
         block: Optional[BlockType] = None,
     ) -> "FileAggregator":
-        print(f"{self.prefix}{result}", file=self.fp, end=self.suffix, flush=self.flush)
+        print(
+            f"{self.prefix}{stringify(result)}",
+            file=self.fp,
+            end=self.suffix,
+            flush=self.flush,
+        )
         return self
 
 
