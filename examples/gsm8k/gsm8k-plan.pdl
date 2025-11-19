@@ -1,4 +1,4 @@
-description: Grade School Math -- for every problem we generate a plan, then exectute and evaluate it.
+description: Grade School Math -- for every problem we generate a plan, then execute and evaluate it.
 defs:
   problems:
     read: ./test.jsonl
