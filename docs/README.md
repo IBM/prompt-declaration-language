@@ -186,7 +186,7 @@ text:
     decoding_method: sample
 ```
 
-Instead of providing `temparature: 0`, the user can write `decoding_method: greedy`, or choose `sample` as in the above exmample.
+Instead of providing `temperature: 0`, the user can write `decoding_method: greedy`, or choose `sample` as in the above example.
 
 
 The same example on Replicate:

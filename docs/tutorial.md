@@ -1006,7 +1006,7 @@ If we add the type annotation `spec: {name: string, age: integer}` on the model 
 We are getting the age as an integer because the model block automatically enable structured decoding. The fields `guided_json` and `response_format` are added automatically by the interpreter to the LiteLLM request with the JSON Schema value obtained from the type. Models on platforms that support structured decoding then use this to generate JSON of the correct format.
 
 
-If we disable structured decoding by setting yhe field `structuredDecoding` to false (see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_error.pdl)), we are getting a type error:
+If we disable structured decoding by setting the field `structuredDecoding` to false (see [file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_error.pdl)), we are getting a type error:
 
 ```
 {'name': 'John', 'age': 'twentyfive'}
