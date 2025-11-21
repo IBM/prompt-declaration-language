@@ -1947,7 +1947,7 @@ def generate_client_response_streaming(
                 parameters=litellm_parameters_to_dict(parameters),
             )
         case GraniteioModelBlock():
-            # TODO: curently fallback to the non-streaming interface
+            # TODO: currently fallback to the non-streaming interface
             return generate_client_response_single(
                 state, scope, block, model_id, model_input
             )

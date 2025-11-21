@@ -2,82 +2,46 @@
 defs: 
   reward:
     function:
-      response: 
-      evaluation: string
+      response: object
     return:
       lang: python  
       code: |
         import math
 
-        if (evaluation != 'true' and evaluation != 'false'):
-          raise Exception(f'Wrong value: {evaluation}')
+        def _get_logprob(value: str, top_logprobs):
+            min_logprob = math.inf
+            for logprob in top_logprobs:
+                if value.startswith(logprob["token"]):
+                    return logprob["logprob"]
+                min_logprob = min(min_logprob, logprob['logprob'])
+            return min_logprob
 
-        contents =  response['choices'][0]['logprobs']['content']
-        top_logprobs = []
+        def _find_first_token(content: str, logprobs):
+            for logprob in reversed(logprobs):
+                if content.startswith(logprob["token"]):
+                    return logprob
+            assert False
 
-        contents_keys = {c["token"] for c in contents}
-        if evaluation in contents_keys:
-          exact_match = True
-        else:
-          exact_match = False
+        def reward(response):
+            content = response['choices'][0]['message']['content']
+            if (content != 'true' and content != 'false'):
+                raise Exception(f'Wrong value: {content}')
 
-        def match(v, c, exact):
-          if exact:
-            return v == c
-          return v.startswith(c)
+            first_token_logprob = _find_first_token(content, response['choices'][0]['logprobs']['content'])
+            top_logprobs = first_token_logprob["top_logprobs"]
 
-        for content in contents:
-          if match(evaluation, content['token'], exact_match):
-            top_logprobs = content['top_logprobs']
-            lp_evaluation = content['logprob']
-            break
-        
-        if evaluation == 'true':
-          lp_y = lp_evaluation
-          other = 'false'
-        else: 
-          lp_n = lp_evaluation
-          other = 'true'
+            lp_true = _get_logprob("true", top_logprobs)
+            lp_false = _get_logprob("false", top_logprobs)
+            p_true = math.exp(lp_true)
+            p_false = math.exp(lp_false)
+            if p_true == 0.0:
+                result = -math.inf
+            else:
+                result = math.log(p_true / (p_true + p_false))
 
-        if other in contents_keys:
-          exact_match = True
-        else:
-          exact_match = False
+            return result
 
-        lp_other = math.inf
-        for tp in top_logprobs:
-          if match(other, tp['token'], exact_match):
-            lp_other = tp['logprob']
-            break
-          lp_other = min(lp_other, tp['logprob'])
-
-        # if math.isinf(lp_other):
-        #   print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        #   print("XXXX lp_other is not defined")
-        #   print(f"{evaluation=}")
-        #   print(f"{other=}")
-        #   print(f"{exact_match=}")
-        #   print(f"top_logprobs tokens:")
-        #   for tp in top_logprobs:
-        #     print(f"    {tp['token']}")
-        #   print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
-        if other == 'true':
-          lp_y = lp_other
-        else: 
-          lp_n = lp_other
-
-        if math.exp(lp_y) == 0.0:
-          result = -math.inf
-        else:
-          result = math.log(math.exp(lp_y) / (math.exp(lp_y) + math.exp(lp_n)))
-
-        # print(f"evaluation: { evaluation }")
-        # print(f"exact_match: { exact_match }")
-        # print(f"lp_y: { lp_y }")
-        # print(f"lp_n: { lp_n }")
-        # print(f"reward: { result }")
-        # print(contents_keys)
+        result = reward(response)
 
 
   llm_as_judge: 
@@ -87,7 +51,6 @@ defs:
     return:
       lastOf:
       - model: ${ model }
-        def: evaluation
         input: |
           ${ prompt }
         modelResponse: out
@@ -97,7 +60,7 @@ defs:
           top_logprobs: 5
           response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
       - def: score
-        data: ${ reward(response=out, evaluation=evaluation) }
+        data: ${ reward(response=out) }
       retry: 3
       fallback:
         lang: python
