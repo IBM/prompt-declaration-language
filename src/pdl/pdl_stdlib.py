@@ -1,12 +1,14 @@
 import math
 
+
 def _get_logprob(value: str, top_logprobs):
     min_logprob = math.inf
     for logprob in top_logprobs:
         if value.startswith(logprob["token"]):
             return logprob["logprob"]
-        min_logprob = min(min_logprob, logprob['logprob'])
+        min_logprob = min(min_logprob, logprob["logprob"])
     return min_logprob
+
 
 def _find_first_token(content: str, logprobs):
     for logprob in reversed(logprobs):
@@ -14,12 +16,15 @@ def _find_first_token(content: str, logprobs):
             return logprob
     assert False
 
-def reward(response):
-    content = response['choices'][0]['message']['content']
-    if (content != 'true' and content != 'false'):
-        raise Exception(f'Wrong value: {content}')
 
-    first_token_logprob = _find_first_token(content, response['choices'][0]['logprobs']['content'])
+def reward(response):
+    content = response["choices"][0]["message"]["content"]
+    if content not in ["true", "false"]:
+        raise ValueError(f"Wrong value: {content}")
+
+    first_token_logprob = _find_first_token(
+        content, response["choices"][0]["logprobs"]["content"]
+    )
     top_logprobs = first_token_logprob["top_logprobs"]
 
     lp_true = _get_logprob("true", top_logprobs)
@@ -33,12 +38,15 @@ def reward(response):
 
     return result
 
-def bool_confidence(response):
-    content = response['choices'][0]['message']['content']
-    if (content != 'true' and content != 'false'):
-        raise Exception(f'Wrong value: {content}')
 
-    first_token_logprob = _find_first_token(content, response['choices'][0]['logprobs']['content'])
+def bool_confidence(response):
+    content = response["choices"][0]["message"]["content"]
+    if content not in ["true", "false"]:
+        raise ValueError(f"Wrong value: {content}")
+
+    first_token_logprob = _find_first_token(
+        content, response["choices"][0]["logprobs"]["content"]
+    )
     top_logprobs = first_token_logprob["top_logprobs"]
 
     lp_true = _get_logprob("true", top_logprobs)
