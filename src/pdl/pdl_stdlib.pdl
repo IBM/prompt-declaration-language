@@ -23,17 +23,25 @@ defs:
     function:
       model: string
       prompt: string
+      parameters: {optional: object}
     return:
+      defs:
+        params: 
+          data: 
+            logprobs: true
+            top_logprobs: 5
+            response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
       lastOf:
+      - lang: python
+        def: parameters
+        code: |
+          result = parameters | params
       - model: ${ model }
+        def: evaluation
         input: |
           ${ prompt }
         modelResponse: out
-        parameters:
-          temperature: 0
-          logprobs: true
-          top_logprobs: 5
-          response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
+        parameters: ${ parameters }
       - def: score
         data: ${ reward(response=out) }
       retry: 3
