@@ -1,0 +1,10 @@
+defs:
+  score:
+    function:
+      document: string
+      ground_truth: string
+    return:
+      lang: python
+      fallback: 0
+      code: |
+        

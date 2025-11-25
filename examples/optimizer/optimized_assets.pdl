@@ -1,0 +1,44 @@
+defs:
+  max_tokens: 1024
+  model: watsonx/openai/gpt-oss-120b
+  num_demonstrations:
+    data: 0
+  demonstrations:
+    data: []
+lastOf:
+- Your task is to figure out if physical assets need attention for maintenance or if they are operating as normal or if there is not enough information.
+- "Select based on following rules: \n- 'not enough data': if there are less than 5 work orders or alerts or anomaly records available you must select this option as an overall condition and you must not consider the other options, ELSE\n- 'needs attention': if (a) there are overdue work orders, OR (b) if there are more than 2 completed-delayed  work orders OR (c) critical maintenance is needed, OR (d) many failures or corrective maintenance work orders have been observed recently, OR (e) high number of recent anomalies or alerts; presence of many preventive work orders is not a reason for extra attention, ELSE\n- 'normal': if regular maintenace is being performed and the number of recent anomalies or alerts is low.\n"
+- |+
+  Here are examples conditions and answers:
+
+- for:
+    example: ${ demonstrations }
+  repeat:
+    text:
+    - 'Query: ${ example.query }'
+    - 'Answer: ${ example.groundTruth }'
+  join:
+    with: |2+
+
+
+- |+
+  What is the answer for the following input? Choose between 'not enough data'/'needs attention'/'normal'
+
+  ${ query }
+
+
+- def: response
+  model: ${ model }
+  parameters:
+    temperature: 0.0
+    max_tokens: ${ max_tokens }
+    response_format:
+      type: json_schema
+      json_schema:
+        name: schema
+        schema:
+          enum:
+          - not enough data
+          - needs attention
+          - normal
+        strict: true
