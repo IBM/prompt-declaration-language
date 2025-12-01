@@ -23,6 +23,7 @@ export type Program =
   | MatchBlock
   | RepeatBlock
   | MapBlock
+  | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
@@ -76,6 +77,7 @@ export type BlockType =
   | MatchBlock
   | RepeatBlock
   | MapBlock
+  | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
@@ -102,7 +104,10 @@ export type ContributeTarget = "result" | "context" | "stdout" | "stderr"
  *
  */
 export type Contribute = ContributeElement[]
-export type ParserType = ("json" | "jsonl" | "yaml") | PdlParser | RegexParser
+export type ParserType =
+  | ("json" | "jsonl" | "yaml" | "csv")
+  | PdlParser
+  | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 export type Feedback = LocalizedExpression | FunctionBlock | string | null
@@ -311,12 +316,41 @@ export type Contribute11 = ContributeElement[]
 export type ExpectationsType11 = ExpectationType[]
 export type PdlIsLeaf11 = false
 export type IndependentEnum4 = "independent" | "dependent"
-export type Kind11 = "text"
+export type Kind11 = "sequence"
 /**
- * Body of the text.
+ * Sequence of blocks to join.
+ */
+export type Sequence = BlockType[]
+/**
+ * String concatenation of the result of each iteration.
  *
  */
-export type Text = BlockType | BlockType[]
+export type As = "text"
+/**
+ * String used to concatenate each iteration of the loop.
+ *
+ */
+export type With1 = string
+/**
+ * Return the result of each iteration as an array.
+ *
+ */
+export type As1 = "array"
+/**
+ * Return the union of the objects created at each iteration.
+ *
+ */
+export type As2 = "object"
+/**
+ * Return the result of the last iteration.
+ *
+ */
+export type As3 = "lastOf"
+export type As4 = "reduce"
+/**
+ * Function used to combine the results.
+ */
+export type Reduce = LocalizedExpression | string
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -329,11 +363,12 @@ export type Contribute12 = ContributeElement[]
 export type ExpectationsType12 = ExpectationType[]
 export type PdlIsLeaf12 = false
 export type IndependentEnum5 = "independent" | "dependent"
-export type Kind12 = "lastOf"
+export type Kind12 = "text"
 /**
- * Sequence of blocks to execute.
+ * Body of the text.
+ *
  */
-export type Lastof = BlockType[]
+export type Text = BlockType | BlockType[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -346,11 +381,11 @@ export type Contribute13 = ContributeElement[]
 export type ExpectationsType13 = ExpectationType[]
 export type PdlIsLeaf13 = false
 export type IndependentEnum6 = "independent" | "dependent"
-export type Kind13 = "array"
+export type Kind13 = "lastOf"
 /**
- * Elements of the array.
+ * Sequence of blocks to execute.
  */
-export type Array1 = BlockType[]
+export type Lastof = BlockType[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -363,12 +398,11 @@ export type Contribute14 = ContributeElement[]
 export type ExpectationsType14 = ExpectationType[]
 export type PdlIsLeaf14 = false
 export type IndependentEnum7 = "independent" | "dependent"
-export type Kind14 = "object"
-export type Object2 =
-  | {
-      [k: string]: BlockType
-    }
-  | BlockType[]
+export type Kind14 = "array"
+/**
+ * Elements of the array.
+ */
+export type Array1 = BlockType[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -379,8 +413,14 @@ export type Contribute15 = ContributeElement[]
  *
  */
 export type ExpectationsType15 = ExpectationType[]
-export type PdlIsLeaf15 = true
-export type Kind15 = "message"
+export type PdlIsLeaf15 = false
+export type IndependentEnum8 = "independent" | "dependent"
+export type Kind15 = "object"
+export type Object2 =
+  | {
+      [k: string]: BlockType
+    }
+  | BlockType[]
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -392,12 +432,7 @@ export type Contribute16 = ContributeElement[]
  */
 export type ExpectationsType16 = ExpectationType[]
 export type PdlIsLeaf16 = true
-export type Kind16 = "read"
-/**
- * Indicate if one or multiple lines should be read.
- *
- */
-export type Multiline = boolean
+export type Kind16 = "message"
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -408,14 +443,13 @@ export type Contribute17 = ContributeElement[]
  *
  */
 export type ExpectationsType17 = ExpectationType[]
-export type PdlIsLeaf17 = false
-export type IndependentEnum8 = "independent" | "dependent"
-export type Kind17 = "include"
+export type PdlIsLeaf17 = true
+export type Kind17 = "read"
 /**
- * Name of the file to include.
+ * Indicate if one or multiple lines should be read.
  *
  */
-export type Include = string
+export type Multiline = boolean
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -426,13 +460,14 @@ export type Contribute18 = ContributeElement[]
  *
  */
 export type ExpectationsType18 = ExpectationType[]
-export type PdlIsLeaf18 = true
-export type Kind18 = "import"
+export type PdlIsLeaf18 = false
+export type IndependentEnum9 = "independent" | "dependent"
+export type Kind18 = "include"
 /**
- * Name of the file to import.
+ * Name of the file to include.
  *
  */
-export type Import = string
+export type Include = string
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -444,7 +479,24 @@ export type Contribute19 = ContributeElement[]
  */
 export type ExpectationsType19 = ExpectationType[]
 export type PdlIsLeaf19 = true
-export type Kind19 = "aggregator"
+export type Kind19 = "import"
+/**
+ * Name of the file to import.
+ *
+ */
+export type Import = string
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute20 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType20 = ExpectationType[]
+export type PdlIsLeaf20 = true
+export type Kind20 = "aggregator"
 export type Aggregator = "context" | FileAggregatorConfig
 /**
  * Documentation associated to the aggregator config.
@@ -479,14 +531,14 @@ export type Flush = LocalizedExpression | boolean | string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute20 = ContributeElement[]
+export type Contribute21 = ContributeElement[]
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type ExpectationsType20 = ExpectationType[]
-export type PdlIsLeaf20 = true
-export type Kind20 = "error"
+export type ExpectationsType21 = ExpectationType[]
+export type PdlIsLeaf21 = true
+export type Kind21 = "error"
 /**
  * Error message.
  *
@@ -496,45 +548,15 @@ export type Msg = string
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute21 = ContributeElement[]
+export type Contribute22 = ContributeElement[]
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type ExpectationsType21 = ExpectationType[]
-export type PdlIsLeaf21 = true
-export type Kind21 = "empty"
+export type ExpectationsType22 = ExpectationType[]
+export type PdlIsLeaf22 = true
+export type Kind22 = "empty"
 export type ExpressionInt = LocalizedExpression | number | string
-/**
- * String concatenation of the result of each iteration.
- *
- */
-export type As = "text"
-/**
- * String used to concatenate each iteration of the loop.
- *
- */
-export type With1 = string
-/**
- * Return the result of each iteration as an array.
- *
- */
-export type As1 = "array"
-/**
- * Return the union of the objects created at each iteration.
- *
- */
-export type As2 = "object"
-/**
- * Return the result of the last iteration.
- *
- */
-export type As3 = "lastOf"
-export type As4 = "reduce"
-/**
- * Function used to combine the results.
- */
-export type Reduce = LocalizedExpression | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
 export type ModelCalls = number
@@ -624,14 +646,14 @@ export type MaxRetries = number | string | null
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute22 = ContributeElement[]
+export type Contribute23 = ContributeElement[]
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type ExpectationsType22 = ExpectationType[]
-export type PdlIsLeaf22 = true
-export type Kind22 = "function"
+export type ExpectationsType23 = ExpectationType[]
+export type PdlIsLeaf23 = true
+export type Kind23 = "function"
 /**
  * Functions parameters with their types.
  *
@@ -658,6 +680,7 @@ export type PdlBlock =
   | MatchBlock
   | RepeatBlock
   | MapBlock
+  | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
@@ -714,7 +737,7 @@ export interface FunctionBlock {
    *
    */
   def?: string | null
-  contribute?: Contribute22
+  contribute?: Contribute23
   /**
    * Parser to use to construct a value out of a string result.
    */
@@ -734,7 +757,7 @@ export interface FunctionBlock {
    *
    */
   trace_error_on_retry?: boolean | string | null
-  expectations?: ExpectationsType22
+  expectations?: ExpectationsType23
   /**
    * Role associated to the block and sub-blocks.
    * Typical roles are `system`, `user`, and `assistant`,
@@ -755,8 +778,8 @@ export interface FunctionBlock {
    * Execution timing information.
    */
   pdl__timing?: PdlTiming | null
-  pdl__is_leaf?: PdlIsLeaf22
-  kind?: Kind22
+  pdl__is_leaf?: PdlIsLeaf23
+  kind?: Kind23
   function: Function
   /**
    * Body of the function.
@@ -776,6 +799,7 @@ export interface FunctionBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -1141,6 +1165,7 @@ export interface LitellmModelBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -1287,6 +1312,7 @@ export interface GraniteioModelBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -1435,6 +1461,7 @@ export interface CodeBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -1896,6 +1923,7 @@ export interface IfBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -2217,6 +2245,7 @@ export interface RepeatBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -2385,6 +2414,7 @@ export interface MapBlock {
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
@@ -2421,9 +2451,9 @@ export interface Defs11 {
   [k: string]: BlockType
 }
 /**
- * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ * Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator.
  */
-export interface TextBlock {
+export interface SequenceBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2508,7 +2538,12 @@ export interface TextBlock {
   pdl__is_leaf?: PdlIsLeaf11
   context?: IndependentEnum4
   kind?: Kind11
-  text: Text
+  sequence: Sequence
+  /**
+   * Define how to combine the result of each block.
+   *
+   */
+  join: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2518,9 +2553,41 @@ export interface Defs12 {
   [k: string]: BlockType
 }
 /**
- * Return the value of the last block if the list of blocks.
+ * Join loop iterations or sequence of blocks as a string.
  */
-export interface LastOfBlock {
+export interface JoinText {
+  as?: As
+  with?: With1
+}
+/**
+ * Join loop iterations or sequence of blocks as an array.
+ */
+export interface JoinArray {
+  as: As1
+}
+/**
+ * Join loop iterations or sequence of blocks as an object.
+ */
+export interface JoinObject {
+  as: As2
+}
+/**
+ * Join loop iterations or sequence of blocks as the value of the last iteration.
+ */
+export interface JoinLastOf {
+  as: As3
+}
+/**
+ * Join loop iterations or sequence of blocks as the value of the last iteration.
+ */
+export interface JoinReduce {
+  as?: As4
+  reduce: Reduce
+}
+/**
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ */
+export interface TextBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2605,7 +2672,7 @@ export interface LastOfBlock {
   pdl__is_leaf?: PdlIsLeaf12
   context?: IndependentEnum5
   kind?: Kind12
-  lastOf: Lastof
+  text: Text
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2615,9 +2682,9 @@ export interface Defs13 {
   [k: string]: BlockType
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Return the value of the last block if the list of blocks.
  */
-export interface ArrayBlock {
+export interface LastOfBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2702,7 +2769,7 @@ export interface ArrayBlock {
   pdl__is_leaf?: PdlIsLeaf13
   context?: IndependentEnum6
   kind?: Kind13
-  array: Array1
+  lastOf: Lastof
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2712,9 +2779,9 @@ export interface Defs14 {
   [k: string]: BlockType
 }
 /**
- * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface ObjectBlock {
+export interface ArrayBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2799,7 +2866,7 @@ export interface ObjectBlock {
   pdl__is_leaf?: PdlIsLeaf14
   context?: IndependentEnum7
   kind?: Kind14
-  object: Object2
+  array: Array1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2809,9 +2876,9 @@ export interface Defs15 {
   [k: string]: BlockType
 }
 /**
- * Create a message.
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface MessageBlock {
+export interface ObjectBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2894,43 +2961,9 @@ export interface MessageBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf15
+  context?: IndependentEnum8
   kind?: Kind15
-  /**
-   * Content of the message.
-   */
-  content:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | CodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
-  /**
-   * For example, the name of the tool that was invoked, for which this message is the tool response.
-   */
-  name?: ExpressionStr | null
-  /**
-   * The id of the tool invocation for which this message is the tool response.
-   */
-  tool_call_id?: ExpressionStr | null
+  object: Object2
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2940,21 +2973,9 @@ export interface Defs16 {
   [k: string]: BlockType
 }
 /**
- * Read from a file or standard input.
- *
- * Example. Read from the standard input with a prompt starting with `> `.
- * ```PDL
- * read:
- * message: "> "
- * ```
- *
- * Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
- * ```PDL
- * read: ./data.yaml
- * parser: yaml
- * ```
+ * Create a message.
  */
-export interface ReadBlock {
+export interface MessageBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3039,16 +3060,42 @@ export interface ReadBlock {
   pdl__is_leaf?: PdlIsLeaf16
   kind?: Kind16
   /**
-   * Name of the file to read. If `None`, read the standard input.
-   *
+   * Content of the message.
    */
-  read: ExpressionStr | null
+  content:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
   /**
-   * Message to prompt the user to enter a value.
-   *
+   * For example, the name of the tool that was invoked, for which this message is the tool response.
    */
-  message?: string | null
-  multiline?: Multiline
+  name?: ExpressionStr | null
+  /**
+   * The id of the tool invocation for which this message is the tool response.
+   */
+  tool_call_id?: ExpressionStr | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3058,9 +3105,21 @@ export interface Defs17 {
   [k: string]: BlockType
 }
 /**
- * Include a PDL file.
+ * Read from a file or standard input.
+ *
+ * Example. Read from the standard input with a prompt starting with `> `.
+ * ```PDL
+ * read:
+ * message: "> "
+ * ```
+ *
+ * Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+ * ```PDL
+ * read: ./data.yaml
+ * parser: yaml
+ * ```
  */
-export interface IncludeBlock {
+export interface ReadBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3143,10 +3202,18 @@ export interface IncludeBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf17
-  context?: IndependentEnum8
   kind?: Kind17
-  include: Include
-  pdl__trace?: BlockType | null
+  /**
+   * Name of the file to read. If `None`, read the standard input.
+   *
+   */
+  read: ExpressionStr | null
+  /**
+   * Message to prompt the user to enter a value.
+   *
+   */
+  message?: string | null
+  multiline?: Multiline
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3156,9 +3223,9 @@ export interface Defs18 {
   [k: string]: BlockType
 }
 /**
- * Import a PDL file.
+ * Include a PDL file.
  */
-export interface ImportBlock {
+export interface IncludeBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3241,8 +3308,9 @@ export interface ImportBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf18
+  context?: IndependentEnum9
   kind?: Kind18
-  import: Import
+  include: Include
   pdl__trace?: BlockType | null
 }
 /**
@@ -3253,9 +3321,9 @@ export interface Defs19 {
   [k: string]: BlockType
 }
 /**
- * Create a new aggregator that can be use in the `contribute` field.
+ * Import a PDL file.
  */
-export interface AggregatorBlock {
+export interface ImportBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3339,7 +3407,8 @@ export interface AggregatorBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf19
   kind?: Kind19
-  aggregator: Aggregator
+  import: Import
+  pdl__trace?: BlockType | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3348,19 +3417,10 @@ export interface AggregatorBlock {
 export interface Defs20 {
   [k: string]: BlockType
 }
-export interface FileAggregatorConfig {
-  description?: Description
-  file: File1
-  mode?: Mode1
-  encoding?: Encoding
-  prefix?: Prefix
-  suffix?: Suffix
-  flush?: Flush
-}
 /**
- * Block representing an error generated at runtime.
+ * Create a new aggregator that can be use in the `contribute` field.
  */
-export interface ErrorBlock {
+export interface AggregatorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3444,36 +3504,7 @@ export interface ErrorBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf20
   kind?: Kind20
-  msg: Msg
-  /**
-   * Block that raised the error.
-   *
-   */
-  program:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | CodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
+  aggregator: Aggregator
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3482,10 +3513,19 @@ export interface ErrorBlock {
 export interface Defs21 {
   [k: string]: BlockType
 }
+export interface FileAggregatorConfig {
+  description?: Description
+  file: File1
+  mode?: Mode1
+  encoding?: Encoding
+  prefix?: Prefix
+  suffix?: Suffix
+  flush?: Flush
+}
 /**
- * Block without an action. It can contain definitions.
+ * Block representing an error generated at runtime.
  */
-export interface EmptyBlock {
+export interface ErrorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3569,6 +3609,37 @@ export interface EmptyBlock {
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf21
   kind?: Kind21
+  msg: Msg
+  /**
+   * Block that raised the error.
+   *
+   */
+  program:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | CodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | MessageBlock
+    | ReadBlock
+    | IncludeBlock
+    | ImportBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3578,36 +3649,99 @@ export interface Defs22 {
   [k: string]: BlockType
 }
 /**
- * Join loop iterations as a string.
+ * Block without an action. It can contain definitions.
  */
-export interface JoinText {
-  as?: As
-  with?: With1
+export interface EmptyBlock {
+  /**
+   * Documentation associated to the block.
+   *
+   */
+  description?: string | null
+  /**
+   * Type specification of the result of the block.
+   *
+   */
+  spec?:
+    | (
+        | "null"
+        | "boolean"
+        | "string"
+        | "number"
+        | "integer"
+        | "array"
+        | "object"
+        | "bool"
+        | "str"
+        | "float"
+        | "int"
+        | "list"
+        | "obj"
+      )
+    | EnumPdlType
+    | PdlTypeType[]
+    | OptionalPdlType
+    | JsonSchemaTypePdlType
+    | ObjectPdlType
+    | {
+        [k: string]: PdlTypeType
+      }
+    | null
+  defs?: Defs23
+  /**
+   * Name of the variable used to store the result of the execution of the block.
+   *
+   */
+  def?: string | null
+  contribute?: Contribute22
+  /**
+   * Parser to use to construct a value out of a string result.
+   */
+  parser?: ParserType | null
+  /**
+   * Block to execute in case of error.
+   *
+   */
+  fallback?: BlockType | null
+  /**
+   * The maximum number of times to retry when an error occurs within a block.
+   *
+   */
+  retry?: number | null
+  /**
+   * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
+   *
+   */
+  trace_error_on_retry?: boolean | string | null
+  expectations?: ExpectationsType22
+  /**
+   * Role associated to the block and sub-blocks.
+   * Typical roles are `system`, `user`, and `assistant`,
+   * but there may be other roles such as `available_tools`.
+   */
+  role?: string | null
+  /**
+   * Current context.
+   */
+  pdl__context?: ModelInput | null
+  /**
+   * Unique identifier for this block.
+   */
+  pdl__id?: string | null
+  pdl__result?: unknown
+  pdl__location?: PdlLocationType | null
+  /**
+   * Execution timing information.
+   */
+  pdl__timing?: PdlTiming | null
+  pdl__is_leaf?: PdlIsLeaf22
+  kind?: Kind22
 }
 /**
- * Join loop iterations as an array.
+ * Set of definitions executed before the execution of the block.
+ *
  */
-export interface JoinArray {
-  as: As1
-}
-/**
- * Join loop iterations as an object.
- */
-export interface JoinObject {
-  as: As2
-}
-/**
- * Join loop iterations as the value of the last iteration.
- */
-export interface JoinLastOf {
-  as: As3
-}
-/**
- * Join loop iterations as the value of the last iteration.
- */
-export interface JoinReduce {
-  as?: As4
-  reduce: Reduce
+export interface Defs23 {
+  [k: string]: BlockType
 }
 /**
  * Internal data structure to record token consumption usage information.
