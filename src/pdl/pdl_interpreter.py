@@ -114,6 +114,7 @@ from .pdl_ast import (
     RepeatBlock,
     RoleType,
     ScopeType,
+    SequenceBlock,
     StructuredBlock,
     TextBlock,
     empty_block_location,
@@ -724,6 +725,15 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             if state.yield_background:
                 yield_background(background)
+        case SequenceBlock():
+            result, background, scope, trace = process_blocks_of(
+                block,
+                "sequence",
+                block.join,
+                state,
+                scope,
+                loc,
+            )
         case TextBlock():
             result, background, scope, trace = process_blocks_of(
                 block,
