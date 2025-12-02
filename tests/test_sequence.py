@@ -1,5 +1,6 @@
 from pdl.pdl import exec_str
 
+
 def test_sequence_text1():
     prog_str = """
 sequence:
@@ -47,7 +48,8 @@ join:
   as: array
 """
     result = exec_str(prog_str)
-    assert result == [ "Hello", "Bye"]
+    assert result == ["Hello", "Bye"]
+
 
 def test_sequence_join1():
     prog_str = """
