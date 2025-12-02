@@ -41,6 +41,7 @@
     }
     &[data-detail="lastOf"],
     &[data-detail="text"],
+    &[data-detail="sequence"],
     &[data-detail="array"] {
       --pdl-bb-color: var(--pf-t--global--icon--color--disabled);
     }

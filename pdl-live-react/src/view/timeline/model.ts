@@ -142,6 +142,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
       .with({ kind: "aggregator" }, () => [])
       .with({ kind: "function" }, () => [])
       .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
+      .with({ kind: "sequence" }, (data) => [data.sequence])
       .with({ kind: "text" }, (data) => [data.text])
       .with({ kind: "lastOf" }, (data) => [data.lastOf])
       .with({ kind: "array" }, (data) => [data.array])
