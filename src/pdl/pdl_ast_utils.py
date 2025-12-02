@@ -31,6 +31,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    SequenceBlock,
     TextBlock,
 )
 
@@ -54,6 +55,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DataBlock():
             pass
+        case SequenceBlock():
+            for b in block.sequence:
+                f(b)
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks
@@ -170,6 +174,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             pass
         case DataBlock():
             block.data = f.f_expr(block.data)
+        case SequenceBlock():
+            block.sequence = [f.f_block(b) for b in block.sequence]
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks

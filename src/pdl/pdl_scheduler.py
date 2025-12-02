@@ -35,6 +35,8 @@ def color_of(kind: BlockKind):
             color = None
         case BlockKind.DATA:
             color = None
+        case BlockKind.SEQUENCE:
+            color = None
         case BlockKind.TEXT:
             color = None
         case BlockKind.LASTOF:

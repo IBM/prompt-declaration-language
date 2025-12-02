@@ -64,6 +64,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    SequenceBlock,
     StructuredBlock,
     TextBlock,
 )
@@ -193,6 +194,9 @@ def block_to_dict(  # noqa: C901
             d["data"] = expr_to_dict(block.data, json_compatible)
             if block.raw:
                 d["raw"] = block.raw
+        case SequenceBlock():
+            d["sequence"] = [block_to_dict(b, json_compatible) for b in block.sequence]
+            d["join"] = join_to_dict(block.join, json_compatible)
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks

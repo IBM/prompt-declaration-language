@@ -73,6 +73,7 @@ class BlockKind(StrEnum):
     CODE = "code"
     GET = "get"
     DATA = "data"
+    SEQUENCE = "sequence"
     TEXT = "text"
     LASTOF = "lastOf"
     ARRAY = "array"
@@ -758,6 +759,76 @@ class DataBlock(LeafBlock):
     """Do not evaluate expressions inside strings."""
 
 
+class JoinConfig(BaseModel):
+    """Configure how loop iterations or sequence of blocks should be combined."""
+
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
+    )
+
+
+class JoinText(JoinConfig):
+    """Join loop iterations or sequence of blocks as a string."""
+
+    as_: Literal["text"] = Field(alias="as", default="text")
+    """String concatenation of the result of each iteration.
+    """
+
+    with_: str = Field(alias="with", default="")
+    """String used to concatenate each iteration of the loop.
+    """
+
+
+class JoinArray(JoinConfig):
+    """Join loop iterations or sequence of blocks as an array."""
+
+    as_: Literal["array"] = Field(alias="as")
+    """Return the result of each iteration as an array.
+    """
+
+
+class JoinObject(JoinConfig):
+    """Join loop iterations or sequence of blocks as an object."""
+
+    as_: Literal["object"] = Field(alias="as")
+    """Return the union of the objects created at each iteration.
+    """
+
+
+class JoinLastOf(JoinConfig):
+    """Join loop iterations or sequence of blocks as the value of the last iteration."""
+
+    as_: Literal["lastOf"] = Field(alias="as")
+    """Return the result of the last iteration.
+    """
+
+
+class JoinReduce(JoinConfig):
+    """Join loop iterations or sequence of blocks as the value of the last iteration."""
+
+    as_: Literal["reduce"] = Field(alias="as", default="reduce")
+
+    reduce: ExpressionType[Callable]
+    """Function used to combine the results."""
+
+
+JoinType = TypeAliasType(
+    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
+)
+"""Different ways to join loop iterations or sequence of blocks."""
+
+
+class SequenceBlock(StructuredBlock):
+    """Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator."""
+
+    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
+    sequence: list["BlockType"]
+    """Sequence of blocks to join."""
+    join: JoinType
+    """Define how to combine the result of each block.
+    """
+
+
 class TextBlock(StructuredBlock):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
@@ -876,65 +947,6 @@ class MatchBlock(StructuredBlock):
     with_: list[MatchCase] = Field(alias="with")
     """List of cases to match.
     """
-
-
-class JoinConfig(BaseModel):
-    """Configure how loop iterations should be combined."""
-
-    model_config = ConfigDict(
-        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
-    )
-
-
-class JoinText(JoinConfig):
-    """Join loop iterations as a string."""
-
-    as_: Literal["text"] = Field(alias="as", default="text")
-    """String concatenation of the result of each iteration.
-    """
-
-    with_: str = Field(alias="with", default="")
-    """String used to concatenate each iteration of the loop.
-    """
-
-
-class JoinArray(JoinConfig):
-    """Join loop iterations as an array."""
-
-    as_: Literal["array"] = Field(alias="as")
-    """Return the result of each iteration as an array.
-    """
-
-
-class JoinObject(JoinConfig):
-    """Join loop iterations as an object."""
-
-    as_: Literal["object"] = Field(alias="as")
-    """Return the union of the objects created at each iteration.
-    """
-
-
-class JoinLastOf(JoinConfig):
-    """Join loop iterations as the value of the last iteration."""
-
-    as_: Literal["lastOf"] = Field(alias="as")
-    """Return the result of the last iteration.
-    """
-
-
-class JoinReduce(JoinConfig):
-    """Join loop iterations as the value of the last iteration."""
-
-    as_: Literal["reduce"] = Field(alias="as", default="reduce")
-
-    reduce: ExpressionType[Callable]
-    """Function used to combine the results."""
-
-
-JoinType = TypeAliasType(
-    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
-)
-"""Different ways to join loop iterations."""
 
 
 class RepeatBlock(StructuredBlock):
@@ -1176,6 +1188,7 @@ AdvancedBlockType: TypeAlias = (
     | MatchBlock
     | RepeatBlock
     | MapBlock
+    | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock

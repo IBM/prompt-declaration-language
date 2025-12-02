@@ -461,6 +461,9 @@
           "$ref": "#/$defs/MapBlock"
         },
         {
+          "$ref": "#/$defs/SequenceBlock"
+        },
+        {
           "$ref": "#/$defs/TextBlock"
         },
         {
@@ -2418,7 +2421,7 @@
     },
     "JoinArray": {
       "additionalProperties": false,
-      "description": "Join loop iterations as an array.",
+      "description": "Join loop iterations or sequence of blocks as an array.",
       "properties": {
         "as": {
           "const": "array",
@@ -2435,7 +2438,7 @@
     },
     "JoinLastOf": {
       "additionalProperties": false,
-      "description": "Join loop iterations as the value of the last iteration.",
+      "description": "Join loop iterations or sequence of blocks as the value of the last iteration.",
       "properties": {
         "as": {
           "const": "lastOf",
@@ -2452,7 +2455,7 @@
     },
     "JoinObject": {
       "additionalProperties": false,
-      "description": "Join loop iterations as an object.",
+      "description": "Join loop iterations or sequence of blocks as an object.",
       "properties": {
         "as": {
           "const": "object",
@@ -2469,7 +2472,7 @@
     },
     "JoinReduce": {
       "additionalProperties": false,
-      "description": "Join loop iterations as the value of the last iteration.",
+      "description": "Join loop iterations or sequence of blocks as the value of the last iteration.",
       "properties": {
         "as": {
           "const": "reduce",
@@ -2498,7 +2501,7 @@
     },
     "JoinText": {
       "additionalProperties": false,
-      "description": "Join loop iterations as a string.",
+      "description": "Join loop iterations or sequence of blocks as a string.",
       "properties": {
         "as": {
           "const": "text",
@@ -4710,6 +4713,136 @@
         "repeat"
       ],
       "title": "RepeatBlock",
+      "type": "object"
+    },
+    "SequenceBlock": {
+      "additionalProperties": false,
+      "description": "Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator.",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeElement"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": false,
+          "default": false,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
+        },
+        "kind": {
+          "const": "sequence",
+          "default": "sequence",
+          "title": "Kind",
+          "type": "string"
+        },
+        "sequence": {
+          "description": "Sequence of blocks to join.",
+          "items": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "title": "Sequence",
+          "type": "array"
+        },
+        "join": {
+          "$ref": "#/$defs/JoinType",
+          "description": "Define how to combine the result of each block.\n    "
+        }
+      },
+      "required": [
+        "sequence",
+        "join"
+      ],
+      "title": "SequenceBlock",
       "type": "object"
     },
     "TextBlock": {

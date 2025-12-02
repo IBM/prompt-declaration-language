@@ -129,6 +129,10 @@ export function map_block_children(
       const data = f_expr(block.data)
       return { ...block, data }
     })
+    .with({ kind: "sequence" }, (block) => {
+      const sequence = block.sequence.map(f_block)
+      return { ...block, sequence: sequence }
+    })
     .with({ kind: "text" }, (block) => {
       let text
       if (block.text instanceof Array) {
@@ -270,6 +274,9 @@ export function iter_block_children(
     .with({ kind: "get" }, () => {})
     .with({ kind: "data" }, (block) => {
       if (block.data) f(block.data)
+    })
+    .with({ kind: "sequence" }, (block) => {
+      block.sequence.forEach(f)
     })
     .with({ kind: "text" }, (block) => {
       if (block.text instanceof Array) {
