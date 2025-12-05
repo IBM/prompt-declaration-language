@@ -1,9 +1,6 @@
-from asyncio import AbstractEventLoop
 from typing import Literal
 
 from pydantic import BaseModel, Field
-
-from pdl.pdl_scheduler import create_event_loop_thread
 
 
 class JsonlDataset(BaseModel):
@@ -39,7 +36,6 @@ class OptimizationConfig(BaseModel):
     validation_set_name: str = Field(default="validation")
     variables: dict[str, list] = Field(default={})
     experiment_prefix: str = Field(default="")
-    
 
     def get_variable_names(self) -> list[str]:
         return [self.demonstrations_variable_name, *self.variables.keys()]

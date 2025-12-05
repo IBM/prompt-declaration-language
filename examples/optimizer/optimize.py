@@ -143,9 +143,9 @@ if __name__ == "__main__":
         print(f"Unknown dataset: {config.dataset}")
         sys.exit(1)
 
-    pdl_config = InterpreterConfig()
-    pdl_config["event_loop"] = _LOOP
-    
+    PDLConfig = InterpreterConfig()
+    PDLConfig["event_loop"] = _LOOP
+
     # Create optimizer instance
     optimizer = PDLOptimizer(
         dataset=dataset,
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         yield_output=args.yield_output,
         experiment_path=args.experiments_path,
         config=config,
-        pdl_config = pdl_config
+        pdl_config=PDLConfig,
     )
 
     # Execute the appropriate command

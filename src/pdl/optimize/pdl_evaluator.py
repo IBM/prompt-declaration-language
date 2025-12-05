@@ -1,11 +1,9 @@
 from typing import Any
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
-from pdl.pdl import InterpreterConfig, exec_str
+from pdl.pdl import exec_str
 from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
-from pdl.pdl_scheduler import create_event_loop_thread
-
 
 
 class PdlEvaluator(OptimizerEvaluator):
@@ -52,8 +50,9 @@ lastOf:
         document: ${{ document }}
         ground_truth: ${{ ground_truth }}"""
 
-
-        result = exec_str(prog=prog, config=self.pdl_config, scope=scope, output="result")
+        result = exec_str(
+            prog=prog, config=self.pdl_config, scope=scope, output="result"
+        )
 
         if isinstance(result, str):
             result = result.strip()

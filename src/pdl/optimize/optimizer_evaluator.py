@@ -77,7 +77,7 @@ class OptimizerEvaluator(Thread):
                     yield_result=self.yield_output,
                     yield_background=self.yield_output,
                     cwd=self.cwd,
-                    event_loop=self.pdl_config["event_loop"] # type: ignore
+                    event_loop=self.pdl_config["event_loop"],  # type: ignore
                 )
                 scope = self.get_scope()
 

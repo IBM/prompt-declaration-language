@@ -40,6 +40,7 @@ rng = default_rng()
 
 _LOOP = create_event_loop_thread()
 
+
 def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
     with (input_path.open(encoding="utf-8") as pdl,):
         pdl_program = Program.model_validate(yaml.safe_load(pdl))
@@ -636,7 +637,7 @@ class PDLOptimizer:
                     timeout=self.timeout,
                     yield_output=self.yield_output,
                     config=self.config,
-                    pdl_config = self.pdl_config,
+                    pdl_config=self.pdl_config,
                     cwd=pdl_file_parent,
                 ),
             )
