@@ -26,8 +26,10 @@ from pdl.optimize.config_parser import JsonlDataset, OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.pdl_evaluator import PdlEvaluator
 from pdl.optimize.util import CandidateResult, TrialOutput, console, execute_threads
+from pdl.pdl import InterpreterConfig
 from pdl.pdl_ast import AdvancedBlockType, DataBlock, Program
 from pdl.pdl_dumper import dump_program_exclude_internals
+from pdl.pdl_scheduler import create_event_loop_thread
 
 warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
 FORMAT = "%(message)s"
@@ -36,6 +38,7 @@ logger.setLevel("INFO")
 logger.addHandler(RichHandler())
 rng = default_rng()
 
+_LOOP = create_event_loop_thread()
 
 def resave_pdl(input_path: Path, output_path: Path, state: dict) -> int:
     with (input_path.open(encoding="utf-8") as pdl,):
@@ -73,6 +76,7 @@ class PDLOptimizer:
         self,
         dataset: DatasetDict,
         config: OptimizationConfig,
+        pdl_config: InterpreterConfig,
         trial_thread: type[OptimizerEvaluator],
         yield_output: bool,
         experiment_path: Path,
@@ -81,6 +85,7 @@ class PDLOptimizer:
         self.yield_output = yield_output
 
         self.config = config
+        self.pdl_config = pdl_config
         self.pdl_path = Path(config.pdl_path)
         self.parallelism = config.parallelism
         self.num_demonstrations = config.num_demonstrations
@@ -631,6 +636,7 @@ class PDLOptimizer:
                     timeout=self.timeout,
                     yield_output=self.yield_output,
                     config=self.config,
+                    pdl_config = self.pdl_config,
                     cwd=pdl_file_parent,
                 ),
             )
@@ -827,6 +833,9 @@ def run_optimizer() -> int:
         print(f"Unknown dataset: {config.dataset}")
         sys.exit(1)
 
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     # Create optimizer instance
     optimizer = PDLOptimizer(
         dataset=dataset,
@@ -834,6 +843,7 @@ def run_optimizer() -> int:
         yield_output=args.yield_output,
         experiment_path=args.experiments_path,
         config=config,
+        pdl_config=pdl_config,
     )
     optimizer.run()
     return 0
