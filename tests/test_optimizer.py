@@ -11,6 +11,10 @@ from examples.optimizer.mbpp_dataset import MBPPDataset
 from examples.optimizer.mbpp_evaluator import MBPPEvaluator
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.pdl_optimizer import PDLOptimizer
+from pdl.pdl import InterpreterConfig
+from pdl.pdl_scheduler import create_event_loop_thread
+
+_LOOP = create_event_loop_thread()
 
 
 def test_gsm8k_cot():
@@ -351,12 +355,17 @@ def test_gsm8k_cot():
             "test": Dataset.from_list(gsm8k["test"]),
         },
     )
+
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
         dataset=gsm8k,
         trial_thread=Gsm8kEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -712,12 +721,17 @@ def run_optimizer_gsm8k(pattern, num_demonstrations=0):
             "test": Dataset.from_list(gsm8k["test"]),
         },
     )
+
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
         dataset=gsm8k,
         trial_thread=Gsm8kEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -1078,12 +1092,16 @@ def run_optimizer_fever(pattern, num_demonstrations=0):
         },
     )
 
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
         dataset=fever,  # pyright: ignore
         trial_thread=FEVEREvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -1123,12 +1141,16 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
         "../prompt-declaration-language-merge/var/mbpp_trajectified",
     )
 
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
         dataset=mbpp_dataset,  # pyright: ignore
         trial_thread=MBPPEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()

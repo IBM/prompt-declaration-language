@@ -16,6 +16,11 @@ from pdl.optimize.config_parser import JsonlDataset, OptimizationConfig
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.pdl_evaluator import PdlEvaluator
 from pdl.optimize.pdl_optimizer import PDLOptimizer
+from pdl.pdl import InterpreterConfig
+from pdl.pdl_scheduler import create_event_loop_thread
+
+_LOOP = create_event_loop_thread()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -138,6 +143,9 @@ if __name__ == "__main__":
         print(f"Unknown dataset: {config.dataset}")
         sys.exit(1)
 
+    PDLConfig = InterpreterConfig()
+    PDLConfig["event_loop"] = _LOOP
+
     # Create optimizer instance
     optimizer = PDLOptimizer(
         dataset=dataset,
@@ -145,6 +153,7 @@ if __name__ == "__main__":
         yield_output=args.yield_output,
         experiment_path=args.experiments_path,
         config=config,
+        pdl_config=PDLConfig,
     )
 
     # Execute the appropriate command

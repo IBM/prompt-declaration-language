@@ -49,7 +49,10 @@ lastOf:
     args:
         document: ${{ document }}
         ground_truth: ${{ ground_truth }}"""
-        result = exec_str(prog=prog, scope=scope, output="result")
+
+        result = exec_str(
+            prog=prog, config=self.pdl_config, scope=scope, output="result"
+        )
 
         if isinstance(result, str):
             result = result.strip()
