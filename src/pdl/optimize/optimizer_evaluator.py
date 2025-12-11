@@ -27,6 +27,7 @@ class OptimizerEvaluator(Thread):
         timeout: int,
         yield_output: bool,
         config: OptimizationConfig,
+        pdl_config: InterpreterConfig,
         cwd: Path,
         answer_key: str = "answer",
     ) -> None:
@@ -40,6 +41,7 @@ class OptimizerEvaluator(Thread):
         self.yield_output = yield_output
         self.answer_key = answer_key
         self.config = config
+        self.pdl_config = pdl_config
         self.cwd = cwd
 
     def get_scope(self) -> ScopeType:
@@ -75,6 +77,7 @@ class OptimizerEvaluator(Thread):
                     yield_result=self.yield_output,
                     yield_background=self.yield_output,
                     cwd=self.cwd,
+                    event_loop=self.pdl_config["event_loop"],  # type: ignore
                 )
                 scope = self.get_scope()
 
