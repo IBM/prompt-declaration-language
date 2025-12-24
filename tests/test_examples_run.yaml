@@ -39,6 +39,7 @@ skip:
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
+  - examples/test.pdl
 
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:

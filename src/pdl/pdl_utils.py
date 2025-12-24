@@ -125,6 +125,8 @@ def message_post_processing(message: dict) -> dict[str, Any]:
     for key, value in message.items():
         if key == "content" and value is not None:
             ret[key] = value
+        if key == "tools_calls" and value is not None:
+            ret[key] = value
         if value is not None:
             if isinstance(value, dict):
                 ret[key] = message_post_processing(value)
