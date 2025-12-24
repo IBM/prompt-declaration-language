@@ -3642,7 +3642,7 @@
               "type": "null"
             }
           ],
-          "default": [],
+          "default": null,
           "title": "Tool Calls"
         }
       },
