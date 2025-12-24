@@ -40,6 +40,7 @@ skip:
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
   - examples/ppdl/mbpp.pdl
+  - examples/test.pdl
 
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:

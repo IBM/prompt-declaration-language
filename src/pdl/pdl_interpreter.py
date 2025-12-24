@@ -849,6 +849,16 @@ def process_block_body(
             if block.tool_call_id is not None:
                 tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
                 message["tool_call_id"] = tool_call_id
+            if block.tool_calls is not None:
+                result, _, _, _ = process_blocks_of(
+                    block,
+                    "tool_calls",
+                    JoinArray(as_="array"),  # pyright: ignore
+                    state,
+                    scope,
+                    loc,
+                )
+                message["tool_calls"] = result
             result = PdlConst(SingletonContext(PdlDict(message)))
             background = SingletonContext(PdlDict(message))
         case IfBlock():
