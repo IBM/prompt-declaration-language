@@ -216,6 +216,7 @@ def block_to_dict(  # noqa: C901
                 d["object"] = [block_to_dict(b, json_compatible) for b in block.object]
         case MessageBlock():
             d["content"] = block_to_dict(block.content, json_compatible)
+            d["tool_calls"] = [block_to_dict(b, json_compatible) for b in block.tool_calls]
         case ReadBlock():
             d["read"] = expr_to_dict(block.read, json_compatible)
             d["message"] = block.message

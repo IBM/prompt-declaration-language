@@ -867,7 +867,7 @@ class MessageBlock(LeafBlock):
     """For example, the name of the tool that was invoked, for which this message is the tool response."""
     tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
-
+    tool_calls: Optional[list["BlockType"]]= []
 
 class IfBlock(StructuredBlock):
     """
