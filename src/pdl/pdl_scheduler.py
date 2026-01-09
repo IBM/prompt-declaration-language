@@ -10,7 +10,11 @@ from .pdl_utils import stringify
 
 def _start_background_loop(loop):
     set_event_loop(loop)
-    loop.run_forever()
+    try:
+        loop.run_forever()
+    finally:
+        loop.run_until_complete(loop.shutdown_asyncgens())
+        loop.close()
 
 
 def create_event_loop_thread() -> AbstractEventLoop:
