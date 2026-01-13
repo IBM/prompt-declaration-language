@@ -204,10 +204,11 @@ dependencies = [
 
 [[package]]
 name = "async-openai"
-version = "0.31.1"
+version = "0.32.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1cc4c602409022b854d89332fae01a6c69a4122fdd0ec66a071b9b5c3a87750b"
+checksum = "16aa4b9090c12270cd0925f735958ab6f0296af7ac08ce0f53fe320bcaf1e23d"
 dependencies = [
+ "getrandom 0.3.2",
  "reqwest",
  "serde",
  "serde_json",
