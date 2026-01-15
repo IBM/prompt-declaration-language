@@ -23,7 +23,6 @@ from typing import (
     Any,
     Generator,
     Iterable,
-    Optional,
     Sequence,
     Tuple,
     TypeVar,
@@ -166,7 +165,7 @@ empty_scope: ScopeType = PdlDict(
 
 
 class ClosureBlock(FunctionBlock):
-    pdl__scope: SkipJsonSchema[Optional[ScopeType]] = Field(repr=False)
+    pdl__scope: SkipJsonSchema[ScopeType | None] = Field(repr=False)
     pdl__state: SkipJsonSchema[InterpreterState] = Field(repr=False)
     pdl__instance_id: SkipJsonSchema[int] = Field(repr=False, default=0)
 
@@ -199,9 +198,9 @@ ClosureBlock.model_rebuild()
 
 def generate(
     pdl_file: str | Path,
-    state: Optional[InterpreterState],
+    state: InterpreterState | None,
     initial_scope: ScopeType,
-    trace_file: Optional[str | Path],
+    trace_file: str | Path | None,
 ) -> int:
     """Execute the PDL program defined in `pdl_file`.
 
@@ -390,10 +389,10 @@ def id_with_set_first_use_nanos(timing):
 
 
 def set_error_to_scope_for_retry(
-    scope: ScopeType, error, block_id: Optional[str] = ""
+    scope: ScopeType, error, block_id: str | None = ""
 ) -> ScopeType:
     repeating_same_error = False
-    pdl_context: Optional[PDLContext] = scope.get("pdl_context")
+    pdl_context: PDLContext | None = scope.get("pdl_context")
     if pdl_context is None:
         return scope
     if pdl_context:
@@ -1199,7 +1198,7 @@ BlockTVarEvalFor = TypeVar("BlockTVarEvalFor", bound=RepeatBlock | MapBlock)
 
 def _evaluate_for_field(
     scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
-) -> Tuple[BlockTVarEvalFor, Optional[dict[str, list]], Optional[int]]:
+) -> Tuple[BlockTVarEvalFor, dict[str, list] | None, int | None]:
     if block.for_ is None:
         items = None
         length = None
@@ -1238,7 +1237,7 @@ BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBl
 
 def _evaluate_max_iterations_field(
     scope: ScopeType, block: BlockTVarEvalMaxIter, loc: PdlLocationType
-) -> Tuple[BlockTVarEvalMaxIter, Optional[int]]:
+) -> Tuple[BlockTVarEvalMaxIter, int | None]:
     if block.maxIterations is None:
         max_iterations = None
     else:
@@ -1265,7 +1264,7 @@ def _evaluate_join_field(
 
 def is_matching(  # pylint: disable=too-many-return-statements
     value: Any, pattern: PatternType, scope: ScopeType
-) -> Optional[ScopeType]:
+) -> ScopeType | None:
     """The function test if `value` matches the pattern `match` and returns the scope updated with the new variables bound by the matching.
 
     Args:
@@ -1276,7 +1275,7 @@ def is_matching(  # pylint: disable=too-many-return-statements
     Returns:
         The function returns `None` if the value is not matched by the pattern and a copy of the updated scope otherwise.
     """
-    new_scope: Optional[ScopeType]
+    new_scope: ScopeType | None
     match pattern:
         case OrPattern():
             new_scope = None
@@ -1350,7 +1349,7 @@ def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional
     state: InterpreterState,
     scope: ScopeType,
     loc: PdlLocationType,
-    field_alias: Optional[str] = None,
+    field_alias: str | None = None,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlockOf]:
     try:
         result, background, scope, child_trace = process_block(
@@ -1382,7 +1381,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
     state: InterpreterState,
     scope: ScopeType,
     loc: PdlLocationType,
-    field_alias: Optional[str] = None,
+    field_alias: str | None = None,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, BlockTypeTVarProcessBlocksOf]:
     try:
         context: IndependentEnum = IndependentEnum.DEPENDENT
@@ -1624,7 +1623,7 @@ def process_expr_of(
     field: str,
     scope: ScopeType,
     loc: PdlLocationType,
-    field_alias: Optional[str] = None,
+    field_alias: str | None = None,
 ) -> tuple[Any, BlockTypeTVarProcessExprOf]:
     result: Any
     expr_trace: LocalizedExpression[Any]
@@ -1647,7 +1646,7 @@ def process_condition_of(
     field: str,
     scope: ScopeType,
     loc: PdlLocationType,
-    field_alias: Optional[str] = None,
+    field_alias: str | None = None,
 ) -> tuple[bool, LocalizedExpression[bool]]:
     result: bool
     expr_trace: LocalizedExpression[bool]
@@ -1974,7 +1973,7 @@ def generate_client_response_streaming(
             )
         case _:
             assert False
-    complete_msg: Optional[dict[str, Any]] = None
+    complete_msg: dict[str, Any] | None = None
     role = None
     wrapped_gen = GeneratorWrapper(msg_stream)
     for chunk in wrapped_gen:
@@ -2018,7 +2017,7 @@ def generate_client_response_streaming(
 
 
 def litellm_parameters_to_dict(
-    parameters: Optional[LitellmParameters | dict[str, Any]],
+    parameters: LitellmParameters | dict[str, Any] | None,
 ) -> dict[str, Any]:
     if isinstance(parameters, dict):
         return {k: v for k, v in parameters.items() if k != "stream"}
@@ -2501,9 +2500,9 @@ class Aggregator(ABC):
     def contribute(
         self,
         result: PdlLazy[Any],
-        role: Optional[RoleType] = None,
-        loc: Optional[PdlLocationType] = None,
-        block: Optional[BlockType] = None,
+        role: RoleType | None = None,
+        loc: PdlLocationType | None = None,
+        block: BlockType | None = None,
     ) -> "Aggregator":
         """Function executed at the end of each block that contain the aggregator.
 
@@ -2519,7 +2518,7 @@ class Aggregator(ABC):
 
 
 class ContextAggregator(Aggregator):
-    def __init__(self, messages: Optional[LazyMessages] = None):
+    def __init__(self, messages: LazyMessages | None = None):
         if messages is None:
             self.messages: LazyMessages = DependentContext([])
         else:
@@ -2528,9 +2527,9 @@ class ContextAggregator(Aggregator):
     def contribute(
         self,
         result: PdlLazy[Any],
-        role: Optional[RoleType] = None,
-        loc: Optional[PdlLocationType] = None,
-        block: Optional[BlockType] = None,
+        role: RoleType | None = None,
+        loc: PdlLocationType | None = None,
+        block: BlockType | None = None,
     ) -> "ContextAggregator":
         match block:
             case None | StructuredBlock():
@@ -2557,9 +2556,9 @@ class FileAggregator(Aggregator):
     def contribute(
         self,
         result: PdlLazy[Any],
-        role: Optional[RoleType] = None,
-        loc: Optional[PdlLocationType] = None,
-        block: Optional[BlockType] = None,
+        role: RoleType | None = None,
+        loc: PdlLocationType | None = None,
+        block: BlockType | None = None,
     ) -> "FileAggregator":
         print(
             f"{self.prefix}{stringify(result)}",
@@ -2589,8 +2588,8 @@ def process_aggregator(
                 mode: str
                 mode_trace: ExpressionType[str]
                 mode, mode_trace = process_expr(scope, cfg.mode, loc)
-                encoding: Optional[str]
-                encoding_trace: ExpressionType[Optional[str]]
+                encoding: str | None
+                encoding_trace: ExpressionType[str | None]
                 encoding, encoding_trace = process_expr(scope, cfg.encoding, loc)
                 prefix: str
                 prefix_trace: ExpressionType[str]

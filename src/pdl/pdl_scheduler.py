@@ -1,6 +1,6 @@
 from asyncio import AbstractEventLoop, new_event_loop, set_event_loop
 from threading import Thread
-from typing import Any, Optional
+from typing import Any
 
 from termcolor import colored
 
@@ -25,7 +25,7 @@ def create_event_loop_thread() -> AbstractEventLoop:
 
 
 def color_of(kind: BlockKind):
-    color: Optional[str]
+    color: str | None
     match kind:
         case BlockKind.FUNCTION:
             color = None
@@ -77,7 +77,7 @@ def color_of(kind: BlockKind):
 
 
 def color_of_role(role: str):
-    color: Optional[str] = None
+    color: str | None = None
     match role:
         case "assistant":
             color = "green"

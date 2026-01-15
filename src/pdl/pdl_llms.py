@@ -2,7 +2,7 @@
 from asyncio import run_coroutine_threadsafe
 from os import environ
 from sys import stderr
-from typing import Any, Generator, Optional, TypeVar
+from typing import Any, Generator, TypeVar
 
 import httpx
 from dotenv import load_dotenv
@@ -173,7 +173,7 @@ class LitellmModel:
 
 def set_structured_decoding_parameters(
     spec: PdlTypeType,
-    parameters: Optional[dict[str, Any]],
+    parameters: dict[str, Any] | None,
 ) -> dict[str, Any]:
     if parameters is None:
         parameters = {}
