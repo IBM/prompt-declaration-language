@@ -116,6 +116,7 @@
               "$ref": "#/$defs/FileAggregatorConfig"
             }
           ],
+          "description": "Configuration for the aggregator (context or file-based).",
           "title": "Aggregator"
         }
       },
@@ -2267,6 +2268,7 @@
       "type": "object"
     },
     "IndependentEnum": {
+      "description": "Enumeration for context execution mode in structured blocks.\n\n- INDEPENDENT: Execute with fresh context (parallel execution)\n- DEPENDENT: Execute with accumulated context (sequential execution)",
       "enum": [
         "independent",
         "dependent"
@@ -3643,6 +3645,7 @@
             }
           ],
           "default": null,
+          "description": "List of tool invocations made by the assistant in this message.",
           "title": "Tool Calls"
         }
       },
@@ -3784,6 +3787,7 @@
               "type": "array"
             }
           ],
+          "description": "Object fields with their block definitions, or a list of blocks that produce objects to merge.",
           "title": "Object"
         }
       },
@@ -4062,6 +4066,7 @@
     },
     "PdlBlock": {
       "$ref": "#/$defs/BlockType",
+      "description": "Wrapper class used to generate proper JSON Schema for PDL blocks.\n\nThis class introduces the BlockType in the generated JSON Schema,\nallowing for proper type definitions in schema documentation.",
       "title": "PdlBlock"
     },
     "PdlLocationType": {

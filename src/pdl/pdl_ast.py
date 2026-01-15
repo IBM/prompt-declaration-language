@@ -32,6 +32,14 @@ from .pdl_lazy import PdlDict, PdlLazy
 
 
 def _ensure_lower(value):
+    """Convert string values to lowercase for case-insensitive validation.
+
+    Args:
+        value: The value to convert (if it's a string)
+
+    Returns:
+        Lowercase string if input is a string, otherwise returns the value unchanged
+    """
     if isinstance(value, str):
         return value.lower()
     return value
@@ -104,10 +112,12 @@ OptionalPdlLocationType = TypeAliasType(
 """Optional location type."""
 
 
+# Value for blocks without source location information
 empty_block_location = PdlLocationType(file="", path=[], table={})
 
 
 LocalizedExpressionT = TypeVar("LocalizedExpressionT")
+"""Type variable for the result type of a localized expression."""
 
 
 class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
@@ -125,6 +135,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
+"""Type variable for the result type of an expression."""
 ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 """Expressions are represented Jinja as strings in between `${` and `}`."""
 
@@ -183,6 +194,7 @@ class AnyPattern(Pattern):
     """Match any value."""
 
     any: Literal[None]
+    """Matches any value (set to None to indicate wildcard matching)."""
 
 
 PatternType = TypeAliasType(
@@ -223,7 +235,7 @@ class OptionalPdlType(PdlType):
     """Optional type."""
 
     optional: "PdlTypeType"
-    """"""
+    """The wrapped type that is optional."""
 
 
 class JsonSchemaTypePdlType(PdlType):
@@ -267,6 +279,7 @@ PdlTypeType = TypeAliasType(
 )
 """Types."""
 
+# TypeAdapter for validating and parsing PDL type specifications
 pdl_type_adapter = TypeAdapter(PdlTypeType)
 
 
@@ -454,16 +467,26 @@ class Block(BaseModel):
 
 
 class LeafBlock(Block):
+    """Base class for blocks that directly contribute their value to the context."""
+
     # Field for internal use
     pdl__is_leaf: Literal[True] = True
 
 
 class IndependentEnum(StrEnum):
+    """Enumeration for context execution mode in structured blocks.
+
+    - INDEPENDENT: Execute with fresh context (parallel execution)
+    - DEPENDENT: Execute with accumulated context (sequential execution)
+    """
+
     INDEPENDENT = "independent"
     DEPENDENT = "dependent"
 
 
 class StructuredBlock(Block):
+    """Base class for blocks that do not directly contribute to the context but contain sub-blocks that can contribute."""
+
     # Field for internal use
     pdl__is_leaf: Literal[False] = False
     context: IndependentEnum = IndependentEnum.DEPENDENT
@@ -553,6 +576,7 @@ class LitellmParameters(BaseModel):
     """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
     """
     parallel_tool_calls: Optional[bool] | str = None
+    """Whether to enable parallel execution of tool calls."""
     # deployment_id = None
     extra_headers: Optional[dict] | str = None
     """Additional headers to include in the request.
@@ -663,6 +687,8 @@ class GraniteioModelBlock(ModelBlock):
 
 
 class BaseCodeBlock(LeafBlock):
+    """Base class for code execution blocks."""
+
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
 
 
@@ -855,6 +881,7 @@ class ObjectBlock(StructuredBlock):
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
     object: dict[str, "BlockType"] | list["BlockType"]
+    """Object fields with their block definitions, or a list of blocks that produce objects to merge."""
 
 
 class MessageBlock(LeafBlock):
@@ -868,6 +895,7 @@ class MessageBlock(LeafBlock):
     tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
     tool_calls: Optional[list["BlockType"]] = None
+    """List of tool invocations made by the assistant in this message."""
 
 
 class IfBlock(StructuredBlock):
@@ -1136,6 +1164,7 @@ class AggregatorBlock(LeafBlock):
 
     kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
     aggregator: AggregatorType
+    """Configuration for the aggregator (context or file-based)."""
 
 
 class ErrorBlock(LeafBlock):
@@ -1205,7 +1234,12 @@ class Program(RootModel):
 
 
 class PdlBlock(RootModel):
-    # This class is used to introduce that a type in the generate JsonSchema
+    """Wrapper class used to generate proper JSON Schema for PDL blocks.
+
+    This class introduces the BlockType in the generated JSON Schema,
+    allowing for proper type definitions in schema documentation.
+    """
+
     root: BlockType
 
 
@@ -1253,13 +1287,14 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self.message = message
 
 
-MAX_NEW_TOKENS = 1024
-MIN_NEW_TOKENS = 1
-REPETITION_PENALTY = 1.05
-TEMPERATURE_SAMPLING = 0.7
-TOP_P_SAMPLING = 0.85
-TOP_K_SAMPLING = 50
-DECODING_METHOD = "greedy"
+# Default model parameter constants
+MAX_NEW_TOKENS = 1024  # Maximum number of tokens to generate
+MIN_NEW_TOKENS = 1  # Minimum number of tokens to generate
+REPETITION_PENALTY = 1.05  # Penalty for repeating tokens
+TEMPERATURE_SAMPLING = 0.7  # Temperature for sampling (higher = more random)
+TOP_P_SAMPLING = 0.85  # Nucleus sampling threshold
+TOP_K_SAMPLING = 50  # Top-k sampling parameter
+DECODING_METHOD = "greedy"  # Default decoding method for text generation
 
 
 def get_default_model_parameters() -> list[dict[str, Any]]:
