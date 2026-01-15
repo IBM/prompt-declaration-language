@@ -233,6 +233,12 @@ export type Contribute7 = ContributeElement[]
  */
 export type ExpectationsType7 = ExpectationType[]
 export type PdlIsLeaf7 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum = "independent" | "dependent"
 export type Kind7 = "if"
 /**
@@ -246,6 +252,12 @@ export type Contribute8 = ContributeElement[]
  */
 export type ExpectationsType8 = ExpectationType[]
 export type PdlIsLeaf8 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum1 = "independent" | "dependent"
 export type Kind8 = "match"
 export type PatternType =
@@ -277,6 +289,12 @@ export type Contribute9 = ContributeElement[]
  */
 export type ExpectationsType9 = ExpectationType[]
 export type PdlIsLeaf9 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum2 = "independent" | "dependent"
 export type Kind9 = "repeat"
 /**
@@ -297,6 +315,12 @@ export type Contribute10 = ContributeElement[]
  */
 export type ExpectationsType10 = ExpectationType[]
 export type PdlIsLeaf10 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum3 = "independent" | "dependent"
 export type Kind10 = "map"
 /**
@@ -317,6 +341,12 @@ export type Contribute11 = ContributeElement[]
  */
 export type ExpectationsType11 = ExpectationType[]
 export type PdlIsLeaf11 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum4 = "independent" | "dependent"
 export type Kind11 = "sequence"
 /**
@@ -364,6 +394,12 @@ export type Contribute12 = ContributeElement[]
  */
 export type ExpectationsType12 = ExpectationType[]
 export type PdlIsLeaf12 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum5 = "independent" | "dependent"
 export type Kind12 = "text"
 /**
@@ -382,6 +418,12 @@ export type Contribute13 = ContributeElement[]
  */
 export type ExpectationsType13 = ExpectationType[]
 export type PdlIsLeaf13 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum6 = "independent" | "dependent"
 export type Kind13 = "lastOf"
 /**
@@ -399,6 +441,12 @@ export type Contribute14 = ContributeElement[]
  */
 export type ExpectationsType14 = ExpectationType[]
 export type PdlIsLeaf14 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum7 = "independent" | "dependent"
 export type Kind14 = "array"
 /**
@@ -416,8 +464,17 @@ export type Contribute15 = ContributeElement[]
  */
 export type ExpectationsType15 = ExpectationType[]
 export type PdlIsLeaf15 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum8 = "independent" | "dependent"
 export type Kind15 = "object"
+/**
+ * Object fields with their block definitions, or a list of blocks that produce objects to merge.
+ */
 export type Object2 =
   | {
       [k: string]: BlockType
@@ -463,6 +520,12 @@ export type Contribute18 = ContributeElement[]
  */
 export type ExpectationsType18 = ExpectationType[]
 export type PdlIsLeaf18 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
 export type IndependentEnum9 = "independent" | "dependent"
 export type Kind18 = "include"
 /**
@@ -521,6 +584,9 @@ export type Contribute21 = ContributeElement[]
 export type ExpectationsType21 = ExpectationType[]
 export type PdlIsLeaf21 = true
 export type Kind21 = "aggregator"
+/**
+ * Configuration for the aggregator (context or file-based).
+ */
 export type Aggregator = "context" | FileAggregatorConfig
 /**
  * Documentation associated to the aggregator config.
@@ -580,6 +646,10 @@ export type Contribute23 = ContributeElement[]
 export type ExpectationsType23 = ExpectationType[]
 export type PdlIsLeaf23 = true
 export type Kind23 = "empty"
+/**
+ * List of tool invocations made by the assistant in this message.
+ */
+export type ToolCalls = BlockType[] | null
 export type ExpressionInt = LocalizedExpression | number | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
@@ -690,6 +760,12 @@ export type Function = {
  *
  */
 export type Signature = string | null
+/**
+ * Wrapper class used to generate proper JSON Schema for PDL blocks.
+ *
+ * This class introduces the BlockType in the generated JSON Schema,
+ * allowing for proper type definitions in schema documentation.
+ */
 export type PdlBlock =
   | ExpressionBlock
   | FunctionBlock
@@ -3131,6 +3207,7 @@ export interface MessageBlock {
    * The id of the tool invocation for which this message is the tool response.
    */
   tool_call_id?: ExpressionStr | null
+  tool_calls?: ToolCalls
 }
 /**
  * Set of definitions executed before the execution of the block.
