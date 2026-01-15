@@ -33,10 +33,10 @@ from .pdl_lazy import PdlDict, PdlLazy
 
 def _ensure_lower(value):
     """Convert string values to lowercase for case-insensitive validation.
-    
+
     Args:
         value: The value to convert (if it's a string)
-        
+
     Returns:
         Lowercase string if input is a string, otherwise returns the value unchanged
     """
@@ -468,24 +468,25 @@ class Block(BaseModel):
 
 class LeafBlock(Block):
     """Base class for blocks that directly contribute their value to the context."""
-    
+
     # Field for internal use
     pdl__is_leaf: Literal[True] = True
 
 
 class IndependentEnum(StrEnum):
     """Enumeration for context execution mode in structured blocks.
-    
+
     - INDEPENDENT: Execute with fresh context (parallel execution)
     - DEPENDENT: Execute with accumulated context (sequential execution)
     """
+
     INDEPENDENT = "independent"
     DEPENDENT = "dependent"
 
 
 class StructuredBlock(Block):
     """Base class for blocks that do not directly contribute to the context but contain sub-blocks that can contribute."""
-    
+
     # Field for internal use
     pdl__is_leaf: Literal[False] = False
     context: IndependentEnum = IndependentEnum.DEPENDENT
@@ -687,7 +688,7 @@ class GraniteioModelBlock(ModelBlock):
 
 class BaseCodeBlock(LeafBlock):
     """Base class for code execution blocks."""
-    
+
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
 
 
@@ -1234,10 +1235,11 @@ class Program(RootModel):
 
 class PdlBlock(RootModel):
     """Wrapper class used to generate proper JSON Schema for PDL blocks.
-    
+
     This class introduces the BlockType in the generated JSON Schema,
     allowing for proper type definitions in schema documentation.
     """
+
     root: BlockType
 
 
