@@ -1,7 +1,7 @@
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 from pydantic import ValidationError
@@ -23,7 +23,7 @@ def parse_file(pdl_file: str | Path) -> tuple[Program, PdlLocationType]:
 
 @lru_cache(maxsize=128)
 def parse_str(
-    pdl_str: str, file_name: Optional[str] = None
+    pdl_str: str, file_name: str | None = None
 ) -> tuple[Program, PdlLocationType]:
     if file_name is None:
         file_name = ""
@@ -34,9 +34,7 @@ def parse_str(
     return prog, loc
 
 
-def parse_dict(
-    pdl_dict: dict[str, Any], loc: Optional[PdlLocationType] = None
-) -> Program:
+def parse_dict(pdl_dict: dict[str, Any], loc: PdlLocationType | None = None) -> Program:
     try:
         prog = Program.model_validate(pdl_dict)
         # set_program_location(prog, pdl_str)

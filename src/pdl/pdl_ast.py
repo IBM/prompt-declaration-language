@@ -1,5 +1,6 @@
 """PDL programs are represented by the Pydantic data structure defined in this file."""
 
+from collections.abc import Mapping, Sequence
 from enum import StrEnum
 from os import environ
 from typing import (
@@ -8,9 +9,7 @@ from typing import (
     Callable,
     Generic,
     Literal,
-    Mapping,
     Optional,
-    Sequence,
     TypeAlias,
     TypeVar,
     Union,
@@ -107,7 +106,7 @@ class PdlLocationType(BaseModel):
 
 
 OptionalPdlLocationType = TypeAliasType(
-    "OptionalPdlLocationType", Optional[PdlLocationType]
+    "OptionalPdlLocationType", PdlLocationType | None
 )
 """Optional location type."""
 
@@ -130,7 +129,7 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
     pdl__expr: Any
-    pdl__result: Optional[LocalizedExpressionT] = None
+    pdl__result: LocalizedExpressionT | None = None
     pdl__location: OptionalPdlLocationType = None
 
 
@@ -142,21 +141,19 @@ ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTyp
 ExpressionStr = TypeAliasType("ExpressionStr", ExpressionType[str])
 """Expression evaluating into a string."""
 
-OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", Optional[ExpressionStr])
+OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", ExpressionStr | None)
 """Optional expression evaluating into a string."""
 
 ExpressionInt = TypeAliasType("ExpressionInt", ExpressionType[int])
 """Expression evaluating into an int."""
 
-OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", Optional[ExpressionInt])
+OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", ExpressionInt | None)
 """Optional expression evaluating into an int."""
 
 ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
 """Expression evaluating into a bool."""
 
-OptionalExpressionBool = TypeAliasType(
-    "OptionalExpressionBool", Optional[ExpressionBool]
-)
+OptionalExpressionBool = TypeAliasType("OptionalExpressionBool", ExpressionBool | None)
 """Optional expression evaluating into a bool."""
 
 
@@ -199,9 +196,15 @@ class AnyPattern(Pattern):
 
 PatternType = TypeAliasType(
     "PatternType",
-    Union[
-        None, bool, int, float, str, OrPattern, ArrayPattern, ObjectPattern, AnyPattern
-    ],
+    None
+    | bool
+    | int
+    | float
+    | str
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern,
 )
 """Patterns allowed to match values in a `case` clause."""
 
@@ -354,10 +357,10 @@ class ExpectationType(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    expect: ExpressionType
+    expect: ExpressionType[Any]
     """English description of the expectation"""
 
-    feedback: Optional[ExpressionType["FunctionBlock"]] = None
+    feedback: ExpressionType["FunctionBlock"] | None = None
     """Feedback function for the expectation"""
 
 
@@ -496,13 +499,13 @@ class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
-    function: Optional[dict[str, PdlTypeType]]
+    function: dict[str, PdlTypeType] | None
     """Functions parameters with their types.
     """
     return_: "BlockType" = Field(..., alias="return")
     """Body of the function.
     """
-    signature: Optional[Json] = None
+    signature: Json | None = None
     """Function signature computed from the function definition.
     """
 
@@ -514,7 +517,7 @@ class CallBlock(LeafBlock):
     call: ExpressionType[FunctionBlock]
     """Function to call.
     """
-    args: ExpressionType = {}
+    args: ExpressionType[Any] = {}
     """Arguments of the function with their values.
     """
     # Field for internal use
@@ -528,16 +531,16 @@ class LitellmParameters(BaseModel):
     """
 
     model_config = ConfigDict(extra="allow", protected_namespaces=())
-    timeout: Optional[Union[float, str]] | str = None
+    timeout: float | str | None = None
     """Timeout in seconds for completion requests (Defaults to 600 seconds).
     """
-    temperature: Optional[float] | str = None
+    temperature: float | str | None = None
     """The temperature parameter for controlling the randomness of the output (default is 1.0).
     """
-    top_p: Optional[float] | str = None
+    top_p: float | str | None = None
     """The top-p parameter for nucleus sampling (default is 1.0).
     """
-    n: Optional[int] | str = None
+    n: int | str | None = None
     """The number of completions to generate (default is 1).
     """
     # stream: Optional[bool] = None
@@ -546,69 +549,69 @@ class LitellmParameters(BaseModel):
     # stream_options: Optional[dict] = None
     # """A dictionary containing options for the streaming response. Only set this when you set stream: true.
     # """
-    stop: Optional[str | list[str]] | str = None
+    stop: str | list[str] | None = None
     """Up to 4 sequences where the LLM API will stop generating further tokens.
     """
-    max_tokens: Optional[int] | str = None
+    max_tokens: int | str | None = None
     """The maximum number of tokens in the generated completion (default is infinity).
     """
-    presence_penalty: Optional[float] | str = None
+    presence_penalty: float | str | None = None
     """It is used to penalize new tokens based on their existence in the text so far.
     """
-    frequency_penalty: Optional[float] | str = None
+    frequency_penalty: float | str | None = None
     """It is used to penalize new tokens based on their frequency in the text so far.
     """
-    logit_bias: Optional[dict] | str = None
+    logit_bias: dict | str | None = None
     """Used to modify the probability of specific tokens appearing in the completion.
     """
-    user: Optional[str] | str = None
+    user: str | None = None
     """A unique identifier representing your end-user. This can help the LLM provider to monitor and detect abuse.
     """
     # openai v1.0+ new params
-    response_format: Optional[dict] | str = None
-    seed: Optional[int] | str = None
-    tools: Optional[list] | str = None
-    tool_choice: Optional[Union[str, dict]] | str = None
-    logprobs: Optional[bool] | str = None
+    response_format: dict | str | None = None
+    seed: int | str | None = None
+    tools: list | str | None = None
+    tool_choice: str | dict | None = None
+    logprobs: bool | str | None = None
     """Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message
     """
-    top_logprobs: Optional[int] | str = None
+    top_logprobs: int | str | None = None
     """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
     """
-    parallel_tool_calls: Optional[bool] | str = None
+    parallel_tool_calls: bool | str | None = None
     """Whether to enable parallel execution of tool calls."""
     # deployment_id = None
-    extra_headers: Optional[dict] | str = None
+    extra_headers: dict | str | None = None
     """Additional headers to include in the request.
     """
     # soon to be deprecated params by OpenAI
-    functions: Optional[list] | str = None
+    functions: list | str | None = None
     """A list of functions to apply to the conversation messages (default is an empty list)
     """
-    function_call: Optional[str] | str = None
+    function_call: str | None = None
     """The name of the function to call within the conversation (default is an empty string)
     """
     # set api_base, api_version, api_key
-    base_url: Optional[str] | str = environ.get("OPENAI_BASE_URL")
+    base_url: str | None = environ.get("OPENAI_BASE_URL")
     """Base URL for the API (default is None).
     """
-    api_version: Optional[str] | str = None
+    api_version: str | None = None
     """API version (default is None).
     """
-    api_key: Optional[str] | str = None
+    api_key: str | None = None
     """API key (default is None).
     """
-    model_list: Optional[list] | str = None  # pass in a list of api_base,keys, etc.
+    model_list: list | str | None = None  # pass in a list of api_base,keys, etc.
     """List of api base, version, keys.
     """
     # Optional liteLLM function params
-    mock_response: Optional[str] | str = None
+    mock_response: str | None = None
     """If provided, return a mock completion response for testing or debugging purposes (default is None).
     """
-    custom_llm_provider: Optional[str] | str = None
+    custom_llm_provider: str | None = None
     """Used for Non-OpenAI LLMs, Example usage for bedrock, set model="amazon.titan-tg1-large" and custom_llm_provider="bedrock"
     """
-    max_retries: Optional[int] | str = None
+    max_retries: int | str | None = None
     """The number of retries to attempt (default is 0).
     """
 
@@ -653,7 +656,7 @@ class LitellmModelBlock(ModelBlock):
     model: ExpressionStr
     """Name of the model following the LiteLLM convention.
     """
-    parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
+    parameters: LitellmParameters | ExpressionType[dict] | None = None
     """Parameters to send to the model.
     """
     structuredDecoding: OptionalBool = True
@@ -681,7 +684,7 @@ class GraniteioModelBlock(ModelBlock):
     processor: GraniteioProcessor | ExpressionType[object]
     """IO Processor configuration or object.
     """
-    parameters: Optional[ExpressionType[dict[str, Any]]] = None
+    parameters: ExpressionType[dict[str, Any]] | None = None
     """Parameters sent to the model.
     """
 
@@ -894,7 +897,7 @@ class MessageBlock(LeafBlock):
     """For example, the name of the tool that was invoked, for which this message is the tool response."""
     tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
-    tool_calls: Optional[list["BlockType"]] = None
+    tool_calls: list["BlockType"] | None = None
     """List of tool invocations made by the assistant in this message."""
 
 
@@ -929,7 +932,7 @@ class MatchCase(BaseModel):
     """Case of a match."""
 
     model_config = ConfigDict(extra="forbid")
-    case: Optional[PatternType] = None
+    case: PatternType | None = None
     """Value to match.
     """
     if_: OptionalExpressionBool = Field(default=None, alias="if")
@@ -1003,7 +1006,7 @@ class RepeatBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    for_: dict[str, ExpressionType[list]] | None = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
     index: OptionalStr = None
@@ -1025,7 +1028,7 @@ class RepeatBlock(StructuredBlock):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    pdl__trace: Optional[list["BlockType"]] = None
+    pdl__trace: list["BlockType"] | None = None
 
 
 class MapBlock(StructuredBlock):
@@ -1055,7 +1058,7 @@ class MapBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.MAP] = BlockKind.MAP
-    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    for_: dict[str, ExpressionType[list]] | None = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
     index: OptionalStr = None
@@ -1074,7 +1077,7 @@ class MapBlock(StructuredBlock):
     """Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
     """
     # Field for internal use
-    pdl__trace: Optional[list["BlockType"]] = None
+    pdl__trace: list["BlockType"] | None = None
 
 
 class ReadBlock(LeafBlock):
@@ -1136,7 +1139,7 @@ class AggregatorConfig(BaseModel):
         arbitrary_types_allowed=True,
     )
 
-    description: Optional[str] = None
+    description: str | None = None
     """Documentation associated to the aggregator config.
     """
 
@@ -1146,7 +1149,7 @@ class FileAggregatorConfig(AggregatorConfig):
     """Name of the file to which contribute."""
     mode: ExpressionType[str] = "w"
     """File opening mode."""
-    encoding: ExpressionType[Optional[str]] = "utf-8"
+    encoding: ExpressionType[str | None] = "utf-8"
     """File encoding."""
     prefix: ExpressionType[str] = ""
     """Prefix to the contributed value."""
@@ -1253,8 +1256,8 @@ class PDLRuntimeError(PDLException):
     def __init__(
         self,
         message: str,
-        loc: Optional[PdlLocationType] = None,
-        trace: Optional[BlockType] = None,
+        loc: PdlLocationType | None = None,
+        trace: BlockType | None = None,
         fallback: OptionalAny = None,
     ):
         super().__init__(message)
@@ -1277,7 +1280,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self,
         message: str,
         blocks: list[BlockType],
-        loc: Optional[PdlLocationType] = None,
+        loc: PdlLocationType | None = None,
         fallback: OptionalAny = None,
     ):
         super().__init__(message)

@@ -4,7 +4,7 @@ import os
 import sys
 from asyncio import AbstractEventLoop
 from pathlib import Path
-from typing import Any, Literal, Optional, TypedDict
+from typing import Any, Literal, TypedDict
 
 import yaml
 from pydantic.json_schema import models_json_schema
@@ -72,9 +72,9 @@ class Result(TypedDict):
 
 def exec_program(
     prog: Program,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[PdlLocationType] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | dict[str, Any] | None = None,
+    loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a value of type `pdl.pdl_ast.Program`.
@@ -118,9 +118,9 @@ def exec_program(
 
 def exec_dict(
     prog: dict[str, Any],
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[PdlLocationType] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | dict[str, Any] | None = None,
+    loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a dictionary.
@@ -142,8 +142,8 @@ def exec_dict(
 
 def exec_str(
     prog: str,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | dict[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML string.
@@ -164,8 +164,8 @@ def exec_str(
 
 def exec_file(
     prog: str | Path,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | dict[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML file.
