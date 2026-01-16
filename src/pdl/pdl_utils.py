@@ -121,20 +121,23 @@ def get_contribute_context_value(
 
 
 def message_post_processing(message: dict) -> dict[str, Any]:
-    ret = {}
-    for key, value in message.items():
-        if key == "content" and value is not None:
-            ret[key] = value
-        if key == "tools_calls" and value is not None:
-            ret[key] = value
-        if value is not None:
-            if isinstance(value, dict):
-                ret[key] = message_post_processing(value)
-            else:
-                ret[key] = value
-    if "content" not in ret:
-        ret["content"] = ""
-    return ret
+    if ("content" not in message) or (
+        "content" in message and message["content"] is None
+    ):
+        message["content"] = ""
+    return message
+    # ret = {}
+    # for key, value in message.items():
+    #     if key == "content" and value is not None:
+    #         ret[key] = value
+    #     if value is not None:
+    #         if isinstance(value, dict):
+    #             ret[key] = message_post_processing(value)
+    #         else:
+    #             ret[key] = value
+    # if "content" not in ret:
+    #     ret["content"] = ""
+    # return ret
 
 
 def apply_defaults(
