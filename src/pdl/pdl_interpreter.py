@@ -272,7 +272,9 @@ def process_prog(
         loc,
     )
 
-    stdlib_scope = scope | PdlDict({"stdlib": stdlib_dict})
+    stdlib_scope = scope | PdlDict(
+        {"stdlib": stdlib_dict, "pdl_usage": state.llm_usage}
+    )
 
     result, document, final_scope, trace = process_block(
         state, stdlib_scope, block=prog.root, loc=loc
