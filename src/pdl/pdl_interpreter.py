@@ -158,6 +158,7 @@ warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 empty_scope: ScopeType = PdlDict(
     {
         "pdl_context": DependentContext([]),
+        "pdl_particle_id": 0,
         "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
         "pdl_llm_context_transformer": "watsonx/openai/gpt-oss-120b",
     }
@@ -2452,7 +2453,10 @@ def process_import(
         prog, new_loc = parse_str(prog_str, file_name=str(file))
         cache = state.imported.get(prog_str)
         if cache is None:
-            import_scope = empty_scope | {"stdlib": scope["stdlib"]}
+            import_scope = empty_scope | {
+                "stdlib": scope["stdlib"],
+                "pdl_particle_id": scope["pdl_particle_id"],
+            }
             _, _, new_scope, trace = process_block(
                 state.with_yield_background(False).with_yield_result(False),
                 import_scope,
