@@ -1298,6 +1298,20 @@
         }
       ]
     },
+    "ExpressionList": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "items": {},
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "ExpressionStr": {
       "anyOf": [
         {
@@ -3633,20 +3647,9 @@
           "description": "The id of the tool invocation for which this message is the tool response."
         },
         "tool_calls": {
-          "anyOf": [
-            {
-              "items": {
-                "$ref": "#/$defs/BlockType"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
+          "$ref": "#/$defs/OptionalExpressionList",
           "default": null,
-          "description": "List of tool invocations made by the assistant in this message.",
-          "title": "Tool Calls"
+          "description": "List of tool invocations made by the assistant in this message."
         }
       },
       "required": [
@@ -3892,6 +3895,16 @@
       "anyOf": [
         {
           "$ref": "#/$defs/ExpressionInt"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalExpressionList": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionList"
         },
         {
           "type": "null"

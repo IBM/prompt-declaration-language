@@ -156,6 +156,11 @@ ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
 OptionalExpressionBool = TypeAliasType("OptionalExpressionBool", ExpressionBool | None)
 """Optional expression evaluating into a bool."""
 
+ExpressionList = TypeAliasType("ExpressionList", ExpressionType[list])
+"""Expression evaluating into a list."""
+
+OptionalExpressionList = TypeAliasType("OptionalExpressionList", ExpressionList | None)
+"""Optional expression evaluating into a list."""
 
 class Pattern(BaseModel):
     """Common fields for structured patterns."""
@@ -897,7 +902,7 @@ class MessageBlock(LeafBlock):
     """For example, the name of the tool that was invoked, for which this message is the tool response."""
     tool_call_id: OptionalExpressionStr = None
     """The id of the tool invocation for which this message is the tool response."""
-    tool_calls: list["BlockType"] | None = None
+    tool_calls: OptionalExpressionList = None
     """List of tool invocations made by the assistant in this message."""
 
 
