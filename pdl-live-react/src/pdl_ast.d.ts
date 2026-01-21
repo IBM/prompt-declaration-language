@@ -622,10 +622,7 @@ export type Contribute22 = ContributeElement[]
 export type ExpectationsType22 = ExpectationType[]
 export type PdlIsLeaf22 = true
 export type Kind22 = "empty"
-/**
- * List of tool invocations made by the assistant in this message.
- */
-export type ToolCalls = BlockType[] | null
+export type ExpressionList = LocalizedExpression | unknown[] | string
 export type ExpressionInt = LocalizedExpression | number | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
@@ -3172,7 +3169,10 @@ export interface MessageBlock {
    * The id of the tool invocation for which this message is the tool response.
    */
   tool_call_id?: ExpressionStr | null
-  tool_calls?: ToolCalls
+  /**
+   * List of tool invocations made by the assistant in this message.
+   */
+  tool_calls?: ExpressionList | null
 }
 /**
  * Set of definitions executed before the execution of the block.
