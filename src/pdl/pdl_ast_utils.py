@@ -193,6 +193,12 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.object = [f.f_block(b) for b in block.object]
         case MessageBlock():
             block.content = f.f_block(block.content)
+            if block.name is not None:
+                block.name = f.f_expr(block.name)
+            if block.tool_call_id is not None:
+                block.tool_call_id = f.f_expr(block.tool_call_id)
+            if block.tool_calls is not None:
+                block.tool_calls = f.f_expr(block.tool_calls)
         case IfBlock():
             block.condition = f.f_expr(block.condition)
             block.then = f.f_block(block.then)

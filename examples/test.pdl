@@ -4,7 +4,6 @@ text:
 - role: assistant
   content: hello
   tool_calls: 
-  - data: 
-      a: ${ b }
-      c: d 
+  - a: ${ b }
+    c: d 
 - ${ pdl_context }
