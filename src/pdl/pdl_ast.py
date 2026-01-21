@@ -162,6 +162,7 @@ ExpressionList = TypeAliasType("ExpressionList", ExpressionType[list])
 OptionalExpressionList = TypeAliasType("OptionalExpressionList", ExpressionList | None)
 """Optional expression evaluating into a list."""
 
+
 class Pattern(BaseModel):
     """Common fields for structured patterns."""
 
