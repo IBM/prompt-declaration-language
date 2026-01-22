@@ -645,12 +645,26 @@ def process_block_body_with_replay(
     ):
         assert isinstance(block_id, str)
         if block_id not in state.replay:
-            result, background, scope, trace = process_block_body(
-                state, scope, block, loc
-            )
-            state.replay[block_id] = result
+            try:
+                result, background, scope, trace = process_block_body(
+                    state, scope, block, loc
+                )
+                state.replay[block_id] = {"value": result}
+            except Resample as exc:
+                raise exc from exc
+            except Exception as exc:
+                state.replay[block_id] = {"exception": exc}
+                raise exc from exc
         else:
-            result = state.replay[block_id]
+            match state.replay[block_id]:
+                case {"value": v}:
+                    result = v
+                case {"exception": exc}:
+                    raise exc
+                case _:
+                    raise ValueError(
+                        f"Invalid replay value for {block_id}: {state.replay[block_id]}"
+                    )
             background = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
             )
