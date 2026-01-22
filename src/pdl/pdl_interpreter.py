@@ -661,6 +661,8 @@ def process_block_body_with_replay(
                     state, scope, block, loc
                 )
                 state.replay[block_id] = {"value": result}
+            except Resample as exc:
+                raise exc from exc
             except Exception as exc:
                 state.replay[block_id] = {"exception": exc}
                 raise exc from exc
@@ -1174,7 +1176,7 @@ def process_block_body(
             result = PdlConst("")
             background = DependentContext([])
             assert block.pdl__id is not None
-            state.replay[block.pdl__id] = result
+            state.replay[block.pdl__id] = {"value": result}
             if state.with_resample and block.resample:
                 raise Resample(state.replay, state.score.ref)
         case EmptyBlock():
