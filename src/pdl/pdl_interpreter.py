@@ -650,8 +650,6 @@ def process_block_body_with_replay(
                     state, scope, block, loc
                 )
                 state.replay[block_id] = {"value": result}
-            except Resample as exc:
-                raise exc from exc
             except Exception as exc:
                 state.replay[block_id] = {"exception": exc}
                 raise exc from exc
