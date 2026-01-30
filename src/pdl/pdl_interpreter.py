@@ -641,7 +641,7 @@ def process_block_body_with_replay(
     block_id = ".".join(state.id_stack)
     block.pdl__id = block_id
     if isinstance(block, LeafBlock) and not isinstance(
-        block, (CallBlock, AggregatorBlock)
+        block, (FunctionBlock, CallBlock, AggregatorBlock)
     ):
         assert isinstance(block_id, str)
         if block_id not in state.replay:
