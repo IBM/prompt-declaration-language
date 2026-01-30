@@ -204,9 +204,9 @@ dependencies = [
 
 [[package]]
 name = "async-openai"
-version = "0.32.3"
+version = "0.32.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16aa4b9090c12270cd0925f735958ab6f0296af7ac08ce0f53fe320bcaf1e23d"
+checksum = "f4d91c2005832450ad9ac92411b9d4cec39e30be21adc76553efc47f812d59c7"
 dependencies = [
  "getrandom 0.3.2",
  "reqwest",
@@ -1039,7 +1039,7 @@ dependencies = [
  "libc",
  "option-ext",
  "redox_users",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2586,7 +2586,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -5810,7 +5810,7 @@ dependencies = [
  "getrandom 0.3.2",
  "once_cell",
  "rustix 1.0.7",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -6828,7 +6828,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
