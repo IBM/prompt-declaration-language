@@ -1041,6 +1041,146 @@ In general, `spec` definitions can be a subset of JSON schema, or use a shorthan
 
 Another example of type checking a list can be found [here](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_list.pdl).
 
+## Probabilistic Programming with PDL (PPDL)
+
+PDL includes a probabilistic programming extension called PPDL (Probabilistic PDL) that enables probabilistic inference over LLM-based programs. This allows you to express uncertainty, incorporate soft and hard constraints, and perform inference to find the most likely outcomes given observations.
+
+### The `factor` Block
+
+The core primitive for probabilistic programming in PDL is the `factor` block, which allows you to specify soft constraints or scores that influence the probability of different execution paths. A factor represents a log-probability score that affects the likelihood of a particular outcome.
+
+Here's a simple example ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/ppdl/coin.pdl)):
+
+```yaml
+--8<-- "./examples/ppdl/coin.pdl"
+```
+
+In this program:
+
+1. We define observations (`obs`) representing coin flips
+2. We use an LLM to generate a bias parameter `p` for the coin
+3. We generate synthetic data based on this bias
+4. We use `factor: -10` to penalize cases where the generated data doesn't match observations
+5. The inference algorithm finds values of `p` that best explain the observed data
+
+The `factor` field takes a numeric value representing a log-probability. Negative values penalize certain outcomes, while positive values encourage them. The inference algorithm uses these scores to guide the search toward more likely explanations.
+
+### Running Probabilistic Programs
+
+To execute a probabilistic PDL program, use the `pdl-infer` command instead of `pdl`:
+
+```bash
+pdl-infer examples/ppdl/coin.pdl --algo smc --num-particles 10
+```
+
+The key parameters are:
+
+- `--algo`: The inference algorithm to use (see below)
+- `--num-particles` or `-n`: Number of particles/samples for inference (default: 5)
+- `--workers` or `-w`: Number of parallel workers for parallel algorithms
+- `--viz` or `-v`: Display a visualization of the result distribution
+
+### Inference Algorithms
+
+PPDL supports several inference algorithms:
+
+- **`smc`** (Sequential Monte Carlo): Default algorithm, good balance of accuracy and efficiency
+- **`parallel-smc`**: Parallelized version of SMC for faster execution
+- **`is`** (Importance Sampling): Simpler algorithm, may require more particles
+- **`parallel-is`**: Parallelized importance sampling
+- **`rejection`**: Rejection sampling, useful when you have hard constraints
+- **`parallel-rejection`**: Parallelized rejection sampling
+- **`maj`** (Majority Voting): Ignores factors and returns the most common result
+- **`parallel-maj`**: Parallelized majority voting
+
+### Hidden Markov Model Example
+
+Here's a more complex example implementing a Hidden Markov Model ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/ppdl/hmm.pdl)):
+
+```yaml
+--8<-- "./examples/ppdl/hmm.pdl"
+```
+
+This program:
+
+1. Defines a `step` function that models state transitions with Gaussian noise
+2. Uses `factor` to score how well the hidden state explains observations
+3. Iterates over observations using a `for` loop
+4. The inference algorithm finds the most likely sequence of hidden states
+
+### Combining LLMs with Probabilistic Inference
+
+PPDL is particularly powerful when combining LLM generation with probabilistic constraints. Here's an example that finds names satisfying multiple soft constraints ([file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/ppdl/name_finder.pdl)):
+
+```yaml
+--8<-- "./examples/ppdl/name_finder.pdl"
+```
+
+This program:
+
+1. Uses an LLM to generate candidate names
+2. Applies multiple soft constraints using `factor`:
+   - Penalizes multi-word names
+   - Penalizes rare names in US statistics
+   - Penalizes rare names in French statistics
+3. The inference algorithm finds names that best satisfy all constraints
+
+The key insight is that `factor` blocks allow you to guide LLM generation toward outputs that satisfy domain-specific constraints, without requiring the LLM to understand those constraints directly.
+
+### Using PPDL in Python
+
+You can also use PPDL programmatically from Python:
+
+```python
+from pdl.pdl_infer import exec_file, PpdlConfig
+from pdl.pdl import InterpreterConfig
+
+# Configure the interpreter
+config = InterpreterConfig()
+ppdl_config = PpdlConfig(
+    algo="parallel-smc",
+    num_particles=10,
+    max_workers=4
+)
+
+# Execute the probabilistic program
+dist = exec_file(
+    "examples/ppdl/coin.pdl",
+    config=config,
+    ppdl_config=ppdl_config
+)
+
+# Sample from the result distribution
+result = dist.sample()
+print(result)
+
+# Access the distribution
+for value, log_prob, traces in dist.support:
+    print(f"Value: {value}, Log-probability: {log_prob}")
+```
+
+The result is a `Categorical` distribution object that you can sample from or inspect.
+
+### Best Practices for PPDL
+
+1. **Start with small particle counts**: Begin with 5-10 particles and increase if needed
+2. **Use parallel algorithms**: For production use, prefer `parallel-smc` or `parallel-is`
+3. **Calibrate factor scores**: Factor values should be on a log scale; -10 is a strong penalty, -1 is mild
+4. **Combine with fallbacks**: Use `fallback` blocks to handle cases where the LLM fails to generate valid outputs
+5. **Visualize distributions**: Use `--viz` to understand the distribution of results
+
+### When to Use PPDL
+
+PPDL is particularly useful when:
+
+- You need to incorporate domain knowledge as soft constraints
+- You want to find outputs that satisfy multiple competing objectives
+- You need to perform inference over uncertain LLM outputs
+- You want to combine data-driven (LLM) and model-driven (probabilistic) reasoning
+
+For more examples, see the [`examples/ppdl/`](https://github.com/IBM/prompt-declaration-language/tree/main/examples/ppdl) directory.
+
+
 
 ## Python SDK
 
