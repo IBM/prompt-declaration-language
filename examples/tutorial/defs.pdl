@@ -4,11 +4,11 @@ text:
     fr:
       lastOf:
       - "\nTranslate to French\n"
-      - model: ollama_chat/granite3.2:2b
+      - model: ollama_chat/granite4:1b
     es:
       lastOf:
       - "\nTranslate to Spanish\n"
-      - model: ollama_chat/granite3.2:2b
+      - model: ollama_chat/granite4:1b
   text: |
   
     In Fench: ${ fr }

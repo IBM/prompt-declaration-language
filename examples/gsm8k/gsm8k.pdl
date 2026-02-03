@@ -20,7 +20,7 @@ defs:
   MAX_ITERATIONS: 10
   # Which model to use
   # MODEL: ollama/granite-code:8b
-  # MODEL: ollama/granite3.2:8b
+  # MODEL: ollama/granite4:3b
   MODEL: watsonx/ibm/granite-3-2-8b-instruct
 
   # PDL variables that hold statistics

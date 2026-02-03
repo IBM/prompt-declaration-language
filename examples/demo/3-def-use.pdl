@@ -1,12 +1,12 @@
 description: Variable def and use, model input
 text:
 - "Hello\n"
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   def: name
   parameters:
     stop: ["!"]
 - "\n"
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   input: "Translate the word ${ name | trim } to French\n"
   parameters:
     stop: ["\n"]

@@ -7,7 +7,7 @@ text:
   return:
     lastOf:
     - "\nTranslate the sentence '${ sentence }' to ${ language }.\n"
-    - model: ollama_chat/granite3.2:2b
+    - model: ollama_chat/granite4:1b
       parameters:
         stop: ["\n"]
         temperature: 0

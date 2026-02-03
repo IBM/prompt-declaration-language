@@ -2,7 +2,7 @@ description: Using a weather API and LLM to make a small weather app
 text:
 - def: QUERY
   text: "What is the weather in Madrid?\n"
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   input: |
       Extract the location from the question.
       Question: What is the weather in London?
@@ -25,7 +25,7 @@ text:
   def: WEATHER
   parser: json
   contribute: []
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   input: |
       Explain the weather from the following JSON:
       ${ WEATHER }

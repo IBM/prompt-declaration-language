@@ -29,7 +29,7 @@ text:
   contribute: [context]
 - "What is the circumference of planet Earth?\n"
 - def: actions
-  model: ollama_chat/granite3.3:8b
+  model: ollama_chat/granite4:3b
   parser: json
   spec: [{ name: string, arguments: { topic: string }}]
 - "\n"

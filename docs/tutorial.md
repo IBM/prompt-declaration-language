@@ -32,7 +32,7 @@ Hello, world!
 --8<-- "./examples/tutorial/calling_llm.pdl"
 ```
 
-In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`ollama/granite3.2:2b`) with this as input prompt.
+In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`ollama/granite4:1b`) with this as input prompt.
 The model is passed a parameter `stop` to indicate the stop sequences.
 
 A PDL program computes two data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs (list of messages), where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.

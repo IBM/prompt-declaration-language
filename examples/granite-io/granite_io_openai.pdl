@@ -1,7 +1,7 @@
 text:
 - "Hello!\n"
 - processor:
-    model: "granite3.2:2b"
+    model: "granite4:1b"
     backend: openai
   parameters:
     generate_inputs:

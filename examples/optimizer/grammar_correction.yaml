@@ -30,7 +30,7 @@ parallelism: 5 # how many threads to run evaluations across
 #validation_set_name: validation # name of validation set
 variables: # define discrete options to sample from
   model: # set ${ model } variable
-    - ollama_chat/granite3.3:8b
+    - ollama_chat/granite4:3b
     - ollama_chat/gpt-oss:20b
   num_demonstrations: # overrides num demonstrations above
     - 0

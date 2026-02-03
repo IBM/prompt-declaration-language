@@ -6,7 +6,7 @@ def main():
         "text": [
             "Hello\n",
             {
-                "model": "ollama_chat/granite3.2:2b",
+                "model": "ollama_chat/granite4:1b",
                 "parameters": {
                     "stop": ["!"],
                 },

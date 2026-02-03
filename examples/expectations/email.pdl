@@ -27,7 +27,7 @@ defs:
   name: Olivia
 lastOf:
 - "Write an email to ${ name } using the notes following: ${ notes }"
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   expectations:
   - expect: The email should end with Kind regards
     feedback:  ${ feedback }

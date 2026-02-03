@@ -10,7 +10,7 @@ mod tests {
 
     use ollama_rs::generation::chat::MessageRole;
 
-    const DEFAULT_MODEL: &'static str = "ollama/granite3.2:2b";
+    const DEFAULT_MODEL: &'static str = "ollama/granite4:1b";
 
     fn streaming<'a>() -> RunOptions<'a> {
         let mut o: RunOptions = Default::default();

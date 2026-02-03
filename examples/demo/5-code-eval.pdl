@@ -12,7 +12,7 @@ text:
 - "\n${ CODE.source_code }\n"
 # Use ollama to invoke a Granite model with a prompt.  Output AND
 # set the variable `EXPLANATION` to the output.
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:1b
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.
