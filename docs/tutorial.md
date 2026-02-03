@@ -78,7 +78,7 @@ When using Granite models, we use the following defaults for model parameters:
 - `min_new_tokens`: 1
 - `repetition_penalty`: 1.05
 
-  Also if the `decoding_method` is `sample` (`watsonx_text text completion endpoint), then the following defaults are used:
+  Also if the `decoding_method` is `sample` (`watsonx_text` text completion endpoint), then the following defaults are used:
 
 - `temperature`: 0.7
 - `top_p`: 0.85
@@ -89,7 +89,7 @@ The user can override these defaults by explicitly including them in the model c
 
 ## Building the background context with `lastOf`
 
-The pervious example explicitly provides a list of messages with different roles to the LLM call. This can also be done implicitly using the background context.
+The previous example explicitly provides a list of messages with different roles to the LLM call. This can also be done implicitly using the background context.
 
 Each block can be annotated with a `role` field indicating the role that is used when a message is added to the background context by the block or any of the sub-block that does not redefine it.
 In this example, we add a `system` message asking the model to provide answer formally ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/role.pdl)):
