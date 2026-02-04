@@ -22,7 +22,7 @@ text:
   contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
 - def: actions
-  model: ollama_chat/granite4:3b
+  model: ollama_chat/granite4:micro
   parser: json
   spec: [{ name: string, arguments: { expr: string }}]
 - "\n"

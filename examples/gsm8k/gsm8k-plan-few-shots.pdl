@@ -28,7 +28,7 @@ defs:
         - "\nProblem:\n"
         - ${ problem }
         - "\n"
-        - model: ollama/granite4:3b
+        - model: ollama/granite4:micro
   
   solve:
     function:
@@ -41,7 +41,7 @@ defs:
         The plan looks good! Now, use real numbers and do the calculation. Please solve the question 
         step-by-step according to the high-level plan. Give me the final answer. Make your response short.
       - "\nThe answer is:\n"
-      - model: ollama/granite4:3b
+      - model: ollama/granite4:micro
 
   extract_final_answer:
     function:
@@ -50,7 +50,7 @@ defs:
       lastOf:
       - ${ solution }
       - Extract the result from the above solution into a JSON object with field "result" and a float as value. Remove any dollar signs or other symbols.
-      - model: ollama/granite4:3b
+      - model: ollama/granite4:micro
         parser: json
         def: result
         spec: { "result": number }

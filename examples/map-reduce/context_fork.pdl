@@ -5,6 +5,6 @@ lastOf:
   map:
     lastOf:
     - my name is ${ name }
-    - model: ollama/granite4:1b
+    - model: ollama/granite4:micro
   join:
     as: array

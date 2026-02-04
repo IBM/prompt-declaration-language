@@ -7,7 +7,7 @@ defs:
     read: ./ground_truth.txt
 text:
 - "\n${ CODE.source_code }\n"
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   def: EXPLANATION
   input: |
       Here is some info about the location of the function in the repo.

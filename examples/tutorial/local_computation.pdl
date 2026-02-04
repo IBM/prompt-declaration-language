@@ -3,7 +3,7 @@ text:
 - "Hello\n"
 - defs:
     GEN:
-      model: ollama_chat/granite4:1b
+      model: ollama_chat/granite4:micro
       parameters:
         stop: ['!']
 - "The variable GEN is equal to: ${ GEN }"

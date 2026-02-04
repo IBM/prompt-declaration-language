@@ -42,6 +42,6 @@ text:
 
     Q: ${ TEST_PROMPT }
     A:
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   parameters:
     temperature: 0

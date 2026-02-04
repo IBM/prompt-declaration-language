@@ -5,9 +5,9 @@ text:
     text:
     - text:
       - " in French!"
-      - model: ollama_chat/granite4:1b
+      - model: ollama_chat/granite4:micro
     - text:
       - " en Espanol!"
-      - model: ollama_chat/granite4:1b
+      - model: ollama_chat/granite4:micro
   - "Which language did I use last?"
-  - model: ollama_chat/granite4:1b
+  - model: ollama_chat/granite4:micro

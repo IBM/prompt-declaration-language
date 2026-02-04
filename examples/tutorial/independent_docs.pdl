@@ -8,4 +8,4 @@ text:
     - ${ doc1 }
     - ${ doc2 }
   - Compare and contrast the above documents.
-  - model: ollama_chat/granite4:1b
+  - model: ollama_chat/granite4:micro

@@ -5,4 +5,4 @@ defs:
 call: ${ lib.react }
 args:
   question: "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching avoid using the words discovery or birthday.\n"
-  model: ollama_chat/granite4:3b
+  model: ollama_chat/granite4:micro

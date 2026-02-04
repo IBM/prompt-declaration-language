@@ -6,7 +6,7 @@ HELLO = """
 text:
 - >+
   Hello, my name is ${name}
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
 """
 
 

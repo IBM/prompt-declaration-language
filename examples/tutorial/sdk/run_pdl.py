@@ -23,7 +23,7 @@ def another(scope):
 
 def main():
     result1 = my_pdl_program(
-        scope={"model": "ollama_chat/granite4:1b", "input": "Hello\n"}
+        scope={"model": "ollama_chat/granite4:micro", "input": "Hello\n"}
     )
     result2 = another(scope={})
     print(result1)

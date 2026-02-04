@@ -9,14 +9,14 @@ defs:
   pdl_llm_context_transformer: watsonx/ibm/granite-4-h-small
 lastOf:
 - ${ problem }
-- model: ollama_chat/granite4:3b
+- model: ollama_chat/granite4:micro
   parameters:
     temperature: 1.5
   expectations:
    - expect: "This solution to the following math problem is correct: ${ problem }"
   retry: 1
 - Extract the result from the above solution into a JSON object with field "answer" and a float as value. Remove any dollar signs or other symbols.
-- model: ollama_chat/granite4:3b
+- model: ollama_chat/granite4:micro
   def: result
   parser: json
   spec: { "answer": number }

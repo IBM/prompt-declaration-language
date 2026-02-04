@@ -4,7 +4,7 @@ HELLO = """
 text:
 - >+
   Hello
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   parameters:
     stop: ['!']
 """

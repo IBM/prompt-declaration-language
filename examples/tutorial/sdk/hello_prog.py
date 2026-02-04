@@ -8,7 +8,7 @@ def main():
             text=[
                 "Hello\n",
                 LitellmModelBlock(
-                    model="ollama_chat/granite4:1b",
+                    model="ollama_chat/granite4:micro",
                     parameters=LitellmParameters(stop=["!"]),
                 ),
             ]

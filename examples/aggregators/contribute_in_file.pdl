@@ -4,12 +4,12 @@ defs:
       file: /tmp/log.txt
 text:
 - Hello
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   parameters:
     temperature: 0
   contribute: [ result, context, log ]
 - nice to meet you.
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   parameters:
     temperature: 0
   modelResponse: raw_response

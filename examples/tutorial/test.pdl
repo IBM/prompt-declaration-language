@@ -10,6 +10,6 @@ defs:
   mycontext: ${ (m1 + m2) * m3 }
 
 text:
-- model: ollama_chat/granite4:1b
+- model: ollama_chat/granite4:micro
   input: ${ mycontext }
 - ${ mycontext }

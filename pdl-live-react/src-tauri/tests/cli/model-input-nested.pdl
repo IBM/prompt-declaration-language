@@ -5,4 +5,4 @@ text:
   - text:
       - role: user
         content: what is the fastest animal where i live?
-  - model: ollama/granite4:1b
+  - model: ollama/granite4:micro

@@ -7,7 +7,7 @@ from beeai_framework.workflows.agent import AgentWorkflow, AgentWorkflowInput
 
 
 async def main() -> None:
-    llm = ChatModel.from_name("ollama:granite4:1b")
+    llm = ChatModel.from_name("ollama:granite4:micro")
     workflow = AgentWorkflow(name="Smart assistant")
 
     workflow.add_agent(

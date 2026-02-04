@@ -29,7 +29,7 @@ defs:
           Tip: ${ tip }
           Paragraph:
 
-        - model: ollama_chat/granite4:3b
+        - model: ollama_chat/granite4:micro
           parameters:
             temperature: 0
             max_tokens: 128
@@ -43,7 +43,7 @@ defs:
       lastOf:
         - "Please act as a helpful assistant. Your job is to provide users with useful tips on a specific topic.\n"
         - "Give ${ number } tips for ${ topic }, each under 8 words. Do not use quotes. Make sure there are ${ number } tips.\n"
-        - model: ollama_chat/granite4:3b
+        - model: ollama_chat/granite4:micro
           parameters:
             temperature: 0
 

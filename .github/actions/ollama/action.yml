@@ -18,15 +18,15 @@ runs:
     - name: Pull models in examples/
       shell: bash
       run: |
-        ollama pull granite4:1b
-        ollama pull granite4:3b
+        ollama pull granite4:micro
+        ollama pull granite4:micro
         ollama pull mxbai-embed-large
         ollama list
 
     - name: Check that all required models are available
       shell: bash
       run: |
-        models=("mxbai-embed-large" "granite4:1b" "granite4:3b")
+        models=("mxbai-embed-large" "granite4:micro" "granite4:micro")
         missing=0
         for model in "${models[@]}"; do
           if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then

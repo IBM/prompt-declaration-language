@@ -1,4 +1,4 @@
-model: ollama/granite4:1b
+model: ollama/granite4:micro
 input:
   array:
     - role: user
