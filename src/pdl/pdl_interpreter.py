@@ -174,8 +174,11 @@ class ClosureBlock(FunctionBlock):
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
             if len(keys) < len(args):
-                if self.signature is not None and self.signature.get("name", "") != "":
-                    err = f"Too many arguments to the call of {self.signature['name']}"
+                if (
+                    self.signature is not None
+                    and self.signature["function"].get("name", "") != ""
+                ):
+                    err = f"Too many arguments to the call of {self.signature['function']['name']}"
                 else:
                     err = "Too many arguments to the call"
                 raise PDLRuntimeExpressionError(
@@ -509,7 +512,9 @@ def process_advance_block_retry(  # noqa: C901
                         evaluate_closure, _ = process_expr(scope, evaluate, loc)
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
                     args = {"expectation": expectation, "response": result.result()}
-                    keys = evaluate_closure.signature["parameters"]["properties"].keys()
+                    keys = evaluate_closure.signature["function"]["parameters"][
+                        "properties"
+                    ].keys()
                     if "pdl_llm_as_judge" in keys:
                         args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
                     if "pdl_llm_context_transformer" in keys:
@@ -1135,15 +1140,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
-            signature: dict[str, Any] = {"type": "function"}
+            _signature: dict[str, Any] = {}
             if block.def_ is not None:
-                signature["name"] = block.def_
+                _signature["name"] = block.def_
             if block.description is not None:
-                signature["description"] = block.description
+                _signature["description"] = block.description
             if block.function is not None:
-                signature["parameters"] = get_json_schema(block.function, False) or {}
+                _signature["parameters"] = get_json_schema(block.function, False) or {}
             else:
-                signature["parameters"] = {}
+                _signature["parameters"] = {}
+            signature: dict[str, Any] = {"type": "function", "function": _signature}
             closure.signature = signature
             result = PdlConst(closure)
             background = DependentContext([])
@@ -2340,7 +2346,7 @@ def execute_call(state, current_context, closure, args, loc):
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of the function{' ' + closure.signature.get('name', '') if closure.signature is not None else ''}:",
+                f"Type errors in result of the function{' ' + closure.signature["function"].get('name', '') if closure.signature is not None else ''}:",
                 fun_loc,
                 f_trace,
             ),
