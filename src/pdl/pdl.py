@@ -3,6 +3,7 @@ import json
 import os
 import sys
 from asyncio import AbstractEventLoop
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
@@ -18,12 +19,11 @@ from .pdl_ast import (
     PdlUsage,
     Program,
     RoleType,
-    ScopeType,
     empty_block_location,
     get_default_model_parameters,
 )
 from .pdl_interpreter import InterpreterState, process_prog
-from .pdl_lazy import PdlDict
+from .pdl_interpreter_state import ScopeType
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import (  # pylint: disable=unused-import # noqa: F401
@@ -73,7 +73,7 @@ class Result(TypedDict):
 def exec_program(
     prog: Program,
     config: InterpreterConfig | None = None,
-    scope: ScopeType | dict[str, Any] | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
@@ -92,8 +92,8 @@ def exec_program(
     config = config or InterpreterConfig()
     config["replay"] = dict(config.get("replay", {}))
     state = InterpreterState(**config)
-    if not isinstance(scope, PdlDict):
-        scope = PdlDict(scope or {})
+    if not isinstance(scope, ScopeType):
+        scope = ScopeType(scope or {})
     loc = loc or empty_block_location
     initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     future_result, _, future_scope, trace = process_prog(
@@ -119,7 +119,7 @@ def exec_program(
 def exec_dict(
     prog: dict[str, Any],
     config: InterpreterConfig | None = None,
-    scope: ScopeType | dict[str, Any] | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
@@ -143,7 +143,7 @@ def exec_dict(
 def exec_str(
     prog: str,
     config: InterpreterConfig | None = None,
-    scope: ScopeType | dict[str, Any] | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML string.
@@ -165,7 +165,7 @@ def exec_str(
 def exec_file(
     prog: str | Path,
     config: InterpreterConfig | None = None,
-    scope: ScopeType | dict[str, Any] | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML file.
@@ -312,7 +312,7 @@ def main():
     exit_code = pdl_interpreter.generate(
         pdl_file,
         InterpreterState(**config),
-        PdlDict(initial_scope),
+        ScopeType(initial_scope),
         trace_file,
     )
     return exit_code

@@ -112,7 +112,6 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RoleType,
-    ScopeType,
     SequenceBlock,
     StructuredBlock,
     TextBlock,
@@ -128,7 +127,7 @@ from .pdl_context import (
     deserialize,
     ensure_context,
 )
-from .pdl_interpreter_state import InterpreterState
+from .pdl_interpreter_state import InterpreterState, ScopeType
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
 from .pdl_llms import LitellmModel
 from .pdl_location_utils import append, get_loc_string
@@ -152,7 +151,7 @@ from .pdl_utils import (
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-empty_scope: ScopeType = PdlDict(
+empty_scope = ScopeType(
     {
         "pdl_context": DependentContext([]),
         "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
@@ -452,7 +451,7 @@ def process_advance_block_retry(  # noqa: C901
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
     background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
+    new_scope = ScopeType({})
     trace: AdvancedBlockType = EmptyBlock()
 
     init_state = state
@@ -2325,9 +2324,9 @@ def execute_call(state, current_context, closure, args, loc):
         args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
     f_scope = (
-        (closure.pdl__scope or PdlDict({}))
-        | PdlDict({"pdl_context": current_context})
-        | PdlDict((args or {}))
+        (closure.pdl__scope or ScopeType({}))
+        | {"pdl_context": current_context}
+        | (args or {})
     )
     if closure.pdl__location is not None:
         fun_loc = PdlLocationType(

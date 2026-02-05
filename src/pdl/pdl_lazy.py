@@ -97,7 +97,7 @@ class PdlDict(
     def __init__(
         self,
         data: (
-            dict[PdlDictKeyT, PdlDictElemT]
+            Mapping[PdlDictKeyT, PdlDictElemT]
             | Future[dict[PdlDictKeyT, PdlDictElemT]]
             | PdlLazy[dict[PdlDictKeyT, PdlDictElemT]]
         ),
