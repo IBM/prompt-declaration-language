@@ -162,6 +162,14 @@ ExpressionList = TypeAliasType("ExpressionList", ExpressionType[list])
 OptionalExpressionList = TypeAliasType("OptionalExpressionList", ExpressionList | None)
 """Optional expression evaluating into a list."""
 
+ExpressionDictStr = TypeAliasType("ExpressionDictStr", ExpressionType[dict[str, Any]])
+""""Expression evaluating into a dict[str, Any]."""
+
+OptionalExpressionDictStr = TypeAliasType(
+    "OptionalExpressionDictStr", ExpressionDictStr | None
+)
+"""Optional expression evaluating into a dict[str, Any]."""
+
 
 class Pattern(BaseModel):
     """Common fields for structured patterns."""
@@ -723,6 +731,9 @@ class CodeBlock(BaseCodeBlock):
     """
     code: "BlockType"
     """Code to execute.
+    """
+    scope: OptionalExpressionDictStr = None
+    """Scope to use for the code execution.  If not provided, the global scope is used.
     """
 
 

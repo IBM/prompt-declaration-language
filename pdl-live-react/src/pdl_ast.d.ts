@@ -626,6 +626,12 @@ export type ExpressionList = LocalizedExpression | unknown[] | string
 export type ExpressionInt = LocalizedExpression | number | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
+export type ExpressionDictStr =
+  | LocalizedExpression
+  | {
+      [k: string]: unknown
+    }
+  | string
 export type ModelCalls = number
 export type CompletionTokens = number
 export type PromptTokens = number
@@ -1546,6 +1552,11 @@ export interface CodeBlock {
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
+  /**
+   * Scope to use for the code execution.  If not provided, the global scope is used.
+   *
+   */
+  scope?: ExpressionDictStr | null
 }
 /**
  * Set of definitions executed before the execution of the block.
