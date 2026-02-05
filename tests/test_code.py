@@ -246,7 +246,7 @@ lang: pdl
 scope:
   greeting: "Bonjour"
 code: |
-  text: ${ greeting }, World!
+  text: ${ "${" } greeting ${ "}" }, World!
 """
     result = exec_str(prog_str)
     assert result == "Bonjour, World!"
