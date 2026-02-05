@@ -2066,6 +2066,7 @@ def process_call_code(
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""
+    execution_scope: ScopeType = scope
     match block:
         case ArgsBlock():
             code_a = []
@@ -2086,11 +2087,13 @@ def process_call_code(
                 loc,
             )
             code_s = code_.result()
+            if block.scope is not None:
+                execution_scope, block = process_expr_of(block, "scope", scope, loc)
 
     match block.lang:
         case "python":
             try:
-                result = call_python(code_s, scope, state)
+                result = call_python(code_s, execution_scope, state)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2120,7 +2123,7 @@ def process_call_code(
                 ) from exc
         case "ipython":
             try:
-                result = call_ipython(code_s, scope)
+                result = call_ipython(code_s, execution_scope)
                 background = SingletonContext(
                     PdlList(
                         [
@@ -2164,7 +2167,7 @@ def process_call_code(
                 ) from exc
         case "jinja":
             try:
-                result = call_jinja(code_s, scope)
+                result = call_jinja(code_s, execution_scope)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2184,7 +2187,7 @@ def process_call_code(
                 ) from exc
         case "pdl":
             try:
-                result = call_pdl(code_s, scope)
+                result = call_pdl(code_s, execution_scope)
                 background = DependentContext(
                     PdlList(
                         [
