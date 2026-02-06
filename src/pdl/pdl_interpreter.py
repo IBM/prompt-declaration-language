@@ -994,8 +994,8 @@ def process_block_body(
                         "pdl_context": DependentContext([pdl_context_init, background])
                     }
                     if items is not None:
-                        for k in items.keys():
-                            scope = scope | {k: items[k][iidx]}
+                        for k, lst in items.items():
+                            scope = scope | {k: lst[iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -1200,7 +1200,8 @@ def _evaluate_for_field(
                     trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
                     fallback=[],
                 )
-            items_res[idx] = list(lst)
+            lst = list(lst)
+            items_res[idx] = lst
             lengths.append(len(lst))
         if len(set(lengths)) != 1:  # Not all the lists are of the same length
             msg = "Lists inside the For block must be of the same length."
