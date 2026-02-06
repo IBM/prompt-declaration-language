@@ -1186,8 +1186,9 @@ def _evaluate_for_field(
     else:
         items, block = process_expr_of(block, "for_", scope, loc, "for")
         lengths = []
+        items_res = {}
         for idx, lst in items.items():
-            if not isinstance(lst, list):
+            if not isinstance(lst, Iterable):
                 msg = f"Values inside the For block must be lists but got {type(lst)}."
                 lst_loc = append(
                     append(block.pdl__location or empty_block_location, "for"),
@@ -1199,6 +1200,7 @@ def _evaluate_for_field(
                     trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
                     fallback=[],
                 )
+            items_res[idx] = list(lst)
             lengths.append(len(lst))
         if len(set(lengths)) != 1:  # Not all the lists are of the same length
             msg = "Lists inside the For block must be of the same length."
@@ -1210,7 +1212,7 @@ def _evaluate_for_field(
                 fallback=[],
             )
         length = lengths[0]
-    return block, items, length
+    return block, items_res, length
 
 
 BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBlock)
