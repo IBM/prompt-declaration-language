@@ -331,7 +331,7 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists but got <class 'str'>.",
+        "tests/data/line/hello26.pdl:12 - Lists inside the For block must be of the same length.",
     ],
 }
 
@@ -383,7 +383,7 @@ line30 = {
     "file": "tests/data/line/hello30.pdl",
     "errors": [
         "",
-        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists but got <class 'dict'>.",
+        "tests/data/line/hello30.pdl:6 - Values inside the For block must be lists but got <class 'int'>.",
     ],
 }
 

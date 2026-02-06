@@ -187,6 +187,8 @@ def block_to_dict(  # noqa: C901
         case CodeBlock():
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
+            if block.scope is not None:
+                d["scope"] = expr_to_dict(block.scope, json_compatible)
         case GetBlock():
             d["get"] = block.get
         case DataBlock():

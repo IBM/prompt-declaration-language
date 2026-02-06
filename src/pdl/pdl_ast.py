@@ -27,7 +27,7 @@ from pydantic import (
 from typing_extensions import TypeAliasType
 
 from .pdl_context import PDLContext
-from .pdl_lazy import PdlDict, PdlLazy
+from .pdl_lazy import PdlLazy
 
 
 def _ensure_lower(value):
@@ -57,10 +57,6 @@ OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
 
 OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
 """Optional block."""
-
-
-ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
-"""Type of the execution environment."""
 
 ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
 """Type of the input of an LLM call."""
@@ -161,6 +157,14 @@ ExpressionList = TypeAliasType("ExpressionList", ExpressionType[list])
 
 OptionalExpressionList = TypeAliasType("OptionalExpressionList", ExpressionList | None)
 """Optional expression evaluating into a list."""
+
+ExpressionDictStr = TypeAliasType("ExpressionDictStr", ExpressionType[dict[str, Any]])
+""""Expression evaluating into a dict[str, Any]."""
+
+OptionalExpressionDictStr = TypeAliasType(
+    "OptionalExpressionDictStr", ExpressionDictStr | None
+)
+"""Optional expression evaluating into a dict[str, Any]."""
 
 
 class Pattern(BaseModel):
@@ -723,6 +727,9 @@ class CodeBlock(BaseCodeBlock):
     """
     code: "BlockType"
     """Code to execute.
+    """
+    scope: OptionalExpressionDictStr = None
+    """Scope to use for the code execution.  If not provided, the global scope is used.
     """
 
 

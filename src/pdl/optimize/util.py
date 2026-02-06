@@ -7,7 +7,8 @@ import yaml
 from datasets.arrow_dataset import Dataset
 from rich.console import Console
 
-from pdl.pdl_ast import Program, ScopeType
+from pdl.pdl_ast import Program
+from pdl.pdl_interpreter_state import ScopeType
 
 console = Console()
 
