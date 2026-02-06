@@ -1,7 +1,6 @@
-update_results: yes
+update_results: false
 check: []
 skip:
-  - examples/demo/8-tools.pdl
   - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8k.pdl
