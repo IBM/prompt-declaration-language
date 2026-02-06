@@ -1181,7 +1181,7 @@ def _evaluate_for_field(
     scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
 ) -> Tuple[BlockTVarEvalFor, dict[str, list] | None, int | None]:
     if block.for_ is None:
-        items = None
+        items_res = None
         length = None
     else:
         items, block = process_expr_of(block, "for_", scope, loc, "for")
