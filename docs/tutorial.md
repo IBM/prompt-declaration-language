@@ -450,6 +450,23 @@ When using `scope`:
 - The global PDL scope is not affected by variables defined in the `scope` field
 - If `scope` is not provided, the code block uses the global PDL scope as usual
 
+### Accessing the pdl_scope variable
+
+The `pdl_scope` variable is a special built-in variable that provides access to the entire scope dictionary within code blocks and Jinja expressions. This is useful when you need to introspect available variables, iterate over them, or access variables dynamically.
+
+```yaml
+--8<-- "./examples/tutorial/pdl_scope.pdl"
+```
+
+In this example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/pdl_scope.pdl)), we demonstrate how to use `pdl_scope`:
+
+1. Access variables through `pdl_scope` using dictionary syntax: `pdl_scope["greeting"]`
+2. Iterate over all available variables using `pdl_scope.keys()`
+
+The `pdl_scope` variable contains all variables in the current scope, including:
+- User-defined variables (like `greeting` and `name` in the example)
+- Built-in PDL variables (like `pdl_context`, `pdl_usage`, `stdlib`, etc.)
+
 ## Calling REST APIs
 
 PDL programs can contain calls to REST APIs with Python code. Consider a simple weather app ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/weather.pdl)):

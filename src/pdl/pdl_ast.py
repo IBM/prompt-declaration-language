@@ -27,7 +27,7 @@ from pydantic import (
 from typing_extensions import TypeAliasType
 
 from .pdl_context import PDLContext
-from .pdl_lazy import PdlDict, PdlLazy
+from .pdl_lazy import PdlLazy
 
 
 def _ensure_lower(value):
@@ -57,10 +57,6 @@ OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
 
 OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
 """Optional block."""
-
-
-ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
-"""Type of the execution environment."""
 
 ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
 """Type of the input of an LLM call."""

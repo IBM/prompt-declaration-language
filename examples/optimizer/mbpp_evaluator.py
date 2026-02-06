@@ -5,8 +5,8 @@ from typing import Any
 from evalplus.evaluate import check_correctness
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
-from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_interpreter_state import ScopeType
 
 
 class MBPPEvaluator(OptimizerEvaluator):

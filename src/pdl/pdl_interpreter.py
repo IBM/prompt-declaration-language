@@ -112,7 +112,6 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RoleType,
-    ScopeType,
     SequenceBlock,
     StructuredBlock,
     TextBlock,
@@ -128,7 +127,7 @@ from .pdl_context import (
     deserialize,
     ensure_context,
 )
-from .pdl_interpreter_state import InterpreterState
+from .pdl_interpreter_state import InterpreterState, ScopeType
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
 from .pdl_llms import LitellmModel
 from .pdl_location_utils import append, get_loc_string
@@ -152,7 +151,7 @@ from .pdl_utils import (
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-empty_scope: ScopeType = PdlDict(
+empty_scope = ScopeType(
     {
         "pdl_context": DependentContext([]),
         "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
@@ -452,7 +451,7 @@ def process_advance_block_retry(  # noqa: C901
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
     background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
+    new_scope = ScopeType({})
     trace: AdvancedBlockType = EmptyBlock()
 
     init_state = state
@@ -995,8 +994,8 @@ def process_block_body(
                         "pdl_context": DependentContext([pdl_context_init, background])
                     }
                     if items is not None:
-                        for k in items.keys():
-                            scope = scope | {k: items[k][iidx]}
+                        for k, lst in items.items():
+                            scope = scope | {k: lst[iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -1182,13 +1181,14 @@ def _evaluate_for_field(
     scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
 ) -> Tuple[BlockTVarEvalFor, dict[str, list] | None, int | None]:
     if block.for_ is None:
-        items = None
+        items_res = None
         length = None
     else:
         items, block = process_expr_of(block, "for_", scope, loc, "for")
         lengths = []
+        items_res = {}
         for idx, lst in items.items():
-            if not isinstance(lst, list):
+            if not isinstance(lst, Iterable):
                 msg = f"Values inside the For block must be lists but got {type(lst)}."
                 lst_loc = append(
                     append(block.pdl__location or empty_block_location, "for"),
@@ -1200,6 +1200,8 @@ def _evaluate_for_field(
                     trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
                     fallback=[],
                 )
+            lst = list(lst)
+            items_res[idx] = lst
             lengths.append(len(lst))
         if len(set(lengths)) != 1:  # Not all the lists are of the same length
             msg = "Lists inside the For block must be of the same length."
@@ -1211,7 +1213,7 @@ def _evaluate_for_field(
                 fallback=[],
             )
         length = lengths[0]
-    return block, items, length
+    return block, items_res, length
 
 
 BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBlock)
@@ -2325,9 +2327,9 @@ def execute_call(state, current_context, closure, args, loc):
         args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
     f_scope = (
-        (closure.pdl__scope or PdlDict({}))
-        | PdlDict({"pdl_context": current_context})
-        | PdlDict((args or {}))
+        (closure.pdl__scope or ScopeType({}))
+        | {"pdl_context": current_context}
+        | (args or {})
     )
     if closure.pdl__location is not None:
         fun_loc = PdlLocationType(

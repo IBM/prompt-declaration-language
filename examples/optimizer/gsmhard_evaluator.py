@@ -2,8 +2,8 @@ from typing import Any
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.parse_number import extract_math_answer
-from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_interpreter_state import ScopeType
 
 
 def is_float(s: str | float) -> str:
