@@ -19,7 +19,6 @@ runs:
       shell: bash
       run: |
         ollama pull granite4:micro
-        ollama pull granite4:micro
         ollama pull mxbai-embed-large
         ollama list
 
