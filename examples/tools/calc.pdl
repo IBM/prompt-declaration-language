@@ -13,23 +13,25 @@ defs:
     array:
       - ${ calc.signature }
 text:
-- role: system
-  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools.
-  contribute: [context]
-- role: tools
-  content:
-    text: ${ tools }
-  contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
-- def: actions
-  model: ollama_chat/granite4:micro
-  parser: json
-  spec: [{ name: string, arguments: { expr: string }}]
-- "\n"
-- match: ${ actions[0].name }
-  with:
-  - case: calc
-    then:
-      call: ${ calc }
-      args: 
-        expr: ${ actions[0].arguments.expr }
+- model: ollama_chat/granite4:micro
+  parameters:
+    tools: ${ tools }
+  modelResponse: actions
+  contribute: []
+- defs:
+    action: ${ actions["choices"][0]["message"]["tool_calls"][0] }
+    func_name: ${ action.function.name }
+    func_args:
+      data: ${ action.function.arguments }
+      parser: json
+  text:
+  - Computing `${ func_name }(${ func_args })`
+  - "\n"
+  - match: ${ func_name }
+    with:
+    - case: calc
+      then:
+        call: ${ calc }
+        args: 
+          expr: ${ func_args.expr }
