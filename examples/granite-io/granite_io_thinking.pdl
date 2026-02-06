@@ -2,7 +2,7 @@ text:
 - Find the fastest way for a seller to visit all the cities in their region
 - def: response
   processor:
-    model: "granite3.2:2b"
+    model: "granite4:micro"
     backend: openai
   parameters: 
     thinking: true

@@ -2,7 +2,7 @@ text:
 - Hello
 - text: Before model call
   contribute: [ stderr ]
-- model: ollama_chat/granite3.3:2b
+- model: ollama_chat/granite4:micro
   parameters:
     temperature: 0
 - contribute:
