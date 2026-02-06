@@ -112,7 +112,6 @@ from .pdl_ast import (
     RegexParser,
     RepeatBlock,
     RoleType,
-    ScopeType,
     SequenceBlock,
     StructuredBlock,
     TextBlock,
@@ -128,7 +127,7 @@ from .pdl_context import (
     deserialize,
     ensure_context,
 )
-from .pdl_interpreter_state import InterpreterState
+from .pdl_interpreter_state import InterpreterState, ScopeType
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
 from .pdl_llms import LitellmModel
 from .pdl_location_utils import append, get_loc_string
@@ -152,7 +151,7 @@ from .pdl_utils import (
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-empty_scope: ScopeType = PdlDict(
+empty_scope = ScopeType(
     {
         "pdl_context": DependentContext([]),
         "pdl_llm_as_judge": "watsonx/openai/gpt-oss-120b",
@@ -174,8 +173,11 @@ class ClosureBlock(FunctionBlock):
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
             if len(keys) < len(args):
-                if self.signature is not None and self.signature.get("name", "") != "":
-                    err = f"Too many arguments to the call of {self.signature['name']}"
+                if (
+                    self.signature is not None
+                    and self.signature["function"].get("name", "") != ""
+                ):
+                    err = f"Too many arguments to the call of {self.signature['function']['name']}"
                 else:
                     err = "Too many arguments to the call"
                 raise PDLRuntimeExpressionError(
@@ -452,7 +454,7 @@ def process_advance_block_retry(  # noqa: C901
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
     background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
+    new_scope = ScopeType({})
     trace: AdvancedBlockType = EmptyBlock()
 
     init_state = state
@@ -509,7 +511,9 @@ def process_advance_block_retry(  # noqa: C901
                         evaluate_closure, _ = process_expr(scope, evaluate, loc)
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
                     args = {"expectation": expectation, "response": result.result()}
-                    keys = evaluate_closure.signature["parameters"]["properties"].keys()
+                    keys = evaluate_closure.signature["function"]["parameters"][
+                        "properties"
+                    ].keys()
                     if "pdl_llm_as_judge" in keys:
                         args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
                     if "pdl_llm_context_transformer" in keys:
@@ -995,8 +999,8 @@ def process_block_body(
                         "pdl_context": DependentContext([pdl_context_init, background])
                     }
                     if items is not None:
-                        for k in items.keys():
-                            scope = scope | {k: items[k][iidx]}
+                        for k, lst in items.items():
+                            scope = scope | {k: lst[iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -1135,15 +1139,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
-            signature: dict[str, Any] = {"type": "function"}
+            _signature: dict[str, Any] = {}
             if block.def_ is not None:
-                signature["name"] = block.def_
+                _signature["name"] = block.def_
             if block.description is not None:
-                signature["description"] = block.description
+                _signature["description"] = block.description
             if block.function is not None:
-                signature["parameters"] = get_json_schema(block.function, False) or {}
+                _signature["parameters"] = get_json_schema(block.function, False) or {}
             else:
-                signature["parameters"] = {}
+                _signature["parameters"] = {}
+            signature: dict[str, Any] = {"type": "function", "function": _signature}
             closure.signature = signature
             result = PdlConst(closure)
             background = DependentContext([])
@@ -1182,13 +1187,14 @@ def _evaluate_for_field(
     scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
 ) -> Tuple[BlockTVarEvalFor, dict[str, list] | None, int | None]:
     if block.for_ is None:
-        items = None
+        items_res = None
         length = None
     else:
         items, block = process_expr_of(block, "for_", scope, loc, "for")
         lengths = []
+        items_res = {}
         for idx, lst in items.items():
-            if not isinstance(lst, list):
+            if not isinstance(lst, Iterable):
                 msg = f"Values inside the For block must be lists but got {type(lst)}."
                 lst_loc = append(
                     append(block.pdl__location or empty_block_location, "for"),
@@ -1200,6 +1206,8 @@ def _evaluate_for_field(
                     trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
                     fallback=[],
                 )
+            lst = list(lst)
+            items_res[idx] = lst
             lengths.append(len(lst))
         if len(set(lengths)) != 1:  # Not all the lists are of the same length
             msg = "Lists inside the For block must be of the same length."
@@ -1211,7 +1219,7 @@ def _evaluate_for_field(
                 fallback=[],
             )
         length = lengths[0]
-    return block, items, length
+    return block, items_res, length
 
 
 BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBlock)
@@ -2066,6 +2074,7 @@ def process_call_code(
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""
+    execution_scope: ScopeType = scope
     match block:
         case ArgsBlock():
             code_a = []
@@ -2086,11 +2095,13 @@ def process_call_code(
                 loc,
             )
             code_s = code_.result()
+            if block.scope is not None:
+                execution_scope, block = process_expr_of(block, "scope", scope, loc)
 
     match block.lang:
         case "python":
             try:
-                result = call_python(code_s, scope, state)
+                result = call_python(code_s, execution_scope, state)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2120,7 +2131,7 @@ def process_call_code(
                 ) from exc
         case "ipython":
             try:
-                result = call_ipython(code_s, scope)
+                result = call_ipython(code_s, execution_scope)
                 background = SingletonContext(
                     PdlList(
                         [
@@ -2164,7 +2175,7 @@ def process_call_code(
                 ) from exc
         case "jinja":
             try:
-                result = call_jinja(code_s, scope)
+                result = call_jinja(code_s, execution_scope)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2184,7 +2195,7 @@ def process_call_code(
                 ) from exc
         case "pdl":
             try:
-                result = call_pdl(code_s, scope)
+                result = call_pdl(code_s, execution_scope)
                 background = DependentContext(
                     PdlList(
                         [
@@ -2322,9 +2333,9 @@ def execute_call(state, current_context, closure, args, loc):
         args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
     f_scope = (
-        (closure.pdl__scope or PdlDict({}))
-        | PdlDict({"pdl_context": current_context})
-        | PdlDict((args or {}))
+        (closure.pdl__scope or ScopeType({}))
+        | {"pdl_context": current_context}
+        | (args or {})
     )
     if closure.pdl__location is not None:
         fun_loc = PdlLocationType(
@@ -2340,7 +2351,7 @@ def execute_call(state, current_context, closure, args, loc):
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of the function{' ' + closure.signature.get('name', '') if closure.signature is not None else ''}:",
+                f"Type errors in result of the function{' ' + closure.signature['function'].get('name', '') if closure.signature is not None else ''}:",
                 fun_loc,
                 f_trace,
             ),

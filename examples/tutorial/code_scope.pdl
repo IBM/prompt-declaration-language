@@ -1,0 +1,7 @@
+description: Demonstrating the scope field in code blocks
+lang: python
+scope:
+  x: 10
+  y: 20
+code: |
+  result = x + y

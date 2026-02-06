@@ -766,6 +766,11 @@
         "code": {
           "$ref": "#/$defs/BlockType",
           "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution.  If not provided, the global scope is used.\n    "
         }
       },
       "required": [
@@ -1279,6 +1284,20 @@
         },
         {
           "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExpressionDictStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "additionalProperties": true,
+          "type": "object"
         },
         {
           "type": "string"
@@ -3885,6 +3904,16 @@
       "anyOf": [
         {
           "$ref": "#/$defs/ExpressionBool"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalExpressionDictStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionDictStr"
         },
         {
           "type": "null"
