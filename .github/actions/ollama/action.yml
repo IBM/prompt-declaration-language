@@ -26,7 +26,7 @@ runs:
     - name: Check that all required models are available
       shell: bash
       run: |
-        models=("mxbai-embed-large" "granite4:micro" "granite4:micro")
+        models=("mxbai-embed-large" "granite4:micro")
         missing=0
         for model in "${models[@]}"; do
           if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
