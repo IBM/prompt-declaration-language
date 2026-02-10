@@ -20,7 +20,7 @@ text:
   modelResponse: actions
   contribute: []
 - defs:
-    action: ${ actions["choices"][0]["message"]["tool_calls"][0] }
+    action: ${ stdlib.get_tool_calls(actions)[0] }
     func_name: ${ action.function.name }
     func_args:
       data: ${ action.function.arguments }
