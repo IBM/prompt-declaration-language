@@ -56,6 +56,8 @@ from .pdl_ast import (
     BlockType,
     CallBlock,
     CodeBlock,
+    CodeBlockType,
+    CommandCodeBlock,
     ContributeElement,
     ContributeTarget,
     ContributeValue,
@@ -73,6 +75,8 @@ from .pdl_ast import (
     ImportBlock,
     IncludeBlock,
     IndependentEnum,
+    IPythonCodeBlock,
+    JinjaCodeBlock,
     JoinArray,
     JoinLastOf,
     JoinObject,
@@ -99,6 +103,7 @@ from .pdl_ast import (
     ParserType,
     Pattern,
     PatternType,
+    PdlCodeBlock,
     PdlLocationType,
     PdlParser,
     PDLRuntimeError,
@@ -108,6 +113,7 @@ from .pdl_ast import (
     PdlTiming,
     PdlUsage,
     Program,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -363,7 +369,7 @@ def process_advanced_block_timed(
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     block.pdl__timing.end_nanos = time.time_ns()
     match trace:
-        case ModelBlock():
+        case LitellmModelBlock() | GraniteioModelBlock():
             mode: SerializeMode
             if trace.platform == ModelPlatform.LITELLM:
                 mode = SerializeMode.LITELLM
@@ -2068,9 +2074,9 @@ def generate_client_response_single(
 def process_call_code(
     state: InterpreterState,
     scope: ScopeType,
-    block: ArgsBlock | CodeBlock,
+    block: ArgsBlock | CodeBlockType,
     loc: PdlLocationType,
-) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlock]:
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlockType]:
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""
@@ -2098,8 +2104,28 @@ def process_call_code(
             if block.scope is not None:
                 execution_scope, block = process_expr_of(block, "scope", scope, loc)
 
-    match block.lang:
-        case "python":
+    match block:
+        case ArgsBlock():
+            try:
+                result = call_command(code_s, code_a)
+                background = SingletonContext(
+                    PdlDict(
+                        {
+                            "role": state.role,
+                            "content": result,
+                            "pdl__defsite": block.pdl__id,
+                        }
+                    )
+                )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Shell Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"args": code_a}),
+                ) from exc
+        case PythonCodeBlock():
             try:
                 result = call_python(code_s, execution_scope, state)
                 background = SingletonContext(
@@ -2129,7 +2155,7 @@ def process_call_code(
                         update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
                 ) from exc
-        case "ipython":
+        case IPythonCodeBlock():
             try:
                 result = call_ipython(code_s, execution_scope)
                 background = SingletonContext(
@@ -2153,7 +2179,7 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "command":
+        case CommandCodeBlock():
             try:
                 result = call_command(code_s, code_a)
                 background = SingletonContext(
@@ -2173,9 +2199,13 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "jinja":
+        case JinjaCodeBlock():
             try:
-                result = call_jinja(code_s, execution_scope)
+                if block.parameters is not None:
+                    parameters, block = process_expr_of(block, "parameters", scope, loc)
+                else:
+                    parameters = {}
+                result = call_jinja(code_s, execution_scope, parameters)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2193,7 +2223,7 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "pdl":
+        case PdlCodeBlock():
             try:
                 result = call_pdl(code_s, execution_scope)
                 background = DependentContext(
@@ -2272,9 +2302,10 @@ def call_command(code: str, code_a: list[str] | None) -> PdlLazy[str]:
     return PdlConst(output)
 
 
-def call_jinja(code: str, scope: ScopeType) -> PdlLazy[Any]:
+def call_jinja(code: str, scope: ScopeType, parameters: dict) -> PdlLazy[Any]:
     template = Template(
         code,
+        **parameters,
     )
     result = template.render(scope)
     return PdlConst(result)
