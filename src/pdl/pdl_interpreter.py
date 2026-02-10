@@ -56,7 +56,6 @@ from .pdl_ast import (
     BlockType,
     CallBlock,
     CodeBlock,
-    CodeBlockType,
     CommandCodeBlock,
     ContributeElement,
     ContributeTarget,
@@ -2074,9 +2073,26 @@ def generate_client_response_single(
 def process_call_code(
     state: InterpreterState,
     scope: ScopeType,
-    block: ArgsBlock | CodeBlockType,
+    block: (
+        ArgsBlock
+        | PythonCodeBlock
+        | IPythonCodeBlock
+        | JinjaCodeBlock
+        | PdlCodeBlock
+        | CommandCodeBlock
+    ),
     loc: PdlLocationType,
-) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlockType]:
+) -> tuple[
+    PdlLazy[Any],
+    LazyMessages,
+    ScopeType,
+    ArgsBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock,
+]:
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""

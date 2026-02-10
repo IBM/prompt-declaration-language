@@ -438,7 +438,19 @@
           "$ref": "#/$defs/GraniteioModelBlock"
         },
         {
-          "$ref": "#/$defs/CodeBlockType"
+          "$ref": "#/$defs/PythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/IPythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/JinjaCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/PdlCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/CommandCodeBlock"
         },
         {
           "$ref": "#/$defs/ArgsBlock"
@@ -644,25 +656,6 @@
       ],
       "title": "CallBlock",
       "type": "object"
-    },
-    "CodeBlockType": {
-      "anyOf": [
-        {
-          "$ref": "#/$defs/PythonCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/IPythonCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/JinjaCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/PdlCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/CommandCodeBlock"
-        }
-      ]
     },
     "CommandCodeBlock": {
       "additionalProperties": false,

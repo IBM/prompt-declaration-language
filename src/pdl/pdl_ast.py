@@ -815,19 +815,6 @@ class CommandCodeBlock(CodeBlock):
     """
 
 
-CodeBlockType = TypeAliasType(
-    "CodeBlockType",
-    Annotated[
-        "Union[PythonCodeBlock,"  # pyright: ignore
-        "      IPythonCodeBlock,"
-        "      JinjaCodeBlock,"
-        "      PdlCodeBlock,"
-        "      CommandCodeBlock]",
-        Field(union_mode="left_to_right"),
-    ],
-)
-
-
 class ArgsBlock(BaseCodeBlock):
     """
     Execute a command line, which will spawn a subprocess with the given argument vector. Note: if you need a shell script execution, you must wrap your command line in /bin/sh or some shell of your choosing.
@@ -1303,7 +1290,11 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlockType
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
