@@ -706,8 +706,19 @@ class BaseCodeBlock(LeafBlock):
 
 
 class CodeBlock(BaseCodeBlock):
+    """Common fields for the `code` blocks."""
+
+    code: "BlockType"
+    """Code to execute.
     """
-    Execute a piece of code.
+    scope: OptionalExpressionDictStr = None
+    """Scope to use for the code execution. If not provided, the global scope is used.
+    """
+
+
+class PythonCodeBlock(CodeBlock):
+    """
+    Execute Python code.
 
     Example:
     ```PDL
@@ -719,17 +730,88 @@ class CodeBlock(BaseCodeBlock):
     ```
     """
 
-    lang: Annotated[
-        Literal["python", "command", "jinja", "pdl", "ipython"],
-        BeforeValidator(_ensure_lower),
-    ]
+    lang: Annotated[Literal["python"], BeforeValidator(_ensure_lower)] = "python"
     """Programming language of the code.
     """
-    code: "BlockType"
-    """Code to execute.
+
+
+class IPythonCodeBlock(CodeBlock):
     """
-    scope: OptionalExpressionDictStr = None
-    """Scope to use for the code execution.  If not provided, the global scope is used.
+    Execute Python code as in iPython cell.
+
+    Example:
+    ```PDL
+    lang: python
+    code: |
+        import random
+        random.randint(1, 20)
+    ```
+    """
+
+    lang: Annotated[Literal["ipython"], BeforeValidator(_ensure_lower)] = "ipython"
+    """Programming language of the code.
+    """
+
+
+class JinjaCodeBlock(CodeBlock):
+    """
+    Execute Jinja code.
+
+    Example:
+    ```PDL
+    defs:
+      name: John
+    lang: jinja
+    code: |
+      Hello {{ name }}!
+    ```
+    """
+
+    lang: Annotated[Literal["jinja"], BeforeValidator(_ensure_lower)] = "jinja"
+    """Programming language of the code.
+    """
+
+    parameters: OptionalExpressionDictStr = None
+    """Parameters to pass to the Jinja template.
+    """
+
+
+class PdlCodeBlock(CodeBlock):
+    """
+    Execute PDL code.
+
+    Example:
+    ```PDL
+    defs:
+      x:
+        data: ${ y }
+        raw: true
+      y: World
+    lang: pdl
+    code: |
+      Hello ${ x }!
+    ```
+    """
+
+    lang: Annotated[Literal["pdl"], BeforeValidator(_ensure_lower)] = "pdl"
+    """Programming language of the code.
+    """
+
+
+class CommandCodeBlock(CodeBlock):
+    """
+    Execute shell command.
+
+    Example:
+    ```PDL
+    lang: command
+    code: |
+        ls -l
+    ```
+    """
+
+    lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
+    """Programming language of the code.
     """
 
 
@@ -1208,7 +1290,11 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock

@@ -151,6 +151,21 @@ code: |
     )
 
 
+def test_jinja4():
+    prog_str = """
+defs:
+  name: World
+lang: jinja
+code: |
+    Hello ${ "${" } name ${ "}" }!
+parameters:
+  variable_start_string:  ${ "${" }
+  variable_end_string: ${ "}" }
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
 def test_pdl1():
     prog_str = """
 lang: pdl
