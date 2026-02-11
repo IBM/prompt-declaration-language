@@ -4,8 +4,12 @@ import type {
   GraniteioModelBlock,
   PdlBlock,
   TextBlock,
+  PythonCodeBlock,
+  IPythonCodeBlock,
+  JinjaCodeBlock,
+  PdlCodeBlock,
+  CommandCodeBlock,
   ArgsBlock,
-  CodeBlock,
   ModelInput,
   LocalizedExpression,
 } from "./pdl_ast"
@@ -18,6 +22,13 @@ export type ExpressionT<T> = T | string | LocalizedExpression
 type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>
 }
+
+export type CodeBlock =
+  | PythonCodeBlock
+  | IPythonCodeBlock
+  | JinjaCodeBlock
+  | PdlCodeBlock
+  | CommandCodeBlock
 
 export type ModelBlock = LitellmModelBlock | GraniteioModelBlock
 
