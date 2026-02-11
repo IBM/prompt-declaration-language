@@ -16,7 +16,7 @@ from .pdl_ast import (
     ArrayPattern,
     Block,
     CallBlock,
-    CodeBlock,
+    CommandCodeBlock,
     ContributeElement,
     ContributeTarget,
     DataBlock,
@@ -33,6 +33,8 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    IPythonCodeBlock,
+    JinjaCodeBlock,
     JoinArray,
     JoinLastOf,
     JoinObject,
@@ -54,12 +56,14 @@ from .pdl_ast import (
     OrPattern,
     ParserType,
     PatternType,
+    PdlCodeBlock,
     PdlLocationType,
     PdlParser,
     PdlTiming,
     PdlTypeType,
     PdlUsage,
     Program,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
@@ -106,11 +110,15 @@ def program_to_dict(
     return block_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(  # noqa: C901
-    block: pdl_ast.BlockType, json_compatible: bool
-) -> DumpedBlockType:
+def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
+    return advance_block_to_dict(block, json_compatible)
+
+
+def advance_block_to_dict(  # noqa: C901
+    block: pdl_ast.AdvancedBlockType, json_compatible: bool
+) -> DumpedBlockType:
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
     if block.pdl__id is not None:
@@ -184,11 +192,23 @@ def block_to_dict(  # noqa: C901
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
         case ArgsBlock():
             d["args"] = block.args
-        case CodeBlock():
+        case (
+            PythonCodeBlock()
+            | IPythonCodeBlock()
+            | JinjaCodeBlock()
+            | PdlCodeBlock()
+            | CommandCodeBlock()
+        ):
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
             if block.scope is not None:
                 d["scope"] = expr_to_dict(block.scope, json_compatible)
+            match block:
+                case JinjaCodeBlock():
+                    if block.parameters is not None:
+                        d["parameters"] = expr_to_dict(
+                            block.parameters, json_compatible
+                        )
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
