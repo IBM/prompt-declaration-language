@@ -6,9 +6,7 @@ import { isArgs, extractCode, CodeBlock } from "../../../helpers"
 export default function CodeItems({
   block,
 }: {
-  block:
-    | import("../../../pdl_ast").ArgsBlock
-    | CodeBlock
+  block: import("../../../pdl_ast").ArgsBlock | CodeBlock
 }) {
   const { lang } = block
   const code = isArgs(block) ? block.args.join(" ") : extractCode(block)
