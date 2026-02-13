@@ -1,5 +1,11 @@
 
 defs: 
+  get_tool_calls:
+    function:
+      model_response: object
+    return: ${ model_response["choices"][0]["message"]["tool_calls"] }
+
+
   bool_confidence:
     function:
       response: object

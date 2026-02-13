@@ -10,22 +10,22 @@ defs:
           description: Arithmetic expression to calculate
 text:
 - role: system
-  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
+  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with a JSON of the tool to use. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
   contribute: [context]
 - role: tools
   content:
     text: ${ tools }
   contribute: [context]
 - "Out of 1400 participants, 400 passed the test. What percentage is that?\n"
-- def: actions
+- def: action
   model: ollama_chat/granite4:micro
   parser: json
-  spec: [{ name: string, arguments: { expr: string }}]
+  spec: { name: string, arguments: { expr: string }}
   parameters:
     drop_params: true
 - "\n"
-- if: ${ actions[0].name == "calc" }
+- if: ${ action.name == "calc" }
   then:
     text:
     - lang: python
-      code: result = ${ actions[0].arguments.expr }
+      code: result = ${ action.arguments.expr }
