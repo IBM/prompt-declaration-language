@@ -1,5 +1,5 @@
-update_results: true
-check: [examples/tools/search.pdl ]
+update_results: false
+check: []
 skip:
   - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl
