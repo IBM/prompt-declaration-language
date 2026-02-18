@@ -1,0 +1,6 @@
+How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.
+Thought: I need to determine who discovered the Hudson River and then find their birth year. The discovery is attributed to Henry Hudson (1598‑1611), an English explorer. His birth year was 1565. To calculate how many years ago this was from 2025, subtract 1565 from 2025.
+Action: {"name": "calc", "arguments": {"expr": "2025 - 1565"}}
+Observation: 460
+The discoverer of the Hudson River, Henry Hudson, was born in **1565**. Therefore, he was born **460 years ago** from the year 2025.Action: {"name": "finish", "arguments": {"answer": "460 years ago"}}
+Observation: 460 years ago
