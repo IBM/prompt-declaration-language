@@ -416,10 +416,6 @@ See [here](https://docs.python.org/3/library/re.html) for more information on ho
 
 The following script shows how to execute python code ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_python.pdl)). The python code is executed locally (or in a containerized way if using `pdl --sandbox`).  In principle, PDL is agnostic of any specific programming language, but we currently only support Python, Jinja, and shell commands. Variables defined in PDL are copied into the global scope of the Python code, so those variables can be used directly in the code. However, mutating variables in Python has no effect on the variables in the PDL program. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block. A variable `def` on the code block will then be set to this result.
 
-In order to define variables that are carried over to the next Python code block, a special variable `PDL_SESSION` can be used, and
-variables assigned to it as fields.
-See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/tfidf_rag.pdl)).
-
 ```yaml
 --8<-- "./examples/tutorial/code_python.pdl"
 ```
@@ -429,6 +425,11 @@ This results in the following output (for example):
 ```
 Hello, r!
 ```
+
+In order to define variables that are carried over to the next Python code block, without returning from the code block a special variable `PDL_SESSION` can be used, and
+variables assigned to it as fields.
+See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_session.pdl)).
+
 
 PDL also supports Jinja code blocks, shell commands, as well as PDL code blocks for meta-cycle programming. For more examples, see
 ([Jinja code](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_jinja.pdl)),
