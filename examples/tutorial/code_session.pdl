@@ -1,0 +1,11 @@
+text:
+- lang: python
+  code: |
+    PDL_SESSION.fd = open("/tmp/output", mode="w")
+    result = "File opened"
+- Hello
+- lang: python
+  code: |
+    print(pdl_context, file=PDL_SESSION.fd)
+    PDL_SESSION.fd.close()
+    result = "File closed"
