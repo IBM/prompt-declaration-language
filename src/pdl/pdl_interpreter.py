@@ -280,10 +280,20 @@ def process_prog(
         {"stdlib": stdlib_dict, "pdl_usage": state.llm_usage}
     )
 
-    result, document, final_scope, trace = process_block(
-        state, stdlib_scope, block=prog.root, loc=loc
-    )
-    return result, document, final_scope, trace
+    try:
+        result, document, final_scope, trace = process_block(
+            state, stdlib_scope, block=prog.root, loc=loc
+        )
+        return result, document, final_scope, trace
+    finally:
+        # Close all opened files
+        for fp in state.opened_files:
+            try:
+                if not fp.closed:
+                    fp.close()
+            except Exception:
+                # Ignore errors during cleanup
+                pass  # nosec B110
 
 
 def process_block(
@@ -2657,6 +2667,7 @@ def process_aggregator(
             fp = open(  # pylint: disable=consider-using-with
                 file, mode=mode, encoding=encoding
             )
+            state.opened_files.append(fp)  # Track for cleanup
             aggregator = FileAggregator(fp, prefix=prefix, suffix=suffix, flush=flush)
         case _:
             assert False, "Unexpected aggregator"

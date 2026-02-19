@@ -1,6 +1,6 @@
 from asyncio import AbstractEventLoop
 from pathlib import Path
-from typing import Any
+from typing import IO, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -56,6 +56,8 @@ class InterpreterState(BaseModel):
     """Dictionary that associate runtime block ids with their values to be able to replay an execution."""
     llm_usage: PdlUsage = PdlUsage()
     """Data structure where to accumulate LLMs usage."""
+    opened_files: list[IO[Any]] = Field(default_factory=list)
+    """List of file handles opened during execution that need to be closed."""
 
     def with_yield_result(self: "InterpreterState", b: bool) -> "InterpreterState":
         return self.model_copy(update={"yield_result": b})
