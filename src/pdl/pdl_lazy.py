@@ -97,7 +97,7 @@ class PdlDict(
     def __init__(
         self,
         data: (
-            dict[PdlDictKeyT, PdlDictElemT]
+            Mapping[PdlDictKeyT, PdlDictElemT]
             | Future[dict[PdlDictKeyT, PdlDictElemT]]
             | PdlLazy[dict[PdlDictKeyT, PdlDictElemT]]
         ),
@@ -131,11 +131,9 @@ class PdlDict(
         return repr(self.result())
 
     def __or__(self, value: Union["PdlLazy", dict]):
-        if isinstance(value, PdlLazy):
-            d = value.data
-        else:
-            d = value
-        return PdlDict(self.data | d)  # pyright: ignore
+        while isinstance(value, PdlLazy):
+            value = value.data
+        return PdlDict(self.data | value)  # pyright: ignore
 
     def result(self):  # pyright: ignore
         return dict(self)

@@ -19,6 +19,7 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    JinjaCodeBlock,
     LastOfBlock,
     LitellmModelBlock,
     MapBlock,
@@ -170,6 +171,12 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
             block.code = f.f_block(block.code)
+            if block.scope is not None:
+                block.scope = f.f_expr(block.scope)
+            match block:
+                case JinjaCodeBlock():
+                    if block.parameters is not None:
+                        block.parameters = f.f_expr(block.parameters)
         case GetBlock():
             pass
         case DataBlock():

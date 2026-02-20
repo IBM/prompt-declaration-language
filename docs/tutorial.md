@@ -32,7 +32,7 @@ Hello, world!
 --8<-- "./examples/tutorial/calling_llm.pdl"
 ```
 
-In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`ollama/granite3.2:2b`) with this as input prompt.
+In this program ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/calling_llm.pdl)), the `text` starts with the word `"Hello\n"`, and we call a model (`ollama/granite4:micro`) with this as input prompt.
 The model is passed a parameter `stop` to indicate the stop sequences.
 
 A PDL program computes two data structures. The first is a JSON corresponding to the result of the overall program, obtained by aggregating the results of each block. This is what is printed by default when we run the interpreter. The second is a conversational background context, which is a list of role/content pairs (list of messages), where we implicitly keep track of roles and content for the purpose of communicating with models that support chat APIs. The contents in the latter correspond to the results of each block. The conversational background context is what is used to make calls to LLMs via LiteLLM.
@@ -78,7 +78,7 @@ When using Granite models, we use the following defaults for model parameters:
 - `min_new_tokens`: 1
 - `repetition_penalty`: 1.05
 
-  Also if the `decoding_method` is `sample` (`watsonx_text text completion endpoint), then the following defaults are used:
+  Also if the `decoding_method` is `sample` (`watsonx_text` text completion endpoint), then the following defaults are used:
 
 - `temperature`: 0.7
 - `top_p`: 0.85
@@ -89,7 +89,7 @@ The user can override these defaults by explicitly including them in the model c
 
 ## Building the background context with `lastOf`
 
-The pervious example explicitly provides a list of messages with different roles to the LLM call. This can also be done implicitly using the background context.
+The previous example explicitly provides a list of messages with different roles to the LLM call. This can also be done implicitly using the background context.
 
 Each block can be annotated with a `role` field indicating the role that is used when a message is added to the background context by the block or any of the sub-block that does not redefine it.
 In this example, we add a `system` message asking the model to provide answer formally ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/role.pdl)):
@@ -416,10 +416,6 @@ See [here](https://docs.python.org/3/library/re.html) for more information on ho
 
 The following script shows how to execute python code ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_python.pdl)). The python code is executed locally (or in a containerized way if using `pdl --sandbox`).  In principle, PDL is agnostic of any specific programming language, but we currently only support Python, Jinja, and shell commands. Variables defined in PDL are copied into the global scope of the Python code, so those variables can be used directly in the code. However, mutating variables in Python has no effect on the variables in the PDL program. The result of the code must be assigned to the variable `result` internally to be propagated to the result of the block. A variable `def` on the code block will then be set to this result.
 
-In order to define variables that are carried over to the next Python code block, a special variable `PDL_SESSION` can be used, and
-variables assigned to it as fields.
-See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/programs/tfidf_rag.pdl)).
-
 ```yaml
 --8<-- "./examples/tutorial/code_python.pdl"
 ```
@@ -430,10 +426,47 @@ This results in the following output (for example):
 Hello, r!
 ```
 
+In order to define variables that are carried over to the next Python code block, without returning from the code block a special variable `PDL_SESSION` can be used, and
+variables assigned to it as fields.
+See for example: ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_session.pdl)).
+
+
 PDL also supports Jinja code blocks, shell commands, as well as PDL code blocks for meta-cycle programming. For more examples, see
 ([Jinja code](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_jinja.pdl)),
 ([shell command](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_command.pdl)),
 ([PDL code](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/code_pdl.pdl)).
+
+### Using the scope field
+
+Code blocks can use the optional `scope` field to provide a custom set of variables for code execution, instead of using the global PDL scope. This is useful when you want to isolate variables or provide specific values to a code block without affecting the rest of the program.
+
+```yaml
+--8<-- "./examples/tutorial/code_scope.pdl"
+```
+
+In this example, the variables `x` and `y` are defined in the `scope` field and are available directly in the Python code. The `scope` field accepts a dictionary of variable names and their values. This feature works with all supported code languages (Python, Jinja, and PDL).
+
+When using `scope`:
+- Variables from the scope are available in the code block
+- The global PDL scope is not affected by variables defined in the `scope` field
+- If `scope` is not provided, the code block uses the global PDL scope as usual
+
+### Accessing the pdl_scope variable
+
+The `pdl_scope` variable is a special built-in variable that provides access to the entire scope dictionary within code blocks and Jinja expressions. This is useful when you need to introspect available variables, iterate over them, or access variables dynamically.
+
+```yaml
+--8<-- "./examples/tutorial/pdl_scope.pdl"
+```
+
+In this example ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/pdl_scope.pdl)), we demonstrate how to use `pdl_scope`:
+
+1. Access variables through `pdl_scope` using dictionary syntax: `pdl_scope["greeting"]`
+2. Iterate over all available variables using `pdl_scope.keys()`
+
+The `pdl_scope` variable contains all variables in the current scope, including:
+- User-defined variables (like `greeting` and `name` in the example)
+- Built-in PDL variables (like `pdl_context`, `pdl_usage`, `stdlib`, etc.)
 
 ## Calling REST APIs
 

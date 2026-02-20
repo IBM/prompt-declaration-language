@@ -47,7 +47,7 @@ python process_grammar_correction.py
 
 ## Loss function
 
-The lost function is use to guide the optimizer towards the best solution and evaluate the final program. The loss function can must be a PDL function named `score` that takes as input the result of the program, the ground truth, and returns a floating point number.
+The loss function is use to guide the optimizer towards the best solution and evaluate the final program. The loss function can must be a PDL function named `score` that takes as input the result of the program, the ground truth, and returns a floating point number.
 In our example, we are using the Levenshtein distance that we import from the `textdistance` Python module. The `score` function is defined in the [`eval_levenshtein.pdl` file](https://github.com/IBM/prompt-declaration-language/blob/main/examples/optimizer/eval_levenshtein.pdl):
 
 ```yaml
@@ -73,7 +73,7 @@ Last but not least, `variables` indicates the domain of each variable that needs
 
 Notice that variable `input` in the PDL program is not given a domain. This is because it will hold the different instances that will be evaluated (it was included in the `instance_columns` field).
 
-For a complete list of available fields in the configuration file is given in the configuration parser [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py).
+The complete list of fields available in the configuration file is given in the configuration parser [file](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/optimize/config_parser.py).
 
 
 We are ready to run the optimizer!

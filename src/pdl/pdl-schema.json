@@ -438,7 +438,19 @@
           "$ref": "#/$defs/GraniteioModelBlock"
         },
         {
-          "$ref": "#/$defs/CodeBlock"
+          "$ref": "#/$defs/PythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/IPythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/JinjaCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/PdlCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/CommandCodeBlock"
         },
         {
           "$ref": "#/$defs/ArgsBlock"
@@ -648,9 +660,9 @@
       "title": "CallBlock",
       "type": "object"
     },
-    "CodeBlock": {
+    "CommandCodeBlock": {
       "additionalProperties": false,
-      "description": "Execute a piece of code.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
+      "description": "Execute shell command.\n\nExample:\n```PDL\nlang: command\ncode: |\n    ls -l\n```",
       "properties": {
         "description": {
           "$ref": "#/$defs/OptionalStr",
@@ -754,28 +766,27 @@
           "title": "Kind",
           "type": "string"
         },
-        "lang": {
-          "description": "Programming language of the code.\n    ",
-          "enum": [
-            "python",
-            "command",
-            "jinja",
-            "pdl",
-            "ipython"
-          ],
-          "title": "Lang",
-          "type": "string"
-        },
         "code": {
           "$ref": "#/$defs/BlockType",
           "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution. If not provided, the global scope is used.\n    "
+        },
+        "lang": {
+          "const": "command",
+          "default": "command",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
         }
       },
       "required": [
-        "lang",
         "code"
       ],
-      "title": "CodeBlock",
+      "title": "CommandCodeBlock",
       "type": "object"
     },
     "ContributeElement": {
@@ -1282,6 +1293,20 @@
         },
         {
           "type": "boolean"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExpressionDictStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+        },
+        {
+          "additionalProperties": true,
+          "type": "object"
         },
         {
           "type": "string"
@@ -2047,6 +2072,135 @@
       "title": "GraniteioProcessor",
       "type": "object"
     },
+    "IPythonCodeBlock": {
+      "additionalProperties": false,
+      "description": "Execute Python code as in iPython cell.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    random.randint(1, 20)\n```",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeElement"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/$defs/BlockType",
+          "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution. If not provided, the global scope is used.\n    "
+        },
+        "lang": {
+          "const": "ipython",
+          "default": "ipython",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "IPythonCodeBlock",
+      "type": "object"
+    },
     "IfBlock": {
       "additionalProperties": false,
       "description": "Conditional control structure.\n\nExample:\n```PDL\ndefs:\n  answer:\n    read:\n    message: \"Enter a number? \"\nif: ${ (answer | int) == 42 }\nthen: You won!\n```",
@@ -2434,6 +2588,140 @@
       ],
       "title": "IndependentEnum",
       "type": "string"
+    },
+    "JinjaCodeBlock": {
+      "additionalProperties": false,
+      "description": "Execute Jinja code.\n\nExample:\n```PDL\ndefs:\n  name: John\nlang: jinja\ncode: |\n  Hello {{ name }}!\n```",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeElement"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/$defs/BlockType",
+          "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution. If not provided, the global scope is used.\n    "
+        },
+        "lang": {
+          "const": "jinja",
+          "default": "jinja",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
+        },
+        "parameters": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Parameters to pass to the Jinja template.\n    "
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "JinjaCodeBlock",
+      "type": "object"
     },
     "JoinArray": {
       "additionalProperties": false,
@@ -4040,6 +4328,16 @@
         }
       ]
     },
+    "OptionalExpressionDictStr": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionDictStr"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
     "OptionalExpressionInt": {
       "anyOf": [
         {
@@ -4241,6 +4539,135 @@
       "description": "Wrapper class used to generate proper JSON Schema for PDL blocks.\n\nThis class introduces the BlockType in the generated JSON Schema,\nallowing for proper type definitions in schema documentation.",
       "title": "PdlBlock"
     },
+    "PdlCodeBlock": {
+      "additionalProperties": false,
+      "description": "Execute PDL code.\n\nExample:\n```PDL\ndefs:\n  x:\n    data: ${ y }\n    raw: true\n  y: World\nlang: pdl\ncode: |\n  Hello ${ x }!\n```",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeElement"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/$defs/BlockType",
+          "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution. If not provided, the global scope is used.\n    "
+        },
+        "lang": {
+          "const": "pdl",
+          "default": "pdl",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "PdlCodeBlock",
+      "type": "object"
+    },
     "PdlLocationType": {
       "additionalProperties": false,
       "description": "Internal data structure to keep track of the source location information.",
@@ -4393,6 +4820,135 @@
       "$ref": "#/$defs/BlockType",
       "description": "Prompt Declaration Language program (PDL)",
       "title": "Program"
+    },
+    "PythonCodeBlock": {
+      "additionalProperties": false,
+      "description": "Execute Python code.\n\nExample:\n```PDL\nlang: python\ncode: |\n    import random\n    # (In PDL, set `result` to the output you wish for your code block.)\n    result = random.randint(1, 20)\n```",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Documentation associated to the block.\n    "
+        },
+        "spec": {
+          "$ref": "#/$defs/PdlTypeType",
+          "default": null,
+          "description": "Type specification of the result of the block.\n    "
+        },
+        "defs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/BlockType"
+          },
+          "default": {},
+          "description": "Set of definitions executed before the execution of the block.\n    ",
+          "title": "Defs",
+          "type": "object"
+        },
+        "def": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Name of the variable used to store the result of the execution of the block.\n    "
+        },
+        "contribute": {
+          "default": [
+            "result",
+            "context"
+          ],
+          "description": "Indicate if the block contributes to the result and background context.\n    ",
+          "items": {
+            "$ref": "#/$defs/ContributeElement"
+          },
+          "title": "Contribute",
+          "type": "array"
+        },
+        "parser": {
+          "$ref": "#/$defs/OptionalParserType",
+          "default": null,
+          "description": "Parser to use to construct a value out of a string result."
+        },
+        "fallback": {
+          "$ref": "#/$defs/OptionalBlockType",
+          "default": null,
+          "description": "Block to execute in case of error.\n    "
+        },
+        "retry": {
+          "$ref": "#/$defs/OptionalInt",
+          "default": null,
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+        },
+        "trace_error_on_retry": {
+          "$ref": "#/$defs/OptionalBoolOrStr",
+          "default": null,
+          "description": "Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.\n    "
+        },
+        "expectations": {
+          "$ref": "#/$defs/ExpectationsType",
+          "default": [],
+          "description": "Specify any expectations that the result of the block must satisfy.\n    "
+        },
+        "role": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": null,
+          "description": "Role associated to the block and sub-blocks.\nTypical roles are `system`, `user`, and `assistant`,\nbut there may be other roles such as `available_tools`."
+        },
+        "pdl__context": {
+          "$ref": "#/$defs/OptionalModelInput",
+          "default": [],
+          "description": "Current context."
+        },
+        "pdl__id": {
+          "$ref": "#/$defs/OptionalStr",
+          "default": "",
+          "description": "Unique identifier for this block."
+        },
+        "pdl__result": {
+          "$ref": "#/$defs/OptionalAny",
+          "default": null,
+          "description": "Result of the execution of the block."
+        },
+        "pdl__location": {
+          "$ref": "#/$defs/OptionalPdlLocationType",
+          "default": null
+        },
+        "pdl__timing": {
+          "$ref": "#/$defs/OptionalPdlTiming",
+          "default": null,
+          "description": "Execution timing information."
+        },
+        "pdl__is_leaf": {
+          "const": true,
+          "default": true,
+          "title": "Pdl  Is Leaf",
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "code",
+          "default": "code",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/$defs/BlockType",
+          "description": "Code to execute.\n    "
+        },
+        "scope": {
+          "$ref": "#/$defs/OptionalExpressionDictStr",
+          "default": null,
+          "description": "Scope to use for the code execution. If not provided, the global scope is used.\n    "
+        },
+        "lang": {
+          "const": "python",
+          "default": "python",
+          "description": "Programming language of the code.\n    ",
+          "title": "Lang",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "PythonCodeBlock",
+      "type": "object"
     },
     "ReadBlock": {
       "additionalProperties": false,

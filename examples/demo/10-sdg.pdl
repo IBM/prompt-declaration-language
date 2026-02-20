@@ -1,6 +1,6 @@
 defs:
   teacher_sys_prompt: You are a very knowledgeable AI Assistant that will faithfully assist the user with their task.
-  teacher_model: ollama_chat/granite3.2:8b
+  teacher_model: ollama_chat/granite4:micro
   teacher_template:
     function:
       sys_prompt: string

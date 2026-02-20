@@ -2,8 +2,8 @@ from typing import Any
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.pdl import exec_str
-from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_interpreter_state import ScopeType
 
 
 class PdlEvaluator(OptimizerEvaluator):

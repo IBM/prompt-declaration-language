@@ -65,12 +65,12 @@ text:
 - repeat:
     text:
     - def: thought
-      model: ollama_chat/granite3.3:8b
+      model: ollama_chat/granite4:micro
       parameters:
         stop: ["Action:"]
     - "Action:\n"
     - def: action
-      model: ollama_chat/granite3.3:8b
+      model: ollama_chat/granite4:micro
       parameters:
         stop: ["\n"]
       parser: json

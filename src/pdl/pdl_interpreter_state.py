@@ -1,14 +1,26 @@
 from asyncio import AbstractEventLoop
 from pathlib import Path
-from typing import Any
+from typing import IO, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from pdl.pdl_context import DependentContext
-from pdl.pdl_utils import Ref
-
-from .pdl_ast import BlockType, LazyMessages, PdlUsage, RoleType, ScopeType
+from .pdl_ast import BlockType, LazyMessages, PdlUsage, RoleType
+from .pdl_context import DependentContext
+from .pdl_lazy import PdlDict, PdlLazy
 from .pdl_scheduler import create_event_loop_thread
+from .pdl_utils import Ref
+
+
+class ScopeType(PdlDict):
+    """Data structure of the execution environment."""
+
+    def __getitem__(self, key):  # pyright: ignore
+        if key == "pdl_scope":
+            return self.data
+        return super().__getitem__(key)
+
+    def __or__(self, value: PdlLazy | dict):
+        return ScopeType(super().__or__(value))
 
 
 class InterpreterState(BaseModel):
@@ -48,6 +60,8 @@ class InterpreterState(BaseModel):
     """Dictionary that associate runtime block ids with their values to be able to replay an execution."""
     llm_usage: PdlUsage = PdlUsage()
     """Data structure where to accumulate LLMs usage."""
+    opened_files: list[IO[Any]] = Field(default_factory=list)
+    """List of file handles opened during execution that need to be closed."""
     score: Ref[float] = Field(default_factory=lambda: Ref(0.0))
     """Log Probability of the execution."""
 

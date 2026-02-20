@@ -46,7 +46,7 @@ defs:
       - "\nProblem:\n"
       - ${ problem }
       - "\n"
-      - model: ollama/granite3.2:8b
+      - model: ollama/granite4:micro
         parameters:
           temperature: 0.7
           top_p: 0.85
@@ -62,7 +62,7 @@ defs:
         The plan looks good! Now, use real numbers and do the calculation. Please solve the question 
         step-by-step according to the high-level plan. Give me the final answer. Make your response short.
       - "\nThe answer is:\n"
-      - model: ollama/granite3.2:8b
+      - model: ollama/granite4:micro
         parameters:
           temperature: 0.7
           top_p: 0.85
@@ -74,7 +74,7 @@ defs:
       lastOf:
       - ${ solution }
       - Extract the result from the above solution into a JSON object with field "result" and a float as value. Remove any dollar signs or other symbols.
-      - model: ollama/granite3.2:8b
+      - model: ollama/granite4:micro
         parser: json
         def: result
         spec: { "result": number }

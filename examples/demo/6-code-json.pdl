@@ -6,7 +6,7 @@ defs:
   TRUTH:
     read: ./ground_truth.txt
 text:
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:micro
   def: EXPLANATION
   contribute: []
   input:

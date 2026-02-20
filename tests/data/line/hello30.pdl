@@ -1,8 +1,7 @@
 description: hello with bad for loop
 defs:
   val:
-    data:
-      p: 1
+    data: 42
 for:
   k: ${ val }
 repeat:

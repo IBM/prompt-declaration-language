@@ -1,0 +1,10 @@
+Hello, World!
+Available variables in scope:
+- pdl_context
+- pdl_llm_as_judge
+- pdl_llm_context_transformer
+- pdl_model_default_parameters
+- stdlib
+- pdl_usage
+- greeting
+- name

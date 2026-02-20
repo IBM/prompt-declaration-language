@@ -151,6 +151,21 @@ code: |
     )
 
 
+def test_jinja4():
+    prog_str = """
+defs:
+  name: World
+lang: jinja
+code: |
+    Hello ${ "${" } name ${ "}" }!
+parameters:
+  variable_start_string:  ${ "${" }
+  variable_end_string: ${ "}" }
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello World!"
+
+
 def test_pdl1():
     prog_str = """
 lang: pdl
@@ -212,3 +227,41 @@ code: result = "Hello World!"
 """
     result = exec_str(prog_str)
     assert result == "Hello World!"
+
+
+def test_scope1():
+    prog_str = """
+lang: python
+scope:
+  x: 10
+  y: 20
+code: |
+  result = x + y
+"""
+    result = exec_str(prog_str)
+    assert result == 30
+
+
+def test_scope2():
+    prog_str = """
+lang: jinja
+scope:
+  name: "Alice"
+  age: 30
+code: |
+  Hello, my name is {{ name }} and I am {{ age }} years old.
+"""
+    result = exec_str(prog_str)
+    assert result == "Hello, my name is Alice and I am 30 years old."
+
+
+def test_scope3():
+    prog_str = """
+lang: pdl
+scope:
+  greeting: "Bonjour"
+code: |
+  text: ${ "${" } greeting ${ "}" }, World!
+"""
+    result = exec_str(prog_str)
+    assert result == "Bonjour, World!"

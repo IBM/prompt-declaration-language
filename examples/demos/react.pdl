@@ -1,15 +1,17 @@
 description: Demonstrating a React program
 defs:
-  Calc:
+  problem: |
+    How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.
+  calc:
     description: Calculator function
     function:
-        expr:
-          type: string
-          description: Arithmetic expression to calculate
+      expr:
+        type: string
+        description: Arithmetic expression to calculate
     return:
       lang: python
       code: result = ${ expr }
-  Search:
+  search:
     description: Wikipedia search
     function:
       topic:
@@ -24,72 +26,104 @@ defs:
           result = wikipedia.summary("${ topic }")
         except wikipedia.WikipediaException as e:
           result = str(e)
+  finish:
+    description: Respond with the answer
+    function:
+      answer:
+        type: string
+        description: The answer
+    return: ${ answer }
   tools:
     data:
-    - ${ Calc.signature }
-    - ${ Search.signature }
+    - ${ calc.signature }
+    - ${ search.signature }
+    - ${ finish.signature }
 text:
-- role: system
-  text: You are Granite, developed by IBM. You are a helpful AI assistant with access to the following tools. When a tool is required to answer the user's query, respond with <|tool_call|> followed by a JSON list of tools used. If a tool does not exist in the provided list of tools, notify the user that you do not have the ability to fulfill the request.
-  contribute: [context]
 - role: tools
   content:
     text: ${ tools }
   contribute: [context]
-- text:
-    |
+- role: system
+  content:
+    text:
+    - |
+      You are a helpful assistant that uses the following tools:
+    - for:
+        tool: ${ tools }
+      index: i
+      repeat: |
+      
+        ${ i+1 }) ${ tool.function.name } - ${ tool.function.description }
+        The parameters respect the following JSON Schema: ${tool.function.parameters}
+    - |
+
+      Follow this exact ReAct format:
+
+      Thought: <describe what you plan to do next>
+      Action: { "name": <tool_name>, "arguments": <tool_arguments> }
+
+      # After I return tool results, continue:
+
+      Observation: <what you observed>
+
+      # Repeat Thought/Action/Observation as needed.
+      # When you are ready to answer the user, finish with the action:
+
+      Action: { "name": "finish", "arguments": { "answer": <your best possible answer, concise and clear> } }
+
+      STRICT FORMAT RULES:
+      - One action per step.
+      - Do NOT invent tools.
+      - Use a tool when available, for example if arithmetic is needed, prefer a calculator tool.
+      - Keep chain-of-thought under 'Thought:' lines. End with the `finish` action.
+  contribute: [context]
+- text: |
+    Here is an example of execution traces:
+
     What profession does Nicholas Ray and Elia Kazan have in common?
     Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
-    Action:
-    [{"name": "Search", "arguments": {"topic": "Nicholas Ray"}}]
+    Action: {"name": "search", "arguments": {"topic": "Nicholas Ray"}}
     Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
     Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
-    Action:
-    [{"name": "Search", "arguments": {"topic": "Elia Kazan"}}]
+    Action: {"name": "search", "arguments": {"topic": "Elia Kazan"}}
     Observation: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
     Thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
-    Action:
-    [{"name": "Finish", "arguments": {"topic": "director, screenwriter, actor"}}]
-
-
-    What is the elevation range for the area that the eastern sector of the Colorado orogeny extends into?
-    Thought: I need to search Colorado orogeny, find the area that the eastern sector of the Colorado ...
-    Action:
-    [{"name": "Search", "arguments": {"topic": "Colorado orogeny"}}]
-    Observation: The Colorado orogeny was an episode of mountain building (an orogeny) ...
-    Thought: It does not mention the eastern sector. So I need to look up eastern sector.
-    Thought: High Plains rise in elevation from around 1,800 to 7,000 ft, so the answer is 1,800 to 7,000 ft.
-    Action:
-    [{"name": "Finish", "arguments": {"topic": "1,800 to 7,000 ft"}}]
+    Action: {"name": "finish", "arguments": {"answer": "director, screenwriter, actor"}}
   contribute: [context]
 
-- "How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.\n"
+- ${ problem }
 - repeat:
     text:
     - def: thought
-      model: ollama_chat/granite3.3:8b
+      model: ollama_chat/granite4:micro
       parameters:
         stop: ["Action:"]
-    - "Action:\n"
+    - text: "Action: "
     - def: action
-      model: ollama_chat/granite3.3:8b
-      parameters:
-        stop: ["\n"]
+      model: ollama_chat/granite4:micro
       parser: json
-    - "\nObservation: "
-    - match: ${ action[0].name }
+      spec:
+        name: string
+        arguments: object
+    - defs:
+        func_name: ${ action.name }
+        func_args: ${ action.arguments }
+      text: |-
+
+        Observation: 
+    - match: ${ func_name }
       with:
-        - case: Search
+        - case: search
           then:
-            call: ${ Search }
+            call: ${ search }
             args:
-              topic: ${ action[0].arguments.topic }
-        - case: Calc
+              topic: ${ func_args.topic }
+        - case: calc
           then:
-            call: ${ Calc }
+            call: ${ calc }
             args:
-              expr: ${ action[0].arguments.expr }
-        - case: Finish
-          then: ${ action[0].arguments.topic }
+              expr: ${ func_args.expr }
+        - case: finish
+          then: ${ func_args.answer }
     - "\n"
-  until: ${ action[0].name == "Finish" }
+  until: ${ func_name == "finish" }

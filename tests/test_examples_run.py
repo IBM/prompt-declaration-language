@@ -10,8 +10,7 @@ import yaml
 from pytest import CaptureFixture, MonkeyPatch
 
 from pdl import pdl
-from pdl.pdl_ast import ScopeType
-from pdl.pdl_lazy import PdlDict
+from pdl.pdl_interpreter_state import ScopeType
 from pdl.pdl_parser import PDLParseError
 
 EXAMPLES_RUN_CONFIG_FILE = os.getenv(
@@ -154,7 +153,7 @@ class ExamplesRun:
                 if "scope" in inputs_type:
                     scope = inputs_type["scope"]
                 self.with_inputs[filename] = InputsType(
-                    stdin=stdin, scope=PdlDict(scope) if scope is not None else None
+                    stdin=stdin, scope=ScopeType(scope) if scope is not None else None
                 )
 
         # Inits expected results
@@ -208,7 +207,7 @@ class ExamplesRun:
         """
 
         pdl_file_path = pathlib.Path(pdl_file_name)
-        scope: ScopeType = PdlDict({})
+        scope: ScopeType = ScopeType({})
 
         # Patch with inputs
         if pdl_file_name in self.with_inputs:

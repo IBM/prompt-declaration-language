@@ -2,7 +2,7 @@ description: Demo of CoT pattern
 defs:
   cot:
     import: ../../contrib/prompt_library/CoT
-  model: ollama/granite3.2:8b
+  model: ollama/granite4:micro
   demonstrations:
     data:
       - question: |-

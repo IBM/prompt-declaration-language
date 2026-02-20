@@ -56,6 +56,7 @@ from .pdl_ast import (
     BlockType,
     CallBlock,
     CodeBlock,
+    CommandCodeBlock,
     ContributeElement,
     ContributeTarget,
     ContributeValue,
@@ -74,6 +75,8 @@ from .pdl_ast import (
     ImportBlock,
     IncludeBlock,
     IndependentEnum,
+    IPythonCodeBlock,
+    JinjaCodeBlock,
     JoinArray,
     JoinLastOf,
     JoinObject,
@@ -100,6 +103,7 @@ from .pdl_ast import (
     ParserType,
     Pattern,
     PatternType,
+    PdlCodeBlock,
     PdlLocationType,
     PdlParser,
     PDLRuntimeError,
@@ -109,11 +113,11 @@ from .pdl_ast import (
     PdlTiming,
     PdlUsage,
     Program,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
     RoleType,
-    ScopeType,
     SequenceBlock,
     StructuredBlock,
     TextBlock,
@@ -129,7 +133,7 @@ from .pdl_context import (
     deserialize,
     ensure_context,
 )
-from .pdl_interpreter_state import InterpreterState
+from .pdl_interpreter_state import InterpreterState, ScopeType
 from .pdl_lazy import PdlConst, PdlDict, PdlLazy, PdlList, lazy_apply
 from .pdl_llms import LitellmModel
 from .pdl_location_utils import append, get_loc_string
@@ -154,7 +158,7 @@ from .pdl_utils import (
 
 warnings.filterwarnings("ignore", "Valid config keys have changed in V2")
 
-empty_scope: ScopeType = PdlDict(
+empty_scope = ScopeType(
     {
         "pdl_context": DependentContext([]),
         "pdl_particle_id": 0,
@@ -177,8 +181,11 @@ class ClosureBlock(FunctionBlock):
         if len(args) > 0:
             keys = self.function.keys() if self.function is not None else {}
             if len(keys) < len(args):
-                if self.signature is not None and self.signature.get("name", "") != "":
-                    err = f"Too many arguments to the call of {self.signature['name']}"
+                if (
+                    self.signature is not None
+                    and self.signature["function"].get("name", "") != ""
+                ):
+                    err = f"Too many arguments to the call of {self.signature['function']['name']}"
                 else:
                     err = "Too many arguments to the call"
                 raise PDLRuntimeExpressionError(
@@ -276,10 +283,20 @@ def process_prog(
         {"stdlib": stdlib_dict, "pdl_usage": state.llm_usage}
     )
 
-    result, document, final_scope, trace = process_block(
-        state, stdlib_scope, block=prog.root, loc=loc
-    )
-    return result, document, final_scope, trace
+    try:
+        result, document, final_scope, trace = process_block(
+            state, stdlib_scope, block=prog.root, loc=loc
+        )
+        return result, document, final_scope, trace
+    finally:
+        # Close all opened files
+        for fp in state.opened_files:
+            try:
+                if not fp.closed:
+                    fp.close()
+            except Exception:
+                # Ignore errors during cleanup
+                pass  # nosec B110
 
 
 def process_block(
@@ -364,7 +381,7 @@ def process_advanced_block_timed(
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     block.pdl__timing.end_nanos = time.time_ns()
     match trace:
-        case ModelBlock():
+        case LitellmModelBlock() | GraniteioModelBlock():
             mode: SerializeMode
             if trace.platform == ModelPlatform.LITELLM:
                 mode = SerializeMode.LITELLM
@@ -455,7 +472,7 @@ def process_advance_block_retry(  # noqa: C901
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: PdlLazy[Any] = PdlConst(None)
     background: LazyMessages = DependentContext([])
-    new_scope: ScopeType = PdlDict({})
+    new_scope = ScopeType({})
     trace: AdvancedBlockType = EmptyBlock()
 
     init_state = state
@@ -513,7 +530,9 @@ def process_advance_block_retry(  # noqa: C901
                         evaluate_closure, _ = process_expr(scope, evaluate, loc)
                     expectation, _ = process_expr(scope, getattr(req, "expect"), loc)
                     args = {"expectation": expectation, "response": result.result()}
-                    keys = evaluate_closure.signature["parameters"]["properties"].keys()
+                    keys = evaluate_closure.signature["function"]["parameters"][
+                        "properties"
+                    ].keys()
                     if "pdl_llm_as_judge" in keys:
                         args = args | {"pdl_llm_as_judge": scope["pdl_llm_as_judge"]}
                     if "pdl_llm_context_transformer" in keys:
@@ -1008,8 +1027,8 @@ def process_block_body(
                         "pdl_context": DependentContext([pdl_context_init, background])
                     }
                     if items is not None:
-                        for k in items.keys():
-                            scope = scope | {k: items[k][iidx]}
+                        for k, lst in items.items():
+                            scope = scope | {k: lst[iidx]}
                     (
                         iteration_result,
                         iteration_background,
@@ -1148,15 +1167,16 @@ def process_block_body(
             if block.def_ is not None:
                 scope = scope | {block.def_: closure}
             closure.pdl__scope = scope
-            signature: dict[str, Any] = {"type": "function"}
+            _signature: dict[str, Any] = {}
             if block.def_ is not None:
-                signature["name"] = block.def_
+                _signature["name"] = block.def_
             if block.description is not None:
-                signature["description"] = block.description
+                _signature["description"] = block.description
             if block.function is not None:
-                signature["parameters"] = get_json_schema(block.function, False) or {}
+                _signature["parameters"] = get_json_schema(block.function, False) or {}
             else:
-                signature["parameters"] = {}
+                _signature["parameters"] = {}
+            signature: dict[str, Any] = {"type": "function", "function": _signature}
             closure.signature = signature
             result = PdlConst(closure)
             background = DependentContext([])
@@ -1211,13 +1231,14 @@ def _evaluate_for_field(
     scope: ScopeType, block: BlockTVarEvalFor, loc: PdlLocationType
 ) -> Tuple[BlockTVarEvalFor, dict[str, list] | None, int | None]:
     if block.for_ is None:
-        items = None
+        items_res = None
         length = None
     else:
         items, block = process_expr_of(block, "for_", scope, loc, "for")
         lengths = []
+        items_res = {}
         for idx, lst in items.items():
-            if not isinstance(lst, list):
+            if not isinstance(lst, Iterable):
                 msg = f"Values inside the For block must be lists but got {type(lst)}."
                 lst_loc = append(
                     append(block.pdl__location or empty_block_location, "for"),
@@ -1229,6 +1250,8 @@ def _evaluate_for_field(
                     trace=ErrorBlock(msg=msg, pdl__location=lst_loc, program=block),
                     fallback=[],
                 )
+            lst = list(lst)
+            items_res[idx] = lst
             lengths.append(len(lst))
         if len(set(lengths)) != 1:  # Not all the lists are of the same length
             msg = "Lists inside the For block must be of the same length."
@@ -1240,7 +1263,7 @@ def _evaluate_for_field(
                 fallback=[],
             )
         length = lengths[0]
-    return block, items, length
+    return block, items_res, length
 
 
 BlockTVarEvalMaxIter = TypeVar("BlockTVarEvalMaxIter", bound=RepeatBlock | MapBlock)
@@ -2089,12 +2112,30 @@ def generate_client_response_single(
 def process_call_code(
     state: InterpreterState,
     scope: ScopeType,
-    block: ArgsBlock | CodeBlock,
+    block: (
+        ArgsBlock
+        | PythonCodeBlock
+        | IPythonCodeBlock
+        | JinjaCodeBlock
+        | PdlCodeBlock
+        | CommandCodeBlock
+    ),
     loc: PdlLocationType,
-) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, ArgsBlock | CodeBlock]:
+) -> tuple[
+    PdlLazy[Any],
+    LazyMessages,
+    ScopeType,
+    ArgsBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock,
+]:
     background: LazyMessages
     code_a: None | list[str] = None
     code_s = ""
+    execution_scope: ScopeType = scope
     match block:
         case ArgsBlock():
             code_a = []
@@ -2115,11 +2156,33 @@ def process_call_code(
                 loc,
             )
             code_s = code_.result()
+            if block.scope is not None:
+                execution_scope, block = process_expr_of(block, "scope", scope, loc)
 
-    match block.lang:
-        case "python":
+    match block:
+        case ArgsBlock():
             try:
-                result = call_python(code_s, scope, state)
+                result = call_command(code_s, code_a)
+                background = SingletonContext(
+                    PdlDict(
+                        {
+                            "role": state.role,
+                            "content": result,
+                            "pdl__defsite": block.pdl__id,
+                        }
+                    )
+                )
+            except KeyboardInterrupt as exc:
+                raise exc from exc
+            except Exception as exc:
+                raise PDLRuntimeError(
+                    f"Shell Code error: {repr(exc)}",
+                    loc=loc,
+                    trace=block.model_copy(update={"args": code_a}),
+                ) from exc
+        case PythonCodeBlock():
+            try:
+                result = call_python(code_s, execution_scope, state)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2147,9 +2210,9 @@ def process_call_code(
                         update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
                 ) from exc
-        case "ipython":
+        case IPythonCodeBlock():
             try:
-                result = call_ipython(code_s, scope)
+                result = call_ipython(code_s, execution_scope)
                 background = SingletonContext(
                     PdlList(
                         [
@@ -2171,7 +2234,7 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "command":
+        case CommandCodeBlock():
             try:
                 result = call_command(code_s, code_a)
                 background = SingletonContext(
@@ -2191,9 +2254,13 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "jinja":
+        case JinjaCodeBlock():
             try:
-                result = call_jinja(code_s, scope)
+                if block.parameters is not None:
+                    parameters, block = process_expr_of(block, "parameters", scope, loc)
+                else:
+                    parameters = {}
+                result = call_jinja(code_s, execution_scope, parameters)
                 background = SingletonContext(
                     PdlDict(
                         {
@@ -2211,9 +2278,9 @@ def process_call_code(
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
                 ) from exc
-        case "pdl":
+        case PdlCodeBlock():
             try:
-                result = call_pdl(code_s, scope)
+                result = call_pdl(code_s, execution_scope)
                 background = DependentContext(
                     PdlList(
                         [
@@ -2290,9 +2357,10 @@ def call_command(code: str, code_a: list[str] | None) -> PdlLazy[str]:
     return PdlConst(output)
 
 
-def call_jinja(code: str, scope: ScopeType) -> PdlLazy[Any]:
+def call_jinja(code: str, scope: ScopeType, parameters: dict) -> PdlLazy[Any]:
     template = Template(
         code,
+        **parameters,
     )
     result = template.render(scope)
     return PdlConst(result)
@@ -2351,9 +2419,9 @@ def execute_call(state, current_context, closure, args, loc):
         args = args | {"pdl_context": deserialize(args["pdl_context"])}
     f_body = closure.return_
     f_scope = (
-        (closure.pdl__scope or PdlDict({}))
-        | PdlDict({"pdl_context": current_context})
-        | PdlDict((args or {}))
+        (closure.pdl__scope or ScopeType({}))
+        | {"pdl_context": current_context}
+        | (args or {})
     )
     if closure.pdl__location is not None:
         fun_loc = PdlLocationType(
@@ -2369,7 +2437,7 @@ def execute_call(state, current_context, closure, args, loc):
             lambda r: result_with_type_checking(
                 r,
                 closure.spec,
-                f"Type errors in result of the function{' ' + closure.signature.get('name', '') if closure.signature is not None else ''}:",
+                f"Type errors in result of the function{' ' + closure.signature['function'].get('name', '') if closure.signature is not None else ''}:",
                 fun_loc,
                 f_trace,
             ),
@@ -2631,6 +2699,7 @@ def process_aggregator(
             fp = open(  # pylint: disable=consider-using-with
                 file, mode=mode, encoding=encoding
             )
+            state.opened_files.append(fp)  # Track for cleanup
             aggregator = FileAggregator(fp, prefix=prefix, suffix=suffix, flush=flush)
         case _:
             assert False, "Unexpected aggregator"
