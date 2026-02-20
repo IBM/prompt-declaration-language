@@ -104,7 +104,7 @@ def exec_program(
     if score is not None and not isinstance(score, Ref):
         config["score"] = Ref(score)
     assert config.get("score") is None or isinstance(config.get("score"), Ref)
-    state = InterpreterState(**config)
+    state = InterpreterState(**config)  # pyright: ignore
     if not isinstance(scope, ScopeType):
         scope = ScopeType(scope or {})
     loc = loc or empty_block_location
@@ -330,7 +330,7 @@ def main():
 
     exit_code = pdl_interpreter.generate(
         pdl_file,
-        InterpreterState(**config),
+        InterpreterState(**config),  # pyright: ignore
         ScopeType(initial_scope),
         trace_file,
     )

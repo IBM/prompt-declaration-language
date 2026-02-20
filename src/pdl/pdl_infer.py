@@ -11,7 +11,6 @@ from .pdl_ast import (
     PdlLocationType,
     PdlUsage,
     Program,
-    ScopeType,
     get_default_model_parameters,
 )
 from .pdl_distributions import Categorical, viz
@@ -25,6 +24,7 @@ from .pdl_inference import (
     infer_smc,
     infer_smc_parallel,
 )
+from .pdl_interpreter_state import ScopeType
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_scheduler import create_event_loop_thread
 from .pdl_utils import validate_scope

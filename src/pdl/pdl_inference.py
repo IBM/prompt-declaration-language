@@ -7,8 +7,9 @@ from typing_extensions import TypeAliasType
 
 from .pdl import InterpreterConfig, Result
 from .pdl import exec_program as pdl_exec_program
-from .pdl_ast import BlockType, PdlLocationType, Program, ScopeType
+from .pdl_ast import BlockType, PdlLocationType, Program
 from .pdl_distributions import Categorical
+from .pdl_interpreter_state import ScopeType
 from .pdl_utils import Resample
 
 T = TypeVar("T")
