@@ -164,7 +164,7 @@ defs:
             # regex: "Rating.*\\[\\[(?P<rating>\\d+\\.?\\d*)\\]\\]"
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-      data: ${ teacher_output.rating | float }
+      data: ${ (teacher_output.rating if teacher_output is not none else 0.0) | float }
 
   filter_questions:
     function:
@@ -346,7 +346,7 @@ defs:
             spec: { "rating": string }
             regex: 'Rating.*\[\[(?P<rating>\d+\.?\d*)\]\]'
             mode: search
-      data: ${ (teacher_output.rating if teacher_output.rating is not none else 0.0) | float}
+      data: ${ (teacher_output.rating if teacher_output is not none else 0.0) | float}
 
   filter_question_answer_pair:
     function:

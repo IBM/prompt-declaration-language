@@ -1,0 +1,129 @@
+description: Demonstrating a React program
+defs:
+  problem: |
+    How many years ago was the discoverer of the Hudson River born? Keep in mind we are in 2025. When searching for a birthday for a person, simply ask for the name of that person.
+  calc:
+    description: Calculator function
+    function:
+      expr:
+        type: string
+        description: Arithmetic expression to calculate
+    return:
+      lang: python
+      code: result = ${ expr }
+  search:
+    description: Wikipedia search
+    function:
+      topic:
+        type: string
+        description: Topic to search
+    return:
+      lang: python
+      code: |
+        import warnings, wikipedia
+        warnings.simplefilter("ignore")
+        try:
+          result = wikipedia.summary("${ topic }")
+        except wikipedia.WikipediaException as e:
+          result = str(e)
+  finish:
+    description: Respond with the answer
+    function:
+      answer:
+        type: string
+        description: The answer
+    return: ${ answer }
+  tools:
+    data:
+    - ${ calc.signature }
+    - ${ search.signature }
+    - ${ finish.signature }
+text:
+- role: tools
+  content:
+    text: ${ tools }
+  contribute: [context]
+- role: system
+  content:
+    text:
+    - |
+      You are a helpful assistant that uses the following tools:
+    - for:
+        tool: ${ tools }
+      index: i
+      repeat: |
+      
+        ${ i+1 }) ${ tool.function.name } - ${ tool.function.description }
+        The parameters respect the following JSON Schema: ${tool.function.parameters}
+    - |
+
+      Follow this exact ReAct format:
+
+      Thought: <describe what you plan to do next>
+      Action: { "name": <tool_name>, "arguments": <tool_arguments> }
+
+      # After I return tool results, continue:
+
+      Observation: <what you observed>
+
+      # Repeat Thought/Action/Observation as needed.
+      # When you are ready to answer the user, finish with the action:
+
+      Action: { "name": "finish", "arguments": { "answer": <your best possible answer, concise and clear> } }
+
+      STRICT FORMAT RULES:
+      - One action per step.
+      - Do NOT invent tools.
+      - Use a tool when available, for example if arithmetic is needed, prefer a calculator tool.
+      - Keep chain-of-thought under 'Thought:' lines. End with the `finish` action.
+  contribute: [context]
+- text: |
+    Here is an example of execution traces:
+
+    What profession does Nicholas Ray and Elia Kazan have in common?
+    Thought: I need to search Nicholas Ray and Elia Kazan, find their professions, then find the profession they have in common.
+    Action: {"name": "search", "arguments": {"topic": "Nicholas Ray"}}
+    Observation: Nicholas Ray (born Raymond Nicholas Kienzle Jr., August 7, 1911 - June 16, 1979) was an American film director, screenwriter, and actor best known for the 1955 film Rebel Without a Cause.
+    Thought: Professions of Nicholas Ray are director, screenwriter, and actor. I need to search Elia Kazan next and find his professions.
+    Action: {"name": "search", "arguments": {"topic": "Elia Kazan"}}
+    Observation: Elia Kazan was an American film and theatre director, producer, screenwriter and actor.
+    Thought: Professions of Elia Kazan are director, producer, screenwriter, and actor. So profession Nicholas Ray and Elia Kazan have in common is director, screenwriter, and actor.
+    Action: {"name": "finish", "arguments": {"answer": "director, screenwriter, actor"}}
+  contribute: [context]
+
+- ${ problem }
+- repeat:
+    text:
+    - def: thought
+      model: ollama_chat/granite4:micro
+      parameters:
+        stop: ["Action:"]
+    - text: "Action: "
+    - def: action
+      model: ollama_chat/granite4:micro
+      parser: json
+      spec:
+        name: string
+        arguments: object
+    - defs:
+        func_name: ${ action.name }
+        func_args: ${ action.arguments }
+      text: |-
+
+        Observation: 
+    - match: ${ func_name }
+      with:
+        - case: search
+          then:
+            call: ${ search }
+            args:
+              topic: ${ func_args.topic }
+        - case: calc
+          then:
+            call: ${ calc }
+            args:
+              expr: ${ func_args.expr }
+        - case: finish
+          then: ${ func_args.answer }
+    - "\n"
+  until: ${ func_name == "finish" }
