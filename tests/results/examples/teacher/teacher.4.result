@@ -1,0 +1,19 @@
+----- Loading seed examples -----
+
+{"task_description": "to teach a large language model to come up with puns", "created_by": "mizmo", "seed_examples": [{"question": "Tell me a pun about birds.", "answer": "Why do birds eat wood?\n\nBecause they're peckish!"}, {"question": "Tell me a pun about gas.", "answer": "Why did the car have a belly ache?\n\nBecause it had too much gas!"}, {"question": "Tell me a pun about waves.", "answer": "What did the ocean say to the ocean?\n\nNothing. It just waved!"}]}
+
+----- Generating questions -----
+
+[{"icl_question": "Tell me a pun about birds.", "icl_answer": "Why do birds eat wood?\n\nBecause they're peckish!", "question": "Can you share a witty joke about gardening?"}, {"icl_question": "Tell me a pun about birds.", "icl_answer": "Why do birds eat wood?\n\nBecause they're peckish!", "question": "What's a funny play on words related to space exploration?"}, {"icl_question": "Tell me a pun about gas.", "icl_answer": "Why did the car have a belly ache?\n\nBecause it had too much gas!", "question": "Share a witty play on words related to water."}, {"icl_question": "Tell me a pun about gas.", "icl_answer": "Why did the car have a belly ache?\n\nBecause it had too much gas!", "question": "Come up with a clever pun involving food."}, {"icl_question": "Tell me a pun about waves.", "icl_answer": "What did the ocean say to the ocean?\n\nNothing. It just waved!", "question": "Share a humorous play on words related to computers."}, {"icl_question": "Tell me a pun about waves.", "icl_answer": "What did the ocean say to the ocean?\n\nNothing. It just waved!", "question": "Come up with a clever pun involving fruits or vegetables."}]
+
+----- Filtering questions -----
+
+[{"icl_question": "Tell me a pun about birds.", "icl_answer": "Why do birds eat wood?\n\nBecause they're peckish!", "question": "Can you share a witty joke about gardening?"}, {"icl_question": "Tell me a pun about waves.", "icl_answer": "What did the ocean say to the ocean?\n\nNothing. It just waved!", "question": "Come up with a clever pun involving fruits or vegetables."}]
+
+----- Generating answers -----
+
+[{"question": "Can you share a witty joke about gardening?", "answer": "Sure, here's a gardening-related pun for you:\n\nWhy did the gardener get upset when his plants didn't grow?\n\nBecause he had too many \"roots\" to be pulled!"}, {"question": "Come up with a clever pun involving fruits or vegetables.", "answer": "Why don't tomatoes tell jokes about their peers? Because they might get hit with a \"pepper\"!"}]
+
+----- Filtering QA pairs -----
+
+[{"question": "Can you share a witty joke about gardening?", "answer": "Sure, here's a gardening-related pun for you:\n\nWhy did the gardener get upset when his plants didn't grow?\n\nBecause he had too many \"roots\" to be pulled!"}, {"question": "Come up with a clever pun involving fruits or vegetables.", "answer": "Why don't tomatoes tell jokes about their peers? Because they might get hit with a \"pepper\"!"}]

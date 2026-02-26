@@ -18,6 +18,7 @@ runs:
     - name: Pull models in examples/
       shell: bash
       run: |
+        sleep 5
         ollama pull granite4:micro
         ollama pull mxbai-embed-large
         ollama list
