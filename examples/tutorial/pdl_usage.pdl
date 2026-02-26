@@ -1,0 +1,14 @@
+description: Demonstrating the pdl_usage variable
+text:
+- |
+  Hello
+
+- model: ollama/granite4:micro
+- |
+  
+  
+  Usage Statistics:
+  - Model calls: ${ pdl_usage.model_calls }
+  - Prompt tokens: ${ pdl_usage.prompt_tokens }
+  - Completion tokens: ${ pdl_usage.completion_tokens }
+  - Total tokens: ${ pdl_usage.prompt_tokens + pdl_usage.completion_tokens }
