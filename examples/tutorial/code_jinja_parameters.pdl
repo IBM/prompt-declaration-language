@@ -1,0 +1,18 @@
+description: Demonstrating Jinja code with parameters field
+defs:
+  items:
+    data:
+    - apple
+    - banana
+    - cherry
+lang: jinja
+parameters:
+  trim_blocks: true
+  lstrip_blocks: true
+code: |
+  Shopping List:
+  {% for item in items %}
+    - {{ item }}
+  {% endfor %}
+  
+  Total items: {{ items | length }}
