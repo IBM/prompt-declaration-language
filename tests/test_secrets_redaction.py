@@ -105,7 +105,7 @@ class TestWriteTrace:
 
         try:
             write_trace(temp_file, trace)
-            with open(temp_file, "r") as f:
+            with open(temp_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             content = json.dumps(data)
@@ -122,7 +122,7 @@ class TestWriteTrace:
 
         try:
             write_trace(temp_file, trace, secrets=["sk-1234567890", "mySecret123"])
-            with open(temp_file, "r") as f:
+            with open(temp_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             content = json.dumps(data)
@@ -155,7 +155,7 @@ class TestWriteTrace:
 
         try:
             write_trace(temp_file, trace, secrets=[])
-            with open(temp_file, "r") as f:
+            with open(temp_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             content = json.dumps(data)
@@ -173,7 +173,7 @@ class TestWriteTrace:
 
         try:
             write_trace(temp_file, trace, secrets=None)
-            with open(temp_file, "r") as f:
+            with open(temp_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             content = json.dumps(data)

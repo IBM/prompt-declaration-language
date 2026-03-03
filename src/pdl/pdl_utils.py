@@ -221,9 +221,7 @@ def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]])
             assert isinstance(glob_defaults, dict)
 
 
-RedactSecretsT = TypeVar("RedactSecretsT")
-
-def redact_secrets(data: RedactSecretsT, secrets: list[str]) -> RedactSecretsT:
+def redact_secrets(data: Any, secrets: list[str]) -> Any:
     """Recursively redact secrets from a data structure.
 
     Args:
@@ -242,15 +240,14 @@ def redact_secrets(data: RedactSecretsT, secrets: list[str]) -> RedactSecretsT:
             s = s.replace(secret, "[REDACTED]")
         return s
 
-    elif isinstance(data, dict):
+    if isinstance(data, dict):
         return {k: redact_secrets(v, secrets) for k, v in data.items()}
 
-    elif isinstance(data, list):
+    if isinstance(data, list):
         return [redact_secrets(item, secrets) for item in data]
 
-    else:
-        # Primitives (int, float, bool, None) pass through unchanged
-        return data
+    # Primitives (int, float, bool, None) pass through unchanged
+    return data
 
 
 def write_trace(
@@ -269,11 +266,11 @@ def write_trace(
     try:
         d: Any = block_to_dict(trace, json_compatible=True)
         d = as_json(d)
-        
+
         # Redact secrets if provided
         if secrets:
             d = redact_secrets(d, secrets)
-        
+
         with open(trace_file, "w", encoding="utf-8") as fp:
             json.dump(d, fp)
     except Exception as e:
