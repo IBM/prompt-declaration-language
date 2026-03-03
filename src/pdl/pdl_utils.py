@@ -221,19 +221,59 @@ def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]])
             assert isinstance(glob_defaults, dict)
 
 
+RedactSecretsT = TypeVar("RedactSecretsT")
+
+def redact_secrets(data: RedactSecretsT, secrets: list[str]) -> RedactSecretsT:
+    """Recursively redact secrets from a data structure.
+
+    Args:
+        data: The data structure to redact (can be dict, list, str, or primitive).
+        secrets: List of secret strings to redact.
+
+    Returns:
+        A copy of the data structure with secrets replaced by '[REDACTED]'.
+    """
+    if not secrets:
+        return data
+
+    if isinstance(data, str):
+        s = data
+        for secret in secrets:
+            s = s.replace(secret, "[REDACTED]")
+        return s
+
+    elif isinstance(data, dict):
+        return {k: redact_secrets(v, secrets) for k, v in data.items()}
+
+    elif isinstance(data, list):
+        return [redact_secrets(item, secrets) for item in data]
+
+    else:
+        # Primitives (int, float, bool, None) pass through unchanged
+        return data
+
+
 def write_trace(
     trace_file: str | Path,
     trace: BlockType,
+    secrets: list[str] | None = None,
 ):
     """Write the execution trace into a file.
 
     Args:
         trace_file:  File to save the execution trace.
         trace: Execution trace.
+        secrets: Optional list of secret strings to redact from the trace.
+                 Any string value containing a secret will be replaced with '[REDACTED]'.
     """
     try:
         d: Any = block_to_dict(trace, json_compatible=True)
         d = as_json(d)
+        
+        # Redact secrets if provided
+        if secrets:
+            d = redact_secrets(d, secrets)
+        
         with open(trace_file, "w", encoding="utf-8") as fp:
             json.dump(d, fp)
     except Exception as e:
