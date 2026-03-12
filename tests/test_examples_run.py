@@ -231,6 +231,7 @@ class ExamplesRun:
     def __execute_file(self, pdl_file_path, scope, replay):
         exec_result = ExecutionResult()
         output = None
+        random.seed(11)
         try:
             # Execute file
             output = pdl.exec_file(
@@ -329,7 +330,6 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     Runs the test
     """
 
-    random.seed(11)
     background = ExamplesRun(monkeypatch)
 
     background.populate_exec_result_for_checks()

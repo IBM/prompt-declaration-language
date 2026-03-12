@@ -1,5 +1,5 @@
 defs:
-  model: replicate/ibm-granite/granite-3.2-8b-instruct
+  model: ollama/granite4:micro
   names_fr:
     data: {
       "Louise": {"2020": 5.30, "2021": 5.33, "2022": 4.94, "2023": 4.69, "2024": null},

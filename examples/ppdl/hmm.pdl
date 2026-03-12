@@ -1,4 +1,11 @@
 defs:
+  rng:
+    lang: python
+    code: |
+      import random
+      import numpy as np
+      seed_value = random.randint(1, 10000)
+      result = np.random.default_rng(seed_value)
   step:
     function:
       pre_x: number
@@ -8,21 +15,20 @@ defs:
         x:
           lang: python
           code: |
-            from mu_ppl import Gaussian
-            result = Gaussian(pre_x, 1).sample()
+            from scipy.stats import norm
+            result = norm(pre_x, 1).rvs(random_state=rng)
         score: 
           lang: python
           code: |
-            from mu_ppl import Gaussian
-            result = Gaussian(x, 1).log_prob(y)
+            from scipy.stats import norm
+            result = norm(x, 1).logpdf(y)
       lastOf:
-        - factor: ${score}
-        - data: ${x}
+      - factor: ${score}
+      - data: ${x}
   obs:
     array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30]
 
   pre_x: 0
-
 for:
   y: ${obs}
 repeat:
@@ -34,8 +40,5 @@ repeat:
         y: ${y}
   data: ${pre_x}
 join:
-  as: array  
-  
-
-
+  as: lastOf
 

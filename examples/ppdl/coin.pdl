@@ -1,8 +1,8 @@
 defs:
   obs:
-    array: [0, 0,  0, 0, 0, 0, 0, 0, 1, 1]
+    array: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
   p:
-    model: ollama_chat/granite3.3:2b
+    model: ollama_chat/granite4:micro
     parameters:
       temperature: 1
     input: Generate a number between 0 and 1 that represents the bias of a coin that might returns head (represented with the value 1) more often than tail (represented with the value 0). DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
@@ -12,21 +12,21 @@ defs:
       lastOf:
       - factor: -1000
       - data: 0.5
-  data:
-    lang: python
-    code: |
-      import random
-      if not isinstance(p, float):
-        p = 0.5
-      result = random.choices([1, 0], weights=[p, 1 - p], k=10)
 lastOf:
-  - lang: python
-    code: |
-      print(f"The bias is {p}")
-      result = None
-  - if: ${ obs != data}
-    then: 
-      factor: -10
-  # - model: ollama_chat/granite3.2:2b
-  #   input: If the bias of a coin is ${p}, is it biased towards head? JUST ANSWER WITH A BOOLEAN (true or false)
+  - defs:
+     score:
+      lang: python
+      code: |
+        import math
+        # Calculate log probability of observing the data given p
+        log_prob = 0.0
+        for flip in obs:
+          if flip == 1:
+            # Probability of heads
+            log_prob += math.log(p) if p > 0 else -1000
+          else:
+            # Probability of tails
+            log_prob += math.log(1 - p) if p < 1 else -1000
+        result = log_prob
+    factor: ${score}
   - ${p}
