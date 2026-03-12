@@ -17,7 +17,8 @@ dependencies = [
   "termcolor>=2,<4",
   "ipython>=8,<10",
   "json-repair~=0.35",
-  "granite-io>=0.5,<0.6"
+  "granite-io>=0.5,<0.6",
+  "matplotlib~=3.10",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
