@@ -22,6 +22,8 @@ from ..pdl_ast import (
     LocalizedExpression,
     MapBlock,
     ModelBlock,
+    OpenaiModelBlock,
+    OpenaiParameters,
     ReadBlock,
     RepeatBlock,
     TextBlock,
@@ -271,6 +273,21 @@ def compile_block(
                         include_stop_sequence = False
                     else:
                         if isinstance(block.parameters, LitellmParameters):
+                            parameters = block.parameters.model_dump()
+                        elif isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.pdl__expr
+                        elif isinstance(block.parameters, str):
+                            parameters = {}
+                        else:
+                            parameters = block.parameters
+                        stop_sequences = parameters.get("stop", [])
+                        include_stop_sequence = parameters.get("stop", False)
+                case OpenaiModelBlock():
+                    if block.parameters is None:
+                        stop_sequences = []
+                        include_stop_sequence = False
+                    else:
+                        if isinstance(block.parameters, OpenaiParameters):
                             parameters = block.parameters.model_dump()
                         elif isinstance(block.parameters, LocalizedExpression):
                             parameters = block.parameters.pdl__expr

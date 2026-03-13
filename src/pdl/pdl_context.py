@@ -20,6 +20,7 @@ from .pdl_lazy import PdlApply, PdlConst, PdlDict, PdlLazy, PdlList
 class SerializeMode(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "graniteio"
+    OPENAI = "openai"
 
 
 class PDLContext(ABC, Sequence):
