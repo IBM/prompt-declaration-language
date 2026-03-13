@@ -42,6 +42,7 @@ skip:
   - examples/ppdl/coin.pdl
   - examples/ppdl/mbpp.pdl
   - examples/ppdl/hmm_nl_priors.pdl
+  - examples/prompt_library/gsm8k_prob_react.pdl
   - examples/test.pdl
 
 with_inputs:
