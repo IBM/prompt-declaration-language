@@ -1,0 +1,9 @@
+description: Test OpenAI platform
+text:
+- "Hello, can you respond with a simple greeting?\n"
+- platform: openai
+  model: granite4:micro
+  parameters:
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    max_tokens: 100

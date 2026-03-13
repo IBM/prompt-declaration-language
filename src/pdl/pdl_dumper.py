@@ -53,6 +53,8 @@ from .pdl_ast import (
     ObjectBlock,
     ObjectPattern,
     ObjectPdlType,
+    OpenaiModelBlock,
+    OpenaiParameters,
     OptionalPdlType,
     OrPattern,
     ParserType,
@@ -191,6 +193,25 @@ def advance_block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+        case OpenaiModelBlock():
+            d["platform"] = str(block.platform)
+            d["model"] = expr_to_dict(block.model, json_compatible)
+            d["input"] = block_to_dict(block.input, json_compatible)
+            if block.parameters is not None:
+                if isinstance(block.parameters, OpenaiParameters):
+                    d["parameters"] = block.parameters.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
+                else:
+                    d["parameters"] = expr_to_dict(block.parameters, json_compatible)
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
+            if not block.structuredDecoding:
+                d["structuredDecoding"] = block.structuredDecoding
+            if block.pdl__usage is not None:
+                d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+            if block.pdl__model_input is not None:
+                d["pdl__model_input"] = block.pdl__model_input
         case ArgsBlock():
             d["args"] = block.args
         case (

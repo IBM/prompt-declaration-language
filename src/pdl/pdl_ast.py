@@ -629,9 +629,24 @@ class LitellmParameters(BaseModel):
     """
 
 
+class OpenaiParameters(BaseModel):
+    """Parameters for OpenAI API calls."""
+
+    # Client configuration (subfields within parameters)
+    api_key: str | None = None
+    """OpenAI API key (default is None, uses OPENAI_API_KEY environment variable).
+    """
+    base_url: str | None = None
+    """Base URL for the OpenAI API (default is None, uses https://api.openai.com/v1).
+    """
+    organization: str | None = None
+    """OpenAI organization ID (default is None).
+    """
+
 class ModelPlatform(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "granite-io"
+    OPENAI = "openai"
 
 
 class ModelBlock(LeafBlock):
@@ -701,6 +716,33 @@ class GraniteioModelBlock(ModelBlock):
     parameters: ExpressionType[dict[str, Any]] | None = None
     """Parameters sent to the model.
     """
+
+
+class OpenaiModelBlock(ModelBlock):
+    """
+    Call an LLM through the OpenAI API.
+
+    Example:
+    ```PDL
+    model: gpt-4
+    platform: openai
+    parameters:
+      temperature: 0.7
+      max_tokens: 100
+    ```
+    """
+
+    platform: Literal[ModelPlatform.OPENAI] = ModelPlatform.OPENAI
+    """Optional field to ensure that the block is using OpenAI.
+    """
+    model: ExpressionStr
+    """Name of the OpenAI model to use (e.g., 'gpt-4', 'gpt-3.5-turbo').
+    """
+    parameters: OpenaiParameters | ExpressionType[dict] | None = None
+    """Parameters to send to the OpenAI API.
+    """
+    structuredDecoding: OptionalBool = True
+    """Perform structured decoding if possible (i.e., `parser` and `spec` are provided)."""
 
 
 class BaseCodeBlock(LeafBlock):
@@ -1308,6 +1350,7 @@ AdvancedBlockType: TypeAlias = (
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
+    | OpenaiModelBlock
     | PythonCodeBlock
     | IPythonCodeBlock
     | JinjaCodeBlock
