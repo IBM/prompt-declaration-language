@@ -7,3 +7,4 @@ text:
     base_url: "http://localhost:11434/v1"
     api_key: "ollama"
     max_tokens: 100
+    temperature: 0.0
