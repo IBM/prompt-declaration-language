@@ -8,3 +8,4 @@ text:
     api_key: "ollama"
     max_tokens: 100
     temperature: 0.0
+    seed: 11
