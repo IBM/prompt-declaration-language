@@ -643,6 +643,7 @@ class OpenaiParameters(BaseModel):
     """OpenAI organization ID (default is None).
     """
 
+
 class ModelPlatform(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "granite-io"

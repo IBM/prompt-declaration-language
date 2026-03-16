@@ -13,7 +13,6 @@ from .pdl_ast import (
     ModelInput,
     OpenaiModelBlock,
     PDLRuntimeError,
-    PdlTypeType,
 )
 from .pdl_interpreter_state import InterpreterState
 from .pdl_lazy import PdlConst, PdlLazy, lazy_apply
@@ -29,29 +28,29 @@ class OpenaiModel:
     def _get_client_config(parameters: dict[str, Any]) -> dict[str, Any]:
         """Extract client configuration from parameters."""
         config = {}
-        
+
         # Extract client config fields
         if "api_key" in parameters and parameters["api_key"] is not None:
             config["api_key"] = parameters.pop("api_key")
         elif "OPENAI_API_KEY" in environ:
             config["api_key"] = environ["OPENAI_API_KEY"]
-            
+
         if "base_url" in parameters and parameters["base_url"] is not None:
             config["base_url"] = parameters.pop("base_url")
-            
+
         if "organization" in parameters:
             if parameters["organization"] is not None:
                 config["organization"] = parameters.pop("organization")
             else:
                 parameters.pop("organization")
-            
+
         return config
 
     @staticmethod
     def _get_client(config: dict[str, Any]):
         """Create and return an OpenAI client with the given configuration."""
         from openai import OpenAI
-        
+
         return OpenAI(**config)
 
     @staticmethod
@@ -62,7 +61,10 @@ class OpenaiModel:
         """Prepare parameters for the OpenAI API call."""
         spec = block.spec
         if block.structuredDecoding and spec is not None:
-            if "response_format" not in parameters or parameters["response_format"] is None:
+            if (
+                "response_format" not in parameters
+                or parameters["response_format"] is None
+            ):
                 schema = pdltype_to_jsonschema(spec, True)
                 parameters["response_format"] = {
                     "type": "json_schema",
@@ -85,18 +87,18 @@ class OpenaiModel:
             # Extract client configuration
             client_config = OpenaiModel._get_client_config(parameters)
             client = OpenaiModel._get_client(client_config)
-            
+
             # Prepare parameters
             parameters = OpenaiModel._prepare_parameters(block, parameters)
-            
+
             # Make the API call
             response = client.chat.completions.create(
                 model=model_id,
-                messages=list(messages),
+                messages=list(messages),  # pyright: ignore
                 stream=False,
                 **parameters,
             )
-            
+
             msg = response.choices[0].message
             message_dict = {
                 "role": msg.role if msg.role else "assistant",
@@ -114,7 +116,7 @@ class OpenaiModel:
                     }
                     for tc in msg.tool_calls
                 ]
-            
+
             return (
                 message_post_processing(message_dict),
                 response.model_dump(),
@@ -219,19 +221,19 @@ class OpenaiModel:
         # Extract client configuration
         client_config = OpenaiModel._get_client_config(parameters)
         client = OpenaiModel._get_client(client_config)
-        
+
         # Prepare parameters
         parameters = OpenaiModel._prepare_parameters(block, parameters)
-        
+
         # Make the streaming API call
         response = client.chat.completions.create(
             model=model_id,
-            messages=list(messages),
+            messages=list(messages),  # pyright: ignore
             stream=True,
             stream_options={"include_usage": True},
             **parameters,
         )
-        
+
         result = []
         for chunk in response:
             chunk_dict = chunk.model_dump()
@@ -250,7 +252,9 @@ class OpenaiModel:
                             "type": tc.type,
                             "function": {
                                 "name": tc.function.name if tc.function else None,
-                                "arguments": tc.function.arguments if tc.function else None,
+                                "arguments": (
+                                    tc.function.arguments if tc.function else None
+                                ),
                             },
                         }
                         for tc in delta.tool_calls
