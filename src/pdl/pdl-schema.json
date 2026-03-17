@@ -4456,6 +4456,7 @@
       "type": "object"
     },
     "OpenaiParameters": {
+      "additionalProperties": true,
       "description": "Parameters for OpenAI API calls.",
       "properties": {
         "api_key": {
