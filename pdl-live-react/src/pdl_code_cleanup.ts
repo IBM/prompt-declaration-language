@@ -46,7 +46,9 @@ export function block_code_cleanup(block: PdlBlock): PdlBlock {
     .otherwise((block) => block)
 }
 
-function clean_model_block(block: LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock) {
+function clean_model_block(
+  block: LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock,
+) {
   return {
     ...block,
     pdl__context: !hasContextInformation(block)

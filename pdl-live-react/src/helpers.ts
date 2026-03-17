@@ -31,7 +31,10 @@ export type CodeBlock =
   | PdlCodeBlock
   | CommandCodeBlock
 
-export type ModelBlock = LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock
+export type ModelBlock =
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | OpenaiModelBlock
 
 export type ModelBlockWithUsage = ModelBlock & {
   pdl__usage: Required<MakeNonNullable<import("./pdl_ast").PdlUsage>>
