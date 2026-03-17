@@ -632,6 +632,8 @@ class LitellmParameters(BaseModel):
 class OpenaiParameters(BaseModel):
     """Parameters for OpenAI API calls."""
 
+    model_config = ConfigDict(extra="allow", protected_namespaces=())
+
     # Client configuration (subfields within parameters)
     api_key: str | None = None
     """OpenAI API key (default is None, uses OPENAI_API_KEY environment variable).
