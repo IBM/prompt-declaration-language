@@ -60,7 +60,7 @@ defs:
   name:
     lastOf:
     - |
-      I am looking for a first name for my future baby. Can you give me one suggestion? I suggest to pick one fro the following list:
+      I am looking for a first name for my future baby. Can you give me one suggestion? You must to pick one from the following list:
       ${names}
     - model: ${ model }
       parameters:

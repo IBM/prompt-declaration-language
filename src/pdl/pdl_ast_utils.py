@@ -28,6 +28,7 @@ from .pdl_ast import (
     MessageBlock,
     ModelBlock,
     ObjectBlock,
+    OpenaiModelBlock,
     PdlParser,
     ReadBlock,
     RegexParser,
@@ -166,6 +167,11 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 case _:
                     processor = f.f_expr(block.processor)
             block.processor = processor
+            block.input = f.f_block(block.input)
+            if block.parameters is not None:
+                block.parameters = f.f_expr(block.parameters)
+        case OpenaiModelBlock():
+            block.model = f.f_expr(block.model)
             block.input = f.f_block(block.input)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)

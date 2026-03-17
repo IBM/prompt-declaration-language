@@ -99,6 +99,8 @@ from .pdl_ast import (
     ObjectBlock,
     ObjectPattern,
     ObjectPdlType,
+    OpenaiModelBlock,
+    OpenaiParameters,
     OrPattern,
     ParserType,
     Pattern,
@@ -381,12 +383,14 @@ def process_advanced_block_timed(
     result, background, scope, trace = process_advanced_block(state, scope, block, loc)
     block.pdl__timing.end_nanos = time.time_ns()
     match trace:
-        case LitellmModelBlock() | GraniteioModelBlock():
+        case LitellmModelBlock() | GraniteioModelBlock() | OpenaiModelBlock():
             mode: SerializeMode
             if trace.platform == ModelPlatform.LITELLM:
                 mode = SerializeMode.LITELLM
-            else:
+            elif trace.platform == ModelPlatform.GRANITEIO:
                 mode = SerializeMode.GRANITEIO
+            else:
+                mode = SerializeMode.OPENAI
             trace = trace.model_copy(
                 update={
                     "pdl__context": lazy_apply(
@@ -1864,6 +1868,19 @@ def process_call_model(
                 _, concrete_block = process_expr_of(
                     concrete_block, "parameters", scope, loc
                 )
+        case OpenaiModelBlock():
+            # evaluate model name
+            model_id, concrete_block = process_expr_of(
+                block, "model", scope, loc  # pyright: ignore
+            )  # pyright: ignore
+            if isinstance(concrete_block.parameters, OpenaiParameters):
+                concrete_block = concrete_block.model_copy(
+                    update={"parameters": concrete_block.parameters.model_dump()}
+                )
+
+            _, concrete_block = process_expr_of(
+                concrete_block, "parameters", scope, loc
+            )
         case _:
             assert False
     # evaluate input
@@ -1885,6 +1902,8 @@ def process_call_model(
                 model_input = model_input_context.serialize(SerializeMode.LITELLM)
             case GraniteioModelBlock():
                 model_input = model_input_context.serialize(SerializeMode.GRANITEIO)
+            case OpenaiModelBlock():
+                model_input = model_input_context.serialize(SerializeMode.OPENAI)
             case _:
                 assert False
         concrete_block = concrete_block.model_copy(
@@ -1952,7 +1971,7 @@ def process_call_model(
 def generate_client_response(
     state: InterpreterState,
     scope: ScopeType,
-    block: LitellmModelBlock | GraniteioModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock,
     model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
@@ -1973,7 +1992,7 @@ def generate_client_response(
 def generate_client_response_streaming(
     state: InterpreterState,
     scope: ScopeType,
-    block: LitellmModelBlock | GraniteioModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock,
     model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
@@ -2004,6 +2023,29 @@ def generate_client_response_streaming(
             # TODO: currently fallback to the non-streaming interface
             return generate_client_response_single(
                 state, scope, block, model_id, model_input
+            )
+        case OpenaiModelBlock():
+            if block.parameters is None:
+                parameters = None
+            else:
+                parameters = value_of_expr(block.parameters)  # pyright: ignore
+            assert parameters is None or isinstance(
+                parameters, dict
+            )  # block is a "concrete block"
+            # Apply PDL defaults to model invocation
+
+            parameters = apply_defaults(
+                model_id,
+                parameters or {},
+                scope.get("pdl_model_default_parameters", []),
+            )
+            from .pdl_openai import OpenaiModel
+
+            msg_stream = OpenaiModel.generate_text_stream(
+                block,
+                model_id=value_of_expr(block.model),
+                messages=model_input,
+                parameters=openai_parameters_to_dict(parameters),
             )
         case _:
             assert False
@@ -2061,10 +2103,21 @@ def litellm_parameters_to_dict(
     return parameters_dict
 
 
+def openai_parameters_to_dict(
+    parameters: OpenaiParameters | dict[str, Any] | None,
+) -> dict[str, Any]:
+    if isinstance(parameters, dict):
+        return parameters
+    if parameters is None:
+        parameters = OpenaiParameters()
+    parameters_dict = parameters.model_dump()
+    return parameters_dict
+
+
 def generate_client_response_single(
     state: InterpreterState,
     scope: ScopeType,
-    block: LitellmModelBlock | GraniteioModelBlock,
+    block: LitellmModelBlock | GraniteioModelBlock | OpenaiModelBlock,
     model_id: str,
     model_input: ModelInput,
 ) -> tuple[LazyMessage, PdlLazy[Any]]:
@@ -2097,6 +2150,16 @@ def generate_client_response_single(
                 block=block,
                 messages=model_input,
                 event_loop=state.event_loop,
+            )
+        case OpenaiModelBlock():
+            from .pdl_openai import OpenaiModel
+
+            message, response = OpenaiModel.generate_text(
+                state=state,
+                block=block,
+                model_id=value_of_expr(block.model),
+                messages=model_input,
+                parameters=openai_parameters_to_dict(parameters),
             )
         case _:
             assert False

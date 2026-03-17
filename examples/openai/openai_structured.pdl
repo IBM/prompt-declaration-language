@@ -1,0 +1,14 @@
+description: OpenAI platform with structured output
+text:
+- "Extract information about a person from this text: John Doe is 30 years old and his email is john@example.com\n"
+- platform: openai
+  model: granite4:micro
+  parser: json
+  spec:
+    name: string
+    age: integer
+    email: string
+  parameters:
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    temperature: 0.0
