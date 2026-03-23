@@ -33,6 +33,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    RetryConfiguration,
     SequenceBlock,
     TextBlock,
 )
@@ -261,6 +262,18 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.parser.pdl = f.f_block(block.parser.pdl)
     if block.fallback is not None:
         block.fallback = f.f_block(block.fallback)
+    # Handle retry field when it's a RetryConfiguration with expression fields
+    if isinstance(block.retry, RetryConfiguration):
+        retry_config = block.retry
+        mapped_retry = RetryConfiguration(
+            tries=f.f_expr(retry_config.tries),
+            delay=f.f_expr(retry_config.delay),
+            max_delay=f.f_expr(retry_config.max_delay),
+            backoff=f.f_expr(retry_config.backoff),
+            jitter=f.f_expr(retry_config.jitter),
+            exceptions=f.f_expr(retry_config.exceptions),  # type: ignore[arg-type]
+        )
+        block = block.model_copy(update={"retry": mapped_retry})
     return block
 
 

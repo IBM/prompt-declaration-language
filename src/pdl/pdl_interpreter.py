@@ -1,6 +1,7 @@
 # pylint: disable=import-outside-toplevel
 import csv
 import json
+import random
 import re
 import shlex
 import subprocess  # nosec
@@ -119,6 +120,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    RetryConfiguration,
     RoleType,
     SequenceBlock,
     StructuredBlock,
@@ -468,6 +470,55 @@ def process_advanced_block(  # noqa: C901
     return result, background, new_scope, trace
 
 
+def calculate_retry_delay(
+    retry_config: RetryConfiguration,
+    trial_idx: int,
+) -> float:
+    """Calculate the delay before the next retry attempt.
+
+    Args:
+        retry_config: The retry configuration object
+        trial_idx: The current trial index (0-based)
+
+    Returns:
+        The delay in seconds to wait before the next retry
+    """
+    # Start with the base delay
+    delay = retry_config.delay
+    assert isinstance(delay, (int, float)), f"delay must be numeric, got {type(delay)}"
+
+    # Apply exponential backoff: delay * (backoff ** trial_idx)
+    backoff = retry_config.backoff
+    assert isinstance(
+        backoff, (int, float)
+    ), f"backoff must be numeric, got {type(backoff)}"
+    if backoff != 1.0:
+        delay = delay * (backoff**trial_idx)
+
+    # Cap at max_delay if specified
+    max_delay = retry_config.max_delay
+    if max_delay is not None:
+        assert isinstance(
+            max_delay, (int, float)
+        ), f"max_delay must be numeric, got {type(max_delay)}"
+        if delay > max_delay:
+            delay = float(max_delay)
+
+    # Add jitter
+    jitter = retry_config.jitter
+    if isinstance(jitter, (list, tuple)) and len(jitter) == 2:
+        # Random jitter in range [min, max]
+        delay += random.uniform(jitter[0], jitter[1])
+    elif isinstance(jitter, (int, float)):
+        # Fixed jitter
+        delay += jitter
+
+    assert isinstance(
+        delay, (int, float)
+    ), f"delay must be numeric at return, got {type(delay)}"
+    return float(delay)
+
+
 def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
@@ -489,10 +540,65 @@ def process_advance_block_retry(  # noqa: C901
         state.yield_background and context_in_contribute(block)
     )
 
-    max_retry = block.retry if block.retry is not None else 0
-    trial_total = max_retry + 1
+    # Extract and evaluate retry configuration
+    retry_config = None
+    evaluated_retry_config = None
+    if isinstance(block.retry, RetryConfiguration):
+        # Evaluate each field of the retry configuration
+        tries, tries_trace = process_expr(
+            scope, block.retry.tries, append(loc, "retry.tries")
+        )
+        delay, delay_trace = process_expr(
+            scope, block.retry.delay, append(loc, "retry.delay")
+        )
+        # Handle optional max_delay
+        if block.retry.max_delay is not None:
+            max_delay, max_delay_trace = process_expr(
+                scope, block.retry.max_delay, append(loc, "retry.max_delay")
+            )
+        else:
+            max_delay = None
+            max_delay_trace = None
+        backoff, backoff_trace = process_expr(
+            scope, block.retry.backoff, append(loc, "retry.backoff")
+        )
+        jitter, jitter_trace = process_expr(  # type: ignore[arg-type]
+            scope, block.retry.jitter, append(loc, "retry.jitter")
+        )
+        exceptions, exceptions_trace = process_expr(
+            scope, block.retry.exceptions, append(loc, "retry.exceptions")
+        )
+
+        # Create evaluated retry configuration for use
+        retry_config = RetryConfiguration(
+            tries=tries,
+            delay=delay,
+            max_delay=max_delay,
+            backoff=backoff,
+            jitter=jitter,
+            exceptions=exceptions,
+        )
+
+        # Create traced retry configuration for saving in trace
+        evaluated_retry_config = RetryConfiguration(
+            tries=tries_trace,
+            delay=delay_trace,
+            max_delay=max_delay_trace,
+            backoff=backoff_trace,
+            jitter=jitter_trace,
+            exceptions=exceptions_trace,
+        )
+
+        max_retry = tries
+    else:
+        max_retry = block.retry if block.retry is not None else 0
+
+    # For infinite retries (-1), we'll use a while loop condition
+    infinite_retries = max_retry < 0
+    trial_total = max_retry + 1 if not infinite_retries else float("inf")
     score: float = 0.0
-    for trial_idx in range(trial_total):  # pylint: disable=too-many-nested-blocks
+    trial_idx = 0
+    while trial_idx < trial_total:  # pylint: disable=too-many-nested-blocks
         try:
             if block.retry is not None:
                 iteration_state = state.with_id(f"retry{trial_idx}")
@@ -501,6 +607,10 @@ def process_advance_block_retry(  # noqa: C901
             result, background, new_scope, trace = process_block_body_with_replay(
                 iteration_state, scope, block, loc
             )
+
+            # Update trace with evaluated retry configuration if present
+            if evaluated_retry_config is not None:
+                trace = trace.model_copy(update={"retry": evaluated_retry_config})
 
             result = lazy_apply(id_with_set_first_use_nanos(block.pdl__timing), result)
             add_done_callback(
@@ -581,6 +691,12 @@ def process_advance_block_retry(  # noqa: C901
                 if (
                     expectations_satisfied is False
                 ):  # This is needed, otherwise we don't retry
+                    # Apply retry delay if configured and more retries remain
+                    if retry_config is not None and trial_idx + 1 < trial_total:
+                        delay = calculate_retry_delay(retry_config, trial_idx)
+                        if delay > 0:
+                            time.sleep(delay)
+                    trial_idx += 1
                     continue
             break
         except KeyboardInterrupt as exc:
@@ -588,7 +704,61 @@ def process_advance_block_retry(  # noqa: C901
         except Resample as exc:
             raise exc from exc
         except Exception as exc:
-            do_retry = block.retry and trial_idx + 1 < trial_total
+            # Check if the exception matches the configured exception types
+            should_retry_exception = True
+            if retry_config is not None:
+                # Get the exception types to catch
+                exception_types = retry_config.exceptions
+
+                # Convert string names to actual exception classes
+                def resolve_exception_type(exc_type):
+                    if isinstance(exc_type, str):
+                        # Try to get the exception class from builtins
+                        try:
+                            return getattr(__builtins__, exc_type)
+                        except (AttributeError, TypeError):
+                            # If not in builtins, return Exception as fallback
+                            return Exception
+                    return exc_type
+
+                # Normalize to tuple for isinstance check
+                resolved_types: tuple[type[Exception], ...]
+                if isinstance(exception_types, list):
+                    resolved_list = [
+                        resolve_exception_type(e)
+                        for e in exception_types  # pylint: disable=not-an-iterable
+                    ]
+                    # Type assertion to help type checkers
+                    assert all(
+                        isinstance(t, type) and issubclass(t, Exception)
+                        for t in resolved_list
+                    ), "All resolved types must be Exception subclasses"
+                    resolved_types = tuple(resolved_list)  # type: ignore[assignment]
+                elif not isinstance(exception_types, tuple):
+                    resolved_single = resolve_exception_type(exception_types)
+                    assert isinstance(resolved_single, type) and issubclass(
+                        resolved_single, Exception
+                    ), "Resolved type must be an Exception subclass"
+                    resolved_types = (resolved_single,)  # type: ignore[assignment]
+                else:
+                    resolved_list = [
+                        resolve_exception_type(e)
+                        for e in exception_types  # pylint: disable=not-an-iterable
+                    ]
+                    assert all(
+                        isinstance(t, type) and issubclass(t, Exception)
+                        for t in resolved_list
+                    ), "All resolved types must be Exception subclasses"
+                    resolved_types = tuple(resolved_list)  # type: ignore[assignment]
+
+                # Check if the caught exception matches any of the specified types
+                should_retry_exception = isinstance(exc, resolved_types)
+
+            # Determine if we should retry based on exception match and retry availability
+            do_retry = (
+                block.retry and trial_idx + 1 < trial_total and should_retry_exception
+            )
+
             if block.fallback is None and not do_retry:
                 raise exc from exc
             if do_retry:
@@ -604,6 +774,13 @@ def process_advance_block_retry(  # noqa: C901
                 )
                 if block.trace_error_on_retry:
                     scope = set_error_to_scope_for_retry(scope, error, block.pdl__id)
+
+                # Apply retry delay if configured
+                if retry_config is not None:
+                    delay = calculate_retry_delay(retry_config, trial_idx)
+                    if delay > 0:
+                        time.sleep(delay)
+                trial_idx += 1
                 continue
             state = state.with_yield_result(
                 init_state.yield_result and ContributeTarget.RESULT in block.contribute
@@ -631,6 +808,7 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
+        trial_idx += 1
     state.score.ref += score
     return result, background, new_scope, trace
 
