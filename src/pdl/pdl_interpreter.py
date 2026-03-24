@@ -508,7 +508,9 @@ def calculate_retry_delay(
     jitter = retry_config.jitter
     if isinstance(jitter, (list, tuple)) and len(jitter) == 2:
         # Random jitter in range [min, max]
-        delay += random.uniform(jitter[0], jitter[1])
+        delay += random.uniform(jitter[0], jitter[1])  # nosec B311
+        # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+        # We are not using this random number for cryptography purpose.
     elif isinstance(jitter, (int, float)):
         # Fixed jitter
         delay += jitter
