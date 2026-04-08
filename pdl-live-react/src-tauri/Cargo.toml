@@ -33,7 +33,7 @@ duct = "1.0.0"
 rayon = "1.10.0"
 yaml-rust2 = "0.11.0"
 futures = "0.3.31"
-sha2 = "0.10.8"
+sha2 = "0.11.0"
 base64ct = { version = "1.7.1", features = ["alloc"] }
 dirs = "6.0.0"
 serde_norway = "0.9.42"
