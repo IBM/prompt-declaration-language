@@ -388,7 +388,9 @@ class RetryConfiguration(BaseModel):
     """The maximum number of attempts. default: -1 (infinite).
     """
 
-    exceptions: ExpressionType[Type[Exception] | list[Type[Exception]]] = Exception
+    exceptions: ExpressionType[str | Type[Exception] | list[Type[Exception]]] = (
+        "Exception"
+    )
     """An exception or a list of exceptions to catch.
     """
 
@@ -1465,12 +1467,17 @@ class PDLRuntimeError(PDLException):
         loc: PdlLocationType | None = None,
         trace: BlockType | None = None,
         fallback: OptionalAny = None,
+        source_exception: BaseException | None = None,
     ):
         super().__init__(message)
         self.loc = loc
         self.pdl__trace = trace
         self.fallback = fallback
         self.message = message
+        if source_exception is not None:
+            if hasattr(source_exception, "source_exception"):
+                source_exception = source_exception.source_exception  # pyright: ignore
+        self.source_exception = source_exception
 
 
 class PDLRuntimeExpressionError(PDLRuntimeError):

@@ -4,6 +4,7 @@ import io
 from contextlib import redirect_stderr, redirect_stdout
 
 from pdl.pdl import exec_dict
+from pdl.pdl_ast import PDLRuntimeError
 
 
 def test_retry_with_specific_exception_match():
@@ -48,7 +49,7 @@ def test_retry_with_specific_exception_no_match():
                 "lang": "python",
                 "code": {
                     "text": [
-                        "raise KeyError('test exception')\n",
+                        "raise RuntimeError('test exception')\n",
                         "result = 'success'",
                     ]
                 },
@@ -65,7 +66,7 @@ def test_retry_with_specific_exception_no_match():
     with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
         try:
             _ = exec_dict(data)
-        except KeyError:
+        except PDLRuntimeError:
             exception_raised = True
         err_msg = buf.getvalue()
 

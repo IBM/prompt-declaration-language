@@ -192,7 +192,7 @@ class ClosureBlock(FunctionBlock):
                     err = f"Too many arguments to the call of {self.signature['function']['name']}"
                 else:
                     err = "Too many arguments to the call"
-                raise PDLRuntimeExpressionError(
+                raise PDLRuntimeError(
                     err,
                     loc=self.pdl__location,
                     trace=self.model_copy(),
@@ -325,6 +325,7 @@ def process_block(
             "EOF",
             loc=loc,
             trace=ErrorBlock(msg="EOF", pdl__location=loc, program=block),
+            source_exception=exc,
         ) from exc
     except KeyboardInterrupt as exc:
         raise PDLRuntimeError(
@@ -333,6 +334,7 @@ def process_block(
             trace=ErrorBlock(
                 msg="Keyboard Interrupt", pdl__location=loc, program=block
             ),
+            source_exception=exc,
         ) from exc
     scope = scope | {"pdl_context": background}
     return result, background, scope, trace
@@ -354,6 +356,7 @@ def process_expression_block(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            source_exception=exc,
         ) from exc
     result = PdlConst(v)
     background = SingletonContext(
@@ -578,7 +581,7 @@ def process_advance_block_retry(  # noqa: C901
             max_delay=max_delay,
             backoff=backoff,
             jitter=jitter,
-            exceptions=exceptions,
+            exceptions=exceptions,  # pyright: ignore
         )
 
         # Create traced retry configuration for saving in trace
@@ -932,6 +935,7 @@ def process_block_body(
                     exc.message,
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                    source_exception=exc,
                 ) from exc
             background = SingletonContext(
                 PdlDict({"role": state.role, "content": result})
@@ -1035,6 +1039,7 @@ def process_block_body(
                         exc.message,
                         loc=exc.loc or loc,
                         trace=trace,
+                        source_exception=exc,
                     ) from exc
                 result = PdlDict(dict(zip(block.object.keys(), values)))
                 object_trace = dict(zip(block.object.keys(), values_trace))
@@ -1132,6 +1137,7 @@ def process_block_body(
                             trace=ErrorBlock(
                                 msg=exc.message, pdl__location=loc, program=block
                             ),
+                            source_exception=exc,
                         ) from exc
                 if not b:
                     match_case.pdl__if_result = False
@@ -1158,6 +1164,7 @@ def process_block_body(
                         exc.message,
                         loc=exc.loc or loc,
                         trace=block,
+                        source_exception=exc,
                     ) from exc
                 match_case_trace = match_case.model_copy(update={"then": then_trace})
                 cases.append(match_case_trace)
@@ -1246,6 +1253,7 @@ def process_block_body(
                     exc.message,
                     loc=exc.loc or repeat_loc,
                     trace=trace,
+                    source_exception=exc,
                 ) from exc
             result = combine_results(block.join, results)
             if block.context is IndependentEnum.INDEPENDENT:
@@ -1306,6 +1314,7 @@ def process_block_body(
                     exc.message,
                     loc=exc.loc or map_loc,
                     trace=trace,
+                    source_exception=exc,
                 ) from exc
             result = combine_results(block.join, results)
             # background = saved_background  # commented because the block do not contribute to the background
@@ -1582,6 +1591,7 @@ def process_block_of(  # pylint: disable=too-many-arguments, too-many-positional
             exc.message,
             loc=exc.loc or loc,
             trace=trace,
+            source_exception=exc,
         ) from exc
     trace = block.model_copy(update={field: child_trace})
     return result, background, scope, trace
@@ -1620,6 +1630,7 @@ def process_blocks_of(  # pylint: disable=too-many-arguments, too-many-positiona
             exc.message,
             loc=exc.loc or loc,
             trace=trace,
+            source_exception=exc,
         ) from exc
     trace = block.model_copy(update={field: blocks})
     return result, background, scope, trace
@@ -1683,7 +1694,9 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
         except PDLRuntimeError as exc:
             trace.append(exc.pdl__trace)  # type: ignore
             raise PDLRuntimeProcessBlocksError(
-                message=exc.message, blocks=trace, loc=exc.loc or new_loc
+                message=exc.message,
+                blocks=trace,
+                loc=exc.loc or new_loc,
             ) from exc
     else:
         iteration_state = state.with_yield_result(
@@ -1755,6 +1768,7 @@ def process_contribute_context(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            source_exception=exc,
         ) from exc
     replace = replace_contribute_value(
         block.contribute, ContributeValue(value=value_trace)
@@ -1815,6 +1829,7 @@ def process_contribution(
                     exc.message,
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                    source_exception=exc,
                 ) from exc
             elem = {target: ContributeValue(value=value_trace)}
         case _:
@@ -1854,6 +1869,7 @@ def process_expr_of(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            source_exception=exc,
         ) from exc
     trace = block.model_copy(update={field: expr_trace})
     return result, trace
@@ -1877,6 +1893,7 @@ def process_condition_of(
             exc.message,
             loc=exc.loc or loc,
             trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+            source_exception=exc,
         ) from exc
     return result, expr_trace
 
@@ -1967,11 +1984,13 @@ def _process_expr(  # pylint: disable=too-many-return-statements
             raise exc from exc
         except TemplateSyntaxError as exc:
             raise PDLRuntimeExpressionError(
-                f"Syntax error in {expr}: {exc}", loc
+                f"Syntax error in {expr}: {exc}", loc, source_exception=exc
             ) from exc
         except Exception as exc:
             raise PDLRuntimeExpressionError(
-                f"Error during the evaluation of {expr}: {exc}", loc
+                f"Error during the evaluation of {expr}: {exc}",
+                loc,
+                source_exception=exc,
             ) from exc
 
     if isinstance(expr, list):
@@ -2138,6 +2157,7 @@ def process_call_model(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, pdl__location=loc, program=concrete_block),
+            source_exception=exc,
         ) from exc
     except Exception as exc:
         message = f"Error during '{model_id}' model call: {repr(exc)}"
@@ -2145,6 +2165,7 @@ def process_call_model(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, pdl__location=loc, program=concrete_block),
+            source_exception=exc,
         ) from exc
 
 
@@ -2422,6 +2443,7 @@ def process_call_code(
                     f"Shell Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"args": code_a}),
+                    source_exception=exc,
                 ) from exc
         case PythonCodeBlock():
             try:
@@ -2442,6 +2464,7 @@ def process_call_code(
                     trace=block.model_copy(
                         update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
+                    source_exception=exc,
                 ) from exc
             except KeyboardInterrupt as exc:
                 raise exc from exc
@@ -2452,6 +2475,7 @@ def process_call_code(
                     trace=block.model_copy(
                         update={"code": code_s, "pdl__defsite": block.pdl__id}
                     ),
+                    source_exception=exc,
                 ) from exc
         case IPythonCodeBlock():
             try:
@@ -2476,6 +2500,7 @@ def process_call_code(
                     f"Code error: {exc!r}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
+                    source_exception=exc,
                 ) from exc
         case CommandCodeBlock():
             try:
@@ -2496,6 +2521,7 @@ def process_call_code(
                     f"Shell Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
+                    source_exception=exc,
                 ) from exc
         case JinjaCodeBlock():
             try:
@@ -2520,6 +2546,7 @@ def process_call_code(
                     f"Jinja Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
+                    source_exception=exc,
                 ) from exc
         case PdlCodeBlock():
             try:
@@ -2540,6 +2567,7 @@ def process_call_code(
                     f"PDL Code error: {repr(exc)}",
                     loc=loc,
                     trace=block.model_copy(update={"code": code_s}),
+                    source_exception=exc,
                 ) from exc
         case _:
             message = f"Unsupported language: {block.lang}"
@@ -2567,7 +2595,7 @@ def call_python(code: str, scope: ScopeType, state: InterpreterState) -> PdlLazy
         raise exc from exc
     except Exception as exc:
         message = traceback.format_exc()
-        raise PDLRuntimeExpressionError(message) from exc
+        raise PDLRuntimeExpressionError(message, source_exception=exc) from exc
     result = my_namespace.result
     sys.path.pop()
     return PdlConst(result)
@@ -2628,11 +2656,7 @@ def process_call(
         msg = f"Type error: {block.call} is of type {type(closure)} but should be a function."
         if isinstance(closure, str) and isinstance(scope.get(closure), FunctionBlock):
             msg += " You might want to call `${ " + str(block.call) + " }`."
-        raise PDLRuntimeError(
-            msg,
-            loc=append(loc, "call"),
-            trace=block.model_copy(),
-        )
+        raise PDLRuntimeError(msg, loc=append(loc, "call"), trace=block.model_copy())
     args_loc = append(loc, "args")
     type_errors = type_check_args(args, closure.function, args_loc)
     if len(type_errors) > 0:
@@ -2652,6 +2676,7 @@ def process_call(
             exc.message,
             loc=exc.loc or closure.pdl__location,
             trace=block.model_copy(update={"pdl__trace": exc.pdl__trace}),
+            source_exception=exc,
         ) from exc
     trace = block.model_copy(update={"pdl__trace": call_trace})
     return result, background, scope, trace
@@ -2710,6 +2735,7 @@ def process_input(
                 loc=loc,
                 trace=ErrorBlock(msg=msg, pdl__location=loc, program=block),
                 fallback="",
+                source_exception=exc,
             ) from exc
     else:
         message = ""
@@ -2758,13 +2784,12 @@ def process_include(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
+            source_exception=exc,
         ) from exc
     except PDLRuntimeProcessBlocksError as exc:
         trace = block.model_copy(update={"pdl__trace": exc.blocks})
         raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or loc,
-            trace=trace,
+            exc.message, loc=exc.loc or loc, trace=trace, source_exception=exc
         ) from exc
 
 
@@ -2807,13 +2832,12 @@ def process_import(
             message,
             loc=loc,
             trace=ErrorBlock(msg=message, program=block.model_copy()),
+            source_exception=exc,
         ) from exc
     except PDLRuntimeProcessBlocksError as exc:
         trace = block.model_copy(update={"pdl__trace": exc.blocks})
         raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or loc,
-            trace=trace,
+            exc.message, loc=exc.loc or loc, trace=trace, source_exception=exc
         ) from exc
 
 
@@ -2938,6 +2962,7 @@ def process_aggregator(
                     exc.message,
                     loc=exc.loc or loc,
                     trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
+                    source_exception=exc,
                 ) from exc
             fp = open(  # pylint: disable=consider-using-with
                 file, mode=mode, encoding=encoding
@@ -2997,7 +3022,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
-                    f"Attempted to parse ill-formed JSON: {repr(exc)}"
+                    f"Attempted to parse ill-formed JSON: {repr(exc)}",
+                    source_exception=exc,
                 ) from exc
         case "jsonl":
             result = []
@@ -3010,7 +3036,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
-                    f"Attempted to parse ill-formed JSON: {repr(exc)}"
+                    f"Attempted to parse ill-formed JSON: {repr(exc)}",
+                    source_exception=exc,
                 ) from exc
         case "yaml":
             try:
@@ -3019,7 +3046,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
-                    f"Attempted to parse ill-formed YAML: {repr(exc)}"
+                    f"Attempted to parse ill-formed YAML: {repr(exc)}",
+                    source_exception=exc,
                 ) from exc
         case "csv":
             try:
@@ -3031,7 +3059,8 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise exc from exc
             except Exception as exc:
                 raise PDLRuntimeParserError(
-                    f"Attempted to parse ill-formed CSV: {repr(exc)}"
+                    f"Attempted to parse ill-formed CSV: {repr(exc)}",
+                    source_exception=exc,
                 ) from exc
         case PdlParser():
             assert False, "TODO"
@@ -3052,7 +3081,7 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                 raise exc from exc
             except Exception as exc:
                 msg = f"Fail to parse with regex {regex}: {repr(exc)}"
-                raise PDLRuntimeParserError(msg) from exc
+                raise PDLRuntimeParserError(msg, source_exception=exc) from exc
             if m is None:
                 return None
             match parser.spec:
@@ -3066,7 +3095,7 @@ def parse_result(parser: ParserType, text: str) -> JSONReturnType:
                         return result
                     except IndexError as exc:
                         msg = f"No group named {current_group_name} found by {regex} in {text}"
-                        raise PDLRuntimeParserError(msg) from exc
+                        raise PDLRuntimeParserError(msg, source_exception=exc) from exc
                 case _:
                     result = list(m.groups())
         case RegexParser(mode="split" | "findall"):
