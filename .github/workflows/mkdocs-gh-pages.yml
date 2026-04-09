@@ -40,7 +40,7 @@ jobs:
           cp ./src/pdl/pdl-schema.json ./docs/dist/pdl-schema.json
       # Docs
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
