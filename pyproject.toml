@@ -43,8 +43,8 @@ dev = [
 ]
 examples = [
   "pymilvus~=2.5",
-  "langchain~=0.3",
-  "langchain-community~=0.3",
+  "langchain-text-splitters~=1.1",
+  "langchain-community~=0.4",
   "pypdf~=6.0",
   "wikipedia~=1.0",
   "textdistance~=4.0",
