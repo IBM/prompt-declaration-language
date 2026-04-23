@@ -64,6 +64,7 @@ Exit Codes:
 """
 
 import argparse
+import ast
 import logging
 import sys
 import tomllib
@@ -72,6 +73,9 @@ from typing import Any, List, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from pdl.pdl_ast import BlockType, CodeBlock
+from pdl.pdl_ast_utils import iter_block_children
+from pdl.pdl_interpreter import EXPR_START_STRING
 from pdl.pdl_parser import PDLParseError
 from pdl.pdl_parser import parse_file as parse_pdl_file
 
@@ -364,7 +368,8 @@ def _lint_pdl_file(file_path: Path, config: LinterConfig) -> bool:
         return True
 
     try:
-        _, _ = parse_pdl_file(file_path)
+        prog, _ = parse_pdl_file(file_path)
+        _lint_python_code_blocks(prog.root)
         logger.info(" - ✅  %s", file_path)
         return True
     except PDLParseError as e:
@@ -374,6 +379,16 @@ def _lint_pdl_file(file_path: Path, config: LinterConfig) -> bool:
     except Exception:
         logger.exception(" - ❌  %s", file_path)
         return False
+
+
+def _lint_python_code_blocks(block: BlockType):
+    match block:
+        case CodeBlock(lang="python", code=code):
+            if isinstance(code, str) and EXPR_START_STRING not in code:
+                # Try to parse the Python code if the code block is
+                # a string that does not contains a jinja expression
+                ast.parse(code)
+    iter_block_children(_lint_python_code_blocks, block)
 
 
 def _lint_pdl_files_in_directory(
