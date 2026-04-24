@@ -48,7 +48,7 @@ indexmap = { version = "2.9.0", features = ["serde"] }
 rustpython-stdlib = { git="https://github.com/RustPython/RustPython.git", features = ["ssl-vendor"], optional = true } # 0.4.0
 rustpython-pylib = { git="https://github.com/RustPython/RustPython.git", features = ["freeze-stdlib"], optional = true } # 0.4.0
 schemars = "0.8.22"
-fs4 = "0.13.1"
+fs4 = "1.0.0"
 derive_builder = "0.20.2"
 iana-time-zone = "0.1.63"
 async-openai = "0.34.0"
