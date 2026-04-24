@@ -18,7 +18,7 @@ runs:
     - name: Wait for Ollama server
       shell: bash
       run: |
-        max_attempts=5
+        max_attempts=12
         attempt=1
         sleep 15
         
