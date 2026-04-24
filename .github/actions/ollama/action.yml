@@ -15,10 +15,34 @@ runs:
       run: |
         curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
+    - name: Wait for Ollama server
+      shell: bash
+      run: |
+        max_attempts=5
+        attempt=1
+        sleep 15
+        
+        while [ $attempt -le $max_attempts ]; do
+          echo "Attempt $attempt of $max_attempts..."
+          if time curl -i http://localhost:11434; then
+            echo "✅ Ollama server is ready!"
+            exit 0
+          else
+            echo "❌ Attempt $attempt failed"
+            if [ $attempt -lt $max_attempts ]; then
+              echo "Retrying in 10 seconds..."
+              sleep 10
+            fi
+          fi
+          attempt=$((attempt + 1))
+        done
+        
+        echo "❌ Failed to connect to Ollama server after $max_attempts attempts"
+        exit 1
+
     - name: Pull models in examples/
       shell: bash
       run: |
-        sleep 15
         ollama pull granite4:micro
         ollama pull mxbai-embed-large
         ollama list
@@ -40,9 +64,3 @@ runs:
         else
           echo "✅ All expected models are available."
         fi
-
-    - name: Wait for Ollama server
-      shell: bash
-      run: |
-        sleep 5
-        time curl -i http://localhost:11434
