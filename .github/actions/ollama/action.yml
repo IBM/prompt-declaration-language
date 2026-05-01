@@ -9,6 +9,15 @@ runs:
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
+    # Cache Ollama models
+    - name: Cache Ollama models
+      uses: actions/cache@v5
+      with:
+        path: ~/.ollama
+        key: ollama-models-${{ runner.os }}-${{ hashFiles('.github/actions/ollama/action.yml') }}
+        restore-keys: |
+          ollama-models-${{ runner.os }}-
+
       # Set up Ollama
     - name: Install Ollama and start server
       shell: bash
@@ -43,8 +52,17 @@ runs:
     - name: Pull models in examples/
       shell: bash
       run: |
-        ollama pull granite4:micro
-        ollama pull mxbai-embed-large
+        models=("granite4:micro" "mxbai-embed-large")
+        for model in "${models[@]}"; do
+          if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
+            echo "📥 Pulling model: $model"
+            ollama pull "$model"
+          else
+            echo "✅ Model already available: $model"
+          fi
+        done
+        echo ""
+        echo "Available models:"
         ollama list
 
     - name: Check that all required models are available
