@@ -59,7 +59,7 @@ runs:
         # This path is specific to Ubuntu
         path: ${{ env.pythonLocation }}
         # Look to see if there is a cache hit for the setup file
-        key: ${{ inputs.runner-os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
+        key: ${{ inputs.runner-os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
           ${{ inputs.runner-os }}-pip-new3
           ${{ inputs.runner-os }}-new3
