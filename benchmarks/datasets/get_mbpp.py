@@ -1,13 +1,15 @@
 import json
+from copy import deepcopy
+
 from datasets import load_dataset
-from datasets.load import load_dataset
 from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
 from evalplus.evaluate import MBPP_OUTPUT_NOT_NONE_TASKS, get_groundtruth
-from copy import deepcopy
+
 
 class SelectableList(list):
     def select(self, iterable):
         return [self[i] for i in iterable]
+
 
 mbpp = load_dataset("google-research-datasets/mbpp", name="full").rename_column(
     "code",
@@ -26,9 +28,7 @@ expected_outputs = get_groundtruth(
 print(mbpp["test"][0])
 
 
-test_task_ids = [
-    f"Mbpp/{t}" for t in mbpp["test"]["task_id"]  # pyright: ignore
-]
+test_task_ids = [f"Mbpp/{t}" for t in mbpp["test"]["task_id"]]  # pyright: ignore
 
 tests = SelectableList(
     [v for k, v in mbpp_plus.items() if k in test_task_ids],
@@ -39,8 +39,8 @@ for i, x in enumerate(tests):
 
 
 # Create a local jsonl file and write the dataset to it
-output_filename = "mbpp_expected_test.jsonl"
-with open(output_filename, 'w') as f:
+OUTPUT_FILENAME = "mbpp_expected_test.jsonl"
+with open(OUTPUT_FILENAME, "w", encoding="utf-8") as f:
     count = 0
     for example in tests:
         # The `test_list` and `challenge_test_list` fields are lists of strings.
@@ -55,14 +55,14 @@ with open(output_filename, 'w') as f:
             "plus_input": example["plus_input"],
             "contract": example["contract"],
             "assertion": example["assertion"],
-            "expected_output": example["expected_output"]
+            "expected_output": example["expected_output"],
         }
         try:
-            f.write(json.dumps(json_object) + '\n')
+            f.write(json.dumps(json_object) + "\n")
 
-        except:
+        except Exception:  # pylint: disable=broad-except
             count += 1
             continue
 
 print(count)
-print(f"MBPP dataset saved to {output_filename}")
+print(f"MBPP dataset saved to {OUTPUT_FILENAME}")

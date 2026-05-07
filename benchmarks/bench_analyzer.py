@@ -1,15 +1,15 @@
 import argparse
-from dataclasses import dataclass
-import datetime
 import pathlib
-from typing import List, Tuple, Dict, Optional, TypedDict
+from dataclasses import dataclass
 from statistics import mean, stdev
 from sys import stderr
+from typing import Any
 
-from benchmark import AggregatedResults, Experiment, Stats
+from benchmark import AggregatedResults, Experiment
+
 
 @dataclass
-class Key():
+class Key:
     task: str
     dataset: str
     pdl_path: str
@@ -19,7 +19,7 @@ class Key():
     particles: int
     num_tests: int
     retry: int
-    
+
     # def __hash__(self):
     #     return hash((self['task'], self['dataset'], self['model'], self["algorithm"], self["temperature"], self["particles"], self["num_tests"], self["retry"]))
 
@@ -29,60 +29,102 @@ class Key():
     #     return self['task'] == other["task"] and self['dataset'] == other["dataset"] and self['model'] == other["model"] and self["algorithm"] == other["algorithm"] and self["temperature"] == other["temperature"] and self["particles"] == other["particles"] and self["num_tests"] == other["num_tests"] and self["retry"] == other["retry"]
 
     def __hash__(self):
-        return hash((self.task, self.dataset, self.model, self.algorithm, self.temperature, self.particles, self.num_tests, self.retry))
+        return hash(
+            (
+                self.task,
+                self.dataset,
+                self.model,
+                self.algorithm,
+                self.temperature,
+                self.particles,
+                self.num_tests,
+                self.retry,
+            )
+        )
 
     def __eq__(self, other):
         if not isinstance(other, Key):
             return NotImplemented
-        return self.task == other.task and self.dataset == other.dataset and self.model == other.model and self.algorithm == other.algorithm and self.temperature == other.temperature and self.particles == other.particles and self.num_tests == other.num_tests and self.retry == other.retry
+        return (
+            self.task == other.task
+            and self.dataset == other.dataset
+            and self.model == other.model
+            and self.algorithm == other.algorithm
+            and self.temperature == other.temperature
+            and self.particles == other.particles
+            and self.num_tests == other.num_tests
+            and self.retry == other.retry
+        )
+
 
 @dataclass
-class TaskModel():
+class TaskModel:
     task: str
     model: str
-    
+
     def __hash__(self):
         return hash((self.task, self.model))
 
     def __eq__(self, other):
         if not isinstance(other, TaskModel):
             return NotImplemented
-        return self.task == other.task and self.model == other.model 
+        return self.task == other.task and self.model == other.model
 
 
 def aggregate_experiments_by_config(
     experiments: list[Experiment],
-) -> dict[Key, dict]:
-    by_key: Dict[Key, dict] = {}
+) -> dict[Key, dict[str, Any]]:
+    by_key: dict[Key, list[Experiment]] = {}
     for run in experiments:
         cfg = run.config
         key: Key = Key(
-            task = cfg.task,
-            dataset = cfg.dataset,
-            pdl_path = cfg.pdl_path,
-            model = cfg.model,
-            algorithm = cfg.algorithm,
-            temperature = cfg.temperature,
-            particles = cfg.particles,
-            num_tests = cfg.num_tests,
-            retry = cfg.retry
-        )        
+            task=cfg.task,
+            dataset=cfg.dataset,
+            pdl_path=cfg.pdl_path,
+            model=cfg.model,
+            algorithm=cfg.algorithm,
+            temperature=cfg.temperature,
+            particles=cfg.particles,
+            num_tests=cfg.num_tests,
+            retry=cfg.retry,
+        )
         runs = by_key.setdefault(key, [])
         runs.append(run)
         if run.config.num_tests != run.result.total:
-            print(f"% Warning {cfg.aggregated_results_path}: missing {run.config.num_tests - run.result.total} tests")
+            print(
+                f"% Warning {cfg.aggregated_results_path}: missing {run.config.num_tests - run.result.total} tests"
+            )
         if len(run.result.exceptions) > 0:
-            print(f"% Warning {cfg.aggregated_results_path}: {len(run.result.exceptions)} exceptions")
-    aggregated_experiments = {}
+            print(
+                f"% Warning {cfg.aggregated_results_path}: {len(run.result.exceptions)} exceptions"
+            )
+    aggregated_experiments: dict[Key, dict[str, Any]] = {}
     for key, experiments in by_key.items():
-        runs = [ exp.result for exp in experiments ]
-        aggregated_experiments[key] = { "experiments": experiments, "stats": runs_stats(runs) }
+        runs = [exp.result for exp in experiments]
+        aggregated_experiments[key] = {
+            "experiments": experiments,
+            "stats": runs_stats(runs),
+        }
     return aggregated_experiments
 
+
 def sort_aggregated_experiments(aggregated_experiments):
-    rows: list[tuple[Key, dict]] = [(key, val) for key, val in aggregated_experiments.items()]
-    rows.sort(key=lambda r: (r[0].task, r[0].retry, r[0].pdl_path, r[0].particles, r[0].temperature, r[0].model, _sort_tag_algo(r[0].algorithm)))
+    rows: list[tuple[Key, dict]] = [
+        (key, val) for key, val in aggregated_experiments.items()
+    ]
+    rows.sort(
+        key=lambda r: (
+            r[0].task,
+            r[0].retry,
+            r[0].pdl_path,
+            r[0].particles,
+            r[0].temperature,
+            r[0].model,
+            _sort_tag_algo(r[0].algorithm),
+        )
+    )
     return rows
+
 
 def _sort_tag_algo(algo: str):
     if algo.endswith("maj"):
@@ -95,23 +137,33 @@ def _sort_tag_algo(algo: str):
         t = algo
     return t
 
-def stats(elements: list) -> Optional[Tuple[float, float]]:
+
+def stats(elements: list) -> tuple[float, float] | None:
     match len(elements):
         case 0:
             return None
         case 1:
-            return elements[0], 0.0        
+            return elements[0], 0.0
     return (mean(elements), stdev(elements))
 
+
 def runs_stats(runs: list[AggregatedResults]):
-    success_expectation_list = [ run.success_expectation for run in runs ]
-    mode_success_rate_list = [ (run.mode.successes / run.total) for run in runs ]
-    pass_at_1_success_rate_list = [ (run.pass_at_1.successes / run.total) for run in runs if run.pass_at_1 is not None ]
-    pass_at_k_success_rate_list = [ (run.pass_at_k.successes / run.total) for run in runs ]
-    time_list = [ run.total_time / run.total for run in runs ]
-    model_calls_list = [ run.llm_usage.model_calls / run.total for run in runs ]
-    prompt_tokens_list = [ run.llm_usage.prompt_tokens / run.total for run in runs ]
-    completion_tokens_list = [ run.llm_usage.completion_tokens / run.total for run in runs ]
+    success_expectation_list = [run.success_expectation for run in runs]
+    mode_success_rate_list = [(run.mode.successes / run.total) for run in runs]
+    pass_at_1_success_rate_list = [
+        (run.pass_at_1.successes / run.total)
+        for run in runs
+        if run.pass_at_1 is not None
+    ]
+    pass_at_k_success_rate_list = [
+        (run.pass_at_k.successes / run.total) for run in runs
+    ]
+    time_list = [run.total_time / run.total for run in runs]
+    model_calls_list = [run.llm_usage.model_calls / run.total for run in runs]
+    prompt_tokens_list = [run.llm_usage.prompt_tokens / run.total for run in runs]
+    completion_tokens_list = [
+        run.llm_usage.completion_tokens / run.total for run in runs
+    ]
     return {
         "success_expectation": stats(success_expectation_list),
         "mode": stats(mode_success_rate_list),
@@ -123,7 +175,9 @@ def runs_stats(runs: list[AggregatedResults]):
         "completion_tokens": stats(completion_tokens_list),
     }
 
+
 # --- LaTeX rendering ---------------------------------------------------------
+
 
 def make_caption(experiments: list[Experiment]):
     assert len(experiments) > 0
@@ -137,22 +191,23 @@ def make_caption(experiments: list[Experiment]):
     num_tests = config.num_tests
     assert all(
         [
-            exp.config.task == task and
-            exp.config.dataset == dataset and
-            exp.config.pdl_path == pdl_path and
-            exp.config.temperature == temperature and
-            exp.config.particles == particles and
-            exp.config.num_tests == num_tests
+            exp.config.task == task
+            and exp.config.dataset == dataset
+            and exp.config.pdl_path == pdl_path
+            and exp.config.temperature == temperature
+            and exp.config.particles == particles
+            and exp.config.num_tests == num_tests
             for exp in experiments
         ]
     )
     return f"Results for the {task} benchmark (program: \\texttt{{{pdl_path}}}, data: \\texttt{{{dataset}}}) on {num_tests} samples with temperature {temperature} and {particles} particles."
 
+
 def experiments_to_latex(
     experiments: list[Experiment],
     label: str = "tab:results",
     decimals_rate: int = 1,  # percent decimals for rate
-    decimals_sd: int = 1,    # percent decimals for sd (shown in percentage points
+    decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
     caption = make_caption(experiments)
@@ -161,7 +216,18 @@ def experiments_to_latex(
 
     # Column spec
     cols = ["l", "l", "r", "r", "r", "r", "r", "r", "r", "r"]
-    header = ["model", "algo ", "mode", "E(succ)", "pass@1", "pass@k", "LLM calls", "prompt", "completion", "time" ]
+    header = [
+        "model",
+        "algo ",
+        "mode",
+        "E(succ)",
+        "pass@1",
+        "pass@k",
+        "LLM calls",
+        "prompt",
+        "completion",
+        "time",
+    ]
     # header = [ _esc_latex(s) for s in header ]
 
     lines = []
@@ -173,18 +239,20 @@ def experiments_to_latex(
     lines.append(r"\midrule")
 
     for k, v in agg_rows:
-        
+
         row = [
             format_model(k.model),
             format_algorithm(k.algorithm),
             format_rate_stats(v["stats"]["mode"], decimals_rate, decimals_sd),
-            format_rate_stats(v["stats"]["success_expectation"], decimals_rate, decimals_sd),
+            format_rate_stats(
+                v["stats"]["success_expectation"], decimals_rate, decimals_sd
+            ),
             format_rate_stats(v["stats"]["pass_at_1"], decimals_rate, decimals_sd),
             format_rate_stats(v["stats"]["pass_at_k"], decimals_rate, decimals_sd),
             format_stats(v["stats"]["model_calls"], 1, decimals_sd),
             format_stats(v["stats"]["prompt_tokens"], decimals_stats, decimals_sd),
             format_stats(v["stats"]["completion_tokens"], decimals_stats, decimals_sd),
-            format_time_stats(v["stats"]["time"], decimals_sd)
+            format_time_stats(v["stats"]["time"], decimals_sd),
         ]
         # row = [ _esc_latex(x) for x in row]
         lines.append(" & ".join(row) + r" \\")
@@ -197,28 +265,33 @@ def experiments_to_latex(
 
     return "\n".join(lines)
 
-def group_aggregated_experiments(agg: list[dict[Key, dict]])-> dict:
-    res: dict[TaskModel, dict] = {}
+
+def group_aggregated_experiments(
+    agg: list[tuple[Key, dict[str, Any]]],
+) -> dict[TaskModel, dict[str, Any]]:
+    res: dict[TaskModel, dict[str, Any]] = {}
     for exp in agg:
-        key = exp[0]
+        key, value = exp
         tm = TaskModel(task=key.task, model=key.model)
         if tm not in res.keys():
             res[tm] = {}
-        res[tm][key.algorithm] = exp[1]["stats"]["mode"]
+        res[tm][key.algorithm] = value["stats"]["mode"]
         if key.algorithm == "parallel-maj":
-            res[tm]["pass_at_1"] = exp[1]["stats"]["success_expectation"]
-            res[tm]["pass_at_k"] = exp[1]["stats"]["pass_at_k"]
+            res[tm]["pass_at_1"] = value["stats"]["success_expectation"]
+            res[tm]["pass_at_k"] = value["stats"]["pass_at_k"]
     return res
+
 
 def get_max_array(data):
     max_val = max(data)
     return [1 if x == max_val else 0 for x in data]
 
+
 def experiments_to_latex_total(
     experiments: list[Experiment],
     label: str = "tab:results",
     decimals_rate: int = 1,  # percent decimals for rate
-    decimals_sd: int = 1,    # percent decimals for sd (shown in percentage points
+    decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
     caption = "Results for PPDL as an inference scaling framework"
@@ -241,14 +314,13 @@ def experiments_to_latex_total(
 
     prev_task = None
     for k, v in agg_rows_grouped.items():
-        
+
         if prev_task != k.task:
             lines.append(r"\midrule")
             lines.append(r"{\bf " + k.task + " } & & & & & \\\\")
             lines.append(r"\midrule")
-            first = True
         prev_task = k.task
-        bolds = get_max_array([v["parallel-maj"], v["parallel-is"],v["parallel-smc"]])
+        bolds = get_max_array([v["parallel-maj"], v["parallel-is"], v["parallel-smc"]])
         row = [
             format_model(k.model),
             format_rate_stats(v["pass_at_1"], decimals_rate, decimals_sd),
@@ -273,7 +345,7 @@ def experiments_to_latex_compact(
     experiments: list[Experiment],
     label: str = "tab:results",
     decimals_rate: int = 1,  # percent decimals for rate
-    decimals_sd: int = 1,    # percent decimals for sd (shown in percentage points
+    decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
     caption = make_caption(experiments)
@@ -282,7 +354,7 @@ def experiments_to_latex_compact(
 
     # Column spec
     cols = ["l", "l", "r", "r", "r", "r", "r"]
-    header = ["model", "algo ", "mode", "E(succ)", "pass@k", "LLM calls", "time" ]
+    header = ["model", "algo ", "mode", "E(succ)", "pass@k", "LLM calls", "time"]
     # header = [ _esc_latex(s) for s in header ]
 
     lines = []
@@ -295,7 +367,7 @@ def experiments_to_latex_compact(
 
     prev_model = None
     for k, v in agg_rows:
-        
+
         if prev_model is not None and prev_model != k.model:
             lines.append(r"\midrule")
         prev_model = k.model
@@ -303,10 +375,12 @@ def experiments_to_latex_compact(
             format_model(k.model),
             format_algorithm(k.algorithm),
             format_rate_stats(v["stats"]["mode"], decimals_rate, decimals_sd),
-            format_rate_stats(v["stats"]["success_expectation"], decimals_rate, decimals_sd),
+            format_rate_stats(
+                v["stats"]["success_expectation"], decimals_rate, decimals_sd
+            ),
             format_rate_stats(v["stats"]["pass_at_k"], decimals_rate, decimals_sd),
             format_stats(v["stats"]["model_calls"], 1, decimals_sd),
-            format_time_stats(v["stats"]["time"], decimals_sd)
+            format_time_stats(v["stats"]["time"], decimals_sd),
         ]
         # row = [ _esc_latex(x) for x in row]
         lines.append(" & ".join(row) + r" \\")
@@ -330,6 +404,7 @@ def format_rate_stats(stats, decimals_rate, decimals_sd, bold=False):
     sd_str = f"{sd*100:.{decimals_sd}f}"
     return rate_str + " {\\tiny $\\pm$ " + sd_str + "}\\"
 
+
 def format_stats(stats, decimals_stats, decimals_sd):
     if stats is None:
         return "-"
@@ -337,6 +412,7 @@ def format_stats(stats, decimals_stats, decimals_sd):
     mean_str = format_number(mean, decimals_stats)
     sd_str = format_number(sd, decimals_sd)
     return f"{mean_str} $\\pm$ {sd_str}"
+
 
 def format_time_stats(stats, decimals_sd):
     if stats is None:
@@ -351,7 +427,7 @@ def format_number(number, decimals):
     if abs(number) < 1000:
         return f"{number:.{decimals}f}"
     else:
-    # elif abs(number) < 1_000_000:
+        # elif abs(number) < 1_000_000:
         return f"{number / 1000:.{decimals}f}k"
     # elif abs(number) < 1_000_000_000:
     #     return f"{number / 1_000_000:.1f}M"
@@ -359,6 +435,7 @@ def format_number(number, decimals):
     #     return f"{number / 1_000_000_000:.1f}B"
     # else:
     #     return f"{number / 1_000_000_000_000:.1f}T"
+
 
 def format_model(model: str):
     # if model.endswith("llama-4-maverick-17b-128e-instruct-fp8"):
@@ -401,8 +478,10 @@ def format_model(model: str):
             m = model
     return m
 
+
 def format_algorithm(algo: str):
     return algo.removeprefix("parallel-")
+
 
 def format_time(seconds):
     seconds_i = int(seconds)
@@ -415,40 +494,46 @@ def format_time(seconds):
         return f"{minutes:02}:{seconds_i:02}"
     return f"{seconds:.1f}"
 
+
 def _esc_latex(s: str) -> str:
     if s is None:
         return ""
-    return (str(s)
-            # .replace('\\', r'\textbackslash{}')
-            # .replace('\\', r'\\')
-            .replace('_', r'\_')
-            .replace('%', r'\%')
-            .replace('&', r'\&')
-            .replace('#', r'\#')
-            # .replace('{', r'\{')
-            # .replace('}', r'\}')
-            .replace('$', r'\$'))
+    return (
+        str(s)
+        # .replace('\\', r'\textbackslash{}')
+        # .replace('\\', r'\\')
+        .replace("_", r"\_")
+        .replace("%", r"\%")
+        .replace("&", r"\&")
+        .replace("#", r"\#")
+        # .replace('{', r'\{')
+        # .replace('}', r'\}')
+        .replace("$", r"\$")
+    )
+
 
 def files_to_latex(files):
     experiments = []
     for file_name in files:
         print(f"% analyse: {file_name}")
         file_path = pathlib.Path(file_name)
-        file_content = file_path.read_text()
+        file_content = file_path.read_text(encoding="utf-8")
         experiment = Experiment.model_validate_json(file_content)
         experiments.append(experiment)
-    #latex = experiments_to_latex_compact(experiments)
+    # latex = experiments_to_latex_compact(experiments)
     latex = experiments_to_latex_total(experiments)
     return latex
+
 
 def main():
     parser = argparse.ArgumentParser(
         description="Analyse benchmark results",
     )
-    parser.add_argument("files", nargs='+', help="Aggregated results files to process.")
+    parser.add_argument("files", nargs="+", help="Aggregated results files to process.")
     args = parser.parse_args()
     latex = files_to_latex(args.files)
     print(latex)
-    
+
+
 if __name__ == "__main__":
     main()
