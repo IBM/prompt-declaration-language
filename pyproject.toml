@@ -67,7 +67,10 @@ optimizer = [
   "duration_parser>=1.0.1",
   "multiprocess~=0.70",
 ]
-all = [ "prompt-declaration-language[dev,examples,docs,optimizer]" ]
+benchmark = [
+  "datasets~=4.8",
+]
+all = [ "prompt-declaration-language[dev,examples,docs,optimizer,benchmark]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"

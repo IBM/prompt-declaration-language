@@ -38,7 +38,10 @@ repos:
         entry: pylint
         language: python
         types: [python]
-        additional_dependencies: ['pylint==4.0.3']
+        additional_dependencies:
+         - pylint==4.0.3
+         - datasets==4.8.5
+         - openai==1.66.1
         args:
           [
             "-rn", # Only display messages
