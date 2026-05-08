@@ -1,3 +1,16 @@
+"""
+Benchmark Results Analyzer
+
+This module analyzes benchmark experiment results and generates LaTeX tables.
+It processes aggregated benchmark data, computes statistics, and formats results.
+
+Key functionality:
+- Aggregates experiments by configuration parameters
+- Computes mean and standard deviation statistics
+- Generates multiple LaTeX table formats (full, compact, total)
+- Formats model names, algorithms, and metrics for display
+"""
+
 import argparse
 import pathlib
 from dataclasses import dataclass
@@ -11,6 +24,24 @@ from benchmark import AggregatedResults, Experiment
 
 @dataclass
 class Key:  # pylint: disable=too-many-instance-attributes
+    """
+    Unique identifier for a benchmark experiment configuration.
+    
+    Groups experiments by all configuration parameters to enable aggregation
+    of multiple runs with identical settings. Used as a dictionary key to
+    organize and compare experiment results.
+    
+    Attributes:
+        task: Name of the benchmark task (e.g., "gsm8k", "mbpp")
+        dataset: Dataset identifier used for the task
+        pdl_path: Path to the PDL program file
+        model: LLM model name/identifier
+        algorithm: Inference algorithm (e.g., "parallel-maj", "parallel-smc")
+        temperature: Sampling temperature parameter
+        particles: Number of particles for probabilistic inference
+        num_tests: Total number of test cases
+        retry: Retry attempt number for this configuration
+    """
     task: str
     dataset: str
     pdl_path: str
@@ -20,14 +51,6 @@ class Key:  # pylint: disable=too-many-instance-attributes
     particles: int
     num_tests: int
     retry: int
-
-    # def __hash__(self):
-    #     return hash((self['task'], self['dataset'], self['model'], self["algorithm"], self["temperature"], self["particles"], self["num_tests"], self["retry"]))
-
-    # def __eq__(self, other):
-    #     if not isinstance(other, Key):
-    #         return NotImplemented
-    #     return self['task'] == other["task"] and self['dataset'] == other["dataset"] and self['model'] == other["model"] and self["algorithm"] == other["algorithm"] and self["temperature"] == other["temperature"] and self["particles"] == other["particles"] and self["num_tests"] == other["num_tests"] and self["retry"] == other["retry"]
 
     def __hash__(self):
         return hash(
@@ -44,6 +67,7 @@ class Key:  # pylint: disable=too-many-instance-attributes
         )
 
     def __eq__(self, other):
+        """Check equality by comparing all configuration parameters."""
         if not isinstance(other, Key):
             return NotImplemented
         return (
@@ -60,6 +84,16 @@ class Key:  # pylint: disable=too-many-instance-attributes
 
 @dataclass
 class TaskModel:
+    """
+    Simplified key for grouping experiments by task and model only.
+    
+    Used for generating summary tables that compare different algorithms
+    for the same task-model combination.
+    
+    Attributes:
+        task: Name of the benchmark task
+        model: LLM model name/identifier
+    """
     task: str
     model: str
 
@@ -67,6 +101,7 @@ class TaskModel:
         return hash((self.task, self.model))
 
     def __eq__(self, other):
+        """Check equality by comparing task and model."""
         if not isinstance(other, TaskModel):
             return NotImplemented
         return self.task == other.task and self.model == other.model
@@ -75,7 +110,26 @@ class TaskModel:
 def aggregate_experiments_by_config(
     experiments: list[Experiment],
 ) -> dict[Key, dict[str, Any]]:
+    """
+    Group experiments by configuration and compute aggregate statistics.
+    
+    Takes a list of experiment results and groups them by their configuration
+    parameters (task, model, algorithm, etc.). For each unique configuration,
+    computes statistical summaries across all runs with that configuration.
+    
+    Also prints warnings for incomplete experiments (missing tests or exceptions).
+    
+    Args:
+        experiments: List of Experiment objects to aggregate
+        
+    Returns:
+        Dictionary mapping each unique Key to a dict containing:
+        - "experiments": Original list of all experiments
+        - "stats": Computed statistics (mean, stdev) for various metrics
+    """
     by_key: dict[Key, list[Experiment]] = {}
+    
+    # Group experiments by configuration key
     for run in experiments:
         cfg = run.config
         key: Key = Key(
@@ -91,6 +145,8 @@ def aggregate_experiments_by_config(
         )
         runs = by_key.setdefault(key, [])
         runs.append(run)
+        
+        # Warn about incomplete or failed experiments
         if run.config.num_tests != run.result.total:
             print(
                 f"% Warning {cfg.aggregated_results_path}: missing {run.config.num_tests - run.result.total} tests"
@@ -99,6 +155,8 @@ def aggregate_experiments_by_config(
             print(
                 f"% Warning {cfg.aggregated_results_path}: {len(run.result.exceptions)} exceptions"
             )
+    
+    # Compute statistics for each configuration
     aggregated_experiments: dict[Key, dict[str, Any]] = {}
     for key, experiments_subset in by_key.items():
         runs = [exp.result for exp in experiments_subset]
@@ -112,6 +170,18 @@ def aggregate_experiments_by_config(
 def sort_aggregated_experiments(
     aggregated_experiments: dict[Key, dict[str, Any]],
 ) -> list[tuple[Key, dict]]:
+    """
+    Sort aggregated experiments for consistent table ordering.
+    
+    Sorts by: task, retry, pdl_path, particles, temperature, model, algorithm.
+    Algorithms are further sorted by type (maj, is, smc) using _sort_tag_algo.
+    
+    Args:
+        aggregated_experiments: Dictionary of aggregated experiment data
+        
+    Returns:
+        Sorted list of (Key, stats_dict) tuples
+    """
     rows: list[tuple[Key, dict]] = list(aggregated_experiments.items())
     rows.sort(
         key=lambda r: (
@@ -128,6 +198,21 @@ def sort_aggregated_experiments(
 
 
 def _sort_tag_algo(algo: str):
+    """
+    Create sort key for algorithms to ensure consistent ordering.
+    
+    Prefixes algorithms with numbers to control sort order:
+    - "maj" (majority voting) algorithms first (0-)
+    - "is" (importance sampling) algorithms second (1-)
+    - "smc" (sequential Monte Carlo) algorithms third (2-)
+    - Other algorithms last (no prefix)
+    
+    Args:
+        algo: Algorithm name string
+        
+    Returns:
+        Sort key string with numeric prefix
+    """
     if algo.endswith("maj"):
         t = f"0-{algo}"
     elif algo.endswith("is"):
@@ -139,7 +224,21 @@ def _sort_tag_algo(algo: str):
     return t
 
 
-def compulte_stats(elements: list) -> tuple[float, float] | None:
+def compute_stats(elements: list) -> tuple[float, float] | None:
+    """
+    Compute mean and standard deviation for a list of values.
+    
+    Handles edge cases:
+    - Empty list: returns None
+    - Single element: returns (value, 0.0) since no variance
+    - Multiple elements: returns (mean, stdev)
+    
+    Args:
+        elements: List of numeric values
+        
+    Returns:
+        Tuple of (mean, stdev) or None if empty list
+    """
     match len(elements):
         case 0:
             return None
@@ -149,6 +248,25 @@ def compulte_stats(elements: list) -> tuple[float, float] | None:
 
 
 def runs_stats(runs: list[AggregatedResults]):
+    """
+    Compute statistics across multiple benchmark runs.
+    
+    Extracts various metrics from each run and computes mean/stdev:
+    - success_expectation: Expected success rate from probabilistic inference
+    - mode: Success rate of the most likely outcome
+    - pass_at_1: Success rate of the first sample
+    - pass_at_k: Success rate considering top-k samples
+    - time: Average time per test case
+    - model_calls: Average LLM API calls per test case
+    - prompt_tokens: Average prompt tokens per test case
+    - completion_tokens: Average completion tokens per test case
+    
+    Args:
+        runs: List of AggregatedResults from multiple experiment runs
+        
+    Returns:
+        Dictionary mapping metric names to (mean, stdev) tuples
+    """
     success_expectation_list = [run.success_expectation for run in runs]
     mode_success_rate_list = [(run.mode.successes / run.total) for run in runs]
     pass_at_1_success_rate_list = [
@@ -166,21 +284,37 @@ def runs_stats(runs: list[AggregatedResults]):
         run.llm_usage.completion_tokens / run.total for run in runs
     ]
     return {
-        "success_expectation": compulte_stats(success_expectation_list),
-        "mode": compulte_stats(mode_success_rate_list),
-        "pass_at_1": compulte_stats(pass_at_1_success_rate_list),
-        "pass_at_k": compulte_stats(pass_at_k_success_rate_list),
-        "time": compulte_stats(time_list),
-        "model_calls": compulte_stats(model_calls_list),
-        "prompt_tokens": compulte_stats(prompt_tokens_list),
-        "completion_tokens": compulte_stats(completion_tokens_list),
+        "success_expectation": compute_stats(success_expectation_list),
+        "mode": compute_stats(mode_success_rate_list),
+        "pass_at_1": compute_stats(pass_at_1_success_rate_list),
+        "pass_at_k": compute_stats(pass_at_k_success_rate_list),
+        "time": compute_stats(time_list),
+        "model_calls": compute_stats(model_calls_list),
+        "prompt_tokens": compute_stats(prompt_tokens_list),
+        "completion_tokens": compute_stats(completion_tokens_list),
     }
 
 
-# --- LaTeX rendering ---------------------------------------------------------
+# --- LaTeX Table Generation --------------------------------------------------
 
 
 def make_caption(experiments: list[Experiment]):
+    """
+    Generate a descriptive caption for a LaTeX table.
+    
+    Extracts common configuration parameters from experiments and formats
+    them into a caption describing the benchmark, program, dataset, and
+    experimental parameters.
+    
+    Assumes all experiments share the same task, dataset, pdl_path,
+    temperature, particles, and num_tests (verified by assertion).
+    
+    Args:
+        experiments: List of experiments to generate caption for
+        
+    Returns:
+        LaTeX-formatted caption string
+    """
     assert len(experiments) > 0
     experiment = experiments[0]
     config = experiment.config
@@ -190,6 +324,7 @@ def make_caption(experiments: list[Experiment]):
     temperature = config.temperature
     particles = config.particles
     num_tests = config.num_tests
+    # Verify all experiments have matching configuration
     assert all(
         (
             exp.config.task == task
@@ -211,11 +346,28 @@ def experiments_to_latex(
     decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
+    """
+    Generate a full LaTeX table with all metrics.
+    
+    Creates a comprehensive table showing model, algorithm, and all performance
+    metrics including mode, success expectation, pass@1, pass@k, LLM calls,
+    token usage, and time.
+    
+    Args:
+        experiments: List of experiments to include in table
+        label: LaTeX label for cross-referencing
+        decimals_rate: Decimal places for success rates (as percentages)
+        decimals_sd: Decimal places for standard deviations
+        decimals_stats: Decimal places for other statistics
+        
+    Returns:
+        Complete LaTeX table as a string
+    """
     caption = make_caption(experiments)
     agg = aggregate_experiments_by_config(experiments)
     agg_rows = sort_aggregated_experiments(agg)
 
-    # Column spec
+    # Column specifications: l=left-aligned, r=right-aligned
     cols = ["l", "l", "r", "r", "r", "r", "r", "r", "r", "r"]
     header = [
         "model",
@@ -229,8 +381,6 @@ def experiments_to_latex(
         "completion",
         "time",
     ]
-    # header = [ _esc_latex(s) for s in header ]
-
     lines = []
     lines.append(r"\begin{table}[ht]")
     lines.append(r"\centering")
@@ -239,8 +389,8 @@ def experiments_to_latex(
     lines.append(" & ".join(header) + r" \\")
     lines.append(r"\midrule")
 
+    # Generate table rows
     for k, v in agg_rows:
-
         row = [
             format_model(k.model),
             format_algorithm(k.algorithm),
@@ -255,7 +405,6 @@ def experiments_to_latex(
             format_stats(v["stats"]["completion_tokens"], decimals_stats, decimals_sd),
             format_time_stats(v["stats"]["time"], decimals_sd),
         ]
-        # row = [ _esc_latex(x) for x in row]
         lines.append(" & ".join(row) + r" \\")
 
     lines.append(r"\bottomrule")
@@ -270,12 +419,26 @@ def experiments_to_latex(
 def group_aggregated_experiments(
     agg: list[tuple[Key, dict[str, Any]]],
 ) -> dict[TaskModel, dict[str, Any]]:
+    """
+    Group experiments by task and model for summary tables.
+    
+    Reorganizes aggregated experiments to compare different algorithms
+    for the same task-model combination. Extracts mode statistics for
+    each algorithm and pass@1/pass@k from the parallel-maj baseline.
+    
+    Args:
+        agg: List of (Key, stats_dict) tuples from aggregated experiments
+        
+    Returns:
+        Dictionary mapping TaskModel to algorithm statistics
+    """
     res: dict[TaskModel, dict[str, Any]] = {}
     for exp in agg:
         key, value = exp
         tm = TaskModel(task=key.task, model=key.model)
         d = res.setdefault(tm, {})
         d[key.algorithm] = value["stats"]["mode"]
+        # Store pass@1 and pass@k from the majority voting baseline
         if key.algorithm == "parallel-maj":
             d["pass_at_1"] = value["stats"]["success_expectation"]
             d["pass_at_k"] = value["stats"]["pass_at_k"]
@@ -283,6 +446,17 @@ def group_aggregated_experiments(
 
 
 def get_max_array(data):
+    """
+    Create a binary array indicating which elements equal the maximum.
+    
+    Used to bold the best-performing algorithm in tables.
+    
+    Args:
+        data: List of numeric values
+        
+    Returns:
+        List of 1s and 0s, where 1 indicates the maximum value
+    """
     max_val = max(data)
     return [1 if x == max_val else 0 for x in data]
 
@@ -294,15 +468,31 @@ def experiments_to_latex_total(
     decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
+    """
+    Generate a compact summary table comparing algorithms.
+    
+    Creates a condensed table showing pass@1, three algorithm variants
+    (maj, is, smc), and pass@k for each model. Groups results by task
+    and bolds the best-performing algorithm for each model.
+    
+    Args:
+        experiments: List of experiments to include in table
+        label: LaTeX label for cross-referencing
+        decimals_rate: Decimal places for success rates (as percentages)
+        decimals_sd: Decimal places for standard deviations
+        decimals_stats: Decimal places for other statistics (unused here)
+        
+    Returns:
+        Complete LaTeX table as a string
+    """
     caption = "Results for PPDL as an inference scaling framework"
     agg = aggregate_experiments_by_config(experiments)
     agg_rows = sort_aggregated_experiments(agg)
     agg_rows_grouped = group_aggregated_experiments(agg_rows)
 
-    # Column spec
+    # Column specifications: c=center-aligned
     cols = ["c", "c", "c", "c", "c", "c"]
     header = ["model", "pass@1", "maj", "is", "smc", "pass@k"]
-    # header = [ _esc_latex(s) for s in header ]
 
     lines = []
     lines.append(r"\begin{table}[ht]")
@@ -312,14 +502,17 @@ def experiments_to_latex_total(
     lines.append(" & ".join(header) + r" \\")
     lines.append(r"\midrule")
 
+    # Generate table rows, grouping by task
     prev_task = None
     for k, v in agg_rows_grouped.items():
-
+        # Add task separator when task changes
         if prev_task != k.task:
             lines.append(r"\midrule")
             lines.append(r"{\bf " + k.task + " } & & & & & \\\\")
             lines.append(r"\midrule")
         prev_task = k.task
+        
+        # Determine which algorithm performed best for bolding
         bolds = get_max_array([v["parallel-maj"], v["parallel-is"], v["parallel-smc"]])
         row = [
             format_model(k.model),
@@ -329,7 +522,6 @@ def experiments_to_latex_total(
             format_rate_stats(v["parallel-smc"], decimals_rate, decimals_sd, bolds[2]),
             format_rate_stats(v["pass_at_k"], decimals_rate, decimals_sd),
         ]
-        # row = [ _esc_latex(x) for x in row]
         lines.append(" & ".join(row) + r" \\")
 
     lines.append(r"\bottomrule")
@@ -348,14 +540,30 @@ def experiments_to_latex_compact(
     decimals_sd: int = 1,  # percent decimals for sd (shown in percentage points
     decimals_stats: int = 1,  # percent decimals for rate
 ) -> str:
+    """
+    Generate a compact LaTeX table with key metrics only.
+    
+    Similar to experiments_to_latex but omits pass@1, prompt tokens, and
+    completion tokens to save space. Includes model separators between
+    different models.
+    
+    Args:
+        experiments: List of experiments to include in table
+        label: LaTeX label for cross-referencing
+        decimals_rate: Decimal places for success rates (as percentages)
+        decimals_sd: Decimal places for standard deviations
+        decimals_stats: Decimal places for other statistics
+        
+    Returns:
+        Complete LaTeX table as a string
+    """
     caption = make_caption(experiments)
     agg = aggregate_experiments_by_config(experiments)
     agg_rows = sort_aggregated_experiments(agg)
 
-    # Column spec
+    # Column specifications
     cols = ["l", "l", "r", "r", "r", "r", "r"]
     header = ["model", "algo ", "mode", "E(succ)", "pass@k", "LLM calls", "time"]
-    # header = [ _esc_latex(s) for s in header ]
 
     lines = []
     lines.append(r"\begin{table}[ht]")
@@ -365,9 +573,10 @@ def experiments_to_latex_compact(
     lines.append(" & ".join(header) + r" \\")
     lines.append(r"\midrule")
 
+    # Generate table rows with model separators
     prev_model = None
     for k, v in agg_rows:
-
+        # Add separator line when model changes
         if prev_model is not None and prev_model != k.model:
             lines.append(r"\midrule")
         prev_model = k.model
@@ -382,7 +591,6 @@ def experiments_to_latex_compact(
             format_stats(v["stats"]["model_calls"], 1, decimals_sd),
             format_time_stats(v["stats"]["time"], decimals_sd),
         ]
-        # row = [ _esc_latex(x) for x in row]
         lines.append(" & ".join(row) + r" \\")
 
     lines.append(r"\bottomrule")
@@ -395,6 +603,21 @@ def experiments_to_latex_compact(
 
 
 def format_rate_stats(stats, decimals_rate, decimals_sd, bold=False):
+    """
+    Format success rate statistics for LaTeX display.
+    
+    Converts rates to percentages and formats with standard deviation.
+    Optionally bolds the rate for emphasis (e.g., best result).
+    
+    Args:
+        stats: Tuple of (rate, stdev) or None
+        decimals_rate: Decimal places for the rate percentage
+        decimals_sd: Decimal places for the standard deviation
+        bold: Whether to bold the rate value
+        
+    Returns:
+        LaTeX-formatted string like "85.3% ± 2.1" or "-" if None
+    """
     if stats is None:
         return "-"
     rate, sd = stats
@@ -406,6 +629,20 @@ def format_rate_stats(stats, decimals_rate, decimals_sd, bold=False):
 
 
 def format_stats(stats, decimals_stats, decimals_sd):
+    """
+    Format general statistics (non-rate) for LaTeX display.
+    
+    Used for metrics like token counts and LLM calls. Formats large
+    numbers with 'k' suffix (e.g., "1.5k" for 1500).
+    
+    Args:
+        stats: Tuple of (mean, stdev) or None
+        decimals_stats: Decimal places for the mean
+        decimals_sd: Decimal places for the standard deviation
+        
+    Returns:
+        LaTeX-formatted string like "1.5k ± 0.2k" or "-" if None
+    """
     if stats is None:
         return "-"
     mean, sd = stats
@@ -415,6 +652,19 @@ def format_stats(stats, decimals_stats, decimals_sd):
 
 
 def format_time_stats(stats, decimals_sd):
+    """
+    Format time statistics for LaTeX display.
+    
+    Uses human-readable time format (HH:MM:SS or MM:SS or seconds)
+    for the mean, and numeric format for standard deviation.
+    
+    Args:
+        stats: Tuple of (mean_seconds, stdev_seconds) or None
+        decimals_sd: Decimal places for the standard deviation
+        
+    Returns:
+        LaTeX-formatted string like "02:35 ± 12.3" or "-" if None
+    """
     if stats is None:
         return "-"
     mean, sd = stats
@@ -424,29 +674,37 @@ def format_time_stats(stats, decimals_sd):
 
 
 def format_number(number, decimals):
+    """
+    Format numbers with appropriate scale suffix.
+    
+    Numbers < 1000 are shown as-is.
+    Numbers >= 1000 are shown in thousands with 'k' suffix.
+    
+    Args:
+        number: Numeric value to format
+        decimals: Decimal places to display
+        
+    Returns:
+        Formatted string (e.g., "123.4" or "1.5k")
+    """
     if abs(number) < 1000:
         return f"{number:.{decimals}f}"
-    # elif abs(number) < 1_000_000:
     return f"{number / 1000:.{decimals}f}k"
-    # elif abs(number) < 1_000_000_000:
-    #     return f"{number / 1_000_000:.1f}M"
-    # elif abs(number) < 1_000_000_000_000:
-    #     return f"{number / 1_000_000_000:.1f}B"
-    # else:
-    #     return f"{number / 1_000_000_000_000:.1f}T"
 
 
 def format_model(model: str):
-    # if model.endswith("llama-4-maverick-17b-128e-instruct-fp8"):
-    #     m = "llama4-maverick"
-    # elif model.endswith("gpt-oss-120b"):
-    #     m = "gpt-oss-120b"
-    # elif model.endswith("granite-4-h-small"):
-    #     m = "granite4-small"
-    # elif model.endswith("llama-3-3-70b-instruct"):
-    #     m = "llama3.3-70b"
-    # else:
-    #     m = model
+    """
+    Convert full model names to abbreviated forms for tables.
+    
+    Maps long model identifiers to short, consistent abbreviations
+    suitable for table display. Prints a warning for unknown models.
+    
+    Args:
+        model: Full model name/identifier
+        
+    Returns:
+        Abbreviated model name (e.g., "gr4sm" for granite-4-h-small)
+    """
     match model:
         case x if "granite-4-h-small" in x or "granite-4.0-h-small" in x:
             m = "gr4sm"
@@ -479,10 +737,33 @@ def format_model(model: str):
 
 
 def format_algorithm(algo: str):
+    """
+    Remove "parallel-" prefix from algorithm names for display.
+    
+    Args:
+        algo: Algorithm name (e.g., "parallel-maj")
+        
+    Returns:
+        Shortened name (e.g., "maj")
+    """
     return algo.removeprefix("parallel-")
 
 
 def format_time(seconds):
+    """
+    Format time duration in human-readable format.
+    
+    Formats as:
+    - "HH:MM:SS" if >= 1 hour
+    - "MM:SS" if >= 1 minute
+    - "SS.S" (with decimal) if < 1 minute
+    
+    Args:
+        seconds: Time duration in seconds
+        
+    Returns:
+        Formatted time string
+    """
     seconds_i = int(seconds)
     hours = seconds_i // 3600
     minutes = (seconds_i % 3600) // 60
@@ -495,23 +776,43 @@ def format_time(seconds):
 
 
 def _esc_latex(s: str) -> str:
+    """
+    Escape special LaTeX characters in strings.
+    
+    Converts characters that have special meaning in LaTeX to their
+    escaped equivalents to prevent compilation errors.
+    
+    Args:
+        s: String to escape (can be None)
+        
+    Returns:
+        LaTeX-safe string with special characters escaped
+    """
     if s is None:
         return ""
     return (
         str(s)
-        # .replace('\\', r'\textbackslash{}')
-        # .replace('\\', r'\\')
         .replace("_", r"\_")
         .replace("%", r"\%")
         .replace("&", r"\&")
         .replace("#", r"\#")
-        # .replace('{', r'\{')
-        # .replace('}', r'\}')
         .replace("$", r"\$")
     )
 
 
 def files_to_latex(files):
+    """
+    Load experiment files and generate a LaTeX table.
+    
+    Reads JSON experiment result files, parses them into Experiment objects,
+    and generates a summary LaTeX table using experiments_to_latex_total.
+    
+    Args:
+        files: List of file paths to aggregated experiment result files
+        
+    Returns:
+        LaTeX table string
+    """
     experiments = []
     for file_name in files:
         print(f"% analyse: {file_name}")
@@ -519,14 +820,22 @@ def files_to_latex(files):
         file_content = file_path.read_text(encoding="utf-8")
         experiment = Experiment.model_validate_json(file_content)
         experiments.append(experiment)
-    # latex = experiments_to_latex_compact(experiments)
     latex = experiments_to_latex_total(experiments)
     return latex
 
 
 def main():
+    """
+    Command-line entry point for the benchmark analyzer.
+    
+    Parses command-line arguments to get result file paths, processes them,
+    and outputs a LaTeX table to stdout.
+    
+    Usage:
+        python bench_analyzer.py result1.json result2.json ...
+    """
     parser = argparse.ArgumentParser(
-        description="Analyse benchmark results",
+        description="Analyse benchmark results and generate LaTeX tables",
     )
     parser.add_argument("files", nargs="+", help="Aggregated results files to process.")
     args = parser.parse_args()
