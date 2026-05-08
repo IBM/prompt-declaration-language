@@ -367,7 +367,9 @@ def _get_most_frequent(results):
     most_frequents = [
         (ids, passes) for _, (ids, n, passes) in counts.items() if n == max_frequency
     ]
-    most_frequent = random.choice(most_frequents)
+    most_frequent = random.choice(most_frequents)  # nosec B311
+    # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    # We are not using this random number for cryptography purpose.
     return most_frequent
 
 
@@ -403,7 +405,9 @@ def _get_mode(results):
         print(f"XXXXX {res=}", file=stderr, flush=True)
         print(f"XXXXX {max_prob=}", file=stderr, flush=True)
         modes = [(ids, passes) for _, (ids, p, passes) in res.items()]
-    mode = random.choice(modes)
+    mode = random.choice(modes)  # nosec B311
+    # [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+    # We are not using this random number for cryptography purpose.
     return mode
 
 

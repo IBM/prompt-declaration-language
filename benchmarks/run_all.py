@@ -1,6 +1,7 @@
 import argparse
 import os
-import subprocess
+import shlex
+import subprocess  # nosec B404
 from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from sys import stderr
@@ -8,6 +9,9 @@ from typing import Any
 
 import yaml
 from tqdm import tqdm
+
+# [B404:blacklist] Consider possible security implications associated with the subprocess module.
+# We are controlling the executed commands.
 
 
 # pylint: disable=too-many-arguments
@@ -67,9 +71,20 @@ def exec_one(config: dict, directory: str, experiment_id: int):
         open(out_log_file_name, "w", encoding="utf-8") as out_log,
         open(err_log_file_name, "w", encoding="utf-8") as err_log,
     ):
-        cmd = ["python", "run_benchmark.py", "-c", config_file_name, "-d", results_dir]
+        cmd = [
+            "python",
+            "run_benchmark.py",
+            "-c",
+            shlex.quote(config_file_name),
+            "-d",
+            shlex.quote(results_dir),
+        ]
         print(f"Start: {out_log_file_name}", flush=True)
-        result = subprocess.run(cmd, stdout=out_log, stderr=err_log, check=False)
+        result = subprocess.run(  # nosec B603
+            cmd, stdout=out_log, stderr=err_log, check=False
+        )
+        # [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
+        # We are quoting user arguments.
         print(f"Completed ({result.returncode}): {out_log_file_name}")
     return (config, result)
 
