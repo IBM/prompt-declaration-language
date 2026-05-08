@@ -1,7 +1,8 @@
 import argparse
 import pathlib
 from dataclasses import dataclass
-from statistics import mean, stdev
+from statistics import mean as compute_mean
+from statistics import stdev as compute_stdev
 from sys import stderr
 from typing import Any
 
@@ -9,7 +10,7 @@ from benchmark import AggregatedResults, Experiment
 
 
 @dataclass
-class Key:
+class Key:  # pylint: disable=too-many-instance-attributes
     task: str
     dataset: str
     pdl_path: str
@@ -99,8 +100,8 @@ def aggregate_experiments_by_config(
                 f"% Warning {cfg.aggregated_results_path}: {len(run.result.exceptions)} exceptions"
             )
     aggregated_experiments: dict[Key, dict[str, Any]] = {}
-    for key, experiments in by_key.items():
-        runs = [exp.result for exp in experiments]
+    for key, experiments_subset in by_key.items():
+        runs = [exp.result for exp in experiments_subset]
         aggregated_experiments[key] = {
             "experiments": experiments,
             "stats": runs_stats(runs),
@@ -108,10 +109,10 @@ def aggregate_experiments_by_config(
     return aggregated_experiments
 
 
-def sort_aggregated_experiments(aggregated_experiments):
-    rows: list[tuple[Key, dict]] = [
-        (key, val) for key, val in aggregated_experiments.items()
-    ]
+def sort_aggregated_experiments(
+    aggregated_experiments: dict[Key, dict[str, Any]],
+) -> list[tuple[Key, dict]]:
+    rows: list[tuple[Key, dict]] = list(aggregated_experiments.items())
     rows.sort(
         key=lambda r: (
             r[0].task,
@@ -138,13 +139,13 @@ def _sort_tag_algo(algo: str):
     return t
 
 
-def stats(elements: list) -> tuple[float, float] | None:
+def compulte_stats(elements: list) -> tuple[float, float] | None:
     match len(elements):
         case 0:
             return None
         case 1:
             return elements[0], 0.0
-    return (mean(elements), stdev(elements))
+    return (compute_mean(elements), compute_stdev(elements))
 
 
 def runs_stats(runs: list[AggregatedResults]):
@@ -165,14 +166,14 @@ def runs_stats(runs: list[AggregatedResults]):
         run.llm_usage.completion_tokens / run.total for run in runs
     ]
     return {
-        "success_expectation": stats(success_expectation_list),
-        "mode": stats(mode_success_rate_list),
-        "pass_at_1": stats(pass_at_1_success_rate_list),
-        "pass_at_k": stats(pass_at_k_success_rate_list),
-        "time": stats(time_list),
-        "model_calls": stats(model_calls_list),
-        "prompt_tokens": stats(prompt_tokens_list),
-        "completion_tokens": stats(completion_tokens_list),
+        "success_expectation": compulte_stats(success_expectation_list),
+        "mode": compulte_stats(mode_success_rate_list),
+        "pass_at_1": compulte_stats(pass_at_1_success_rate_list),
+        "pass_at_k": compulte_stats(pass_at_k_success_rate_list),
+        "time": compulte_stats(time_list),
+        "model_calls": compulte_stats(model_calls_list),
+        "prompt_tokens": compulte_stats(prompt_tokens_list),
+        "completion_tokens": compulte_stats(completion_tokens_list),
     }
 
 
@@ -190,7 +191,7 @@ def make_caption(experiments: list[Experiment]):
     particles = config.particles
     num_tests = config.num_tests
     assert all(
-        [
+        (
             exp.config.task == task
             and exp.config.dataset == dataset
             and exp.config.pdl_path == pdl_path
@@ -198,7 +199,7 @@ def make_caption(experiments: list[Experiment]):
             and exp.config.particles == particles
             and exp.config.num_tests == num_tests
             for exp in experiments
-        ]
+        )
     )
     return f"Results for the {task} benchmark (program: \\texttt{{{pdl_path}}}, data: \\texttt{{{dataset}}}) on {num_tests} samples with temperature {temperature} and {particles} particles."
 
@@ -273,12 +274,11 @@ def group_aggregated_experiments(
     for exp in agg:
         key, value = exp
         tm = TaskModel(task=key.task, model=key.model)
-        if tm not in res.keys():
-            res[tm] = {}
-        res[tm][key.algorithm] = value["stats"]["mode"]
+        d = res.setdefault(tm, {})
+        d[key.algorithm] = value["stats"]["mode"]
         if key.algorithm == "parallel-maj":
-            res[tm]["pass_at_1"] = value["stats"]["success_expectation"]
-            res[tm]["pass_at_k"] = value["stats"]["pass_at_k"]
+            d["pass_at_1"] = value["stats"]["success_expectation"]
+            d["pass_at_k"] = value["stats"]["pass_at_k"]
     return res
 
 
@@ -426,9 +426,8 @@ def format_time_stats(stats, decimals_sd):
 def format_number(number, decimals):
     if abs(number) < 1000:
         return f"{number:.{decimals}f}"
-    else:
-        # elif abs(number) < 1_000_000:
-        return f"{number / 1000:.{decimals}f}k"
+    # elif abs(number) < 1_000_000:
+    return f"{number / 1000:.{decimals}f}k"
     # elif abs(number) < 1_000_000_000:
     #     return f"{number / 1_000_000:.1f}M"
     # elif abs(number) < 1_000_000_000_000:

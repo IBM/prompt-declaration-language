@@ -42,6 +42,7 @@ repos:
          - pylint==4.0.3
          - datasets==4.8.5
          - openai==1.66.1
+         - pylint-pydantic==0.4.1
         args:
           [
             "-rn", # Only display messages

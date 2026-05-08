@@ -10,7 +10,8 @@ import yaml
 from tqdm import tqdm
 
 
-def config_generator(  # noqa: R0913
+# pylint: disable=too-many-arguments
+def config_generator(
     *,
     task: str,
     dataset: str,
@@ -132,7 +133,7 @@ def make_name(task, temperature, particles, model, algorithm):
     return f"{task}-t{temperature}-p{particles}-{m}-{a}"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="PPDL benchmarking tool",
     )

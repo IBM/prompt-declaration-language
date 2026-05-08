@@ -30,10 +30,10 @@ class LiveCodeBase(BenchmarkBase):
         pass
 
     def passes(self, solution, datapoint) -> bool:
-        from lcb_runner.benchmarks.code_generation import (  # noqa: C015
+        from lcb_runner.benchmarks.code_generation import (  # pylint: disable=import-outside-toplevel
             CodeGenerationProblem,
         )
-        from lcb_runner.evaluation.compute_code_generation_metrics import (  # noqa: C015
+        from lcb_runner.evaluation.compute_code_generation_metrics import (  # pylint: disable=import-outside-toplevel
             check_correctness,
         )
 

@@ -37,7 +37,7 @@ def replace_in_files(old_string, new_string, files):
             print(f"Error processing {file_path}: {e}")
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="PPDL benchmarking tool",
     )

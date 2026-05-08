@@ -9,7 +9,7 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from sys import stderr
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 from rich.console import Console
@@ -94,13 +94,13 @@ class BenchmarkBase(ABC):
         self.event_loop = create_event_loop_thread()
         self.secret = secret
 
-    # @abstractmethod
-    # def solve(self, *args) -> tuple[Categorical[Any], PdlUsage]:
-    #     pass
+    @abstractmethod
+    def solve(self, problem: str) -> tuple[Categorical[Any], PdlUsage]:
+        pass
 
-    # @abstractmethod
-    # def passes(self, *args) -> bool:
-    #     pass
+    @abstractmethod
+    def passes(self, solution, datapoint) -> bool:
+        pass
 
     @abstractmethod
     def get_question(self, datapoint: dict[str, dict]):
@@ -209,7 +209,9 @@ class BenchmarkBase(ABC):
                         passes_futures = []
                         for solution in solutions.values:
                             passes_futures.append(
-                                executor.submit(self.passes, solution, datapoint)
+                                executor.submit(
+                                    self.passes, solution, datapoint
+                                )  # pylint: disable=no-member
                             )
                         for i, (solution, score, passes_future) in enumerate(
                             zip(solutions.values, solutions.logits, passes_futures)
@@ -425,6 +427,7 @@ def retry(f, *args, **kargs):
             else:
                 console.log(f"Fail after {i} tries: {exc}")
                 raise exc from exc
+    return None
 
 
 def make_results_paths(config_name, results_dir):
