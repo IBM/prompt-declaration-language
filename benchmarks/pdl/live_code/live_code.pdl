@@ -1,0 +1,67 @@
+defs:
+  # # model: watsonx/openai/gpt-oss-120b
+  # # model: watsonx/ibm/granite-4-h-small
+  # # model_parameters:
+  # #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # temperature: 0.8
+  # problem: |
+  #   There are three cards with letters $\\texttt{a}$, $\\texttt{b}$, $\\texttt{c}$ placed in a row in some order. You can do the following operation at most once: \n\n \n-  Pick two cards, and swap them.  Is it possible that the row becomes $\\texttt{abc}$ after the operation? Output \"YES\" if it is possible, and \"NO\" otherwise.\n\nInput\n\nThe first line contains a single integer $t$ ($1 \\leq t \\leq 6$) — the number of test cases.\n\nThe only line of each test case contains a single string consisting of each of the three characters $\\texttt{a}$, $\\texttt{b}$, and $\\texttt{c}$ exactly once, representing the cards.\n\nOutput\n\nFor each test case, output \"YES\" if you can make the row $\\texttt{abc}$ with at most one operation, or \"NO\" otherwise.\n\nYou can output the answer in any case (for example, the strings \"yEs\", \"yes\", \"Yes\" and \"YES\" will be recognized as a positive answer).Sample Input 1:\n6\n\nabc\n\nacb\n\nbac\n\nbca\n\ncab\n\ncba\n\n\n\nSample Output 1:\n\nYES\nYES\nYES\nNO\nNO\nYES\n\n\nNote\n\nIn the first test case, we don't need to do any operations, since the row is already $\\texttt{abc}$.\n\nIn the second test case, we can swap $\\texttt{c}$ and $\\texttt{b}$: $\\texttt{acb} \\to \\texttt{abc}$.\n\nIn the third test case, we can swap $\\texttt{b}$ and $\\texttt{a}$: $\\texttt{bac} \\to \\texttt{abc}$.\n\nIn the fourth test case, it is impossible to make $\\texttt{abc}$ using at most one operation.
+
+  utils:
+    import: ../mbpp/utils.pdl
+  parameters: ${ dict(model_parameters, temperature=temperature) }
+lastOf:
+- |
+  Generate an English plan for how to generate code for the following problem:
+  ${ problem }
+- model:  ${ model }
+  parameters: ${ parameters }
+  def: plan
+- defs:
+    judge_prompt: |
+      Consider the following plan for generating code for the coding problem below:
+      Coding Problem: ${ problem }
+      
+      Plan: ${ plan }
+
+      Is the plan correct?
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=judge_prompt, parameters=parameters) }
+- |
+  Generate a complete executable Python function definition corresponding to the above plan for the prompt. 
+  Generate a single function definition called `main` only and nothing else. 
+  Inputs to the function should be given using `input()`.
+  Generate a single function call to the main function.
+  ${ problem }
+- model: ${ model }
+  parameters: ${ parameters }
+  def: solution
+  parser:
+      regex: (.|\n)*```python\n(?P<code>(.|\n)*?)```(.|\n)*
+      spec: { code: string }
+
+#- factor: ${ utils.contains_functions(code=solution) }
+- factor: ${ utils.eval_number_of_warnings(response=solution) }
+- defs:
+    judge_prompt: |
+      Consider the following generated code for the coding problem below:
+      Coding Problem: ${ problem }
+      
+      Code: ${ solution }
+      
+      Is the solution correct?
+
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=judge_prompt, parameters=parameters) }
+- ${ solution.code | default("")}
+fallback:
+ factor: -100

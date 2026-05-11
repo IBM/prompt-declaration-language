@@ -1,0 +1,69 @@
+defs:
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-tiny
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-tiny/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+
+  # temperature: 0.8
+  # problem: |+
+  #  """
+  #  Write a python function to remove first and last occurrence of a given character from the string.                                                                                           
+  #  assert remove_Occ("hello","l") == "heo"
+  #  """
+
+  parameters: ${ dict(model_parameters, temperature=temperature) }
+  judge_parameters: ${ dict(model_parameters, temperature=0) }
+  utils:
+    import: utils.pdl  
+  get_asserts:
+    function:
+      problem: string
+    return:
+      lang: python
+      code: |
+        index = problem.find("assert")
+        result = problem[index:]
+        index = result.find('\"\"\"\n')
+        result = result[0:index]
+lastOf:
+- |
+  Problem: ${ problem }
+
+  Generate a complete executable Python function definition for the problem above. Generate a single function definition only 
+  and nothing else. Do not include docstrings.
+  
+- model: ${ model }
+  def: response
+  parameters: ${ parameters }
+- defs:
+    solution:
+      data: ${ response }
+      parser:
+          regex: (.|\n)*```python\n(?P<code>(.|\n)*?)```(.|\n)*
+          spec: { code: string }
+- if: ${ solution == None }
+  then:
+    defs:
+      solution: 
+        data:
+          code: ${ response }
+- defs: 
+    check:
+      lang: python
+      code: |
+        try:
+          ${ solution.code }
+          ${ get_asserts(problem)}
+        except AssertionError as e:
+          result = -100
+        else: 
+          result = 0
+    factor: ${ check }
+- ${ solution.code | default("")}

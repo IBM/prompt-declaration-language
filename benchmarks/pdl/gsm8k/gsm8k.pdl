@@ -1,0 +1,51 @@
+defs:
+  # # model: watsonx/meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+  # # model: watsonx/openai/gpt-oss-120b
+  # # model: watsonx/ibm/granite-4-h-small
+  # # model: watsonx/meta-llama/llama-3-3-70b-instruct
+  # # model_parameters:
+  # #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # temperature: 0.8
+  # problem: |
+  #   Carla is downloading a 200 GB file. Normally she can download 2 GB/minute, 
+  #   but 40% of the way through the download, Windows forces a restart to install 
+  #   updates, which takes 20 minutes. Then Carla has to restart the download from 
+  #   the beginning. How long does it take to download the file?
+
+  parameters:
+    ${ dict(model_parameters, temperature=temperature) }
+
+lastOf:
+- "Question: ${ problem }"
+- Reason about this math problem and solve it. Generate the final answer on the last line prefixed by `####`
+- model: ${ model }
+  def: solution
+  parameters: ${ parameters }
+- lang: python
+  def: result
+  code: |
+    from pdl.optimize.parse_number import extract_math_answer
+    result_line = solution.splitlines()[-1]
+    result = extract_math_answer(result_line)
+
+- defs:
+    constraint: |
+      Is the solution below to the following math problem correct?
+      
+      Math Problem: ${ problem }
+      Solution: ${ result }
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=constraint, parameters=parameters) }
+- ${ result }
+fallback:
+ factor: -100

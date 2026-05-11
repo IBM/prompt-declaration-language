@@ -1,0 +1,37 @@
+defs:
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # temperature: 0.8
+  # problem: |
+  #     Convert the point $(0,3)$ in rectangular coordinates to polar coordinates.  Enter your answer in the form $(r,\\theta),$ where $r > 0$ and $0 \\le \\theta < 2 \\pi.$
+
+  parameters:
+    ${ dict(model_parameters, temperature=temperature) }
+  judge_parameters: 
+    ${ dict(model_parameters, temperature=0) }
+
+lastOf:
+- "Problem: ${ problem }"
+- model: ${ model }
+  def: solution
+  parameters: ${ parameters }
+- defs:
+    constraint: |
+      Consider the solution below to the following math problem. Read it line by line and reason about it to identify any errors in reasoning.
+      If no issues are found, respond True. If any issue is found, respond False.
+      
+      Math Problem: ${ problem }
+      Solution: ${ solution }
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=constraint, parameters=judge_parameters) }
+- ${ solution }
+fallback:
+ factor: -100

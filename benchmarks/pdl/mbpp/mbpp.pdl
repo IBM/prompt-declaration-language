@@ -1,0 +1,77 @@
+defs:
+  # model: watsonx/openai/gpt-oss-120b
+  # model: watsonx/ibm/granite-4-h-small
+  # model_parameters:
+  #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+
+  # temperature: 0.8
+  # problem: |
+  #  Write a function to find nth centered hexagonal number.                                                                                             
+  #  assert centered_hexagonal_number(10) == 271
+
+  parameters: ${ dict(model_parameters, temperature=temperature) }
+  utils:
+    import: utils.pdl  
+lastOf:
+- |
+  Generate an English plan for how to generate code for the following problem:
+  ${ problem }
+- model: ${ model }
+  parameters: ${ parameters }
+  def: plan
+- defs:
+    constraint: |
+      Consider the following plan for generating code for the coding problem below:
+      Coding Problem: ${ problem }
+      
+      Plan: ${ plan }
+
+      Is the plan correct?
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=constraint, parameters=parameters) }
+- |
+  Generate a complete executable Python function definition corresponding to 
+  the above plan for the prompt. Generate a single function definition only 
+  and nothing else. Do not include docstrings.
+  ${ problem }
+- model: ${ model }
+  def: response
+  parameters: ${ parameters }
+- defs:
+    solution:
+      data: ${ response }
+      parser:
+          regex: (.|\n)*```python\n(?P<code>(.|\n)*?)```(.|\n)*
+          spec: { code: string }
+- if: ${ solution == None }
+  then:
+    defs:
+      solution: 
+        data:
+          code: ${ response }
+- factor: ${ utils.contains_functions(solution.code) }
+- factor: ${ utils.eval_number_of_warnings(solution) }
+- defs:
+    constraint: |
+      Consider the following generated code for the coding problem below:
+      Coding Problem: ${ problem }
+      
+      Code: ${ solution }
+      
+      Is the solution correct?
+
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=constraint, parameters=parameters) }
+- ${ solution.code | default("")}
+# fallback:
+#  factor: -100
+

@@ -1,0 +1,186 @@
+defs:
+  # model: watsonx/openai/gpt-oss-120b
+  # model: watsonx/ibm/granite-4-h-small
+  # model_parameters:
+  #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+
+  # temperature: 0.8
+  # problem: |
+  #  Write a function to find nth centered hexagonal number.                                                                                             
+  #  assert centered_hexagonal_number(10) == 271
+  # problem: |
+  #   Write a python function to count the number of substrings with the sum of digits equal to their length.
+    
+  #   assert count_Substrings('112112') == 6
+
+  parameters: ${ dict(model_parameters, temperature=temperature) }
+  utils:
+    import: utils.pdl
+
+  # Extract Python code block from a string
+  get_python_code:
+    function:
+      response: string
+    return:
+      if: ${ '```python' in response}
+      then:
+        data: ${ response }
+        parser:
+            regex: (.|\n)*```python\n(?P<code>(.|\n)*?)```(.|\n)*
+            spec: { code: string }
+      else:
+        data:
+          code: ${ response }
+
+
+  # Get the name of the function to generate from the problem description
+  get_function_name:
+    function:
+      problem: string
+    return:
+      lastOf:
+      - |
+        Problem:
+        ${ problem }
+
+        Given the problem above, extract the name of the function to to write.
+        IMPORTANT: give only the function name.
+
+      - model: ${ model }
+        parameters: ${ parameters }
+
+  # Generate the Python code from the problem
+  generate_base_code:
+    function:
+      problem: string
+      function_name: string
+    return:
+      defs:
+        response:
+          lastOf:
+            - | 
+              ${ problem }
+            - model: ${ model }
+              parameters: ${ parameters }
+            - Extract the code the code of the function ${ function_name }.
+            - model: ${ model }
+              parameters: ${ parameters }
+      data: ${ get_python_code(response) }
+
+  # Given a problem description and a solution
+  generate_test_function:
+    function:
+      problem: string
+      function_name: string
+      solution: string
+    return:
+      defs:
+        tests_response:
+          lastOf:
+          - |
+            Problem:
+            ${ problem }
+
+            Code:
+            ${ solution }
+
+            Given the problem above and code to solve it, generate tests for the function ${ function_name }. Do not test invalid inputs.
+          - model: ${ model }
+            parameters: ${ parameters }
+          - |
+            Write a Python function `test` returning `True` if the tests above can be executed without errors.
+            IMPORTANT:
+            - Do NOT include the code of the function ${ function_name }.
+            - Assume that the function ${ function_name } under test is available in the current scope.
+            - Generate only the Python code.
+          - model: ${ model }
+            parameters: ${ parameters }
+      data: ${ get_python_code(tests_response) }
+
+  # Execute the tests on the code
+  run_tests:
+    function:
+      code: string
+      tests: string
+    return:
+      lang: python
+      code: |
+        ${ base }
+
+        ${ tests }
+
+        result = test()
+      fallback: false
+
+  # 
+  simplify_solution:
+    function:
+      problem: string
+      function_name: string
+      solution: string
+    return:
+      defs:
+        simplified_response:
+          lastOf:
+          - |
+            Problem:
+            ${ problem }
+
+            Solution:
+            ${ solution }
+
+            Considering the problem and the solution above, rewrite the function ${ function_name } without testing for invalid inputs.
+          - model: ${ model }
+            parameters: ${ parameters }
+          - Extract the code the code of the function ${ function_name }.
+          - model: ${ model }
+            parameters: ${ parameters }
+      data: ${ get_python_code(simplified_response) }
+
+# Main program
+lastOf:
+- defs:
+    function_name: ${ get_function_name(problem) }
+  factor: ${ 0 if function_name in problem else -50 }
+- defs:
+    base: ${ generate_base_code(problem, function_name) }    
+  factor: ${ utils.contains_functions(base.code) }
+- factor: ${ utils.eval_number_of_warnings(base) }
+- defs:
+    constraint: |
+      Consider the following generated code for the coding problem below:
+      Coding Problem:
+      ${ problem }
+      
+      Code:
+      ${ base.code }
+      
+      Is the solution correct?
+  factor: ${ stdlib.llm_as_judge(model=model, prompt=constraint, parameters=parameters) }
+- defs:
+    tests: ${ generate_test_function(problem, function_name, base.code) }
+  factor: ${ utils.is_parsing(tests.code) }
+- defs:
+    base_success: ${ run_tests(base.code, tests.code) }
+  factor: ${ 0 if base_success else -3 }
+  fallback: -4
+- defs:
+    simplified: ${ simplify_solution(problem, function_name, base.code) }
+  factor: ${ utils.contains_functions(simplified.code) }
+- factor: ${ utils.eval_number_of_warnings(simplified) }
+- defs:
+    simplified_success: ${ run_tests(simplified.code, tests.code) }
+  factor: ${ 0 if simplified_success else -3 }
+  fallback: -4
+- ${ simplified.code | default("")}

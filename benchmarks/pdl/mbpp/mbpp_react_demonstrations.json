@@ -1,0 +1,62 @@
+[
+  [
+    {
+      "task": "Write a function to check if the string is a valid email address or not using regex.\nassert check_email(\"ankitrai326@gmail.com\") == 'Valid Email'"
+    },
+    {
+      "thought": "I should run a solution on the test case before proposing a solution."
+    },
+    {
+      "action": "import re \nregex = '^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$'\ndef check_email(email): \n\tif(re.search(regex,email)): \n\t\treturn (\"Valid Email\") \n\telse: \n\t\treturn (\"Invalid Email\")\nres = check_email(\"ankitrai326@gmail.com\")\nassert res == 'Valid Email', \"Expected 'Valid Email' but got {}\".format(res)"
+    },
+    {
+      "observation": "[Executed Successfully with No Output]"
+    },
+    {
+      "thought": "There is no AssertionError. I can now submit the solution."
+    },
+    {
+      "solution": "import re \nregex = '^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$'\ndef check_email(email): \n\tif(re.search(regex,email)): \n\t\treturn (\"Valid Email\") \n\telse: \n\t\treturn (\"Invalid Email\")"
+    }
+  ],
+  [
+    {
+      "task": "Write a function to remove an empty tuple from a list of tuples.\nassert remove_empty([(), (), ('',), ('a', 'b'), ('a', 'b', 'c'), ('d')])==[('',), ('a', 'b'), ('a', 'b', 'c'), 'd']"
+    },
+    {
+      "thought": "I should run a solution on the test case before proposing a solution."
+    },
+    {
+      "action": "def remove_empty(tuple1): #L = [(), (), ('',), ('a', 'b'), ('a', 'b', 'c'), ('d')]\n   tuple1 = [t for t in tuple1 if t]\n   return tuple1\nres = remove_empty([(), (), ('',), ('a', 'b'), ('a', 'b', 'c'), ('d')])\nassert res == [('',), ('a', 'b'), ('a', 'b', 'c'), 'd'], \"Expected [('',), ('a', 'b'), ('a', 'b', 'c'), 'd'] but got {}\".format(res)"
+    },
+    {
+      "observation": "[Executed Successfully with No Output]"
+    },
+    {
+      "thought": "There is no AssertionError. I can now submit the solution."
+    },
+    {
+      "solution": "def remove_empty(tuple1): #L = [(), (), ('',), ('a', 'b'), ('a', 'b', 'c'), ('d')]\n   tuple1 = [t for t in tuple1 if t]\n   return tuple1"
+    }
+  ],
+  [
+    {
+      "task": "Write a function to multiply consecutive numbers of a given list.\nassert mul_consecutive_nums([1, 1, 3, 4, 4, 5, 6, 7])==[1, 3, 12, 16, 20, 30, 42]"
+    },
+    {
+      "thought": "I should run a solution on the test case before proposing a solution."
+    },
+    {
+      "action": "def mul_consecutive_nums(nums):\n    result = [b*a for a, b in zip(nums[:-1], nums[1:])]\n    return result\nres = mul_consecutive_nums([1, 1, 3, 4, 4, 5, 6, 7])\nassert res == [1, 3, 12, 16, 20, 30, 42], \"Expected [1, 3, 12, 16, 20, 30, 42] but got {}\".format(res)"
+    },
+    {
+      "observation": "[Executed Successfully with No Output]"
+    },
+    {
+      "thought": "There is no AssertionError. I can now submit the solution."
+    },
+    {
+      "solution": "def mul_consecutive_nums(nums):\n    result = [b*a for a, b in zip(nums[:-1], nums[1:])]\n    return result"
+    }
+  ]
+]
