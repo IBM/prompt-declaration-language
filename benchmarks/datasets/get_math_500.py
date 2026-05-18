@@ -6,7 +6,7 @@ dataset = load_dataset("HuggingFaceH4/MATH-500")
 # Access the test split
 test_data = dataset["test"]
 
-OUTPUT_FILENAME = "math_500_test.jsonl"
+OUTPUT_FILENAME = Path(__file__).resolve().parent / "math_500_test.jsonl"
 
 # for datapoint in lcb_codegen["test"]:
 #     print(datapoint)

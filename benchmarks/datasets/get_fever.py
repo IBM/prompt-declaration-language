@@ -2,9 +2,10 @@
 #   wget https://raw.githubusercontent.com/google/BIG-bench/refs/heads/main/bigbench/benchmark_tasks/fact_checker/fever/task.json
 
 import json
+from pathlib import Path
 
 # Define the output JSONL file path
-OUTPUT_JSONL_PATH = "fever_test.jsonl"
+OUTPUT_JSONL_PATH = Path(__file__).resolve().parent / "fever_test.jsonl"
 
 with open("task.json", "r", encoding="utf-8") as f:
     data = json.load(f)

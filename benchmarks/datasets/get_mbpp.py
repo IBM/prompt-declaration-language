@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from pathlib import Path
 
 from datasets import load_dataset
 from evalplus.data import get_mbpp_plus, get_mbpp_plus_hash
@@ -39,7 +40,7 @@ for i, x in enumerate(tests):
 
 
 # Create a local jsonl file and write the dataset to it
-OUTPUT_FILENAME = "mbpp_expected_test.jsonl"
+OUTPUT_FILENAME = Path(__file__).resolve().parent / "mbpp_expected_test.jsonl"
 with open(OUTPUT_FILENAME, "w", encoding="utf-8") as f:
     count = 0
     for example in tests:
