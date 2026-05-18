@@ -43,7 +43,7 @@ dev = [
   "pylint-pydantic~=0.4",
 ]
 examples = [
-  "pymilvus~=2.5",
+  "pymilvus>=2.5,<4.0",
   "langchain-text-splitters~=1.1",
   "langchain-community~=0.4",
   "pypdf~=6.0",
