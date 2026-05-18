@@ -19,7 +19,7 @@ GSM8k (Grade School Math 8k) is a dataset of grade school math word problems.
 
 **Download:**
 ```bash
-curl https://raw.githubusercontent.com/openai/grade-school-math/refs/heads/master/grade_school_math/data/test.jsonl > test.jsonl
+curl https://raw.githubusercontent.com/openai/grade-school-math/refs/heads/master/grade_school_math/data/test.jsonl > gsm8k_test.jsonl
 ```
 
 **Source:** [OpenAI Grade School Math Repository](https://github.com/openai/grade-school-math)
@@ -53,9 +53,10 @@ This script will download and format the Math500 dataset for use in benchmarks.
 FEVER (Fact Extraction and VERification) is a dataset for fact-checking and verification tasks.
 
 **Download:**
-1. Visit the [FEVER dataset page](https://fever.ai/dataset/fever.html)
-2. Download the **Paper Test Dataset**
-3. Extract the files to this directory
+```bash
+curl https://raw.githubusercontent.com/google/BIG-bench/refs/heads/main/bigbench/benchmark_tasks/fact_checker/fever/task.json
+python get_fever.py
+```
 
 **Note:** Manual download is required as the dataset requires acceptance of terms.
 
@@ -63,13 +64,10 @@ FEVER (Fact Extraction and VERification) is a dataset for fact-checking and veri
 
 LiveCodeBench provides real-world coding problems for evaluating code generation models.
 
-**Setup:**
+**Setup (requires Python 3.11):**
 1. Clone the LiveCodeBench repository:
    ```bash
-   git clone https://github.com/LiveCodeBench/LiveCodeBench.git
-   cd LiveCodeBench
-   pip install .
-   cd ..
+   pip install git+https://github.com/LiveCodeBench/LiveCodeBench.git
    ```
 
 2. Run the dataset preparation script:
