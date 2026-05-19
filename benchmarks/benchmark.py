@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from pathlib import Path
 from sys import stderr
 from typing import Any, Optional
 
@@ -24,6 +25,8 @@ from pdl.pdl_scheduler import create_event_loop_thread
 
 console = Console()
 os.environ["EVALPLUS_MAX_MEMORY_BYTES"] = "68719476736"
+
+BENCHMARK_DIR = Path(__file__).resolve().parent
 
 
 class ExperimentConfig(BaseModel):
@@ -133,8 +136,9 @@ class BenchmarkBase(ABC):
         success_probabilities = []
         n_workers = 5
 
+        dataset_path = BENCHMARK_DIR / self.config.dataset
         with (
-            open(self.config.dataset, "r", encoding="utf-8") as dataset_f,
+            open(dataset_path, "r", encoding="utf-8") as dataset_f,
             open(
                 self.config.examples_results_path, "w", encoding="utf-8"
             ) as examples_results_file,

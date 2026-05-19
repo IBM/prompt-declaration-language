@@ -3,7 +3,7 @@ from abc import abstractmethod
 from sys import stderr
 from typing import Any
 
-from benchmark import BenchmarkBase
+from benchmark import BENCHMARK_DIR, BenchmarkBase
 
 from pdl.pdl_infer import PpdlConfig
 from pdl.pdl_infer import exec_file as ppdl
@@ -47,7 +47,7 @@ class Gsm8kPPDL(Gsm8kBase):
             max_workers=self.config.max_workers,
         )
         dist = ppdl(
-            prog=self.config.pdl_path,
+            prog=BENCHMARK_DIR / self.config.pdl_path,
             ppdl_config=config,
             scope={
                 "problem": problem,

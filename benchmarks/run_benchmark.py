@@ -5,7 +5,7 @@ import traceback
 from pathlib import Path
 
 import yaml
-from benchmark import BenchmarkBase, ExperimentConfig, make_results_paths
+from benchmark import BENCHMARK_DIR, BenchmarkBase, ExperimentConfig, make_results_paths
 from fever_benchmark import FeverPPDL
 from gsm8k_benchmark import Gsm8kPPDL
 from jinja2 import Template
@@ -53,8 +53,8 @@ def main() -> None:
     parser.add_argument(
         "--dir",
         "-d",
-        type=str,
-        default="results",
+        type=Path,
+        default=BENCHMARK_DIR / "results",
         help="Specify the directory where to store the results",
     )
     args = parser.parse_args()
