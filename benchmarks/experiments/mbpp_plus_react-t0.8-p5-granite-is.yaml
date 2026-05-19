@@ -1,0 +1,9 @@
+task: mbpp-plus
+# dataset: datasets/mbpp_expected_test.jsonl
+dataset: datasets/mbpp_expected_sanitized_test.jsonl
+pdl_path: pdl/mbpp/mbpp_react.pdl
+algorithm: parallel-is
+model: watsonx_text/ibm/granite-4-h-small
+particles: 5
+temperature: 0.8
+num_tests: 100

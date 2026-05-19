@@ -1,0 +1,8 @@
+task: gsm8k
+dataset: datasets/gsm8k_test.jsonl
+pdl_path: pdl/gsm8k/gsm8k.pdl
+algorithm: parallel-smc
+model: watsonx/meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+particles: 5
+temperature: 0.8
+num_tests: 100

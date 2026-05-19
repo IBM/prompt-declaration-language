@@ -1,0 +1,12 @@
+task: math500
+dataset: datasets/math_500_test.jsonl
+pdl_path: pdl/math500/math500.pdl
+algorithm: parallel-is
+model: openai/openai/gpt-oss-120b
+model_parameters:
+  api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b/v1
+  extra_headers:
+    RITS_API_KEY: ${RITS_API_KEY}
+particles: 5
+temperature: 0.8
+num_tests: 100

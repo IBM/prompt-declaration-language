@@ -1,0 +1,12 @@
+task: live-code
+dataset: datasets/live_code_test.jsonl
+pdl_path: pdl/live_code/live_code.pdl
+algorithm: parallel-is
+model: openai/openai/gpt-oss-120b
+model_parameters:
+  api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b/v1
+  extra_headers:
+    RITS_API_KEY: ${RITS_API_KEY}
+temperature: 0.8
+particles: 5
+num_tests: 100

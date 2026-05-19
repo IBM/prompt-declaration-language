@@ -1,0 +1,13 @@
+task: mbpp
+dataset: datasets/mbpp_expected_sanitized_test.jsonl
+pdl_path: pdl/mbpp/mbpp.pdl
+algorithm: parallel-is
+# model: watsonx/ibm/granite-4-h-small
+model: openai/ibm-granite/granite-4.0-h-small
+model_parameters:
+  api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  extra_headers:
+    RITS_API_KEY: ${RITS_API_KEY}
+particles: 5
+temperature: 0.8
+num_tests: 100
