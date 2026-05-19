@@ -69,7 +69,11 @@ optimizer = [
   "multiprocess~=0.70",
 ]
 benchmark = [
-  "datasets~=4.8",
+  "datasets<4.0",
+  "flake8>=7.3",
+  "wikipedia>=1.4",
+  "evalplus>=0.3.1",
+  "math_verify>=0.8"
 ]
 all = [ "prompt-declaration-language[dev,examples,docs,optimizer,benchmark]" ]
 
