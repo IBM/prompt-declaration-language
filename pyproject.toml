@@ -19,6 +19,7 @@ dependencies = [
   "json-repair~=0.35",
   "granite-io>=0.5,<0.6",
   "matplotlib~=3.10",
+  "seaborn~=0.13",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
