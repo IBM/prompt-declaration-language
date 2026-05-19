@@ -19,7 +19,7 @@ from statistics import stdev as compute_stdev
 from sys import stderr
 from typing import Any, Sequence
 
-from benchmarks.benchmark import AggregatedResults, Experiment
+from benchmark import AggregatedResults, Experiment
 
 
 @dataclass
