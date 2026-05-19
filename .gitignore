@@ -156,7 +156,7 @@ pdl-rag-demo.db
 test.jsonl
 train.jsonl
 validation.jsonl
-experiments/
+examples/optimizer/experiments/
 
 # Dataset files
 task.json
