@@ -29,27 +29,21 @@ python datasets/get_mbpp.py
 
 Some benchmarks have their own dataset preparation scripts or instructions. Check the benchmark-specific README files under [`pdl/`](pdl/) when available.
 
-### 3. Run a simple experiment
+### 3. Run an experiment
 
-Run an experiment by passing a YAML configuration file to [`run_benchmark.py`](run_benchmark.py:1).
-
-Example:
+Run an experiment by passing a YAML configuration file to [`run_benchmark.py`](run_benchmark.py:1):
 
 ```bash
 python run_benchmark.py -c experiments/<experiment>.yaml
 ```
 
-If your configuration points to a PDL program, dataset, and model correctly, this command will generate predictions and save benchmark outputs for later analysis.
+### 4. Analyze results
 
-### 4. Analyze the results
-
-Use [`bench_analyzer.py`](bench_analyzer.py:1) to inspect and summarize completed runs:
+After experiments complete, use [`bench_analyzer.py`](bench_analyzer.py:1) to review outputs and compare runs:
 
 ```bash
 python bench_analyzer.py
 ```
-
-If you are comparing multiple runs, execute the analyzer after experiments finish so you can review scores, outputs, and generated artifacts in one place.
 
 
 ## Requirements
@@ -120,21 +114,13 @@ This will:
 
 ### Running a single experiment
 
-You can also run individual experiments by passing a YAML configuration file directly to [`run_benchmark.py`](run_benchmark.py:1):
+Run individual experiments by passing a YAML configuration file to [`run_benchmark.py`](run_benchmark.py:1):
 
 ```bash
 python run_benchmark.py -c experiments/<experiment>.yaml
 ```
 
 The configuration file controls which benchmark runner is used, where data comes from, which PDL program is executed, and where outputs are written.
-
-A typical workflow is:
-
-1. install the required dependencies
-2. fetch or prepare the dataset
-3. create or edit an experiment YAML file
-4. run [`python run_benchmark.py`](run_benchmark.py:1)
-5. inspect results with [`python bench_analyzer.py`](bench_analyzer.py:1)
 
 ---
 
@@ -158,15 +144,7 @@ In practice, the YAML ties together a benchmark implementation in [`*.py`](./) w
 
 ### Choosing the benchmark logic
 
-Each benchmark runner encapsulates task-specific loading and evaluation. For example:
-
-- [`gsm8k_benchmark.py`](gsm8k_benchmark.py) for grade-school math reasoning
-- [`mbpp_benchmark.py`](mbpp_benchmark.py) for programming problems
-- [`math500_benchmark.py`](math500_benchmark.py) for math evaluation
-- [`fever_benchmark.py`](fever_benchmark.py) for fact verification
-- [`live_code_benchmark.py`](live_code_benchmark.py) for LiveCodeBench tasks
-
-Your experiment config should match the expectations of the selected benchmark runner.
+Each benchmark runner encapsulates task-specific loading and evaluation (see the "Benchmark layout" section for available runners). Your experiment config should match the expectations of the selected benchmark runner.
 
 ### Choosing the prompt or pipeline
 
@@ -217,13 +195,11 @@ This makes comparisons easier during analysis and avoids editing the same file r
 
 ## Analyzing experiments
 
-After one or more runs complete, use [`bench_analyzer.py`](bench_analyzer.py:1):
+After runs complete, use [`bench_analyzer.py`](bench_analyzer.py:1) to review outputs, compare runs, and inspect artifacts:
 
 ```bash
 python bench_analyzer.py
 ```
 
-Use the analyzer to review experiment outputs, compare runs, and inspect the generated benchmark artifacts. This is the main post-processing step after running experiments.
-
-For benchmark-specific details about outputs and prompting assets, also consult the README files under [`pdl/`](pdl/).
+For benchmark-specific details, consult the README files under [`pdl/`](pdl/).
 
