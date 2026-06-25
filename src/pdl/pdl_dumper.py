@@ -70,6 +70,7 @@ from .pdl_ast import (
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    RetryConfiguration,
     SequenceBlock,
     StructuredBlock,
     TextBlock,
@@ -144,7 +145,23 @@ def advance_block_to_dict(  # noqa: C901
             x: block_to_dict(b, json_compatible) for x, b in block.defs.items()
         }
     if block.retry is not None:
-        d["retry"] = expr_to_dict(block.retry, json_compatible)
+        if isinstance(block.retry, RetryConfiguration):
+            retry_dict = {}
+            retry_dict["tries"] = expr_to_dict(block.retry.tries, json_compatible)
+            retry_dict["delay"] = expr_to_dict(block.retry.delay, json_compatible)
+            if block.retry.max_delay is not None:
+                retry_dict["max_delay"] = expr_to_dict(
+                    block.retry.max_delay, json_compatible
+                )
+            retry_dict["backoff"] = expr_to_dict(block.retry.backoff, json_compatible)
+            if block.retry.jitter != 0:
+                retry_dict["jitter"] = expr_to_dict(block.retry.jitter, json_compatible)
+            retry_dict["exceptions"] = expr_to_dict(
+                block.retry.exceptions, json_compatible
+            )
+            d["retry"] = retry_dict
+        else:
+            d["retry"] = expr_to_dict(block.retry, json_compatible)
     if block.trace_error_on_retry is not None:
         d["trace_error_on_retry"] = expr_to_dict(
             block.trace_error_on_retry, json_compatible
