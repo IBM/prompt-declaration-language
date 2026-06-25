@@ -1,0 +1,8 @@
+task: fever
+dataset: datasets/fever_test.jsonl
+pdl_path: pdl/fever/fever.pdl
+algorithm: parallel-is
+model: watsonx/meta-llama/llama-3-3-70b-instruct
+particles: 5
+temperature: 0.8
+num_tests: 100

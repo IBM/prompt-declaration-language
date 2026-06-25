@@ -1,0 +1,8 @@
+task: gsm8k
+dataset: datasets/gsm8k_test.jsonl
+pdl_path: pdl/gsm8k/gsm8k.pdl
+algorithm: parallel-is
+model: watsonx/ibm/granite-4-h-small
+particles: 5
+temperature: 0.8
+num_tests: 100

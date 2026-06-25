@@ -1,0 +1,120 @@
+defs:
+  # # model: watsonx/meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+  # # model: watsonx/openai/gpt-oss-120b
+  # # model: watsonx/ibm/granite-4-h-small
+  # # model: watsonx/meta-llama/llama-3-3-70b-instruct
+  # # model_parameters:
+  # #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # temperature: 0.8
+  # problem: "2 Hearts is a musical composition by Minogue."
+
+  parameters:
+    ${ dict(model_parameters, temperature=temperature) }
+
+  true_false_decoding:
+    data:
+      logprobs: true
+      top_logprobs: 5
+      response_format: 
+        type: json_schema
+        json_schema: {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}
+
+  search:
+    description: Wikipedia search
+    function:
+      topic: 
+        type: string
+        description: Topic to be searched
+    return:
+      lastOf:
+        - def: result
+          lang: python
+          code: |
+            import warnings, wikipedia
+            warnings.simplefilter("ignore")
+
+            def main(topic: str, *args, **kwargs) -> str:
+              try:
+                return wikipedia.summary(topic)
+              except wikipedia.DisambiguationError as d:
+                return f"\"{topic}\" may refer to one of {d.args[1]}. Please retry the search with a more specific subject."
+              except wikipedia.WikipediaException as e:
+                return str(e)
+
+            result = main(topic)
+  tools:
+    data:
+    - type: function
+      function: 
+        name: search
+        description: Search Wikipedia
+        parameters: 
+          type: object
+          properties: 
+            topic: 
+              type: string
+              description: Topic to be searched
+          required:
+          - topic
+
+lastOf:
+- ${ problem }
+- model: ${ model }
+  modelResponse: action
+  parameters: ${ dict(parameters, tools=tools)}
+  parser: json
+- def: evidence  
+  for:
+    tool_call: ${ action.choices[0].message.tool_calls }
+  repeat:
+    text:
+    - if: ${ tool_call.function.name == "search"}
+      then:
+        defs: 
+          args:
+            data: ${ tool_call.function.arguments }
+            parser: json
+          topic:
+            text: ${ args["topic"] }
+            fallback:
+              defs:
+                args:
+                  data: ${ args }
+                  parser: json
+              text: ${ args["topic"] }
+        call: ${ search }
+        args:
+          topic: ${ topic }
+      else:
+        factor: -100
+      fallback:
+        factor: -200
+  join:
+    with: "\n"
+  fallback:
+    factor: -300
+- model: ${ model }
+  def: evaluation
+  input: |
+    Consider the evidence:
+    ${ evidence }
+
+    Is the following statement true or false?
+    ${ problem }
+
+    Respond with only ('true'/'false').
+  modelResponse: out
+  parameters: ${ dict(parameters, **true_false_decoding) }
+- factor: ${ stdlib.bool_confidence(response=out) }
+- ${ evaluation }

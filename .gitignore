@@ -156,7 +156,16 @@ pdl-rag-demo.db
 test.jsonl
 train.jsonl
 validation.jsonl
-experiments/
+examples/optimizer/experiments/
+
+# Dataset files
+task.json
+fever_test.jsonl
+gsm8k_test.jsonl
+live_code_test.jsonl
+math_500_test.jsonl
+mbpp_expected_test.jsonl
+mbpp_expected_sanitized_test.jsonl
 
 # Built docs
 _site

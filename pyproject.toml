@@ -40,7 +40,8 @@ classifiers = [
 dev = [
   "pre-commit>=3,<5",
   "pytest~=9.0",
-  "pydantic~=2.9"
+  "pydantic~=2.9",
+  "pylint-pydantic~=0.4",
 ]
 examples = [
   "pymilvus>=2.5,<4.0",
@@ -68,7 +69,14 @@ optimizer = [
   "duration_parser>=1.0.1",
   "multiprocess~=0.70",
 ]
-all = [ "prompt-declaration-language[dev,examples,docs,optimizer]" ]
+benchmark = [
+  "datasets<4.0",
+  "flake8>=7.3",
+  "wikipedia>=1.4",
+  "evalplus>=0.3.1",
+  "math_verify>=0.8"
+]
+all = [ "prompt-declaration-language[dev,examples,docs,optimizer,benchmark]" ]
 
 [project.urls]
 Homepage = "https://ibm.github.io/prompt-declaration-language/"

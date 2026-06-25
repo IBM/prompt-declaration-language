@@ -1,0 +1,9 @@
+task: mbpp 
+# dataset: datasets/mbpp_expected_test.jsonl
+dataset: datasets/mbpp_expected_sanitized_test.jsonl
+pdl_path: pdl/mbpp/mbpp_react.pdl
+algorithm: parallel-smc
+model: watsonx_text/openai/gpt-oss-120b
+particles: 5
+temperature: 0.8
+num_tests: 100

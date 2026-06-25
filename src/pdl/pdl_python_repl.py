@@ -79,9 +79,9 @@ class PythonREPL:
         manager = self.manager()
         return_dict = manager.dict()
 
-        process = self.process(
+        process = self.process(  # pylint: disable=not-callable
             target=target, args=(return_dict,)
-        )  # pylint: disable=not-callable
+        )
         process.start()
         process.join(timeout)
 

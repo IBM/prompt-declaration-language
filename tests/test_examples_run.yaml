@@ -128,3 +128,18 @@ expected_runtime_error:
   - tests/data/line/hello29.pdl
   - tests/data/line/hello30.pdl
   - tests/data/line/hello32.pdl
+  # Missing inputs
+  - benchmarks/pdl/fever/fever_confidence.pdl
+  - benchmarks/pdl/fever/fever.pdl
+  - benchmarks/pdl/gsm8k/gsm8k.pdl
+  - benchmarks/pdl/live_code/live_code.pdl
+  - benchmarks/pdl/math500/math500.pdl
+  - benchmarks/pdl/mbpp/mbpp_assert.pdl
+  - benchmarks/pdl/mbpp/mbpp_pipeline.pdl
+  - benchmarks/pdl/mbpp/mbpp_pipeline2.pdl
+  - benchmarks/pdl/mbpp/mbpp_pipeline4.pdl
+  - benchmarks/pdl/mbpp/mbpp_react_completion.pdl
+  - benchmarks/pdl/mbpp/mbpp_react.pdl
+  - benchmarks/pdl/mbpp/mbpp_simple.pdl
+  - benchmarks/pdl/mbpp/mbpp.pdl
+  - benchmarks/pdl/mbpp/utils.pdl

@@ -21,4 +21,4 @@ disable=
     duplicate-code,
     wrong-import-position
 
-load-plugins=pylint.extensions.docparams,pylint.extensions.bad_builtin
+load-plugins=pylint.extensions.docparams,pylint.extensions.bad_builtin,pylint_pydantic

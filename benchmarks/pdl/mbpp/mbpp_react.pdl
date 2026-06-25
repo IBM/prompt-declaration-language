@@ -1,0 +1,208 @@
+description: MBPP agent
+defs:
+  # model: watsonx/meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+  # model: watsonx/openai/gpt-oss-120b
+  # model: watsonx/ibm/granite-4-h-small
+  # model: watsonx/meta-llama/llama-3-3-70b-instruct
+  # model_parameters:
+  #   data: {}
+  # RITS_API_KEY:
+  #   lang: python
+  #   code: |
+  #     import os
+  #     result = os.environ["RITS_API_KEY"]
+  # model: openai/ibm-granite/granite-4.0-h-small
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/granite-4-h-small/v1
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # model: text-completion-openai/openai/gpt-oss-120b
+  # model_parameters:
+  #   data:
+  #     api_base: https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/gpt-oss-120b/v1/completions
+  #     extra_headers:
+  #       RITS_API_KEY: ${RITS_API_KEY}
+  # temperature: 0.8
+  # problem: |
+  #   Write a python function to find the last digit when factorial of a divides factorial of b.
+
+  parameters:
+    ${ dict(model_parameters, temperature=temperature) }
+
+  max_iterations: 5
+  utils:
+    import: utils.pdl
+  # eval_number_of_warnings:
+  #   function:
+  #     code:
+  #   return:
+  #     defs:
+  #       warnings: ${ utils.flake8(code | default("")) }
+  #     if: ${ (warnings | length) > 0 }
+  #     then: ${ utils.Geometric(0.5).log_prob(warnings | length) }
+  #     else: 0
+  format_trajectory:
+    function:
+      trajectory: [object]
+    return:
+      text:
+        - for:
+            trajectory: ${ trajectory }
+          repeat:
+            text:
+              - defs:
+                  type:
+                    text: ${ trajectory.keys()|first }
+                match: ${ type }
+                with:
+                - case: task
+                  then: |
+                    Task:
+                    ${ trajectory[type]|trim }
+                - case: thought
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Assistant:
+                        <thought>${ trajectory[type]|trim }</thought>
+                - case: action
+                  then: |
+                    <execute>
+                    ${ trajectory[type]|trim }
+                    </execute>
+                - case: observation
+                  then:
+                    text:
+                      - "\n"
+                      - |
+                        Observation:
+                        ${ trajectory[type]|trim }
+                - case: solution
+                  then: |-
+                    <solution>
+                    ${ trajectory[type]|trim }
+                    </solution>
+                - if: ${ type not in ['question'] }
+                  then: "${ type }: ${ trajectory[type]|trim }"
+        - "\n"
+  react_demos:
+    data:
+      - - task: |-
+            Write a function to find the similar elements from the given two tuple lists.
+            assert similar_elements((3, 4, 5, 6),(5, 7, 4, 10)) == (4, 5)
+        - thought: |-
+            The similar elements here are just elements that are in both lists. I should run a solution on the test case before proposing a solution.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+                res = tuple(set(test_tup1) | set(test_tup2))
+                return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: |-
+            ---------------------------------------------------------------------------
+            AssertionError                            Traceback (most recent call last)
+            Cell In[4], line 5
+                  3     return res
+                  4 res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            ----> 5 assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+
+            AssertionError: Expected (4, 5) but got (3, 4, 5, 6, 7, 10)
+        - thought: |-
+            To find the similar elements, I should find the intersection of the two sets. I should use the & operator instead of the | operator.
+        - action: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+            res = similar_elements((3, 4, 5, 6), (5, 7, 4, 10))
+            assert res == (4, 5), "Expected (4, 5) but got {}".format(res)
+        - observation: "[Executed Successfully with No Output]"
+        - thought: There is no more AssertionError. I can now submit the solution.
+        - solution: |-
+            def similar_elements(test_tup1, test_tup2):
+              res = tuple(set(test_tup1) & set(test_tup2))
+              return res
+text:
+  - |
+    Here is an example of trajectory:
+
+  # see https://github.com/xingyaoww/mint-bench/blob/main/mint/tasks/in_context_examples/mbpp/with_tool.txt for prompt
+  - for:
+      trajectory: ${ react_demos }
+    repeat: ${ format_trajectory(trajectory) }
+  - |-
+
+    Using the trajectory format above, solve the following task.
+
+    Task:
+    ${ problem|trim }
+
+    Assistant:
+    <thought>
+  - defs:
+      SOLUTION: ""
+    index: i
+    repeat:
+      text:
+        - def: THOUGHT
+          repeat:
+            text:
+              # - defs:
+              #     extra_parameters:
+              #       data:
+              #         stop:
+              #           - </execute>
+              #           - </solution>
+              #           - <|endoftext|>
+              #         max_tokens: 1024
+              #         include_stop_sequences: true
+              #   model: ${ model }
+              #   def: THOUGHT_inner
+              #   parameters: ${ dict(parameters, **extra_parameters) }
+              - model: ${ model }
+                def: THOUGHT_inner
+                parameters: ${ parameters }
+              - defs:
+                  thought_inner_trim: ${ THOUGHT_inner|trim|trim('\n') }
+                  action:
+                    data: ${ THOUGHT_inner }
+                    parser:
+                      regex: (.|\n)*<(?P<tag>execute|solution)\b[^>]*>(?P<content>(.|\n)*?)</(?P=tag)>(.|\n)*
+                      spec: { tag: string, content: string }
+          # until: ${ thought_inner_trim.endswith('</solution>') or thought_inner_trim.endswith('</execute>') }
+          until: ${ action is not none }
+          maxIterations: ${ max_iterations }
+        - match: ${ action["tag"] | default("") }
+          with:
+          - case: execute
+            then:
+              text:
+              - "\n\nObservation:\n"
+              - defs:
+                  observation:
+                    lang: ipython
+                    code: |
+                      ${ action["content"].lstrip('```python').strip('`') or action["content"] }
+                if: ${ observation is not none }
+                then:
+                  lastOf:
+                  - factor: -1
+                  - ${ (observation|trim|trim('\n')) }
+                else: "[Executed Successfully with No Output]"
+              - |-
+
+
+                Assistant:
+                <thought>
+          - case: solution
+            then:
+              defs:
+                SOLUTION: ${ action["content"] }
+          
+        - factor: ${ -1 if i >= 2 else 0 }
+    until: ${ SOLUTION != '' }
+    maxIterations: ${ max_iterations }
+  - factor: ${ utils.contains_functions(SOLUTION) }
+  # - factor: ${ eval_number_of_warnings(SOLUTION) }
+  - ${ SOLUTION|trim }

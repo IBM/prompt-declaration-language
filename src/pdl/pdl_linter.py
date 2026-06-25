@@ -208,7 +208,9 @@ class LinterConfig(BaseModel):
     A list of directories to ignore.
     """
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(  # pylint: disable=arguments-differ
+        self, __context: Any
+    ) -> None:
         """
         Post-initialize the model.
         """

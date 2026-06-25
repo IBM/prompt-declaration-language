@@ -1,0 +1,8 @@
+task: mbpp
+dataset: datasets/mbpp_expected_sanitized_test.jsonl
+pdl_path: pdl/mbpp/mbpp.pdl
+algorithm: parallel-is
+model: watsonx/meta-llama/llama-4-maverick-17b-128e-instruct-fp8
+particles: 5
+temperature: 0.8
+num_tests: 100
