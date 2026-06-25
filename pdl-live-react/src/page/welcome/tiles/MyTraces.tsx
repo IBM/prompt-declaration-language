@@ -25,7 +25,12 @@ export default function MyTraces() {
             <Button key={filename} isInline variant="link" icon={<FileIcon />}>
               <Link
                 to={
-                  "/my/" + encodeURIComponent(title) + (s ? `?${s}` : "") + hash
+                  "/my/" +
+                  encodeURIComponent(title) +
+                  (s ? `?${s}` : "") +
+                  hash +
+                  "?traceFile=" +
+                  filename
                 }
               >
                 {title}
