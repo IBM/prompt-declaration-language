@@ -1,12 +1,18 @@
 # API Reference
 
-This page documents the PDL members that likely to be used to run PDL programs from Python.
+This page documents the PDL members that are most likely to be used to run PDL programs from Python.
 
 ## Program
 ::: src.pdl.pdl_ast
 
 ## Interpreter
 ::: src.pdl.pdl
+
+## Probabilistic Inference (PPDL)
+::: src.pdl.pdl_infer
+
+## Distributions
+::: src.pdl.pdl_distributions
 
 <!-- 
 ::: pdl.pdl_interpreter
