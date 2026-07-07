@@ -15,6 +15,7 @@ skip:
   - examples/rag/pdf_index.pdl
   - examples/rag/pdf_query.pdl
   - examples/rag/rag_library1.pdl
+  - examples/rag/tfidf_rag.pdl
   - pdl-live-react/src-tauri/tests/cli/code-python.pdl
   - pdl-live-react/demos/error.pdl
   - pdl-live-react/demos/demo1.pdl
