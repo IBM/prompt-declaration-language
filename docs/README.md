@@ -20,10 +20,13 @@ PDL provides the following features:
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Explorer, a UI tool for exploring traces and live programming
+- Probabilistic programming (PPDL): plug-and-play inference scaling via probabilistic inference
 
 The PDL interpreter takes a PDL program as input and generates data by executing its instructions (calling out to models, code, etc...).
 
 See below for a quick reference, followed by [installation notes](#interpreter-installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+
+PDL can also be used as a probabilistic programming language. See [PPDL](https://ibm.github.io/prompt-declaration-language/ppdl) for details.
 
 
 ## Quick Reference
