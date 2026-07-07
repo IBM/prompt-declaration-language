@@ -6,10 +6,40 @@ use duct::cmd;
 
 use crate::util::shasum;
 
+fn validate_requirements(requirements: &str) -> Result<(), Box<dyn ::std::error::Error>> {
+    if requirements.is_empty() {
+        return Err(Box::from("Requirements string cannot be empty"));
+    }
+    for c in requirements.chars() {
+        if !c.is_ascii_alphanumeric()
+            && c != '='
+            && c != '>'
+            && c != '<'
+            && c != '!'
+            && c != '~'
+            && c != ' '
+            && c != '\n'
+            && c != '\r'
+            && c != ','
+            && c != '['
+            && c != ']'
+            && c != '-'
+            && c != '_'
+            && c != '.'
+            && c != '/'
+        {
+            return Err(Box::from(format!("Invalid character in requirements: {}", c)));
+        }
+    }
+    Ok(())
+}
+
 #[cfg(desktop)]
 pub async fn pip_install_if_needed(
     requirements: &str,
 ) -> Result<PathBuf, Box<dyn ::std::error::Error>> {
+    validate_requirements(requirements)?;
+
     let Some(cache_path) = cache_dir() else {
         return Err(Box::from("Could not find user cache directory"));
     };
@@ -30,12 +60,21 @@ pub async fn pip_install_if_needed(
             .stdout_to_stderr()
             .run()?;
 
-        cmd!(bin_path.join("pip"), "install", &requirements)
+        if !venv_path.exists() {
+            return Err(Box::from("Failed to create virtual environment"));
+        }
+
+        let pip_path = bin_path.join("pip");
+        if !pip_path.exists() {
+            return Err(Box::from("pip not found in virtual environment"));
+        }
+
+        let requirements_file = venv_path.join("requirements.txt");
+        write(&requirements_file, requirements)?;
+
+        cmd!(pip_path, "install", "-r", &requirements_file)
             .stdout_to_stderr()
             .run()?;
-
-        let cached_requirements_path = venv_path.join("requirements.txt");
-        write(&cached_requirements_path, requirements)?;
     }
 
     Ok(bin_path.to_path_buf())
