@@ -126,7 +126,7 @@ class ExamplesRun:
         self.update_results: bool = False
 
         # File manipulation
-        self.check = [str(f) for f in pathlib.Path(".").glob("**/*.pdl")]
+        self.check = [str(f) for f in sorted(pathlib.Path(".").glob("**/*.pdl"))]
         self.skip: List[str] = []
         self.with_inputs: Dict[str, InputsType] = {}
         self.expected_parse_error: List[str] = []
