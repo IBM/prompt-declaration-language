@@ -231,6 +231,9 @@ See the [contribution guidelines](https://ibm.github.io/prompt-declaration-langu
 
 ## References
 
-- [PDL Schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json)
 - [arXiv Paper](http://arxiv.org/abs/2410.19135)
+- [AutoPDL Paper](https://openreview.net/pdf?id=CAeISyE3aR) (AutoML 25)
+- [Compliance Agent paper](https://openreview.net/pdf?id=c3PxSjfUYZ) (PRAL@ICML 25)
+- [PPDL paper](https://openreview.net/pdf?id=37hqMR7Cbx) (ICML 26)
+- [PDL Schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json)
 
