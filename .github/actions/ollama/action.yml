@@ -72,8 +72,9 @@ runs:
           fi
           attempt=$((attempt + 1))
         done
-        
+
         echo "❌ Failed to connect to Ollama server after $max_attempts attempts"
+        exit 1
 
     - name: Pull models in examples/
       shell: bash
