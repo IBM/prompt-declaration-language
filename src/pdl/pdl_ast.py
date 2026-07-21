@@ -1578,11 +1578,13 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         {
             "ollama/*": {
                 "temperature": 0,
+                "seed": 0,
             },
         },
         {
             "ollama_chat/*": {
                 "temperature": 0,
+                "seed": 0,
             },
         },
     ]
