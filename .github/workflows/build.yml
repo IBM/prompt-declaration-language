@@ -29,10 +29,10 @@ jobs:
         # This path is specific to Ubuntu
         path: ${{ env.pythonLocation }}
         # Look to see if there is a cache hit for the setup file
-        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}
+        key: ${{ runner.os }}-pip-new4-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-pip-new3
-          ${{ runner.os }}-new3
+          ${{ runner.os }}-pip-new4
+          ${{ runner.os }}-new4
     - name: Install dependencies
       run: pip install --upgrade --upgrade-strategy eager .[all]
     - name: pip list packages
