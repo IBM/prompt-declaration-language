@@ -10,13 +10,16 @@ runs:
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
     # Cache Ollama models.
-    # The install script below runs Ollama as the `ollama` system user, which by
-    # default stores models under /usr/share/ollama/.ollama/models. That path is
-    # outside $HOME and cannot be restored by actions/cache (the runner user has
-    # no write access to /usr/share), so the cache was always empty and the models
-    # were re-downloaded on every run. We redirect the models directory to
-    # ~/.ollama/models (see the "Configure Ollama models directory" step) and cache
-    # that instead.
+    # The install script below installs Ollama as a systemd service that runs as
+    # the `ollama` system user, which stores models under
+    # /usr/share/ollama/.ollama/models. That path is outside $HOME and cannot be
+    # restored by actions/cache (the runner user has no write access to
+    # /usr/share), so the cache was always empty and the models were re-downloaded
+    # on every run. Instead we run the Ollama server ourselves as the runner user
+    # with OLLAMA_MODELS pointed at ~/.ollama/models (see the "Start Ollama server"
+    # step) and cache that directory. Keeping everything owned by the runner user
+    # avoids the cross-user permission/sandboxing issues that come with the
+    # system-wide service.
     - name: Cache Ollama models
       uses: actions/cache@v5
       with:
@@ -26,30 +29,25 @@ runs:
           ollama-models-${{ runner.os }}-
 
       # Set up Ollama
-    - name: Install Ollama and start server
+    - name: Install Ollama
       shell: bash
       run: |
         curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
-    - name: Configure Ollama models directory
+    - name: Start Ollama server
       shell: bash
       run: |
-        # Point the Ollama service at the cached ~/.ollama/models directory so that
-        # pulled models persist across runs. The directory may already be populated
-        # by the cache restore above; make sure it exists and is owned by the
-        # `ollama` service user so the server can read cached models and write new
-        # ones. The default umask keeps the files world-readable so the post-job
-        # cache save (which runs as the runner user) can read them back out.
-        sudo mkdir -p "$HOME/.ollama/models"
-        sudo chown -R ollama:ollama "$HOME/.ollama"
-        sudo chmod -R a+rX "$HOME/.ollama"
-        sudo mkdir -p /etc/systemd/system/ollama.service.d
-        cat <<EOF | sudo tee /etc/systemd/system/ollama.service.d/override.conf
-        [Service]
-        Environment="OLLAMA_MODELS=$HOME/.ollama/models"
-        EOF
-        sudo systemctl daemon-reload
-        sudo systemctl restart ollama
+        # The installer starts Ollama as the `ollama` system user, which stores
+        # models under /usr/share/ollama/.ollama — a path that cannot be cached.
+        # Stop that service and run our own server as the runner user with the
+        # models directory under $HOME (populated by the cache restore above) so
+        # that pulled models persist across runs.
+        sudo systemctl stop ollama 2>/dev/null || true
+        mkdir -p "$HOME/.ollama/models"
+        # Export OLLAMA_MODELS for subsequent steps (the ollama CLI reads it too).
+        echo "OLLAMA_MODELS=$HOME/.ollama/models" >> "$GITHUB_ENV"
+        # Launch the server in the background; it keeps running across later steps.
+        OLLAMA_MODELS="$HOME/.ollama/models" nohup ollama serve > "$HOME/ollama-serve.log" 2>&1 &
 
     - name: Wait for Ollama server
       shell: bash
