@@ -1,7 +1,6 @@
 update_results: false
 check: []
 skip:
-  - examples/demos/react.pdl
   - examples/cldk/cldk-assistant.pdl
   - examples/gsm8k/gsm8k.pdl
   - examples/gsm8k/gsm8k-loop-fission.pdl 
@@ -40,11 +39,15 @@ skip:
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
-  - examples/ppdl/coin.pdl
   - examples/ppdl/mbpp.pdl
-  - examples/ppdl/hmm_nl_priors.pdl
   - examples/prompt_library/gsm8k_prob_react.pdl
   - examples/test.pdl
+unstable_result:
+  - examples/demos/react.pdl
+  - examples/demo/9-react.pdl
+  - examples/react/react_demo.pdl
+  - examples/ppdl/coin.pdl
+  - examples/ppdl/hmm_nl_priors.pdl
 
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:

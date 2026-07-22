@@ -57,6 +57,11 @@ class ExpectedResult:
 
     results: List[str] | None = None
     error_code: ExecutionErrorCode | None = None
+    # When True, any successful execution is accepted regardless of its output.
+    # Used for inherently non-deterministic programs (e.g. agentic loops that
+    # call an LLM and/or live services) whose exact output cannot be pinned down
+    # but which should still run without error.
+    any_result: bool = False
 
     def compare_to_execution(self, execution_result: ExecutionResult) -> bool:
         """
@@ -66,6 +71,10 @@ class ExpectedResult:
         # ExecutionErrorCode codes must match
         if execution_result.error_code != self.error_code:
             return False
+
+        # For non-deterministic programs we only require a successful run
+        if self.any_result:
+            return True
 
         # Check if parse or runtime error
         if self.error_code == ExecutionErrorCode.PARSE_ERROR:
@@ -131,6 +140,9 @@ class ExamplesRun:
         self.with_inputs: Dict[str, InputsType] = {}
         self.expected_parse_error: List[str] = []
         self.expected_runtime_error: List[str] = []
+        # Files that are run but whose exact output is not checked, only that
+        # they execute without error (inherently non-deterministic programs).
+        self.unstable_result: List[str] = []
 
         # Load content from EXAMPLES_RUN_FILE
         with open(EXAMPLES_RUN_CONFIG_FILE, "r", encoding="utf-8") as file:
@@ -145,6 +157,7 @@ class ExamplesRun:
             self.skip = content["skip"]
             self.expected_parse_error = content["expected_parse_error"]
             self.expected_runtime_error = content["expected_runtime_error"]
+            self.unstable_result = content.get("unstable_result") or []
 
             for filename, inputs_type in content["with_inputs"].items():
                 stdin, scope = None, None
@@ -183,6 +196,9 @@ class ExamplesRun:
                 expected_result.error_code = ExecutionErrorCode.PARSE_ERROR
             elif file in self.expected_runtime_error:
                 expected_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
+            elif file in self.unstable_result:
+                expected_result.error_code = ExecutionErrorCode.NO_ERROR
+                expected_result.any_result = True
             else:
 
                 # Collect possible results
