@@ -1,4 +1,5 @@
 import pathlib
+from concurrent.futures import ThreadPoolExecutor
 
 from pdl.pdl_ast import BlockType, IncludeBlock
 from pdl.pdl_ast_utils import iter_block_children
@@ -20,22 +21,55 @@ def has_include(block: BlockType) -> bool:
     return b
 
 
+def _check_dump(yaml_file_name: pathlib.Path) -> None:
+    try:
+        ast1, _ = parse_file(yaml_file_name)
+        if has_include(ast1.root):
+            return
+        d = program_to_dict(ast1)
+        s = dump_yaml(d)
+        ast2, _ = parse_str(s)
+        json1 = ast1.model_dump_json()
+        json2 = ast2.model_dump_json()
+        assert json1 == json2, f"{yaml_file_name}:\n{s}"
+    except PDLParseError:
+        pass
+    except Exception as exc:
+        assert False, f"{yaml_file_name}: {repr(exc)}"
+
+
 def test_dump() -> None:
-    for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        try:
-            ast1, _ = parse_file(yaml_file_name)
-            if has_include(ast1.root):
-                continue
-            d = program_to_dict(ast1)
-            s = dump_yaml(d)
-            ast2, _ = parse_str(s)
-            json1 = ast1.model_dump_json()
-            json2 = ast2.model_dump_json()
-            assert json1 == json2, f"{yaml_file_name}:\n{s}"
-        except PDLParseError:
-            pass
-        except Exception as exc:
-            assert False, f"{yaml_file_name}: {repr(exc)}"
+    with ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(_check_dump, yaml_file_name)
+            for yaml_file_name in pathlib.Path(".").glob("**/*.pdl")
+        ]
+        for future in futures:
+            future.result()
+
+
+def _check_dump_exclude_internals(
+    yaml_file_name: pathlib.Path, known_internals: set[str]
+) -> None:
+    try:
+        ast1, _ = parse_file(yaml_file_name)
+        if has_include(ast1.root):
+            return
+        d = program_to_dict(ast1)
+        s = dump_yaml(d)
+        assert all(
+            field in s for field in known_internals
+        ), f"Internal fields not found in dump: {s}"
+
+        ast2, _ = parse_file(yaml_file_name)
+        s = dump_program_exclude_internals(ast2)
+        assert all(
+            field not in s for field in known_internals
+        ), "Internal fields found in dump"
+    except PDLParseError:
+        pass
+    except Exception as exc:
+        assert False, f"{yaml_file_name}: {repr(exc)}"
 
 
 def test_dump_exclude_internals() -> None:
@@ -49,23 +83,12 @@ def test_dump_exclude_internals() -> None:
         "pdl__is_leaf",
     }
 
-    for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        try:
-            ast1, _ = parse_file(yaml_file_name)
-            if has_include(ast1.root):
-                continue
-            d = program_to_dict(ast1)
-            s = dump_yaml(d)
-            assert all(
-                field in s for field in known_internals
-            ), f"Internal fields not found in dump: {s}"
-
-            ast2, _ = parse_file(yaml_file_name)
-            s = dump_program_exclude_internals(ast2)
-            assert all(
-                field not in s for field in known_internals
-            ), "Internal fields found in dump"
-        except PDLParseError:
-            pass
-        except Exception as exc:
-            assert False, f"{yaml_file_name}: {repr(exc)}"
+    with ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(
+                _check_dump_exclude_internals, yaml_file_name, known_internals
+            )
+            for yaml_file_name in pathlib.Path(".").glob("**/*.pdl")
+        ]
+        for future in futures:
+            future.result()
