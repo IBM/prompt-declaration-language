@@ -19,25 +19,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+    - name: Set up Python environment
+      uses: ./.github/actions/setup-python-env
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Cache pip
-      uses: actions/cache@v5
-      with:
-        # Cache only pip's download cache (wheels), not the whole Python
-        # install. This keeps the cache small to avoid GitHub's per-repo
-        # cache size limit and the resulting LRU eviction.
-        # This path is specific to Ubuntu.
-        path: ~/.cache/pip
-        # Look to see if there is a cache hit for the setup file
-        key: ${{ runner.os }}-pip-wheels1-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-wheels1-${{ env.pythonLocation }}-
-          ${{ runner.os }}-pip-wheels1-
-    - name: Install dependencies
-      run: pip install --upgrade --upgrade-strategy eager .[all]
+        runner-os: ${{ runner.os }}
     - name: pip list packages
       run: pip list
     - name: show pip dependencies
