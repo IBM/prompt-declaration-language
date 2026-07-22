@@ -39,21 +39,15 @@ skip:
   - examples/skeleton-of-thought/tips.pdl
   - examples/tutorial/sdk/lib.pdl
   - build/lib/pdl/pdl_stdlib.pdl
-  - examples/ppdl/coin.pdl
   - examples/ppdl/mbpp.pdl
-  - examples/ppdl/hmm_nl_priors.pdl
   - examples/prompt_library/gsm8k_prob_react.pdl
   - examples/test.pdl
-
-# Files that are executed but whose exact output is not checked -- only that
-# they run without error. These are inherently non-deterministic programs: the
-# ReAct examples drive a variable-length LLM tool-calling loop and query live
-# Wikipedia, so their exact output cannot be reproduced across environments even
-# with a fixed seed. They are the same program under three paths.
 unstable_result:
   - examples/demos/react.pdl
   - examples/demo/9-react.pdl
   - examples/react/react_demo.pdl
+  - examples/ppdl/coin.pdl
+  - examples/ppdl/hmm_nl_priors.pdl
 
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
