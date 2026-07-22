@@ -49,23 +49,11 @@ runs:
       run: cat tests/test_examples_run.yaml
 
     # Run tests
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v6
+    - name: Set up Python environment
+      uses: ./.github/actions/setup-python-env
       with:
         python-version: ${{ inputs.python-version }}
-    - name: Cache pip
-      uses: actions/cache@v5
-      with:
-        # This path is specific to Ubuntu
-        path: ${{ env.pythonLocation }}
-        # Look to see if there is a cache hit for the setup file
-        key: ${{ inputs.runner-os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ inputs.runner-os }}-pip-new3
-          ${{ inputs.runner-os }}-new3
-    - name: Install dependencies
-      shell: bash
-      run: pip install --upgrade --upgrade-strategy eager .[all]
+        runner-os: ${{ inputs.runner-os }}
     - name: Pip list packages
       shell: bash
       run: pip list
