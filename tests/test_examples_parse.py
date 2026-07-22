@@ -28,9 +28,7 @@ def _parse_program(yaml_file_name: pathlib.Path) -> str | None:
 
 def test_valid_programs(capsys: CaptureFixture[str]) -> None:
     with ThreadPoolExecutor() as executor:
-        results = executor.map(
-            _parse_program, pathlib.Path(".").glob("**/*.pdl")
-        )
+        results = executor.map(_parse_program, pathlib.Path(".").glob("**/*.pdl"))
         actual_invalid: set[str] = {name for name in results if name is not None}
     # stderr is captured process-wide, so warnings cannot be attributed to
     # individual files when parsing runs in parallel; check the aggregate.
