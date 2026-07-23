@@ -87,6 +87,7 @@ from .pdl_ast import (
     LazyMessage,
     LazyMessages,
     LeafBlock,
+    LeafBlockType,
     LitellmModelBlock,
     LitellmParameters,
     LocalizedExpression,
@@ -122,6 +123,7 @@ from .pdl_ast import (
     RoleType,
     SequenceBlock,
     StructuredBlock,
+    StructuredBlockType,
     TextBlock,
     empty_block_location,
 )
@@ -725,11 +727,22 @@ def process_block_body(
     block: AdvancedBlockType,
     loc: PdlLocationType,
 ) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
-    scope_init = scope
+    block.pdl__location = loc
+    if isinstance(block, LeafBlock):
+        return process_leaf_block(state, scope, block, loc)
+    assert isinstance(block, StructuredBlock)
+    return process_structured_block(state, scope, block, loc)
+
+
+def process_leaf_block(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: LeafBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
     result: Any
     background: LazyMessages
     trace: AdvancedBlockType
-    block.pdl__location = loc
     match block:
         case ModelBlock():
             result, background, scope, trace = process_call_model(
@@ -776,6 +789,116 @@ def process_block_body(
                 yield_result(result.result(), block.kind)
             if state.yield_background:
                 yield_background(background)
+        case MessageBlock():
+            content, _, _, trace = process_block_of(
+                block,
+                "content",
+                state,
+                scope,
+                loc,
+            )
+            message = {
+                "role": state.role,
+                "content": content,
+                "pdl__defsite": block.pdl__id,
+            }
+            if block.name is not None:
+                name, block = process_expr_of(block, "name", scope, loc)
+                message["name"] = name
+            if block.tool_call_id is not None:
+                tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
+                message["tool_call_id"] = tool_call_id
+            if block.tool_calls is not None:
+                tool_calls, block = process_expr_of(block, "tool_calls", scope, loc)
+                message["tool_calls"] = tool_calls
+            result = PdlConst(SingletonContext(PdlDict(message)))
+            background = SingletonContext(PdlDict(message))
+        case ReadBlock():
+            result, background, scope, trace = process_input(state, scope, block, loc)
+            if state.yield_result:
+                yield_result(result.result(), block.kind)
+            if state.yield_background:
+                yield_background(background)
+
+        case AggregatorBlock():
+            result, background, scope, trace = process_aggregator(
+                state, scope, block, loc
+            )
+
+        case FunctionBlock():
+            closure = ClosureBlock(  # pyright: ignore
+                description=block.description,
+                spec=block.spec,
+                defs=block.defs,
+                def_=block.def_,  # pyright: ignore
+                contribute=block.contribute,
+                parser=block.parser,
+                fallback=block.fallback,
+                retry=block.retry,
+                trace_error_on_retry=block.trace_error_on_retry,
+                role=block.role,
+                function=block.function,
+                return_=block.return_,  # pyright: ignore
+                pdl__location=loc,
+                pdl__scope=None,
+                pdl__state=state,
+            )
+            if block.def_ is not None:
+                scope = scope | {block.def_: closure}
+            closure.pdl__scope = scope
+            _signature: dict[str, Any] = {}
+            if block.def_ is not None:
+                _signature["name"] = block.def_
+            if block.description is not None:
+                _signature["description"] = block.description
+            if block.function is not None:
+                _signature["parameters"] = get_json_schema(block.function, False) or {}
+            else:
+                _signature["parameters"] = {}
+            signature: dict[str, Any] = {"type": "function", "function": _signature}
+            closure.signature = signature
+            result = PdlConst(closure)
+            background = DependentContext([])
+            trace = closure.model_copy(update={})
+        case CallBlock():
+            result, background, scope, trace = process_call(state, scope, block, loc)
+        case FactorBlock():
+            if state.ignore_factor:
+                weight = 0.0
+                trace = block.model_copy()
+            else:
+                weight, trace = process_expr_of(
+                    block, "factor", scope, append(loc, "factor")
+                )
+            trace.pdl__score = weight
+            state.score.ref += weight
+            result = PdlConst("")
+            background = DependentContext([])
+            assert block.pdl__id is not None
+            state.replay[block.pdl__id] = {"value": result}
+            if state.with_resample and block.resample:
+                raise Resample(state.replay, state.score.ref)
+        case EmptyBlock():
+            result = PdlConst("")
+            background = DependentContext([])
+            trace = block.model_copy()
+
+        case _:
+            assert False, f"Internal error: unsupported type ({type(block)})"
+    return result, background, scope, trace
+
+
+def process_structured_block(
+    state: InterpreterState,
+    scope: ScopeType,
+    block: StructuredBlockType,
+    loc: PdlLocationType,
+) -> tuple[PdlLazy[Any], LazyMessages, ScopeType, AdvancedBlockType]:
+    scope_init = scope
+    result: Any
+    background: LazyMessages
+    trace: AdvancedBlockType
+    match block:
         case SequenceBlock():
             result, background, scope, trace = process_blocks_of(
                 block,
@@ -870,30 +993,6 @@ def process_block_body(
                 )
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result, block.kind)
-        case MessageBlock():
-            content, _, _, trace = process_block_of(
-                block,
-                "content",
-                state,
-                scope,
-                loc,
-            )
-            message = {
-                "role": state.role,
-                "content": content,
-                "pdl__defsite": block.pdl__id,
-            }
-            if block.name is not None:
-                name, block = process_expr_of(block, "name", scope, loc)
-                message["name"] = name
-            if block.tool_call_id is not None:
-                tool_call_id, block = process_expr_of(block, "tool_call_id", scope, loc)
-                message["tool_call_id"] = tool_call_id
-            if block.tool_calls is not None:
-                tool_calls, block = process_expr_of(block, "tool_calls", scope, loc)
-                message["tool_calls"] = tool_calls
-            result = PdlConst(SingletonContext(PdlDict(message)))
-            background = SingletonContext(PdlDict(message))
         case IfBlock():
             b, if_trace = process_condition_of(block, "condition", scope, loc, "if")
             if b:
@@ -1132,81 +1231,11 @@ def process_block_body(
             if state.yield_result and not iteration_state.yield_result:
                 yield_result(result.result(), block.kind)
             trace = block.model_copy(update={"pdl__trace": traces})
-        case ReadBlock():
-            result, background, scope, trace = process_input(state, scope, block, loc)
-            if state.yield_result:
-                yield_result(result.result(), block.kind)
-            if state.yield_background:
-                yield_background(background)
-
         case IncludeBlock():
             result, background, scope, trace = process_include(state, scope, block, loc)
 
         case ImportBlock():
             result, background, scope, trace = process_import(state, scope, block, loc)
-
-        case AggregatorBlock():
-            result, background, scope, trace = process_aggregator(
-                state, scope, block, loc
-            )
-
-        case FunctionBlock():
-            closure = ClosureBlock(  # pyright: ignore
-                description=block.description,
-                spec=block.spec,
-                defs=block.defs,
-                def_=block.def_,  # pyright: ignore
-                contribute=block.contribute,
-                parser=block.parser,
-                fallback=block.fallback,
-                retry=block.retry,
-                trace_error_on_retry=block.trace_error_on_retry,
-                role=block.role,
-                function=block.function,
-                return_=block.return_,  # pyright: ignore
-                pdl__location=loc,
-                pdl__scope=None,
-                pdl__state=state,
-            )
-            if block.def_ is not None:
-                scope = scope | {block.def_: closure}
-            closure.pdl__scope = scope
-            _signature: dict[str, Any] = {}
-            if block.def_ is not None:
-                _signature["name"] = block.def_
-            if block.description is not None:
-                _signature["description"] = block.description
-            if block.function is not None:
-                _signature["parameters"] = get_json_schema(block.function, False) or {}
-            else:
-                _signature["parameters"] = {}
-            signature: dict[str, Any] = {"type": "function", "function": _signature}
-            closure.signature = signature
-            result = PdlConst(closure)
-            background = DependentContext([])
-            trace = closure.model_copy(update={})
-        case CallBlock():
-            result, background, scope, trace = process_call(state, scope, block, loc)
-        case FactorBlock():
-            if state.ignore_factor:
-                weight = 0.0
-                trace = block.model_copy()
-            else:
-                weight, trace = process_expr_of(
-                    block, "factor", scope, append(loc, "factor")
-                )
-            trace.pdl__score = weight
-            state.score.ref += weight
-            result = PdlConst("")
-            background = DependentContext([])
-            assert block.pdl__id is not None
-            state.replay[block.pdl__id] = {"value": result}
-            if state.with_resample and block.resample:
-                raise Resample(state.replay, state.score.ref)
-        case EmptyBlock():
-            result = PdlConst("")
-            background = DependentContext([])
-            trace = block.model_copy()
 
         case _:
             assert False, f"Internal error: unsupported type ({type(block)})"
