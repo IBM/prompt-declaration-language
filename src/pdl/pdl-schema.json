@@ -465,16 +465,22 @@
           "$ref": "#/$defs/DataBlock"
         },
         {
-          "$ref": "#/$defs/IfBlock"
+          "$ref": "#/$defs/MessageBlock"
         },
         {
-          "$ref": "#/$defs/MatchBlock"
+          "$ref": "#/$defs/ReadBlock"
         },
         {
-          "$ref": "#/$defs/RepeatBlock"
+          "$ref": "#/$defs/FactorBlock"
         },
         {
-          "$ref": "#/$defs/MapBlock"
+          "$ref": "#/$defs/AggregatorBlock"
+        },
+        {
+          "$ref": "#/$defs/ErrorBlock"
+        },
+        {
+          "$ref": "#/$defs/EmptyBlock"
         },
         {
           "$ref": "#/$defs/SequenceBlock"
@@ -492,28 +498,22 @@
           "$ref": "#/$defs/ObjectBlock"
         },
         {
-          "$ref": "#/$defs/MessageBlock"
+          "$ref": "#/$defs/IfBlock"
         },
         {
-          "$ref": "#/$defs/ReadBlock"
+          "$ref": "#/$defs/MatchBlock"
+        },
+        {
+          "$ref": "#/$defs/RepeatBlock"
+        },
+        {
+          "$ref": "#/$defs/MapBlock"
         },
         {
           "$ref": "#/$defs/IncludeBlock"
         },
         {
           "$ref": "#/$defs/ImportBlock"
-        },
-        {
-          "$ref": "#/$defs/FactorBlock"
-        },
-        {
-          "$ref": "#/$defs/AggregatorBlock"
-        },
-        {
-          "$ref": "#/$defs/ErrorBlock"
-        },
-        {
-          "$ref": "#/$defs/EmptyBlock"
         }
       ]
     },
@@ -2430,10 +2430,14 @@
           "description": "Execution timing information."
         },
         "pdl__is_leaf": {
-          "const": true,
-          "default": true,
+          "const": false,
+          "default": false,
           "title": "Pdl  Is Leaf",
           "type": "boolean"
+        },
+        "context": {
+          "$ref": "#/$defs/IndependentEnum",
+          "default": "dependent"
         },
         "kind": {
           "const": "import",

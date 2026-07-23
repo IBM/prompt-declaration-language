@@ -928,6 +928,120 @@ class DataBlock(LeafBlock):
     """Do not evaluate expressions inside strings."""
 
 
+class MessageBlock(LeafBlock):
+    """Create a message."""
+
+    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
+    content: "BlockType"
+    """Content of the message."""
+    name: OptionalExpressionStr = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: OptionalExpressionStr = None
+    """The id of the tool invocation for which this message is the tool response."""
+    tool_calls: OptionalExpressionList = None
+    """List of tool invocations made by the assistant in this message."""
+
+
+class ReadBlock(LeafBlock):
+    """Read from a file or standard input.
+
+    Example. Read from the standard input with a prompt starting with `> `.
+    ```PDL
+    read:
+    message: "> "
+    ```
+
+    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+    ```PDL
+    read: ./data.yaml
+    parser: yaml
+    ```
+    """
+
+    kind: Literal[BlockKind.READ] = BlockKind.READ
+    read: OptionalExpressionStr
+    """Name of the file to read. If `None`, read the standard input.
+    """
+    message: OptionalStr = None
+    """Message to prompt the user to enter a value.
+    """
+    multiline: bool = False
+    """Indicate if one or multiple lines should be read.
+    """
+
+
+class FactorBlock(LeafBlock):
+    """Condition the model."""
+
+    kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
+    factor: ExpressionType[float]
+    """Score to condition the model.
+    """
+    resample: bool = True
+    """Allow to raise the Resampling exception during the execution of the block.
+    """
+    # Field for internal use
+    pdl__score: OptionalFloat = None
+
+
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: str | None = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregatorConfig(AggregatorConfig):
+    file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: ExpressionType[str] = "w"
+    """File opening mode."""
+    encoding: ExpressionType[str | None] = "utf-8"
+    """File encoding."""
+    prefix: ExpressionType[str] = ""
+    """Prefix to the contributed value."""
+    suffix: ExpressionType[str] = "\n"
+    """Suffix to the contributed value."""
+    flush: ExpressionType[bool] = False
+    """Whether to forcibly flush the stream."""
+
+
+AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
+
+
+class AggregatorBlock(LeafBlock):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
+    """Configuration for the aggregator (context or file-based)."""
+
+
+class ErrorBlock(LeafBlock):
+    """Block representing an error generated at runtime."""
+
+    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
+    msg: str
+    """Error message.
+    """
+    program: "BlockType"
+    """Block that raised the error.
+    """
+
+
+class EmptyBlock(LeafBlock):
+    """Block without an action. It can contain definitions."""
+
+    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
+
+
 class JoinConfig(BaseModel):
     """Configure how loop iterations or sequence of blocks should be combined."""
 
@@ -1029,20 +1143,6 @@ class ObjectBlock(StructuredBlock):
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
     object: dict[str, "BlockType"] | list["BlockType"]
     """Object fields with their block definitions, or a list of blocks that produce objects to merge."""
-
-
-class MessageBlock(LeafBlock):
-    """Create a message."""
-
-    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    content: "BlockType"
-    """Content of the message."""
-    name: OptionalExpressionStr = None
-    """For example, the name of the tool that was invoked, for which this message is the tool response."""
-    tool_call_id: OptionalExpressionStr = None
-    """The id of the tool invocation for which this message is the tool response."""
-    tool_calls: OptionalExpressionList = None
-    """List of tool invocations made by the assistant in this message."""
 
 
 class IfBlock(StructuredBlock):
@@ -1224,34 +1324,6 @@ class MapBlock(StructuredBlock):
     pdl__trace: list["BlockType"] | None = None
 
 
-class ReadBlock(LeafBlock):
-    """Read from a file or standard input.
-
-    Example. Read from the standard input with a prompt starting with `> `.
-    ```PDL
-    read:
-    message: "> "
-    ```
-
-    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
-    ```PDL
-    read: ./data.yaml
-    parser: yaml
-    ```
-    """
-
-    kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: OptionalExpressionStr
-    """Name of the file to read. If `None`, read the standard input.
-    """
-    message: OptionalStr = None
-    """Message to prompt the user to enter a value.
-    """
-    multiline: bool = False
-    """Indicate if one or multiple lines should be read.
-    """
-
-
 class IncludeBlock(StructuredBlock):
     """Include a PDL file."""
 
@@ -1263,7 +1335,7 @@ class IncludeBlock(StructuredBlock):
     pdl__trace: OptionalBlockType = None
 
 
-class ImportBlock(LeafBlock):
+class ImportBlock(StructuredBlock):
     """Import a PDL file."""
 
     kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
@@ -1274,81 +1346,9 @@ class ImportBlock(LeafBlock):
     pdl__trace: OptionalBlockType = None
 
 
-class FactorBlock(LeafBlock):
-    """Condition the model."""
-
-    kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
-    factor: ExpressionType[float]
-    """Score to condition the model.
-    """
-    resample: bool = True
-    """Allow to raise the Resampling exception during the execution of the block.
-    """
-    # Field for internal use
-    pdl__score: OptionalFloat = None
-
-
-class AggregatorConfig(BaseModel):
-    """Common fields for all aggregator configurations."""
-
-    model_config = ConfigDict(
-        extra="forbid",
-        use_attribute_docstrings=True,
-        arbitrary_types_allowed=True,
-    )
-
-    description: str | None = None
-    """Documentation associated to the aggregator config.
-    """
-
-
-class FileAggregatorConfig(AggregatorConfig):
-    file: ExpressionType[str]
-    """Name of the file to which contribute."""
-    mode: ExpressionType[str] = "w"
-    """File opening mode."""
-    encoding: ExpressionType[str | None] = "utf-8"
-    """File encoding."""
-    prefix: ExpressionType[str] = ""
-    """Prefix to the contributed value."""
-    suffix: ExpressionType[str] = "\n"
-    """Suffix to the contributed value."""
-    flush: ExpressionType[bool] = False
-    """Whether to forcibly flush the stream."""
-
-
-AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
-
-
-class AggregatorBlock(LeafBlock):
-    """Create a new aggregator that can be use in the `contribute` field."""
-
-    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
-    aggregator: AggregatorType
-    """Configuration for the aggregator (context or file-based)."""
-
-
-class ErrorBlock(LeafBlock):
-    """Block representing an error generated at runtime."""
-
-    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
-    msg: str
-    """Error message.
-    """
-    program: "BlockType"
-    """Block that raised the error.
-    """
-
-
-class EmptyBlock(LeafBlock):
-    """Block without an action. It can contain definitions."""
-
-    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
-
-
 ExpressionBlock = TypeAliasType("ExpressionBlock", Union[None, bool, int, float, str])
 """Expression as blocks"""
-AdvancedBlockType: TypeAlias = (
+LeafBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | LitellmModelBlock
@@ -1362,25 +1362,32 @@ AdvancedBlockType: TypeAlias = (
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | SequenceBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
     | MessageBlock
     | ReadBlock
-    | IncludeBlock
-    | ImportBlock
     | FactorBlock
     | AggregatorBlock
     | ErrorBlock
     | EmptyBlock
 )
-"""Different types of structured blocks.
+"""Blocks that directly contribute their value to the context.
+"""
+StructuredBlockType: TypeAlias = (
+    SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | IncludeBlock
+    | ImportBlock
+)
+"""Blocks that contain sub-blocks that can contribute to the context.
+"""
+AdvancedBlockType: TypeAlias = LeafBlockType | StructuredBlockType
+"""Different types of blocks with all their fields.
 """
 BlockType = TypeAliasType("BlockType", Union[ExpressionBlock, AdvancedBlockType])
 """All kinds of blocks.

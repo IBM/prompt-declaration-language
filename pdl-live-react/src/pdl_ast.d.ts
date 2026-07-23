@@ -24,23 +24,23 @@ export type Program =
   | ArgsBlock
   | GetBlock
   | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | MapBlock
+  | MessageBlock
+  | ReadBlock
+  | FactorBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
   | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
   | ObjectBlock
-  | MessageBlock
-  | ReadBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | MapBlock
   | IncludeBlock
   | ImportBlock
-  | FactorBlock
-  | AggregatorBlock
-  | ErrorBlock
-  | EmptyBlock
 export type ExpressionBlock = boolean | number | string | null
 export type Enum = unknown[]
 export type PdlTypeType =
@@ -84,23 +84,23 @@ export type BlockType =
   | ArgsBlock
   | GetBlock
   | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | MapBlock
+  | MessageBlock
+  | ReadBlock
+  | FactorBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
   | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
   | ObjectBlock
-  | MessageBlock
-  | ReadBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | MapBlock
   | IncludeBlock
   | ImportBlock
-  | FactorBlock
-  | AggregatorBlock
-  | ErrorBlock
-  | EmptyBlock
 export type ContributeElement =
   | ContributeTarget
   | string
@@ -297,15 +297,8 @@ export type Contribute12 = ContributeElement[]
  *
  */
 export type ExpectationsType12 = ExpectationType[]
-export type PdlIsLeaf12 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum = "independent" | "dependent"
-export type Kind12 = "if"
+export type PdlIsLeaf12 = true
+export type Kind12 = "message"
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -316,33 +309,13 @@ export type Contribute13 = ContributeElement[]
  *
  */
 export type ExpectationsType13 = ExpectationType[]
-export type PdlIsLeaf13 = false
+export type PdlIsLeaf13 = true
+export type Kind13 = "read"
 /**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum1 = "independent" | "dependent"
-export type Kind13 = "match"
-export type PatternType =
-  | boolean
-  | number
-  | string
-  | OrPattern
-  | ArrayPattern
-  | ObjectPattern
-  | AnyPattern
-  | null
-export type Anyof = PatternType[]
-export type Array = PatternType[]
-export type Any = null
-export type ExpressionBool = LocalizedExpression | boolean | string
-/**
- * List of cases to match.
+ * Indicate if one or multiple lines should be read.
  *
  */
-export type With = MatchCase[]
+export type Multiline = boolean
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -353,280 +326,8 @@ export type Contribute14 = ContributeElement[]
  *
  */
 export type ExpectationsType14 = ExpectationType[]
-export type PdlIsLeaf14 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum2 = "independent" | "dependent"
-export type Kind14 = "repeat"
-/**
- * Arrays to iterate over.
- *
- */
-export type For = {
-  [k: string]: LocalizedExpression | unknown[] | string
-} | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute15 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType15 = ExpectationType[]
-export type PdlIsLeaf15 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum3 = "independent" | "dependent"
-export type Kind15 = "map"
-/**
- * Arrays to iterate over.
- *
- */
-export type For1 = {
-  [k: string]: LocalizedExpression | unknown[] | string
-} | null
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute16 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType16 = ExpectationType[]
-export type PdlIsLeaf16 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum4 = "independent" | "dependent"
-export type Kind16 = "sequence"
-/**
- * Sequence of blocks to join.
- */
-export type Sequence = BlockType[]
-/**
- * String concatenation of the result of each iteration.
- *
- */
-export type As = "text"
-/**
- * String used to concatenate each iteration of the loop.
- *
- */
-export type With1 = string
-/**
- * Return the result of each iteration as an array.
- *
- */
-export type As1 = "array"
-/**
- * Return the union of the objects created at each iteration.
- *
- */
-export type As2 = "object"
-/**
- * Return the result of the last iteration.
- *
- */
-export type As3 = "lastOf"
-export type As4 = "reduce"
-/**
- * Function used to combine the results.
- */
-export type Reduce = LocalizedExpression | string
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute17 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType17 = ExpectationType[]
-export type PdlIsLeaf17 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum5 = "independent" | "dependent"
-export type Kind17 = "text"
-/**
- * Body of the text.
- *
- */
-export type Text = BlockType | BlockType[]
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute18 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType18 = ExpectationType[]
-export type PdlIsLeaf18 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum6 = "independent" | "dependent"
-export type Kind18 = "lastOf"
-/**
- * Sequence of blocks to execute.
- */
-export type Lastof = BlockType[]
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute19 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType19 = ExpectationType[]
-export type PdlIsLeaf19 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum7 = "independent" | "dependent"
-export type Kind19 = "array"
-/**
- * Elements of the array.
- */
-export type Array1 = BlockType[]
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute20 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType20 = ExpectationType[]
-export type PdlIsLeaf20 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum8 = "independent" | "dependent"
-export type Kind20 = "object"
-/**
- * Object fields with their block definitions, or a list of blocks that produce objects to merge.
- */
-export type Object2 =
-  | {
-      [k: string]: BlockType
-    }
-  | BlockType[]
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute21 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType21 = ExpectationType[]
-export type PdlIsLeaf21 = true
-export type Kind21 = "message"
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute22 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType22 = ExpectationType[]
-export type PdlIsLeaf22 = true
-export type Kind22 = "read"
-/**
- * Indicate if one or multiple lines should be read.
- *
- */
-export type Multiline = boolean
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute23 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType23 = ExpectationType[]
-export type PdlIsLeaf23 = false
-/**
- * Enumeration for context execution mode in structured blocks.
- *
- * - INDEPENDENT: Execute with fresh context (parallel execution)
- * - DEPENDENT: Execute with accumulated context (sequential execution)
- */
-export type IndependentEnum9 = "independent" | "dependent"
-export type Kind23 = "include"
-/**
- * Name of the file to include.
- *
- */
-export type Include = string
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute24 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType24 = ExpectationType[]
-export type PdlIsLeaf24 = true
-export type Kind24 = "import"
-/**
- * Name of the file to import.
- *
- */
-export type Import = string
-/**
- * Indicate if the block contributes to the result and background context.
- *
- */
-export type Contribute25 = ContributeElement[]
-/**
- * Specify any expectations that the result of the block must satisfy.
- *
- */
-export type ExpectationsType25 = ExpectationType[]
-export type PdlIsLeaf25 = true
-export type Kind25 = "factor"
+export type PdlIsLeaf14 = true
+export type Kind14 = "factor"
 /**
  * Score to condition the model.
  *
@@ -641,14 +342,14 @@ export type Resample = boolean
  * Indicate if the block contributes to the result and background context.
  *
  */
-export type Contribute26 = ContributeElement[]
+export type Contribute15 = ContributeElement[]
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
-export type ExpectationsType26 = ExpectationType[]
-export type PdlIsLeaf26 = true
-export type Kind26 = "aggregator"
+export type ExpectationsType15 = ExpectationType[]
+export type PdlIsLeaf15 = true
+export type Kind15 = "aggregator"
 /**
  * Configuration for the aggregator (context or file-based).
  */
@@ -686,19 +387,313 @@ export type Flush = LocalizedExpression | boolean | string
  * Indicate if the block contributes to the result and background context.
  *
  */
+export type Contribute16 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType16 = ExpectationType[]
+export type PdlIsLeaf16 = true
+export type Kind16 = "error"
+/**
+ * Error message.
+ *
+ */
+export type Msg = string
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute17 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType17 = ExpectationType[]
+export type PdlIsLeaf17 = true
+export type Kind17 = "empty"
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute18 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType18 = ExpectationType[]
+export type PdlIsLeaf18 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum = "independent" | "dependent"
+export type Kind18 = "sequence"
+/**
+ * Sequence of blocks to join.
+ */
+export type Sequence = BlockType[]
+/**
+ * String concatenation of the result of each iteration.
+ *
+ */
+export type As = "text"
+/**
+ * String used to concatenate each iteration of the loop.
+ *
+ */
+export type With = string
+/**
+ * Return the result of each iteration as an array.
+ *
+ */
+export type As1 = "array"
+/**
+ * Return the union of the objects created at each iteration.
+ *
+ */
+export type As2 = "object"
+/**
+ * Return the result of the last iteration.
+ *
+ */
+export type As3 = "lastOf"
+export type As4 = "reduce"
+/**
+ * Function used to combine the results.
+ */
+export type Reduce = LocalizedExpression | string
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute19 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType19 = ExpectationType[]
+export type PdlIsLeaf19 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum1 = "independent" | "dependent"
+export type Kind19 = "text"
+/**
+ * Body of the text.
+ *
+ */
+export type Text = BlockType | BlockType[]
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute20 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType20 = ExpectationType[]
+export type PdlIsLeaf20 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum2 = "independent" | "dependent"
+export type Kind20 = "lastOf"
+/**
+ * Sequence of blocks to execute.
+ */
+export type Lastof = BlockType[]
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute21 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType21 = ExpectationType[]
+export type PdlIsLeaf21 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum3 = "independent" | "dependent"
+export type Kind21 = "array"
+/**
+ * Elements of the array.
+ */
+export type Array = BlockType[]
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute22 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType22 = ExpectationType[]
+export type PdlIsLeaf22 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum4 = "independent" | "dependent"
+export type Kind22 = "object"
+/**
+ * Object fields with their block definitions, or a list of blocks that produce objects to merge.
+ */
+export type Object1 =
+  | {
+      [k: string]: BlockType
+    }
+  | BlockType[]
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute23 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType23 = ExpectationType[]
+export type PdlIsLeaf23 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum5 = "independent" | "dependent"
+export type Kind23 = "if"
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute24 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType24 = ExpectationType[]
+export type PdlIsLeaf24 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum6 = "independent" | "dependent"
+export type Kind24 = "match"
+export type PatternType =
+  | boolean
+  | number
+  | string
+  | OrPattern
+  | ArrayPattern
+  | ObjectPattern
+  | AnyPattern
+  | null
+export type Anyof = PatternType[]
+export type Array1 = PatternType[]
+export type Any = null
+export type ExpressionBool = LocalizedExpression | boolean | string
+/**
+ * List of cases to match.
+ *
+ */
+export type With1 = MatchCase[]
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute25 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType25 = ExpectationType[]
+export type PdlIsLeaf25 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum7 = "independent" | "dependent"
+export type Kind25 = "repeat"
+/**
+ * Arrays to iterate over.
+ *
+ */
+export type For = {
+  [k: string]: LocalizedExpression | unknown[] | string
+} | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
+export type Contribute26 = ContributeElement[]
+/**
+ * Specify any expectations that the result of the block must satisfy.
+ *
+ */
+export type ExpectationsType26 = ExpectationType[]
+export type PdlIsLeaf26 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum8 = "independent" | "dependent"
+export type Kind26 = "map"
+/**
+ * Arrays to iterate over.
+ *
+ */
+export type For1 = {
+  [k: string]: LocalizedExpression | unknown[] | string
+} | null
+/**
+ * Indicate if the block contributes to the result and background context.
+ *
+ */
 export type Contribute27 = ContributeElement[]
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
 export type ExpectationsType27 = ExpectationType[]
-export type PdlIsLeaf27 = true
-export type Kind27 = "error"
+export type PdlIsLeaf27 = false
 /**
- * Error message.
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum9 = "independent" | "dependent"
+export type Kind27 = "include"
+/**
+ * Name of the file to include.
  *
  */
-export type Msg = string
+export type Include = string
 /**
  * Indicate if the block contributes to the result and background context.
  *
@@ -709,12 +704,24 @@ export type Contribute28 = ContributeElement[]
  *
  */
 export type ExpectationsType28 = ExpectationType[]
-export type PdlIsLeaf28 = true
-export type Kind28 = "empty"
-export type ExpressionList = LocalizedExpression | unknown[] | string
+export type PdlIsLeaf28 = false
+/**
+ * Enumeration for context execution mode in structured blocks.
+ *
+ * - INDEPENDENT: Execute with fresh context (parallel execution)
+ * - DEPENDENT: Execute with accumulated context (sequential execution)
+ */
+export type IndependentEnum10 = "independent" | "dependent"
+export type Kind28 = "import"
+/**
+ * Name of the file to import.
+ *
+ */
+export type Import = string
 export type ExpressionInt = LocalizedExpression | number | string
 export type PdlTrace = BlockType[] | null
 export type PdlTrace1 = BlockType[] | null
+export type ExpressionList = LocalizedExpression | unknown[] | string
 export type ExpressionDictStr =
   | LocalizedExpression
   | {
@@ -894,23 +901,23 @@ export type PdlBlock =
   | ArgsBlock
   | GetBlock
   | DataBlock
-  | IfBlock
-  | MatchBlock
-  | RepeatBlock
-  | MapBlock
+  | MessageBlock
+  | ReadBlock
+  | FactorBlock
+  | AggregatorBlock
+  | ErrorBlock
+  | EmptyBlock
   | SequenceBlock
   | TextBlock
   | LastOfBlock
   | ArrayBlock
   | ObjectBlock
-  | MessageBlock
-  | ReadBlock
+  | IfBlock
+  | MatchBlock
+  | RepeatBlock
+  | MapBlock
   | IncludeBlock
   | ImportBlock
-  | FactorBlock
-  | AggregatorBlock
-  | ErrorBlock
-  | EmptyBlock
 
 /**
  * Function declaration.
@@ -1019,23 +1026,23 @@ export interface FunctionBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   signature?: Signature
 }
 /**
@@ -1391,23 +1398,23 @@ export interface LitellmModelBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Variable where to store the raw response of the model.
    *
@@ -1545,23 +1552,23 @@ export interface GraniteioModelBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Variable where to store the raw response of the model.
    *
@@ -1700,23 +1707,23 @@ export interface OpenaiModelBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Variable where to store the raw response of the model.
    *
@@ -1863,23 +1870,23 @@ export interface PythonCodeBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Scope to use for the code execution. If not provided, the global scope is used.
    *
@@ -2008,23 +2015,23 @@ export interface IPythonCodeBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Scope to use for the code execution. If not provided, the global scope is used.
    *
@@ -2154,23 +2161,23 @@ export interface JinjaCodeBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Scope to use for the code execution. If not provided, the global scope is used.
    *
@@ -2308,23 +2315,23 @@ export interface PdlCodeBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Scope to use for the code execution. If not provided, the global scope is used.
    *
@@ -2452,23 +2459,23 @@ export interface CommandCodeBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
    * Scope to use for the code execution. If not provided, the global scope is used.
    *
@@ -2805,19 +2812,9 @@ export interface Defs12 {
   [k: string]: BlockType
 }
 /**
- * Conditional control structure.
- *
- * Example:
- * ```PDL
- * defs:
- *   answer:
- *     read:
- *     message: "Enter a number? "
- * if: ${ (answer | int) == 42 }
- * then: You won!
- * ```
+ * Create a message.
  */
-export interface IfBlock {
+export interface MessageBlock {
   /**
    * Documentation associated to the block.
    *
@@ -2900,18 +2897,11 @@ export interface IfBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf12
-  context?: IndependentEnum
   kind?: Kind12
   /**
-   * Condition.
-   *
+   * Content of the message.
    */
-  if: LocalizedExpression | boolean | string
-  /**
-   * Branch to execute if the condition is true.
-   *
-   */
-  then:
+  content:
     | ExpressionBlock
     | FunctionBlock
     | CallBlock
@@ -2926,28 +2916,35 @@ export interface IfBlock {
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
     | SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
   /**
-   * Branch to execute if the condition is false.
-   *
+   * For example, the name of the tool that was invoked, for which this message is the tool response.
    */
-  else?: BlockType | null
+  name?: ExpressionStr | null
+  /**
+   * The id of the tool invocation for which this message is the tool response.
+   */
+  tool_call_id?: ExpressionStr | null
+  /**
+   * List of tool invocations made by the assistant in this message.
+   */
+  tool_calls?: ExpressionList | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -2957,26 +2954,21 @@ export interface Defs13 {
   [k: string]: BlockType
 }
 /**
- * Match control structure.
+ * Read from a file or standard input.
  *
- * Example:
+ * Example. Read from the standard input with a prompt starting with `> `.
  * ```PDL
- * defs:
- *   answer:
- *     read:
- *     message: "Enter a number? "
- * match: ${ (answer | int) }
- * with:
- * - case: 42
- *   then: You won!
- * - case:
- *     any:
- *     def: x
- *   if: ${ x > 42 }
- *   then: Too high
- * - then: Too low
+ * read:
+ * message: "> "
+ * ```
+ *
+ * Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+ * ```PDL
+ * read: ./data.yaml
+ * parser: yaml
+ * ```
  */
-export interface MatchBlock {
+export interface ReadBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3059,10 +3051,18 @@ export interface MatchBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf13
-  context?: IndependentEnum1
   kind?: Kind13
-  match: unknown
-  with: With
+  /**
+   * Name of the file to read. If `None`, read the standard input.
+   *
+   */
+  read: ExpressionStr | null
+  /**
+   * Message to prompt the user to enter a value.
+   *
+   */
+  message?: string | null
+  multiline?: Multiline
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3072,74 +3072,9 @@ export interface Defs14 {
   [k: string]: BlockType
 }
 /**
- * Case of a match.
+ * Condition the model.
  */
-export interface MatchCase {
-  case?: PatternType | null
-  if?: ExpressionBool | null
-  then: BlockType
-  pdl__case_result?: boolean | null
-  pdl__if_result?: boolean | null
-  pdl__matched?: boolean | null
-}
-/**
- * Match any of the patterns.
- */
-export interface OrPattern {
-  def?: string | null
-  anyOf: Anyof
-}
-/**
- * Match an array.
- */
-export interface ArrayPattern {
-  def?: string | null
-  array: Array
-}
-/**
- * Match an object.
- */
-export interface ObjectPattern {
-  def?: string | null
-  object: Object1
-}
-export interface Object1 {
-  [k: string]: PatternType
-}
-/**
- * Match any value.
- */
-export interface AnyPattern {
-  def?: string | null
-  any: Any
-}
-/**
- * Repeat the execution of a block sequentially.
- * The scope and `pdl_context` are accumulated in between iterations.
- *
- * For loop example:
- * ```PDL
- * for:
- *     number: [1, 2, 3, 4]
- *     name: ["Bob", "Carol", "David", "Ernest"]
- * repeat:
- *     "${ name }'s number is ${ number }\n"
- * ```
- *
- * While loop:
- * ```PDL
- * defs:
- *   i: 0
- * while: ${i < 5}
- * repeat:
- *     defs:
- *       i: ${ i + 1}
- *     data: ${ i }
- * join:
- *   as: array
- * ```
- */
-export interface RepeatBlock {
+export interface FactorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3222,71 +3157,10 @@ export interface RepeatBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf14
-  context?: IndependentEnum2
   kind?: Kind14
-  for?: For
-  /**
-   * Name of the variable containing the loop iteration.
-   *
-   */
-  index?: string | null
-  /**
-   * Condition to stay at the beginning of the loop.
-   *
-   */
-  while?: LocalizedExpression | boolean | string
-  /**
-   * Body of the loop.
-   *
-   */
-  repeat:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | OpenaiModelBlock
-    | PythonCodeBlock
-    | IPythonCodeBlock
-    | JinjaCodeBlock
-    | PdlCodeBlock
-    | CommandCodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | SequenceBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
-  /**
-   * Condition to exit at the end of the loop.
-   *
-   */
-  until?: LocalizedExpression | boolean | string
-  /**
-   * Maximal number of iterations to perform.
-   *
-   */
-  maxIterations?: ExpressionInt | null
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
-  pdl__trace?: PdlTrace1
+  factor: Factor
+  resample?: Resample
+  pdl__score?: number | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3296,30 +3170,9 @@ export interface Defs15 {
   [k: string]: BlockType
 }
 /**
- * Independent executions of  a block.
- * Repeat the execution of a block starting from the initial scope
- * and `pdl_context`.
- *
- * For loop example:
- * ```PDL
- * for:
- *     number: [1, 2, 3, 4]
- *     name: ["Bob", "Carol", "David", "Ernest"]
- * map:
- *     "${ name }'s number is ${ number }\n"
- * ```
- *
- * Bounded loop:
- * ```PDL
- * index: i
- * maxIterations: 5
- * map:
- *     ${ i }
- * join:
- *   as: array
- * ```
+ * Create a new aggregator that can be use in the `contribute` field.
  */
-export interface MapBlock {
+export interface AggregatorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3402,66 +3255,8 @@ export interface MapBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf15
-  context?: IndependentEnum3
   kind?: Kind15
-  for?: For1
-  /**
-   * Name of the variable containing the loop iteration.
-   *
-   */
-  index?: string | null
-  /**
-   * Body of the iterator.
-   *
-   */
-  map:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | OpenaiModelBlock
-    | PythonCodeBlock
-    | IPythonCodeBlock
-    | JinjaCodeBlock
-    | PdlCodeBlock
-    | CommandCodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | SequenceBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
-  /**
-   * Maximal number of iterations to perform.
-   *
-   */
-  maxIterations?: ExpressionInt | null
-  /**
-   * Define how to combine the result of each iteration.
-   *
-   */
-  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
-  /**
-   * Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
-   *
-   */
-  maxWorkers?: number | null
-  pdl__trace?: PdlTrace
+  aggregator: Aggregator
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3470,10 +3265,19 @@ export interface MapBlock {
 export interface Defs16 {
   [k: string]: BlockType
 }
+export interface FileAggregatorConfig {
+  description?: Description
+  file: File1
+  mode?: Mode1
+  encoding?: Encoding
+  prefix?: Prefix
+  suffix?: Suffix
+  flush?: Flush
+}
 /**
- * Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator.
+ * Block representing an error generated at runtime.
  */
-export interface SequenceBlock {
+export interface ErrorBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3556,14 +3360,44 @@ export interface SequenceBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf16
-  context?: IndependentEnum4
   kind?: Kind16
-  sequence: Sequence
+  msg: Msg
   /**
-   * Define how to combine the result of each block.
+   * Block that raised the error.
    *
    */
-  join: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  program:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | OpenaiModelBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | IncludeBlock
+    | ImportBlock
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3573,41 +3407,9 @@ export interface Defs17 {
   [k: string]: BlockType
 }
 /**
- * Join loop iterations or sequence of blocks as a string.
+ * Block without an action. It can contain definitions.
  */
-export interface JoinText {
-  as?: As
-  with?: With1
-}
-/**
- * Join loop iterations or sequence of blocks as an array.
- */
-export interface JoinArray {
-  as: As1
-}
-/**
- * Join loop iterations or sequence of blocks as an object.
- */
-export interface JoinObject {
-  as: As2
-}
-/**
- * Join loop iterations or sequence of blocks as the value of the last iteration.
- */
-export interface JoinLastOf {
-  as: As3
-}
-/**
- * Join loop iterations or sequence of blocks as the value of the last iteration.
- */
-export interface JoinReduce {
-  as?: As4
-  reduce: Reduce
-}
-/**
- * Create the concatenation of the stringify version of the result of each block of the list of blocks.
- */
-export interface TextBlock {
+export interface EmptyBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3690,9 +3492,7 @@ export interface TextBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf17
-  context?: IndependentEnum5
   kind?: Kind17
-  text: Text
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3702,9 +3502,9 @@ export interface Defs18 {
   [k: string]: BlockType
 }
 /**
- * Return the value of the last block if the list of blocks.
+ * Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator.
  */
-export interface LastOfBlock {
+export interface SequenceBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3787,9 +3587,14 @@ export interface LastOfBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf18
-  context?: IndependentEnum6
+  context?: IndependentEnum
   kind?: Kind18
-  lastOf: Lastof
+  sequence: Sequence
+  /**
+   * Define how to combine the result of each block.
+   *
+   */
+  join: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3799,9 +3604,41 @@ export interface Defs19 {
   [k: string]: BlockType
 }
 /**
- * Return the array of values computed by each block of the list of blocks.
+ * Join loop iterations or sequence of blocks as a string.
  */
-export interface ArrayBlock {
+export interface JoinText {
+  as?: As
+  with?: With
+}
+/**
+ * Join loop iterations or sequence of blocks as an array.
+ */
+export interface JoinArray {
+  as: As1
+}
+/**
+ * Join loop iterations or sequence of blocks as an object.
+ */
+export interface JoinObject {
+  as: As2
+}
+/**
+ * Join loop iterations or sequence of blocks as the value of the last iteration.
+ */
+export interface JoinLastOf {
+  as: As3
+}
+/**
+ * Join loop iterations or sequence of blocks as the value of the last iteration.
+ */
+export interface JoinReduce {
+  as?: As4
+  reduce: Reduce
+}
+/**
+ * Create the concatenation of the stringify version of the result of each block of the list of blocks.
+ */
+export interface TextBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3884,9 +3721,9 @@ export interface ArrayBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf19
-  context?: IndependentEnum7
+  context?: IndependentEnum1
   kind?: Kind19
-  array: Array1
+  text: Text
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3896,9 +3733,9 @@ export interface Defs20 {
   [k: string]: BlockType
 }
 /**
- * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
+ * Return the value of the last block if the list of blocks.
  */
-export interface ObjectBlock {
+export interface LastOfBlock {
   /**
    * Documentation associated to the block.
    *
@@ -3981,9 +3818,9 @@ export interface ObjectBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf20
-  context?: IndependentEnum8
+  context?: IndependentEnum2
   kind?: Kind20
-  object: Object2
+  lastOf: Lastof
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -3993,9 +3830,9 @@ export interface Defs21 {
   [k: string]: BlockType
 }
 /**
- * Create a message.
+ * Return the array of values computed by each block of the list of blocks.
  */
-export interface MessageBlock {
+export interface ArrayBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4078,54 +3915,9 @@ export interface MessageBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf21
+  context?: IndependentEnum3
   kind?: Kind21
-  /**
-   * Content of the message.
-   */
-  content:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | OpenaiModelBlock
-    | PythonCodeBlock
-    | IPythonCodeBlock
-    | JinjaCodeBlock
-    | PdlCodeBlock
-    | CommandCodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | SequenceBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
-  /**
-   * For example, the name of the tool that was invoked, for which this message is the tool response.
-   */
-  name?: ExpressionStr | null
-  /**
-   * The id of the tool invocation for which this message is the tool response.
-   */
-  tool_call_id?: ExpressionStr | null
-  /**
-   * List of tool invocations made by the assistant in this message.
-   */
-  tool_calls?: ExpressionList | null
+  array: Array
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4135,21 +3927,9 @@ export interface Defs22 {
   [k: string]: BlockType
 }
 /**
- * Read from a file or standard input.
- *
- * Example. Read from the standard input with a prompt starting with `> `.
- * ```PDL
- * read:
- * message: "> "
- * ```
- *
- * Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
- * ```PDL
- * read: ./data.yaml
- * parser: yaml
- * ```
+ * Return the object where the value of each field is defined by a block. If the body of the object is an array, the resulting object is the union of the objects computed by each element of the array.
  */
-export interface ReadBlock {
+export interface ObjectBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4232,18 +4012,9 @@ export interface ReadBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf22
+  context?: IndependentEnum4
   kind?: Kind22
-  /**
-   * Name of the file to read. If `None`, read the standard input.
-   *
-   */
-  read: ExpressionStr | null
-  /**
-   * Message to prompt the user to enter a value.
-   *
-   */
-  message?: string | null
-  multiline?: Multiline
+  object: Object1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4253,9 +4024,19 @@ export interface Defs23 {
   [k: string]: BlockType
 }
 /**
- * Include a PDL file.
+ * Conditional control structure.
+ *
+ * Example:
+ * ```PDL
+ * defs:
+ *   answer:
+ *     read:
+ *     message: "Enter a number? "
+ * if: ${ (answer | int) == 42 }
+ * then: You won!
+ * ```
  */
-export interface IncludeBlock {
+export interface IfBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4338,10 +4119,54 @@ export interface IncludeBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf23
-  context?: IndependentEnum9
+  context?: IndependentEnum5
   kind?: Kind23
-  include: Include
-  pdl__trace?: BlockType | null
+  /**
+   * Condition.
+   *
+   */
+  if: LocalizedExpression | boolean | string
+  /**
+   * Branch to execute if the condition is true.
+   *
+   */
+  then:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | OpenaiModelBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | IncludeBlock
+    | ImportBlock
+  /**
+   * Branch to execute if the condition is false.
+   *
+   */
+  else?: BlockType | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4351,9 +4176,26 @@ export interface Defs24 {
   [k: string]: BlockType
 }
 /**
- * Import a PDL file.
+ * Match control structure.
+ *
+ * Example:
+ * ```PDL
+ * defs:
+ *   answer:
+ *     read:
+ *     message: "Enter a number? "
+ * match: ${ (answer | int) }
+ * with:
+ * - case: 42
+ *   then: You won!
+ * - case:
+ *     any:
+ *     def: x
+ *   if: ${ x > 42 }
+ *   then: Too high
+ * - then: Too low
  */
-export interface ImportBlock {
+export interface MatchBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4436,9 +4278,10 @@ export interface ImportBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf24
+  context?: IndependentEnum6
   kind?: Kind24
-  import: Import
-  pdl__trace?: BlockType | null
+  match: unknown
+  with: With1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4448,9 +4291,74 @@ export interface Defs25 {
   [k: string]: BlockType
 }
 /**
- * Condition the model.
+ * Case of a match.
  */
-export interface FactorBlock {
+export interface MatchCase {
+  case?: PatternType | null
+  if?: ExpressionBool | null
+  then: BlockType
+  pdl__case_result?: boolean | null
+  pdl__if_result?: boolean | null
+  pdl__matched?: boolean | null
+}
+/**
+ * Match any of the patterns.
+ */
+export interface OrPattern {
+  def?: string | null
+  anyOf: Anyof
+}
+/**
+ * Match an array.
+ */
+export interface ArrayPattern {
+  def?: string | null
+  array: Array1
+}
+/**
+ * Match an object.
+ */
+export interface ObjectPattern {
+  def?: string | null
+  object: Object2
+}
+export interface Object2 {
+  [k: string]: PatternType
+}
+/**
+ * Match any value.
+ */
+export interface AnyPattern {
+  def?: string | null
+  any: Any
+}
+/**
+ * Repeat the execution of a block sequentially.
+ * The scope and `pdl_context` are accumulated in between iterations.
+ *
+ * For loop example:
+ * ```PDL
+ * for:
+ *     number: [1, 2, 3, 4]
+ *     name: ["Bob", "Carol", "David", "Ernest"]
+ * repeat:
+ *     "${ name }'s number is ${ number }\n"
+ * ```
+ *
+ * While loop:
+ * ```PDL
+ * defs:
+ *   i: 0
+ * while: ${i < 5}
+ * repeat:
+ *     defs:
+ *       i: ${ i + 1}
+ *     data: ${ i }
+ * join:
+ *   as: array
+ * ```
+ */
+export interface RepeatBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4533,10 +4441,71 @@ export interface FactorBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf25
+  context?: IndependentEnum7
   kind?: Kind25
-  factor: Factor
-  resample?: Resample
-  pdl__score?: number | null
+  for?: For
+  /**
+   * Name of the variable containing the loop iteration.
+   *
+   */
+  index?: string | null
+  /**
+   * Condition to stay at the beginning of the loop.
+   *
+   */
+  while?: LocalizedExpression | boolean | string
+  /**
+   * Body of the loop.
+   *
+   */
+  repeat:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | OpenaiModelBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | IncludeBlock
+    | ImportBlock
+  /**
+   * Condition to exit at the end of the loop.
+   *
+   */
+  until?: LocalizedExpression | boolean | string
+  /**
+   * Maximal number of iterations to perform.
+   *
+   */
+  maxIterations?: ExpressionInt | null
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
+  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  pdl__trace?: PdlTrace1
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4546,9 +4515,30 @@ export interface Defs26 {
   [k: string]: BlockType
 }
 /**
- * Create a new aggregator that can be use in the `contribute` field.
+ * Independent executions of  a block.
+ * Repeat the execution of a block starting from the initial scope
+ * and `pdl_context`.
+ *
+ * For loop example:
+ * ```PDL
+ * for:
+ *     number: [1, 2, 3, 4]
+ *     name: ["Bob", "Carol", "David", "Ernest"]
+ * map:
+ *     "${ name }'s number is ${ number }\n"
+ * ```
+ *
+ * Bounded loop:
+ * ```PDL
+ * index: i
+ * maxIterations: 5
+ * map:
+ *     ${ i }
+ * join:
+ *   as: array
+ * ```
  */
-export interface AggregatorBlock {
+export interface MapBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4631,8 +4621,66 @@ export interface AggregatorBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf26
+  context?: IndependentEnum8
   kind?: Kind26
-  aggregator: Aggregator
+  for?: For1
+  /**
+   * Name of the variable containing the loop iteration.
+   *
+   */
+  index?: string | null
+  /**
+   * Body of the iterator.
+   *
+   */
+  map:
+    | ExpressionBlock
+    | FunctionBlock
+    | CallBlock
+    | LitellmModelBlock
+    | GraniteioModelBlock
+    | OpenaiModelBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
+    | ArgsBlock
+    | GetBlock
+    | DataBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+    | SequenceBlock
+    | TextBlock
+    | LastOfBlock
+    | ArrayBlock
+    | ObjectBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
+    | IncludeBlock
+    | ImportBlock
+  /**
+   * Maximal number of iterations to perform.
+   *
+   */
+  maxIterations?: ExpressionInt | null
+  /**
+   * Define how to combine the result of each iteration.
+   *
+   */
+  join?: JoinText | JoinArray | JoinObject | JoinLastOf | JoinReduce
+  /**
+   * Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
+   *
+   */
+  maxWorkers?: number | null
+  pdl__trace?: PdlTrace
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4641,19 +4689,10 @@ export interface AggregatorBlock {
 export interface Defs27 {
   [k: string]: BlockType
 }
-export interface FileAggregatorConfig {
-  description?: Description
-  file: File1
-  mode?: Mode1
-  encoding?: Encoding
-  prefix?: Prefix
-  suffix?: Suffix
-  flush?: Flush
-}
 /**
- * Block representing an error generated at runtime.
+ * Include a PDL file.
  */
-export interface ErrorBlock {
+export interface IncludeBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4736,44 +4775,10 @@ export interface ErrorBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf27
+  context?: IndependentEnum9
   kind?: Kind27
-  msg: Msg
-  /**
-   * Block that raised the error.
-   *
-   */
-  program:
-    | ExpressionBlock
-    | FunctionBlock
-    | CallBlock
-    | LitellmModelBlock
-    | GraniteioModelBlock
-    | OpenaiModelBlock
-    | PythonCodeBlock
-    | IPythonCodeBlock
-    | JinjaCodeBlock
-    | PdlCodeBlock
-    | CommandCodeBlock
-    | ArgsBlock
-    | GetBlock
-    | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
-    | SequenceBlock
-    | TextBlock
-    | LastOfBlock
-    | ArrayBlock
-    | ObjectBlock
-    | MessageBlock
-    | ReadBlock
-    | IncludeBlock
-    | ImportBlock
-    | FactorBlock
-    | AggregatorBlock
-    | ErrorBlock
-    | EmptyBlock
+  include: Include
+  pdl__trace?: BlockType | null
 }
 /**
  * Set of definitions executed before the execution of the block.
@@ -4783,9 +4788,9 @@ export interface Defs28 {
   [k: string]: BlockType
 }
 /**
- * Block without an action. It can contain definitions.
+ * Import a PDL file.
  */
-export interface EmptyBlock {
+export interface ImportBlock {
   /**
    * Documentation associated to the block.
    *
@@ -4868,7 +4873,10 @@ export interface EmptyBlock {
    */
   pdl__timing?: PdlTiming | null
   pdl__is_leaf?: PdlIsLeaf28
+  context?: IndependentEnum10
   kind?: Kind28
+  import: Import
+  pdl__trace?: BlockType | null
 }
 /**
  * Set of definitions executed before the execution of the block.

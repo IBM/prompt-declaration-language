@@ -1,8 +1,32 @@
 import pathlib
+import typing
 from concurrent.futures import ThreadPoolExecutor
 
+from pdl.pdl_ast import (
+    ImportBlock,
+    LeafBlock,
+    LeafBlockType,
+    StructuredBlock,
+    StructuredBlockType,
+)
 from pdl.pdl_ast_utils import MappedFunctions, iter_block_children, map_block_children
 from pdl.pdl_parser import PDLParseError, parse_file
+
+
+def test_leaf_and_structured_block_types() -> None:
+    # Every block listed in `LeafBlockType` is a leaf block and every block
+    # listed in `StructuredBlockType` is a structured block. Leaf and structured
+    # blocks are disjoint.
+    for block in typing.get_args(LeafBlockType):
+        assert issubclass(block, LeafBlock), block
+        assert not issubclass(block, StructuredBlock), block
+    for block in typing.get_args(StructuredBlockType):
+        assert issubclass(block, StructuredBlock), block
+        assert not issubclass(block, LeafBlock), block
+    # `import` executes the sub-blocks of the imported file, so it is a
+    # structured block.
+    assert issubclass(ImportBlock, StructuredBlock)
+    assert ImportBlock in typing.get_args(StructuredBlockType)
 
 
 class Counter:
