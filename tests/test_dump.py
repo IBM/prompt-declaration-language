@@ -1,5 +1,6 @@
 import pathlib
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 
 from pdl.pdl_ast import BlockType, IncludeBlock
 from pdl.pdl_ast_utils import iter_block_children
@@ -40,12 +41,9 @@ def _check_dump(yaml_file_name: pathlib.Path) -> None:
 
 def test_dump() -> None:
     with ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(_check_dump, yaml_file_name)
-            for yaml_file_name in pathlib.Path(".").glob("**/*.pdl")
-        ]
-        for future in futures:
-            future.result()
+        # Consume the iterator so any exception raised in a worker propagates.
+        for _ in executor.map(_check_dump, pathlib.Path(".").glob("**/*.pdl")):
+            pass
 
 
 def _check_dump_exclude_internals(
@@ -83,12 +81,8 @@ def test_dump_exclude_internals() -> None:
         "pdl__is_leaf",
     }
 
+    check = partial(_check_dump_exclude_internals, known_internals=known_internals)
     with ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(
-                _check_dump_exclude_internals, yaml_file_name, known_internals
-            )
-            for yaml_file_name in pathlib.Path(".").glob("**/*.pdl")
-        ]
-        for future in futures:
-            future.result()
+        # Consume the iterator so any exception raised in a worker propagates.
+        for _ in executor.map(check, pathlib.Path(".").glob("**/*.pdl")):
+            pass
