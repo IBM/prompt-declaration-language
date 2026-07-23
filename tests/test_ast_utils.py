@@ -1,4 +1,5 @@
 import pathlib
+from concurrent.futures import ThreadPoolExecutor
 
 from pdl.pdl_ast_utils import MappedFunctions, iter_block_children, map_block_children
 from pdl.pdl_parser import PDLParseError, parse_file
@@ -36,14 +37,20 @@ class MapCounter:
         return ast
 
 
+def _check_ast_iterators(yaml_file_name: pathlib.Path) -> None:
+    try:
+        ast, _ = parse_file(yaml_file_name)
+        iter_cpt = IterCounter()
+        iter_cpt.count(ast.root)
+        map_cpt = MapCounter()
+        map_cpt.count(ast.root)
+        assert iter_cpt.cpt == map_cpt.cpt, yaml_file_name
+    except PDLParseError:
+        pass
+
+
 def test_ast_iterators() -> None:
-    for yaml_file_name in pathlib.Path(".").glob("**/*.pdl"):
-        try:
-            ast, _ = parse_file(yaml_file_name)
-            iter_cpt = IterCounter()
-            iter_cpt.count(ast.root)
-            map_cpt = MapCounter()
-            map_cpt.count(ast.root)
-            assert iter_cpt.cpt == map_cpt.cpt, yaml_file_name
-        except PDLParseError:
+    with ThreadPoolExecutor() as executor:
+        # Consume the iterator so any exception raised in a worker propagates.
+        for _ in executor.map(_check_ast_iterators, pathlib.Path(".").glob("**/*.pdl")):
             pass
