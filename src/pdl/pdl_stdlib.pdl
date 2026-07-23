@@ -1,0 +1,133 @@
+
+defs: 
+  get_tool_calls:
+    function:
+      model_response: object
+    return: ${ model_response["choices"][0]["message"]["tool_calls"] }
+
+
+  bool_confidence:
+    function:
+      response: object
+    return:
+      lang: python  
+      code: |
+        from pdl.pdl_stdlib import bool_confidence
+        result = bool_confidence(response)
+
+
+  reward:
+    function:
+      response: object
+    return:
+      lang: python  
+      code: |
+        from pdl.pdl_stdlib import reward
+        result = reward(response)
+
+  llm_as_judge: 
+    function:
+      model: string
+      prompt: string
+      parameters: {optional: object}
+    return:
+      defs:
+        parameters: ${ parameters | default({}) }
+        params: 
+          data: 
+            logprobs: true
+            top_logprobs: 5
+            response_format: {'type': 'json_schema', 'json_schema': {'name': 'schema', 'schema': {'enum': [True, False]}, 'strict': True}}
+      lastOf:
+      - lang: python
+        def: final_parameters
+        code: |
+          result = parameters | params
+      - model: ${ model }
+        def: evaluation
+        input: |
+          ${ prompt }
+        modelResponse: out
+        parameters: ${ final_parameters }
+      - def: score
+        data: ${ reward(response=out) }
+      retry: 3
+      fallback:
+        lang: python
+        code: |
+          raise Exception(f"Llm-as-judge failed!\n judge prompt: {prompt}")
+
+  get_judge_prompt:
+    function:
+      model: string
+      expectation: string
+      response: string
+    return:
+      match: ${ model }
+      with: 
+      - case: watsonx/ibm/granite-4-h-small
+        then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
+
+      - case: watsonx/openai/gpt-oss-120b
+        then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
+      - then: | 
+          Your task is to determine if the following statement is true:
+                  
+          ${ expectation }
+          
+          Here is the solution: ${ response }
+
+          Is the statement correct? Respond with only ('true'/'false')
+
+
+
+  expectations:
+    object:
+      feedback:
+        function:
+          expectation: string
+          response: 
+          pdl_llm_as_judge: string
+          pdl_llm_context_transformer: string
+        return:
+          lastOf:
+          - def: score
+            call: ${ llm_as_judge }
+            args:
+              model: ${ pdl_llm_as_judge }
+              prompt: ${ get_judge_prompt(pdl_llm_as_judge, expectation, response) }
+          - if: ${ score < -0.69 }
+            then:
+              lastOf:
+              - model: ${ pdl_llm_context_transformer }
+                def: instruction
+                input: |
+                  The following requirement is not satisfied, what instruction can be added to get the correct answer?
+                  requirement: ${ expectation }
+                  Answer with only the instruction.
+              - array:
+                - ${ score }
+                - ${ instruction }
+            else:
+              ${ score }
+          
+          
+
+
+
+
+

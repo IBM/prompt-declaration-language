@@ -2,10 +2,15 @@ import { stringify } from "yaml"
 import type {
   LitellmModelBlock,
   GraniteioModelBlock,
+  OpenaiModelBlock,
   PdlBlock,
   TextBlock,
+  PythonCodeBlock,
+  IPythonCodeBlock,
+  JinjaCodeBlock,
+  PdlCodeBlock,
+  CommandCodeBlock,
   ArgsBlock,
-  CodeBlock,
   ModelInput,
   LocalizedExpression,
 } from "./pdl_ast"
@@ -19,7 +24,17 @@ type MakeNonNullable<T> = {
   [K in keyof T]-?: NonNullable<T[K]>
 }
 
-export type ModelBlock = LitellmModelBlock | GraniteioModelBlock
+export type CodeBlock =
+  | PythonCodeBlock
+  | IPythonCodeBlock
+  | JinjaCodeBlock
+  | PdlCodeBlock
+  | CommandCodeBlock
+
+export type ModelBlock =
+  | LitellmModelBlock
+  | GraniteioModelBlock
+  | OpenaiModelBlock
 
 export type ModelBlockWithUsage = ModelBlock & {
   pdl__usage: Required<MakeNonNullable<import("./pdl_ast").PdlUsage>>
@@ -235,6 +250,9 @@ export function hasInput(block: PdlBlock): block is
       pdl__model_input: NonNullable<ModelInput>
     })
   | (Omit<LitellmModelBlock, "input"> & {
+      pdl__model_input: NonNullable<ModelInput>
+    })
+  | (Omit<OpenaiModelBlock, "input"> & {
       pdl__model_input: NonNullable<ModelInput>
     }) {
   const mb = block as ModelBlock

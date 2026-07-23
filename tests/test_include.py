@@ -48,3 +48,30 @@ def test_biz():
         text
         == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"
     )
+
+
+# `import` is a structured block: the imported file is executed and its scope is
+# bound to the variable, here `lib`.
+import_data = {
+    "description": "Import test",
+    "defs": {"lib": {"import": "data/function"}},
+    "text": [
+        {
+            "call": "${ lib.template }",
+            "args": {
+                "preamble": "preamble data",
+                "question": "question data",
+                "notes": "notes data",
+            },
+        },
+    ],
+}
+
+
+def test_import():
+    config = InterpreterConfig(cwd=Path(__file__).parent)
+    text = exec_dict(import_data, config=config)
+    assert (
+        text
+        == "preamble data\n### Question: question data\n\n### Notes:\nnotes data\n\n### Answer:\n"
+    )

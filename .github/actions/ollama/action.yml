@@ -9,25 +9,91 @@ runs:
         sudo rm -rf /usr/share/dotnet
         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
 
+    # Cache Ollama models.
+    # The install script below installs Ollama as a systemd service that runs as
+    # the `ollama` system user, which stores models under
+    # /usr/share/ollama/.ollama/models. That path is outside $HOME and cannot be
+    # restored by actions/cache (the runner user has no write access to
+    # /usr/share), so the cache was always empty and the models were re-downloaded
+    # on every run. Instead we run the Ollama server ourselves as the runner user
+    # with OLLAMA_MODELS pointed at ~/.ollama/models (see the "Start Ollama server"
+    # step) and cache that directory. Keeping everything owned by the runner user
+    # avoids the cross-user permission/sandboxing issues that come with the
+    # system-wide service.
+    - name: Cache Ollama models
+      uses: actions/cache@v5
+      with:
+        path: ~/.ollama/models
+        key: ollama-models-${{ runner.os }}-${{ hashFiles('.github/actions/ollama/action.yml') }}
+        restore-keys: |
+          ollama-models-${{ runner.os }}-
+
       # Set up Ollama
-    - name: Install Ollama and start server
+    - name: Install Ollama
       shell: bash
       run: |
         curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
+    - name: Start Ollama server
+      shell: bash
+      run: |
+        # The installer starts Ollama as the `ollama` system user, which stores
+        # models under /usr/share/ollama/.ollama — a path that cannot be cached.
+        # Stop that service and run our own server as the runner user with the
+        # models directory under $HOME (populated by the cache restore above) so
+        # that pulled models persist across runs.
+        sudo systemctl stop ollama 2>/dev/null || true
+        mkdir -p "$HOME/.ollama/models"
+        # Export OLLAMA_MODELS for subsequent steps (the ollama CLI reads it too).
+        echo "OLLAMA_MODELS=$HOME/.ollama/models" >> "$GITHUB_ENV"
+        # Launch the server in the background; it keeps running across later steps.
+        OLLAMA_MODELS="$HOME/.ollama/models" nohup ollama serve > "$HOME/ollama-serve.log" 2>&1 &
+
+    - name: Wait for Ollama server
+      shell: bash
+      run: |
+        max_attempts=30
+        attempt=1
+        sleep 15
+        
+        while [ $attempt -le $max_attempts ]; do
+          echo "Attempt $attempt of $max_attempts..."
+          if time curl -i http://localhost:11434; then
+            echo "✅ Ollama server is ready!"
+            exit 0
+          else
+            echo "❌ Attempt $attempt failed"
+            if [ $attempt -lt $max_attempts ]; then
+              echo "Retrying in 10 seconds..."
+              sleep 10
+            fi
+          fi
+          attempt=$((attempt + 1))
+        done
+
+        echo "❌ Failed to connect to Ollama server after $max_attempts attempts"
+        exit 1
+
     - name: Pull models in examples/
       shell: bash
       run: |
-        ollama pull granite3.2:2b
-        ollama pull granite3.2:8b
-        ollama pull granite3.3:8b
-        ollama pull mxbai-embed-large
+        models=("granite4:micro" "mxbai-embed-large")
+        for model in "${models[@]}"; do
+          if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
+            echo "📥 Pulling model: $model"
+            ollama pull "$model"
+          else
+            echo "✅ Model already available: $model"
+          fi
+        done
+        echo ""
+        echo "Available models:"
         ollama list
 
     - name: Check that all required models are available
       shell: bash
       run: |
-        models=("mxbai-embed-large" "granite3.2:2b" "granite3.2:8b" "granite3.3:8b")
+        models=("mxbai-embed-large" "granite4:micro")
         missing=0
         for model in "${models[@]}"; do
           if ! ollama list | awk 'NR>1 {print $1}' | grep -q "$model"; then
@@ -41,9 +107,3 @@ runs:
         else
           echo "✅ All expected models are available."
         fi
-
-    - name: Wait for Ollama server
-      shell: bash
-      run: |
-        sleep 5
-        time curl -i http://localhost:11434

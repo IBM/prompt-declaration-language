@@ -1,8 +1,8 @@
 from typing import Any
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
-from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_interpreter_state import ScopeType
 
 
 class FEVEREvaluator(OptimizerEvaluator):
@@ -82,5 +82,12 @@ class FEVEREvaluator(OptimizerEvaluator):
 
         return None
 
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
-        return answer == truth or document.lower().endswith(str(truth).lower())
+    def score(self, document: str, ground_truth: Any) -> float:
+        answer = self.extract_answer(document)
+        if answer is None:
+            return 0.0
+
+        return float(
+            answer == ground_truth
+            or document.lower().endswith(str(ground_truth).lower())
+        )

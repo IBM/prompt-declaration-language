@@ -1,5 +1,6 @@
 """PDL programs are represented by the Pydantic data structure defined in this file."""
 
+from collections.abc import Mapping, Sequence
 from enum import StrEnum
 from os import environ
 from typing import (
@@ -8,9 +9,7 @@ from typing import (
     Callable,
     Generic,
     Literal,
-    Mapping,
     Optional,
-    Sequence,
     TypeAlias,
     TypeVar,
     Union,
@@ -28,10 +27,18 @@ from pydantic import (
 from typing_extensions import TypeAliasType
 
 from .pdl_context import PDLContext
-from .pdl_lazy import PdlDict, PdlLazy
+from .pdl_lazy import PdlLazy
 
 
 def _ensure_lower(value):
+    """Convert string values to lowercase for case-insensitive validation.
+
+    Args:
+        value: The value to convert (if it's a string)
+
+    Returns:
+        Lowercase string if input is a string, otherwise returns the value unchanged
+    """
     if isinstance(value, str):
         return value.lower()
     return value
@@ -41,6 +48,10 @@ OptionalStr = TypeAliasType("OptionalStr", Optional[str])
 """Optional string."""
 OptionalInt = TypeAliasType("OptionalInt", Optional[int])
 """Optional integer."""
+OptionalFloat = TypeAliasType("OptionalFloat", Optional[float])
+"""Optional floating point number."""
+OptionalBool = TypeAliasType("OptionalBool", Optional[bool])
+"""Optional Boolean."""
 OptionalBoolOrStr = TypeAliasType("OptionalBoolOrStr", Optional[Union[bool, str]])
 """Optional boolean or string."""
 OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
@@ -48,10 +59,6 @@ OptionalAny = TypeAliasType("OptionalAny", Optional[Any])
 
 OptionalBlockType = TypeAliasType("OptionalBlockType", Optional["BlockType"])
 """Optional block."""
-
-
-ScopeType = TypeAliasType("ScopeType", PdlDict[str, Any])
-"""Type of the execution environment."""
 
 ModelInput = TypeAliasType("ModelInput", Sequence[Mapping[str, Any]])
 """Type of the input of an LLM call."""
@@ -69,6 +76,7 @@ class BlockKind(StrEnum):
     CODE = "code"
     GET = "get"
     DATA = "data"
+    SEQUENCE = "sequence"
     TEXT = "text"
     LASTOF = "lastOf"
     ARRAY = "array"
@@ -81,6 +89,8 @@ class BlockKind(StrEnum):
     READ = "read"
     INCLUDE = "include"
     IMPORT = "import"
+    FACTOR = "factor"
+    AGGREGATOR = "aggregator"
     EMPTY = "empty"
     ERROR = "error"
 
@@ -95,15 +105,17 @@ class PdlLocationType(BaseModel):
 
 
 OptionalPdlLocationType = TypeAliasType(
-    "OptionalPdlLocationType", Optional[PdlLocationType]
+    "OptionalPdlLocationType", PdlLocationType | None
 )
 """Optional location type."""
 
 
+# Value for blocks without source location information
 empty_block_location = PdlLocationType(file="", path=[], table={})
 
 
 LocalizedExpressionT = TypeVar("LocalizedExpressionT")
+"""Type variable for the result type of a localized expression."""
 
 
 class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
@@ -116,33 +128,46 @@ class LocalizedExpression(BaseModel, Generic[LocalizedExpressionT]):
         model_title_generator=(lambda _: "LocalizedExpression"),
     )
     pdl__expr: Any
-    pdl__result: Optional[LocalizedExpressionT] = None
+    pdl__result: LocalizedExpressionT | None = None
     pdl__location: OptionalPdlLocationType = None
 
 
 ExpressionTypeT = TypeVar("ExpressionTypeT")
+"""Type variable for the result type of an expression."""
 ExpressionType: TypeAlias = LocalizedExpression[ExpressionTypeT] | ExpressionTypeT | str
 """Expressions are represented Jinja as strings in between `${` and `}`."""
 
 ExpressionStr = TypeAliasType("ExpressionStr", ExpressionType[str])
 """Expression evaluating into a string."""
 
-OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", Optional[ExpressionStr])
+OptionalExpressionStr = TypeAliasType("OptionalExpressionStr", ExpressionStr | None)
 """Optional expression evaluating into a string."""
 
 ExpressionInt = TypeAliasType("ExpressionInt", ExpressionType[int])
 """Expression evaluating into an int."""
 
-OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", Optional[ExpressionInt])
+OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", ExpressionInt | None)
 """Optional expression evaluating into an int."""
 
 ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
 """Expression evaluating into a bool."""
 
-OptionalExpressionBool = TypeAliasType(
-    "OptionalExpressionBool", Optional[ExpressionBool]
-)
+OptionalExpressionBool = TypeAliasType("OptionalExpressionBool", ExpressionBool | None)
 """Optional expression evaluating into a bool."""
+
+ExpressionList = TypeAliasType("ExpressionList", ExpressionType[list])
+"""Expression evaluating into a list."""
+
+OptionalExpressionList = TypeAliasType("OptionalExpressionList", ExpressionList | None)
+"""Optional expression evaluating into a list."""
+
+ExpressionDictStr = TypeAliasType("ExpressionDictStr", ExpressionType[dict[str, Any]])
+""""Expression evaluating into a dict[str, Any]."""
+
+OptionalExpressionDictStr = TypeAliasType(
+    "OptionalExpressionDictStr", ExpressionDictStr | None
+)
+"""Optional expression evaluating into a dict[str, Any]."""
 
 
 class Pattern(BaseModel):
@@ -179,13 +204,20 @@ class AnyPattern(Pattern):
     """Match any value."""
 
     any: Literal[None]
+    """Matches any value (set to None to indicate wildcard matching)."""
 
 
 PatternType = TypeAliasType(
     "PatternType",
-    Union[
-        None, bool, int, float, str, OrPattern, ArrayPattern, ObjectPattern, AnyPattern
-    ],
+    None
+    | bool
+    | int
+    | float
+    | str
+    | OrPattern
+    | ArrayPattern
+    | ObjectPattern
+    | AnyPattern,
 )
 """Patterns allowed to match values in a `case` clause."""
 
@@ -219,7 +251,7 @@ class OptionalPdlType(PdlType):
     """Optional type."""
 
     optional: "PdlTypeType"
-    """"""
+    """The wrapped type that is optional."""
 
 
 class JsonSchemaTypePdlType(PdlType):
@@ -263,6 +295,7 @@ PdlTypeType = TypeAliasType(
 )
 """Types."""
 
+# TypeAdapter for validating and parsing PDL type specifications
 pdl_type_adapter = TypeAdapter(PdlTypeType)
 
 
@@ -298,7 +331,7 @@ class RegexParser(Parser):
 
 
 ParserType = TypeAliasType(
-    "ParserType", Union[Literal["json", "jsonl", "yaml"], PdlParser, RegexParser]
+    "ParserType", Union[Literal["json", "jsonl", "yaml", "csv"], PdlParser, RegexParser]
 )
 """Different parsers."""
 OptionalParserType = TypeAliasType("OptionalParserType", Optional[ParserType])
@@ -313,6 +346,8 @@ class ContributeTarget(StrEnum):
 
     RESULT = "result"
     CONTEXT = "context"
+    STDOUT = "stdout"
+    STDERR = "stderr"
 
 
 class ContributeValue(BaseModel):
@@ -320,33 +355,30 @@ class ContributeValue(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    value: ExpressionType[list[Any]]
+    value: ExpressionType[Any]
     """Value to contribute."""
 
 
-ContributeType = TypeAliasType(
-    "ContributeType", Sequence[Union[ContributeTarget, dict[str, ContributeValue]]]
+ContributeElement = TypeAliasType(
+    "ContributeElement", Union[ContributeTarget, str, dict[str, ContributeValue]]
 )
 """Type of the contribute field."""
 
 
-class RequirementType(BaseModel):
-    """Single requirement definition."""
+class ExpectationType(BaseModel):
+    """Single expectation definition."""
 
     model_config = ConfigDict(extra="forbid")
 
-    description: ExpressionType
-    """English description of the requirement"""
+    expect: ExpressionType[Any]
+    """English description of the expectation"""
 
-    evaluate: Optional[ExpressionType["FunctionBlock"]]
-    """Evaluation function for the requirement"""
-
-    transformContext: Optional[ExpressionType["FunctionBlock"]]
-    """Function to transform the context for the requirement"""
+    feedback: ExpressionType["FunctionBlock"] | None = None
+    """Feedback function for the expectation"""
 
 
-RequirementsType = TypeAliasType("RequirementsType", Sequence[RequirementType])
-"""Type of requirements field"""
+ExpectationsType = TypeAliasType("ExpectationsType", Sequence[ExpectationType])
+"""Type of expectations field"""
 
 
 class PdlTiming(BaseModel):
@@ -374,11 +406,14 @@ OptionalPdlTiming = TypeAliasType("OptionalPdlTiming", Optional[PdlTiming])
 class PdlUsage(BaseModel):
     """Internal data structure to record token consumption usage information."""
 
-    completion_tokens: OptionalInt = 0
-    """Completion tokens consumed
+    model_calls: int = 0
+    """Number of calls to LLMs.
     """
-    prompt_tokens: OptionalInt = 0
-    """Prompt tokens consumed
+    completion_tokens: int = 0
+    """Completion tokens consumed.
+    """
+    prompt_tokens: int = 0
+    """Prompt tokens consumed.
     """
 
 
@@ -408,7 +443,7 @@ class Block(BaseModel):
     def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: ContributeType = [
+    contribute: Sequence[ContributeElement] = [
         ContributeTarget.RESULT,
         ContributeTarget.CONTEXT,
     ]
@@ -426,8 +461,8 @@ class Block(BaseModel):
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
 
-    requirements: RequirementsType = []
-    """Specify any requirements that the result of the block must satisfy.
+    expectations: ExpectationsType = []
+    """Specify any expectations that the result of the block must satisfy.
     """
 
     role: RoleType = None
@@ -448,16 +483,26 @@ class Block(BaseModel):
 
 
 class LeafBlock(Block):
+    """Base class for blocks that directly contribute their value to the context."""
+
     # Field for internal use
     pdl__is_leaf: Literal[True] = True
 
 
 class IndependentEnum(StrEnum):
+    """Enumeration for context execution mode in structured blocks.
+
+    - INDEPENDENT: Execute with fresh context (parallel execution)
+    - DEPENDENT: Execute with accumulated context (sequential execution)
+    """
+
     INDEPENDENT = "independent"
     DEPENDENT = "dependent"
 
 
 class StructuredBlock(Block):
+    """Base class for blocks that do not directly contribute to the context but contain sub-blocks that can contribute."""
+
     # Field for internal use
     pdl__is_leaf: Literal[False] = False
     context: IndependentEnum = IndependentEnum.DEPENDENT
@@ -467,13 +512,13 @@ class FunctionBlock(LeafBlock):
     """Function declaration."""
 
     kind: Literal[BlockKind.FUNCTION] = BlockKind.FUNCTION
-    function: Optional[dict[str, PdlTypeType]]
+    function: dict[str, PdlTypeType] | None
     """Functions parameters with their types.
     """
     return_: "BlockType" = Field(..., alias="return")
     """Body of the function.
     """
-    signature: Optional[Json] = None
+    signature: Json | None = None
     """Function signature computed from the function definition.
     """
 
@@ -485,7 +530,7 @@ class CallBlock(LeafBlock):
     call: ExpressionType[FunctionBlock]
     """Function to call.
     """
-    args: ExpressionType = {}
+    args: ExpressionType[Any] = {}
     """Arguments of the function with their values.
     """
     # Field for internal use
@@ -499,16 +544,16 @@ class LitellmParameters(BaseModel):
     """
 
     model_config = ConfigDict(extra="allow", protected_namespaces=())
-    timeout: Optional[Union[float, str]] | str = None
+    timeout: float | str | None = None
     """Timeout in seconds for completion requests (Defaults to 600 seconds).
     """
-    temperature: Optional[float] | str = None
+    temperature: float | str | None = None
     """The temperature parameter for controlling the randomness of the output (default is 1.0).
     """
-    top_p: Optional[float] | str = None
+    top_p: float | str | None = None
     """The top-p parameter for nucleus sampling (default is 1.0).
     """
-    n: Optional[int] | str = None
+    n: int | str | None = None
     """The number of completions to generate (default is 1).
     """
     # stream: Optional[bool] = None
@@ -517,75 +562,94 @@ class LitellmParameters(BaseModel):
     # stream_options: Optional[dict] = None
     # """A dictionary containing options for the streaming response. Only set this when you set stream: true.
     # """
-    stop: Optional[str | list[str]] | str = None
+    stop: str | list[str] | None = None
     """Up to 4 sequences where the LLM API will stop generating further tokens.
     """
-    max_tokens: Optional[int] | str = None
+    max_tokens: int | str | None = None
     """The maximum number of tokens in the generated completion (default is infinity).
     """
-    presence_penalty: Optional[float] | str = None
+    presence_penalty: float | str | None = None
     """It is used to penalize new tokens based on their existence in the text so far.
     """
-    frequency_penalty: Optional[float] | str = None
+    frequency_penalty: float | str | None = None
     """It is used to penalize new tokens based on their frequency in the text so far.
     """
-    logit_bias: Optional[dict] | str = None
+    logit_bias: dict | str | None = None
     """Used to modify the probability of specific tokens appearing in the completion.
     """
-    user: Optional[str] | str = None
+    user: str | None = None
     """A unique identifier representing your end-user. This can help the LLM provider to monitor and detect abuse.
     """
     # openai v1.0+ new params
-    response_format: Optional[dict] | str = None
-    seed: Optional[int] | str = None
-    tools: Optional[list] | str = None
-    tool_choice: Optional[Union[str, dict]] | str = None
-    logprobs: Optional[bool] | str = None
+    response_format: dict | str | None = None
+    seed: int | str | None = None
+    tools: list | str | None = None
+    tool_choice: str | dict | None = None
+    logprobs: bool | str | None = None
     """Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output token returned in the content of message
     """
-    top_logprobs: Optional[int] | str = None
+    top_logprobs: int | str | None = None
     """top_logprobs (int, optional): An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
     """
-    parallel_tool_calls: Optional[bool] | str = None
+    parallel_tool_calls: bool | str | None = None
+    """Whether to enable parallel execution of tool calls."""
     # deployment_id = None
-    extra_headers: Optional[dict] | str = None
+    extra_headers: dict | str | None = None
     """Additional headers to include in the request.
     """
     # soon to be deprecated params by OpenAI
-    functions: Optional[list] | str = None
+    functions: list | str | None = None
     """A list of functions to apply to the conversation messages (default is an empty list)
     """
-    function_call: Optional[str] | str = None
+    function_call: str | None = None
     """The name of the function to call within the conversation (default is an empty string)
     """
     # set api_base, api_version, api_key
-    base_url: Optional[str] | str = environ.get("OPENAI_BASE_URL")
+    base_url: str | None = environ.get("OPENAI_BASE_URL")
     """Base URL for the API (default is None).
     """
-    api_version: Optional[str] | str = None
+    api_version: str | None = None
     """API version (default is None).
     """
-    api_key: Optional[str] | str = None
+    api_key: str | None = None
     """API key (default is None).
     """
-    model_list: Optional[list] | str = None  # pass in a list of api_base,keys, etc.
+    model_list: list | str | None = None  # pass in a list of api_base,keys, etc.
     """List of api base, version, keys.
     """
     # Optional liteLLM function params
-    mock_response: Optional[str] | str = None
+    mock_response: str | None = None
     """If provided, return a mock completion response for testing or debugging purposes (default is None).
     """
-    custom_llm_provider: Optional[str] | str = None
+    custom_llm_provider: str | None = None
     """Used for Non-OpenAI LLMs, Example usage for bedrock, set model="amazon.titan-tg1-large" and custom_llm_provider="bedrock"
     """
-    max_retries: Optional[int] | str = None
+    max_retries: int | str | None = None
     """The number of retries to attempt (default is 0).
+    """
+
+
+class OpenaiParameters(BaseModel):
+    """Parameters for OpenAI API calls."""
+
+    model_config = ConfigDict(extra="allow", protected_namespaces=())
+
+    # Client configuration (subfields within parameters)
+    api_key: str | None = None
+    """OpenAI API key (default is None, uses OPENAI_API_KEY environment variable).
+    """
+    base_url: str | None = None
+    """Base URL for the OpenAI API (default is None, uses https://api.openai.com/v1).
+    """
+    organization: str | None = None
+    """OpenAI organization ID (default is None).
     """
 
 
 class ModelPlatform(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "granite-io"
+    OPENAI = "openai"
 
 
 class ModelBlock(LeafBlock):
@@ -599,6 +663,7 @@ class ModelBlock(LeafBlock):
     """Variable where to store the raw response of the model.
     """
     # Field for internal use
+    pdl__trace: OptionalBlockType = None
     pdl__usage: OptionalPdlUsage = None
     """Tokens consumed during model call
     """
@@ -623,9 +688,11 @@ class LitellmModelBlock(ModelBlock):
     model: ExpressionStr
     """Name of the model following the LiteLLM convention.
     """
-    parameters: Optional[LitellmParameters | ExpressionType[dict]] = None
+    parameters: LitellmParameters | ExpressionType[dict] | None = None
     """Parameters to send to the model.
     """
+    structuredDecoding: OptionalBool = True
+    """Perform structured decoding if possible (i.e., `parser` and `spec` are provided and the inference platform supports it)."""
 
 
 class GraniteioProcessor(BaseModel):
@@ -649,18 +716,58 @@ class GraniteioModelBlock(ModelBlock):
     processor: GraniteioProcessor | ExpressionType[object]
     """IO Processor configuration or object.
     """
-    parameters: Optional[ExpressionType[dict[str, Any]]] = None
+    parameters: ExpressionType[dict[str, Any]] | None = None
     """Parameters sent to the model.
     """
 
 
+class OpenaiModelBlock(ModelBlock):
+    """
+    Call an LLM through the OpenAI API.
+
+    Example:
+    ```PDL
+    model: gpt-4
+    platform: openai
+    parameters:
+      temperature: 0.7
+      max_tokens: 100
+    ```
+    """
+
+    platform: Literal[ModelPlatform.OPENAI] = ModelPlatform.OPENAI
+    """Optional field to ensure that the block is using OpenAI.
+    """
+    model: ExpressionStr
+    """Name of the OpenAI model to use (e.g., 'gpt-4', 'gpt-3.5-turbo').
+    """
+    parameters: OpenaiParameters | ExpressionType[dict] | None = None
+    """Parameters to send to the OpenAI API.
+    """
+    structuredDecoding: OptionalBool = True
+    """Perform structured decoding if possible (i.e., `parser` and `spec` are provided)."""
+
+
 class BaseCodeBlock(LeafBlock):
+    """Base class for code execution blocks."""
+
     kind: Literal[BlockKind.CODE] = BlockKind.CODE
 
 
 class CodeBlock(BaseCodeBlock):
+    """Common fields for the `code` blocks."""
+
+    code: "BlockType"
+    """Code to execute.
     """
-    Execute a piece of code.
+    scope: OptionalExpressionDictStr = None
+    """Scope to use for the code execution. If not provided, the global scope is used.
+    """
+
+
+class PythonCodeBlock(CodeBlock):
+    """
+    Execute Python code.
 
     Example:
     ```PDL
@@ -672,14 +779,88 @@ class CodeBlock(BaseCodeBlock):
     ```
     """
 
-    lang: Annotated[
-        Literal["python", "command", "jinja", "pdl", "ipython"],
-        BeforeValidator(_ensure_lower),
-    ]
+    lang: Annotated[Literal["python"], BeforeValidator(_ensure_lower)] = "python"
     """Programming language of the code.
     """
-    code: "BlockType"
-    """Code to execute.
+
+
+class IPythonCodeBlock(CodeBlock):
+    """
+    Execute Python code as in iPython cell.
+
+    Example:
+    ```PDL
+    lang: python
+    code: |
+        import random
+        random.randint(1, 20)
+    ```
+    """
+
+    lang: Annotated[Literal["ipython"], BeforeValidator(_ensure_lower)] = "ipython"
+    """Programming language of the code.
+    """
+
+
+class JinjaCodeBlock(CodeBlock):
+    """
+    Execute Jinja code.
+
+    Example:
+    ```PDL
+    defs:
+      name: John
+    lang: jinja
+    code: |
+      Hello {{ name }}!
+    ```
+    """
+
+    lang: Annotated[Literal["jinja"], BeforeValidator(_ensure_lower)] = "jinja"
+    """Programming language of the code.
+    """
+
+    parameters: OptionalExpressionDictStr = None
+    """Parameters to pass to the Jinja template.
+    """
+
+
+class PdlCodeBlock(CodeBlock):
+    """
+    Execute PDL code.
+
+    Example:
+    ```PDL
+    defs:
+      x:
+        data: ${ y }
+        raw: true
+      y: World
+    lang: pdl
+    code: |
+      Hello ${ x }!
+    ```
+    """
+
+    lang: Annotated[Literal["pdl"], BeforeValidator(_ensure_lower)] = "pdl"
+    """Programming language of the code.
+    """
+
+
+class CommandCodeBlock(CodeBlock):
+    """
+    Execute shell command.
+
+    Example:
+    ```PDL
+    lang: command
+    code: |
+        ls -l
+    ```
+    """
+
+    lang: Annotated[Literal["command"], BeforeValidator(_ensure_lower)] = "command"
+    """Programming language of the code.
     """
 
 
@@ -747,6 +928,190 @@ class DataBlock(LeafBlock):
     """Do not evaluate expressions inside strings."""
 
 
+class MessageBlock(LeafBlock):
+    """Create a message."""
+
+    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
+    content: "BlockType"
+    """Content of the message."""
+    name: OptionalExpressionStr = None
+    """For example, the name of the tool that was invoked, for which this message is the tool response."""
+    tool_call_id: OptionalExpressionStr = None
+    """The id of the tool invocation for which this message is the tool response."""
+    tool_calls: OptionalExpressionList = None
+    """List of tool invocations made by the assistant in this message."""
+
+
+class ReadBlock(LeafBlock):
+    """Read from a file or standard input.
+
+    Example. Read from the standard input with a prompt starting with `> `.
+    ```PDL
+    read:
+    message: "> "
+    ```
+
+    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
+    ```PDL
+    read: ./data.yaml
+    parser: yaml
+    ```
+    """
+
+    kind: Literal[BlockKind.READ] = BlockKind.READ
+    read: OptionalExpressionStr
+    """Name of the file to read. If `None`, read the standard input.
+    """
+    message: OptionalStr = None
+    """Message to prompt the user to enter a value.
+    """
+    multiline: bool = False
+    """Indicate if one or multiple lines should be read.
+    """
+
+
+class FactorBlock(LeafBlock):
+    """Condition the model."""
+
+    kind: Literal[BlockKind.FACTOR] = BlockKind.FACTOR
+    factor: ExpressionType[float]
+    """Score to condition the model.
+    """
+    resample: bool = True
+    """Allow to raise the Resampling exception during the execution of the block.
+    """
+    # Field for internal use
+    pdl__score: OptionalFloat = None
+
+
+class AggregatorConfig(BaseModel):
+    """Common fields for all aggregator configurations."""
+
+    model_config = ConfigDict(
+        extra="forbid",
+        use_attribute_docstrings=True,
+        arbitrary_types_allowed=True,
+    )
+
+    description: str | None = None
+    """Documentation associated to the aggregator config.
+    """
+
+
+class FileAggregatorConfig(AggregatorConfig):
+    file: ExpressionType[str]
+    """Name of the file to which contribute."""
+    mode: ExpressionType[str] = "w"
+    """File opening mode."""
+    encoding: ExpressionType[str | None] = "utf-8"
+    """File encoding."""
+    prefix: ExpressionType[str] = ""
+    """Prefix to the contributed value."""
+    suffix: ExpressionType[str] = "\n"
+    """Suffix to the contributed value."""
+    flush: ExpressionType[bool] = False
+    """Whether to forcibly flush the stream."""
+
+
+AggregatorType: TypeAlias = Literal["context"] | FileAggregatorConfig
+
+
+class AggregatorBlock(LeafBlock):
+    """Create a new aggregator that can be use in the `contribute` field."""
+
+    kind: Literal[BlockKind.AGGREGATOR] = BlockKind.AGGREGATOR
+    aggregator: AggregatorType
+    """Configuration for the aggregator (context or file-based)."""
+
+
+class ErrorBlock(LeafBlock):
+    """Block representing an error generated at runtime."""
+
+    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
+    msg: str
+    """Error message.
+    """
+    program: "BlockType"
+    """Block that raised the error.
+    """
+
+
+class EmptyBlock(LeafBlock):
+    """Block without an action. It can contain definitions."""
+
+    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
+
+
+class JoinConfig(BaseModel):
+    """Configure how loop iterations or sequence of blocks should be combined."""
+
+    model_config = ConfigDict(
+        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
+    )
+
+
+class JoinText(JoinConfig):
+    """Join loop iterations or sequence of blocks as a string."""
+
+    as_: Literal["text"] = Field(alias="as", default="text")
+    """String concatenation of the result of each iteration.
+    """
+
+    with_: str = Field(alias="with", default="")
+    """String used to concatenate each iteration of the loop.
+    """
+
+
+class JoinArray(JoinConfig):
+    """Join loop iterations or sequence of blocks as an array."""
+
+    as_: Literal["array"] = Field(alias="as")
+    """Return the result of each iteration as an array.
+    """
+
+
+class JoinObject(JoinConfig):
+    """Join loop iterations or sequence of blocks as an object."""
+
+    as_: Literal["object"] = Field(alias="as")
+    """Return the union of the objects created at each iteration.
+    """
+
+
+class JoinLastOf(JoinConfig):
+    """Join loop iterations or sequence of blocks as the value of the last iteration."""
+
+    as_: Literal["lastOf"] = Field(alias="as")
+    """Return the result of the last iteration.
+    """
+
+
+class JoinReduce(JoinConfig):
+    """Join loop iterations or sequence of blocks as the value of the last iteration."""
+
+    as_: Literal["reduce"] = Field(alias="as", default="reduce")
+
+    reduce: ExpressionType[Callable]
+    """Function used to combine the results."""
+
+
+JoinType = TypeAliasType(
+    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
+)
+"""Different ways to join loop iterations or sequence of blocks."""
+
+
+class SequenceBlock(StructuredBlock):
+    """Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator."""
+
+    kind: Literal[BlockKind.SEQUENCE] = BlockKind.SEQUENCE
+    sequence: list["BlockType"]
+    """Sequence of blocks to join."""
+    join: JoinType
+    """Define how to combine the result of each block.
+    """
+
+
 class TextBlock(StructuredBlock):
     """Create the concatenation of the stringify version of the result of each block of the list of blocks."""
 
@@ -777,18 +1142,7 @@ class ObjectBlock(StructuredBlock):
 
     kind: Literal[BlockKind.OBJECT] = BlockKind.OBJECT
     object: dict[str, "BlockType"] | list["BlockType"]
-
-
-class MessageBlock(LeafBlock):
-    """Create a message."""
-
-    kind: Literal[BlockKind.MESSAGE] = BlockKind.MESSAGE
-    content: "BlockType"
-    """Content of the message."""
-    name: OptionalExpressionStr = None
-    """For example, the name of the tool that was invoked, for which this message is the tool response."""
-    tool_call_id: OptionalExpressionStr = None
-    """The id of the tool invocation for which this message is the tool response."""
+    """Object fields with their block definitions, or a list of blocks that produce objects to merge."""
 
 
 class IfBlock(StructuredBlock):
@@ -822,7 +1176,7 @@ class MatchCase(BaseModel):
     """Case of a match."""
 
     model_config = ConfigDict(extra="forbid")
-    case: Optional[PatternType] = None
+    case: PatternType | None = None
     """Value to match.
     """
     if_: OptionalExpressionBool = Field(default=None, alias="if")
@@ -832,9 +1186,9 @@ class MatchCase(BaseModel):
     """Branch to execute if the value is matched and the condition is satisfied.
     """
     # Field for internal use
-    pdl__case_result: Optional[bool] = None
-    pdl__if_result: Optional[bool] = None
-    pdl__matched: Optional[bool] = None
+    pdl__case_result: OptionalBool = None
+    pdl__if_result: OptionalBool = None
+    pdl__matched: OptionalBool = None
 
 
 class MatchBlock(StructuredBlock):
@@ -867,65 +1221,6 @@ class MatchBlock(StructuredBlock):
     """
 
 
-class JoinConfig(BaseModel):
-    """Configure how loop iterations should be combined."""
-
-    model_config = ConfigDict(
-        extra="forbid", use_attribute_docstrings=True, validate_by_name=True
-    )
-
-
-class JoinText(JoinConfig):
-    """Join loop iterations as a string."""
-
-    as_: Literal["text"] = Field(alias="as", default="text")
-    """String concatenation of the result of each iteration.
-    """
-
-    with_: str = Field(alias="with", default="")
-    """String used to concatenate each iteration of the loop.
-    """
-
-
-class JoinArray(JoinConfig):
-    """Join loop iterations as an array."""
-
-    as_: Literal["array"] = Field(alias="as")
-    """Return the result of each iteration as an array.
-    """
-
-
-class JoinObject(JoinConfig):
-    """Join loop iterations as an object."""
-
-    as_: Literal["object"] = Field(alias="as")
-    """Return the union of the objects created at each iteration.
-    """
-
-
-class JoinLastOf(JoinConfig):
-    """Join loop iterations as the value of the last iteration."""
-
-    as_: Literal["lastOf"] = Field(alias="as")
-    """Return the result of the last iteration.
-    """
-
-
-class JoinReduce(JoinConfig):
-    """Join loop iterations as the value of the last iteration."""
-
-    as_: Literal["reduce"] = Field(alias="as", default="reduce")
-
-    reduce: ExpressionType[Callable]
-    """Function used to combine the results."""
-
-
-JoinType = TypeAliasType(
-    "JoinType", Union[JoinText, JoinArray, JoinObject, JoinLastOf, JoinReduce]
-)
-"""Different ways to join loop iterations."""
-
-
 class RepeatBlock(StructuredBlock):
     """
     Repeat the execution of a block sequentially.
@@ -955,7 +1250,7 @@ class RepeatBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.REPEAT] = BlockKind.REPEAT
-    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    for_: dict[str, ExpressionType[list]] | None = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
     index: OptionalStr = None
@@ -977,7 +1272,7 @@ class RepeatBlock(StructuredBlock):
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
-    pdl__trace: Optional[list["BlockType"]] = None
+    pdl__trace: list["BlockType"] | None = None
 
 
 class MapBlock(StructuredBlock):
@@ -1007,7 +1302,7 @@ class MapBlock(StructuredBlock):
     """
 
     kind: Literal[BlockKind.MAP] = BlockKind.MAP
-    for_: Optional[dict[str, ExpressionType[list]]] = Field(default=None, alias="for")
+    for_: dict[str, ExpressionType[list]] | None = Field(default=None, alias="for")
     """Arrays to iterate over.
     """
     index: OptionalStr = None
@@ -1022,36 +1317,11 @@ class MapBlock(StructuredBlock):
     join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
+    maxWorkers: OptionalInt = None
+    """Maximal number of workers to execute the map in parallel. Is it is set to `0`, the execution is sequential otherwise it is given as argument to the `ThreadPoolExecutor`.
+    """
     # Field for internal use
-    pdl__trace: Optional[list["BlockType"]] = None
-
-
-class ReadBlock(LeafBlock):
-    """Read from a file or standard input.
-
-    Example. Read from the standard input with a prompt starting with `> `.
-    ```PDL
-    read:
-    message: "> "
-    ```
-
-    Example. Read the file `./data.yaml` in the same directory of the PDL file containing the block and parse it into YAML.
-    ```PDL
-    read: ./data.yaml
-    parser: yaml
-    ```
-    """
-
-    kind: Literal[BlockKind.READ] = BlockKind.READ
-    read: OptionalExpressionStr
-    """Name of the file to read. If `None`, read the standard input.
-    """
-    message: OptionalStr = None
-    """Message to prompt the user to enter a value.
-    """
-    multiline: bool = False
-    """Indicate if one or multiple lines should be read.
-    """
+    pdl__trace: list["BlockType"] | None = None
 
 
 class IncludeBlock(StructuredBlock):
@@ -1065,7 +1335,7 @@ class IncludeBlock(StructuredBlock):
     pdl__trace: OptionalBlockType = None
 
 
-class ImportBlock(LeafBlock):
+class ImportBlock(StructuredBlock):
     """Import a PDL file."""
 
     kind: Literal[BlockKind.IMPORT] = BlockKind.IMPORT
@@ -1076,53 +1346,50 @@ class ImportBlock(LeafBlock):
     pdl__trace: OptionalBlockType = None
 
 
-class ErrorBlock(LeafBlock):
-    """Block representing an error generated at runtime."""
-
-    kind: Literal[BlockKind.ERROR] = BlockKind.ERROR
-    msg: str
-    """Error message.
-    """
-    program: "BlockType"
-    """Block that raised the error.
-    """
-
-
-class EmptyBlock(LeafBlock):
-    """Block without an action. It can contain definitions."""
-
-    kind: Literal[BlockKind.EMPTY] = BlockKind.EMPTY
-
-
-AdvancedBlockType: TypeAlias = (
+ExpressionBlock = TypeAliasType("ExpressionBlock", Union[None, bool, int, float, str])
+"""Expression as blocks"""
+LeafBlockType: TypeAlias = (
     FunctionBlock
     | CallBlock
     | LitellmModelBlock
     | GraniteioModelBlock
-    | CodeBlock
+    | OpenaiModelBlock
+    | PythonCodeBlock
+    | IPythonCodeBlock
+    | JinjaCodeBlock
+    | PdlCodeBlock
+    | CommandCodeBlock
     | ArgsBlock
     | GetBlock
     | DataBlock
-    | IfBlock
-    | MatchBlock
-    | RepeatBlock
-    | MapBlock
+    | MessageBlock
+    | ReadBlock
+    | FactorBlock
+    | AggregatorBlock
+    | ErrorBlock
+    | EmptyBlock
+)
+"""Blocks that directly contribute their value to the context.
+"""
+StructuredBlockType: TypeAlias = (
+    SequenceBlock
     | TextBlock
     | LastOfBlock
     | ArrayBlock
     | ObjectBlock
-    | MessageBlock
-    | ReadBlock
+    | IfBlock
+    | MatchBlock
+    | RepeatBlock
+    | MapBlock
     | IncludeBlock
     | ImportBlock
-    | ErrorBlock
-    | EmptyBlock
 )
-"""Different types of structured blocks.
+"""Blocks that contain sub-blocks that can contribute to the context.
 """
-BlockType = TypeAliasType(
-    "BlockType", Union[None, bool, int, float, str, AdvancedBlockType]
-)
+AdvancedBlockType: TypeAlias = LeafBlockType | StructuredBlockType
+"""Different types of blocks with all their fields.
+"""
+BlockType = TypeAliasType("BlockType", Union[ExpressionBlock, AdvancedBlockType])
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore
@@ -1141,7 +1408,12 @@ class Program(RootModel):
 
 
 class PdlBlock(RootModel):
-    # This class is used to introduce that a type in the generate JsonSchema
+    """Wrapper class used to generate proper JSON Schema for PDL blocks.
+
+    This class introduces the BlockType in the generated JSON Schema,
+    allowing for proper type definitions in schema documentation.
+    """
+
     root: BlockType
 
 
@@ -1155,8 +1427,8 @@ class PDLRuntimeError(PDLException):
     def __init__(
         self,
         message: str,
-        loc: Optional[PdlLocationType] = None,
-        trace: Optional[BlockType] = None,
+        loc: PdlLocationType | None = None,
+        trace: BlockType | None = None,
         fallback: OptionalAny = None,
     ):
         super().__init__(message)
@@ -1179,7 +1451,7 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self,
         message: str,
         blocks: list[BlockType],
-        loc: Optional[PdlLocationType] = None,
+        loc: PdlLocationType | None = None,
         fallback: OptionalAny = None,
     ):
         super().__init__(message)
@@ -1189,13 +1461,14 @@ class PDLRuntimeProcessBlocksError(PDLException):
         self.message = message
 
 
-MAX_NEW_TOKENS = 1024
-MIN_NEW_TOKENS = 1
-REPETITION_PENALTY = 1.05
-TEMPERATURE_SAMPLING = 0.7
-TOP_P_SAMPLING = 0.85
-TOP_K_SAMPLING = 50
-DECODING_METHOD = "greedy"
+# Default model parameter constants
+MAX_NEW_TOKENS = 1024  # Maximum number of tokens to generate
+MIN_NEW_TOKENS = 1  # Minimum number of tokens to generate
+REPETITION_PENALTY = 1.05  # Penalty for repeating tokens
+TEMPERATURE_SAMPLING = 0.7  # Temperature for sampling (higher = more random)
+TOP_P_SAMPLING = 0.85  # Nucleus sampling threshold
+TOP_K_SAMPLING = 50  # Top-k sampling parameter
+DECODING_METHOD = "greedy"  # Default decoding method for text generation
 
 
 def get_default_model_parameters() -> list[dict[str, Any]]:
@@ -1312,11 +1585,13 @@ def get_default_model_parameters() -> list[dict[str, Any]]:
         {
             "ollama/*": {
                 "temperature": 0,
+                "seed": 0,
             },
         },
         {
             "ollama_chat/*": {
                 "temperature": 0,
+                "seed": 0,
             },
         },
     ]

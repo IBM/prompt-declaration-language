@@ -44,10 +44,11 @@ theme:
 nav:
   - Home: README.md
   - Tutorial: tutorial.md
+  - AutoPDL: autopdl.md
+  - PPDL: ppdl.md
   - API Reference: api_reference.md
   - Contribute: contrib.md
   - Viewer: viewer.md
-  - AutoPDL: autopdl.md
 
 # Define some IBM colors
 extra_css:

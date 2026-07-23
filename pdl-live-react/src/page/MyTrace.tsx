@@ -9,7 +9,7 @@ type Props = {
   value: string
 }
 
-/** current is demo curently being shown */
+/** current is demo currently being shown */
 function MyTracesDropdown({ current }: { current: string }) {
   return (
     <PageBreadcrumbDropdown label="My Traces">

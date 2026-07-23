@@ -3,7 +3,7 @@ text:
 - "Hello\n"
 - text: "\nTranslate to French\n"
   contribute: [context]
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:micro
   contribute: []
   def: fr
 - |

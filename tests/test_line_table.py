@@ -44,8 +44,8 @@ line3 = {
     "file": "tests/data/line/hello3.pdl",
     "errors": [
         "",
-        "tests/data/line/hello3.pdl:6 - Type errors during spec checking:",
-        "tests/data/line/hello3.pdl:6 -  World! should be of type <class 'int'>",
+        "tests/data/line/hello3.pdl:7 - Type errors during spec checking:",
+        "tests/data/line/hello3.pdl:7 -  World! should be of type <class 'int'>",
     ],
 }
 
@@ -72,7 +72,6 @@ line7 = {
     "file": "tests/data/line/hello7.pdl",
     "errors": [
         "",
-        "tests/data/line/hello7.pdl:4 - Missing required field: lang",
         "tests/data/line/hello7.pdl:4 - Field not allowed: lans",
     ],
 }
@@ -100,8 +99,8 @@ line9 = {
     "file": "tests/data/line/hello9.pdl",
     "errors": [
         "",
-        "tests/data/line/hello9.pdl:3 - Type errors during spec checking:",
-        "tests/data/line/hello9.pdl:3 - hello should be of type <class 'int'>",
+        "tests/data/line/hello9.pdl:4 - Type errors during spec checking:",
+        "tests/data/line/hello9.pdl:4 - hello should be of type <class 'int'>",
     ],
 }
 
@@ -140,8 +139,8 @@ line12 = {
     "file": "tests/data/line/hello12.pdl",
     "errors": [
         "",
-        "tests/data/line/hello12.pdl:9 - Type errors during spec checking:",
-        "tests/data/line/hello12.pdl:9 - How are you? should be of type <class 'bool'>",
+        "tests/data/line/hello12.pdl:11 - Type errors during spec checking:",
+        "tests/data/line/hello12.pdl:11 - How are you? should be of type <class 'bool'>",
     ],
 }
 
@@ -154,8 +153,8 @@ line13 = {
     "file": "tests/data/line/hello13.pdl",
     "errors": [
         "",
-        "tests/data/line/hello13.pdl:9 - Type errors during spec checking:",
-        "tests/data/line/hello13.pdl:9 - 1 should be of type <class 'str'>",
+        "tests/data/line/hello13.pdl:12 - Type errors during spec checking:",
+        "tests/data/line/hello13.pdl:12 - 1 should be of type <class 'str'>",
     ],
 }
 
@@ -195,8 +194,8 @@ line16 = {
     "file": "tests/data/line/hello16.pdl",
     "errors": [
         "",
-        "tests/data/line/hello16.pdl:8 - Type errors during spec checking:",
-        "tests/data/line/hello16.pdl:8 - 30 should be of type <class 'str'>",
+        "tests/data/line/hello16.pdl:10 - Type errors during spec checking:",
+        "tests/data/line/hello16.pdl:10 - 30 should be of type <class 'str'>",
     ],
 }
 
@@ -209,8 +208,8 @@ line17 = {
     "file": "tests/data/line/hello17.pdl",
     "errors": [
         "",
-        "tests/data/line/hello17.pdl:3 - Type errors during spec checking:",
-        "tests/data/line/hello17.pdl:3 - hello should be of type <class 'int'>",
+        "tests/data/line/hello17.pdl:4 - Type errors during spec checking:",
+        "tests/data/line/hello17.pdl:4 - hello should be of type <class 'int'>",
     ],
 }
 
@@ -331,7 +330,7 @@ line26 = {
     "file": "tests/data/line/hello26.pdl",
     "errors": [
         "",
-        "tests/data/line/hello26.pdl:13 - Values inside the For block must be lists but got <class 'str'>.",
+        "tests/data/line/hello26.pdl:12 - Lists inside the For block must be of the same length.",
     ],
 }
 
@@ -383,7 +382,7 @@ line30 = {
     "file": "tests/data/line/hello30.pdl",
     "errors": [
         "",
-        "tests/data/line/hello30.pdl:7 - Values inside the For block must be lists but got <class 'dict'>.",
+        "tests/data/line/hello30.pdl:6 - Values inside the For block must be lists but got <class 'int'>.",
     ],
 }
 
@@ -405,3 +404,17 @@ line31 = {
 
 def test_line31(capsys: CaptureFixture[str]):
     do_test(line31, capsys)
+
+
+line32 = {
+    "file": "tests/data/line/hello32.pdl",
+    "errors": [
+        "",
+        "tests/data/line/hello32.pdl:4 - Type errors during spec checking:",
+        "tests/data/line/hello32.pdl:4 - 1 should be of type <class 'str'>",
+    ],
+}
+
+
+def test_line32(capsys: CaptureFixture[str]):
+    do_test(line32, capsys)

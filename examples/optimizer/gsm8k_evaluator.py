@@ -2,8 +2,8 @@ from typing import Any
 
 from pdl.optimize.optimizer_evaluator import OptimizerEvaluator
 from pdl.optimize.parse_number import extract_math_answer
-from pdl.pdl_ast import ScopeType
 from pdl.pdl_interpreter import empty_scope
+from pdl.pdl_interpreter_state import ScopeType
 
 
 class Gsm8kEvaluator(OptimizerEvaluator):
@@ -64,8 +64,6 @@ class Gsm8kEvaluator(OptimizerEvaluator):
         scope["reasoning"] = self.example["reasoning"]
         return empty_scope | scope
 
-    def extract_answer(self, document: str) -> Any:
-        return extract_math_answer(document)
-
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
-        return answer == truth or document.endswith(f" {truth}")
+    def score(self, document: str, ground_truth: Any) -> float:
+        answer = extract_math_answer(document)
+        return float(answer == ground_truth or document.endswith(f" {ground_truth}"))

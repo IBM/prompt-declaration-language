@@ -1,0 +1,2 @@
+Extract information about a person from this text: John Doe is 30 years old and his email is john@example.com
+{"name": "John Doe", "age": 30, "email": "john@example.com"}

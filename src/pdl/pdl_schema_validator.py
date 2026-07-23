@@ -1,5 +1,5 @@
 # pylint: disable=import-outside-toplevel
-from typing import Any, Optional
+from typing import Any
 
 from .pdl_ast import FunctionBlock, PdlTypeType
 from .pdl_location_utils import get_loc_string
@@ -8,8 +8,8 @@ from .pdl_schema_utils import get_json_schema, pdltype_to_jsonschema
 
 
 def type_check_args(
-    args: Optional[dict[str, Any]],
-    params: Optional[dict[str, PdlTypeType]],
+    args: dict[str, Any] | None,
+    params: dict[str, PdlTypeType] | None,
     loc,
 ) -> list[str]:
     if (args == {} or args is None) and (params is None or params == {}):

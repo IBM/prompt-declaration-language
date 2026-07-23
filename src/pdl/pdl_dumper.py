@@ -8,20 +8,25 @@ from pydantic.main import BaseModel, IncEx
 
 from . import pdl_ast
 from .pdl_ast import (
+    AggregatorBlock,
+    AggregatorType,
     AnyPattern,
     ArgsBlock,
     ArrayBlock,
     ArrayPattern,
     Block,
     CallBlock,
-    CodeBlock,
+    CommandCodeBlock,
+    ContributeElement,
     ContributeTarget,
-    ContributeValue,
     DataBlock,
     EmptyBlock,
     EnumPdlType,
     ErrorBlock,
+    ExpectationType,
     ExpressionType,
+    FactorBlock,
+    FileAggregatorConfig,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -29,6 +34,8 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    IPythonCodeBlock,
+    JinjaCodeBlock,
     JoinArray,
     JoinLastOf,
     JoinObject,
@@ -46,20 +53,24 @@ from .pdl_ast import (
     ObjectBlock,
     ObjectPattern,
     ObjectPdlType,
+    OpenaiModelBlock,
+    OpenaiParameters,
     OptionalPdlType,
     OrPattern,
     ParserType,
     PatternType,
+    PdlCodeBlock,
     PdlLocationType,
     PdlParser,
     PdlTiming,
     PdlTypeType,
     PdlUsage,
     Program,
+    PythonCodeBlock,
     ReadBlock,
     RegexParser,
     RepeatBlock,
-    RequirementType,
+    SequenceBlock,
     StructuredBlock,
     TextBlock,
 )
@@ -102,11 +113,15 @@ def program_to_dict(
     return block_to_dict(prog.root, json_compatible)
 
 
-def block_to_dict(  # noqa: C901
-    block: pdl_ast.BlockType, json_compatible: bool
-) -> DumpedBlockType:
+def block_to_dict(block: pdl_ast.BlockType, json_compatible: bool) -> DumpedBlockType:
     if not isinstance(block, Block):
         return block
+    return advance_block_to_dict(block, json_compatible)
+
+
+def advance_block_to_dict(  # noqa: C901
+    block: pdl_ast.AdvancedBlockType, json_compatible: bool
+) -> DumpedBlockType:
     d: dict[str, Any] = {}
     d["kind"] = str(block.kind)
     if block.pdl__id is not None:
@@ -151,6 +166,8 @@ def block_to_dict(  # noqa: C901
                     d["parameters"] = expr_to_dict(block.parameters, json_compatible)
             if block.modelResponse is not None:
                 d["modelResponse"] = block.modelResponse
+            if not block.structuredDecoding:
+                d["structuredDecoding"] = block.structuredDecoding
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
             if block.pdl__model_input is not None:
@@ -176,17 +193,53 @@ def block_to_dict(  # noqa: C901
                 d["modelResponse"] = block.modelResponse
             if block.pdl__usage is not None:
                 d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+        case OpenaiModelBlock():
+            d["platform"] = str(block.platform)
+            d["model"] = expr_to_dict(block.model, json_compatible)
+            d["input"] = block_to_dict(block.input, json_compatible)
+            if block.parameters is not None:
+                if isinstance(block.parameters, OpenaiParameters):
+                    d["parameters"] = block.parameters.model_dump(
+                        exclude_unset=True, exclude_defaults=True
+                    )
+                else:
+                    d["parameters"] = expr_to_dict(block.parameters, json_compatible)
+            if block.modelResponse is not None:
+                d["modelResponse"] = block.modelResponse
+            if not block.structuredDecoding:
+                d["structuredDecoding"] = block.structuredDecoding
+            if block.pdl__usage is not None:
+                d["pdl__usage"] = usage_to_dict(block.pdl__usage)
+            if block.pdl__model_input is not None:
+                d["pdl__model_input"] = block.pdl__model_input
         case ArgsBlock():
             d["args"] = block.args
-        case CodeBlock():
+        case (
+            PythonCodeBlock()
+            | IPythonCodeBlock()
+            | JinjaCodeBlock()
+            | PdlCodeBlock()
+            | CommandCodeBlock()
+        ):
             d["lang"] = block.lang
             d["code"] = block_to_dict(block.code, json_compatible)
+            if block.scope is not None:
+                d["scope"] = expr_to_dict(block.scope, json_compatible)
+            match block:
+                case JinjaCodeBlock():
+                    if block.parameters is not None:
+                        d["parameters"] = expr_to_dict(
+                            block.parameters, json_compatible
+                        )
         case GetBlock():
             d["get"] = block.get
         case DataBlock():
             d["data"] = expr_to_dict(block.data, json_compatible)
             if block.raw:
                 d["raw"] = block.raw
+        case SequenceBlock():
+            d["sequence"] = [block_to_dict(b, json_compatible) for b in block.sequence]
+            d["join"] = join_to_dict(block.join, json_compatible)
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks
@@ -207,6 +260,8 @@ def block_to_dict(  # noqa: C901
                 d["object"] = [block_to_dict(b, json_compatible) for b in block.object]
         case MessageBlock():
             d["content"] = block_to_dict(block.content, json_compatible)
+            if block.tool_calls:
+                d["tool_calls"] = expr_to_dict(block.tool_calls, json_compatible)
         case ReadBlock():
             d["read"] = expr_to_dict(block.read, json_compatible)
             d["message"] = block.message
@@ -219,6 +274,14 @@ def block_to_dict(  # noqa: C901
             d["import"] = block.import_
             if block.pdl__trace:
                 d["pdl__trace"] = block_to_dict(block.pdl__trace, json_compatible)
+        case FactorBlock():
+            d["factor"] = expr_to_dict(block.factor, json_compatible)
+            if not block.resample:
+                d["resample"] = block.resample
+            if block.pdl__score is not None:
+                d["pdl__score"] = block.pdl__score
+        case AggregatorBlock():
+            d["aggregator"] = aggregator_to_dict(block.aggregator)
         case IfBlock():
             d["if"] = expr_to_dict(block.condition, json_compatible)
             d["then"] = block_to_dict(block.then, json_compatible)
@@ -259,6 +322,8 @@ def block_to_dict(  # noqa: C901
                 d["for"] = expr_to_dict(block.for_, json_compatible)
             if block.index is not None:
                 d["index"] = block.index
+            if block.maxWorkers is not None:
+                d["maxWorkers"] = expr_to_dict(block.maxWorkers, json_compatible)
             d["map"] = block_to_dict(block.map, json_compatible)
             if block.maxIterations is not None:
                 d["maxIterations"] = expr_to_dict(block.maxIterations, json_compatible)
@@ -294,13 +359,13 @@ def block_to_dict(  # noqa: C901
         [ContributeTarget.CONTEXT, ContributeTarget.RESULT],
     ]:
         d["contribute"] = contribute_to_list(block.contribute)
-    if block.pdl__result is not None:
+    if block.pdl__result is not None and not isinstance(block, ImportBlock):
         d["pdl__result"] = data_to_dict(block.pdl__result.result(), json_compatible)
     if block.parser is not None:
         d["parser"] = parser_to_dict(block.parser)
-    if block.requirements is not None:
-        d["requirements"] = [
-            requirement_to_dict(b, json_compatible) for b in block.requirements
+    if block.expectations is not None:
+        d["expectations"] = [
+            expectation_to_dict(b, json_compatible) for b in block.expectations
         ]
     # if block.pdl__location is not None:
     #     d["pdl__location"] = location_to_dict(block.pdl__location)
@@ -398,16 +463,17 @@ def timing_to_dict(timing: PdlTiming) -> dict:
 
 def usage_to_dict(usage: PdlUsage) -> dict:
     d: dict = {}
+    d["model_calls"] = usage.model_calls
     d["completion_tokens"] = usage.completion_tokens
     d["prompt_tokens"] = usage.prompt_tokens
     return d
 
 
-def requirement_to_dict(req: RequirementType, json_compatible: bool) -> dict:
+def expectation_to_dict(req: ExpectationType, json_compatible: bool) -> dict:
     d: dict = {}
-    d["description"] = req.description
-    d["evaluate"] = expr_to_dict(req.evaluate, json_compatible)
-    d["transformContext"] = expr_to_dict(req.transformContext, json_compatible)
+    d["expect"] = req.expect
+    if req.feedback is not None:
+        d["feedback"] = expr_to_dict(req.feedback, json_compatible)
     return d
 
 
@@ -461,6 +527,8 @@ def as_json(value: Any) -> JsonType:
         return {str(k): as_json(v) for k, v in value.items()}
     if isinstance(value, Iterable):
         return [as_json(v) for v in value]
+    if isinstance(value, Block):
+        return as_json(block_to_dict(value, json_compatible=True))  # pyright: ignore
     return str(value)
 
 
@@ -484,11 +552,11 @@ def parser_to_dict(parser: ParserType) -> str | dict[str, Any]:
 
 
 def location_to_dict(location: PdlLocationType) -> dict[str, Any]:
-    return {"path": location.path, "file": location.file, "table": location.table}
+    return {"path": location.path, "file": location.file, "table": {}}
 
 
 def contribute_to_list(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+    contribute: Sequence[ContributeElement],
 ) -> list[str | dict[str, Any]]:
     acc: list[str | dict[str, Any]] = []
     for contrib in contribute:
@@ -497,6 +565,17 @@ def contribute_to_list(
         elif isinstance(contrib, dict):
             acc.append({str(k): v.model_dump() for k, v in contrib.items()})
     return acc
+
+
+def aggregator_to_dict(aggregator: AggregatorType):
+    match aggregator:
+        case "context":
+            result = aggregator
+        case FileAggregatorConfig():
+            result = aggregator.model_dump()
+        case _:
+            assert False, "Unexpected aggregator"
+    return result
 
 
 def build_exclude(obj: Any, regex: re.Pattern[str]) -> Any:

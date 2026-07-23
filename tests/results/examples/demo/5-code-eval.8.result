@@ -1,0 +1,51 @@
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the `OffsetUtil` class located in the `stagesupport/src/main/java/com/...` directory of the `streamsets/datacollector` repository.
+
+Here's a breakdown of the code:
+
+```java
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+    offsetMap = new HashMap<>();
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
+  }
+  return offsetMap;
+}
+```
+
+1. The method is declared as `public static`, indicating that it can be called without creating an instance of the class.
+
+2. The method takes a single parameter `lastSourceOffset` of type `String`, which represents the serialized offset data.
+
+3. The method returns a `Map<String, String>`, which is a map with string keys and string values.
+
+4. The `@SuppressWarnings("unchecked")` annotation is used to suppress a specific unchecked warning related to the use of `Map.class` with the `JSON_MAPPER.readValue` method. It assumes that the deserialization will result in a `Map<String, String>`.
+
+5. Inside the method, a variable `offsetMap` of type `Map<String, String>` is declared.
+
+6. The method checks if `lastSourceOffset` is `null` or an empty string using the condition `if (lastSourceOffset == null || lastSourceOffset.isEmpty())`.
+
+7. If `lastSourceOffset` is `null` or an empty string, a new `HashMap<String, String>` is created and assigned to `offsetMap`.
+
+8. If `lastSourceOffset` is not `null` or an empty string, the method uses the `JSON_MAPPER` (presumably an instance of `com.fasterxml.jackson.databind.ObjectMapper`) to deserialize the JSON string into a `Map<String, String>` using the `readValue` method. The `Map.class` parameter specifies the type of the deserialized object.
+
+9. Finally, the method returns the `offsetMap`.
+
+In summary, this method deserializes a JSON string representing offsets into a `Map<String, String>` if the `lastSourceOffset` is not `null` or an empty string. If the `lastSourceOffset` is `null` or an empty string, it returns an empty `HashMap<String, String>`.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.2145421903052065

@@ -14,10 +14,10 @@ curl https://raw.githubusercontent.com/openai/grade-school-math/refs/heads/maste
 To run, do `pdl --stream none gsm8.pdl`.
 
 The example version attempts to do the first 50 questions in that example
-using `ollama/granite3.2:8b`.  If you are using Ollama, you should first do
+using `ollama/granite4:micro`.  If you are using Ollama, you should first do
 
 ```bash
-ollama pull granite3.2:8b
+ollama pull granite4:micro
 ```
 
 To get the model.

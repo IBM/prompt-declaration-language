@@ -1,8 +1,11 @@
 import argparse
 import json
+import os
 import sys
+from asyncio import AbstractEventLoop
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, Literal, Optional, TypedDict
+from typing import Any, Literal, TypedDict
 
 import yaml
 from pydantic.json_schema import models_json_schema
@@ -10,22 +13,26 @@ from pydantic.json_schema import models_json_schema
 from . import pdl_interpreter
 from ._version import version
 from .pdl_ast import (
+    BlockType,
     PdlBlock,
     PdlLocationType,
+    PdlUsage,
     Program,
     RoleType,
-    ScopeType,
     empty_block_location,
     get_default_model_parameters,
 )
 from .pdl_interpreter import InterpreterState, process_prog
-from .pdl_lazy import PdlDict
+from .pdl_interpreter_state import ScopeType
 from .pdl_parser import parse_dict, parse_file, parse_str
 from .pdl_runner import exec_docker
 from .pdl_utils import (  # pylint: disable=unused-import # noqa: F401
+    Ref,
     validate_scope,
     write_trace,
 )
+
+os.environ["DISABLE_AIOHTTP_TRANSPORT"] = "True"
 
 
 class InterpreterConfig(TypedDict, total=False):
@@ -46,14 +53,37 @@ class InterpreterConfig(TypedDict, total=False):
     """Default role.
     """
     cwd: Path
-    """Path considered as the current working directory for file reading."""
+    """Path considered as the current working directory for file reading.
+    """
+    replay: dict[str, Any]
+    """Execute the program reusing some already computed values.
+    """
+    with_resample: bool
+    """Allow the interpreter to raise the `Resample` exception."""
+    ignore_factor: bool
+    """Do not evaluate the expression associated to the `factor` block but use `0` instead (so resample if `with_resample` is true)."""
+    score: float | Ref[float]
+    """Initial value of the score."""
+    event_loop: AbstractEventLoop
+    """Event loop to schedule LLM calls."""
+    llm_usage: PdlUsage
+    """Data structure where to accumulate LLMs usage."""
+
+
+class Result(TypedDict):
+    result: Any
+    scope: dict[str, Any]
+    trace: BlockType
+    replay: dict[str, Any]
+    score: float
+    usage: PdlUsage
 
 
 def exec_program(
     prog: Program,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[PdlLocationType] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
+    loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a value of type `pdl.pdl_ast.Program`.
@@ -66,12 +96,17 @@ def exec_program(
         output: Configure the output of the returned value of this function. Defaults to `"result"`
 
     Returns:
-        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, and `trace`.
+        Return the final result if `output` is set to `"result"`. If set of `all`, it returns a dictionary containing, `result`, `scope`, `trace`, `replay`, and `score`.
     """
-    config = config or {}
-    state = InterpreterState(**config)
-    if not isinstance(scope, PdlDict):
-        scope = PdlDict(scope or {})
+    config = config or InterpreterConfig()
+    config["replay"] = dict(config.get("replay", {}))
+    score = config.get("score")
+    if score is not None and not isinstance(score, Ref):
+        config["score"] = Ref(score)
+    assert config.get("score") is None or isinstance(config.get("score"), Ref)
+    state = InterpreterState(**config)  # pyright: ignore
+    if not isinstance(scope, ScopeType):
+        scope = ScopeType(scope or {})
     loc = loc or empty_block_location
     initial_scope = {"pdl_model_default_parameters": get_default_model_parameters()}
     future_result, _, future_scope, trace = process_prog(
@@ -82,17 +117,24 @@ def exec_program(
         case "result":
             return result
         case "all":
-            scope = future_scope.result()
-            return {"result": result, "scope": scope, "trace": trace}
+            result_all: Result = {
+                "result": result,
+                "scope": future_scope.result(),
+                "trace": trace,
+                "replay": state.replay,
+                "score": state.score.ref,
+                "usage": state.llm_usage,
+            }
+            return result_all
         case _:
             assert False, 'The `output` variable should be "result" or "all"'
 
 
 def exec_dict(
     prog: dict[str, Any],
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
-    loc: Optional[PdlLocationType] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
+    loc: PdlLocationType | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as a dictionary.
@@ -114,8 +156,8 @@ def exec_dict(
 
 def exec_str(
     prog: str,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML string.
@@ -136,8 +178,8 @@ def exec_str(
 
 def exec_file(
     prog: str | Path,
-    config: Optional[InterpreterConfig] = None,
-    scope: Optional[ScopeType | dict[str, Any]] = None,
+    config: InterpreterConfig | None = None,
+    scope: ScopeType | Mapping[str, Any] | None = None,
     output: Literal["result", "all"] = "result",
 ) -> Any:
     """Execute a PDL program given as YAML file.
@@ -158,6 +200,14 @@ def exec_file(
         config["cwd"] = Path(prog).parent
     result = exec_program(program, config, scope, loc, output)
     return result
+
+
+def pdl(func):
+    def pdl_wrapper(scope):
+        result = exec_str(prog=func.__doc__, scope=scope)
+        return result
+
+    return pdl_wrapper
 
 
 def main():
@@ -273,10 +323,15 @@ def main():
         batch=batch,
         cwd=pdl_file.parent,
     )
+    score = config.get("score")
+    if score is not None and not isinstance(score, Ref):
+        config["score"] = Ref(score)
+    assert config.get("score") is None or isinstance(config.get("score"), Ref)
+
     exit_code = pdl_interpreter.generate(
         pdl_file,
-        InterpreterState(**config),
-        PdlDict(initial_scope),
+        InterpreterState(**config),  # pyright: ignore
+        ScopeType(initial_scope),
         trace_file,
     )
     return exit_code

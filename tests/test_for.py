@@ -171,6 +171,28 @@ join:
         assert result == [["11", "12"], ["21", "22"], ["31", "32"]]
 
 
+def test_for_object():
+    for loop_kind in ["repeat", "map"]:
+        prog_str = f"""
+description: for loop creating an object
+defs:
+  numbers:
+    data: [1, 2, 3, 4]
+  names:
+    data: ["Bob", "Carol", "David", "Ernest"]
+for:
+  number: ${{ numbers }}
+  name: ${{ names }}
+{loop_kind}:
+  data:
+    ${{ name }}: ${{ number }}
+join:
+  as: object
+"""
+        result = exec_str(prog_str)
+        assert result == {"Bob": 1, "Carol": 2, "David": 3, "Ernest": 4}
+
+
 def test_for_nested_text():
     for loop_kind1 in ["repeat", "map"]:
         for loop_kind2 in ["repeat", "map"]:
@@ -253,12 +275,18 @@ def test_for_context():
         match loop_kind:
             case "repeat":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
                     [
                         {
                             "role": "user",
                             "content": "Hello",
-                            "pdl__defsite": "lastOf.0",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
                         },
                         {
                             "role": "user",
@@ -266,17 +294,17 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 }
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.0",
+                            "pdl__defsite": "lastOf.1.repeat.0.data",
                         },
                     ],
                     [
                         {
                             "role": "user",
                             "content": "Hello",
-                            "pdl__defsite": "lastOf.0",
+                            "pdl__defsite": "lastOf.0.data",
                         },
                         {
                             "role": "user",
@@ -284,10 +312,10 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 }
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.0",
+                            "pdl__defsite": "lastOf.1.repeat.0.data",
                         },
                         {
                             "role": "user",
@@ -295,7 +323,7 @@ def test_for_context():
                                 {
                                     "role": "user",
                                     "content": "Hello",
-                                    "pdl__defsite": "lastOf.0",
+                                    "pdl__defsite": "lastOf.0.data",
                                 },
                                 {
                                     "role": "user",
@@ -303,25 +331,62 @@ def test_for_context():
                                         {
                                             "role": "user",
                                             "content": "Hello",
-                                            "pdl__defsite": "lastOf.0",
+                                            "pdl__defsite": "lastOf.0.data",
                                         }
                                     ],
-                                    "pdl__defsite": "lastOf.1.repeat.0",
+                                    "pdl__defsite": "lastOf.1.repeat.0.data",
                                 },
                             ],
-                            "pdl__defsite": "lastOf.1.repeat.1",
+                            "pdl__defsite": "lastOf.1.repeat.1.data",
                         },
                     ],
                 ]
             case "map":
                 assert result["result"] == [
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
-                    [{"role": "user", "content": "Hello", "pdl__defsite": "lastOf.0"}],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
+                    [
+                        {
+                            "role": "user",
+                            "content": "Hello",
+                            "pdl__defsite": "lastOf.0.data",
+                        }
+                    ],
                 ]
 
 
 def test_for_reduce():
+    for loop_kind1 in ["repeat", "map"]:
+        prog_str = f"""
+defs:
+  plus:
+    function:
+        x: number
+        y: number
+    return: ${{ x + y }}
+for:
+  i: [1,2,3,4]
+{loop_kind1}: ${{ i }}
+join:
+  reduce: ${{ plus }}
+"""
+        result = exec_str(prog_str)
+        assert result == 10
+
+
+def test_for_reduce_python():
     for loop_kind1 in ["repeat", "map"]:
         prog_str = f"""
 defs:
@@ -338,3 +403,15 @@ join:
 """
         result = exec_str(prog_str)
         assert result == 10
+
+
+def test_map_max_workers():
+    for max_workers in [0, "null", 2, 4]:
+        prog_str = f"""
+for:
+  i: [1,2,3,4]
+map: ${{ i }}
+maxWorkers: {max_workers}
+"""
+        result = exec_str(prog_str)
+        assert result == "1234"

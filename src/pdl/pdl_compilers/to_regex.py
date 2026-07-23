@@ -4,12 +4,14 @@ from dataclasses import dataclass
 from typing import Sequence, TypeAlias
 
 from ..pdl_ast import (
+    AggregatorBlock,
     Block,
     BlockType,
     CallBlock,
     CodeBlock,
     DataBlock,
     ExpressionType,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     IfBlock,
@@ -20,6 +22,8 @@ from ..pdl_ast import (
     LocalizedExpression,
     MapBlock,
     ModelBlock,
+    OpenaiModelBlock,
+    OpenaiParameters,
     ReadBlock,
     RepeatBlock,
     TextBlock,
@@ -278,6 +282,21 @@ def compile_block(
                             parameters = block.parameters
                         stop_sequences = parameters.get("stop", [])
                         include_stop_sequence = parameters.get("stop", False)
+                case OpenaiModelBlock():
+                    if block.parameters is None:
+                        stop_sequences = []
+                        include_stop_sequence = False
+                    else:
+                        if isinstance(block.parameters, OpenaiParameters):
+                            parameters = block.parameters.model_dump()
+                        elif isinstance(block.parameters, LocalizedExpression):
+                            parameters = block.parameters.pdl__expr
+                        elif isinstance(block.parameters, str):
+                            parameters = {}
+                        else:
+                            parameters = block.parameters
+                        stop_sequences = parameters.get("stop", [])
+                        include_stop_sequence = parameters.get("stop", False)
                 case _:
                     assert False
 
@@ -322,6 +341,10 @@ def compile_block(
         case IncludeBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case ImportBlock():
+            regex = ReStar(ReAnyChar())  # XXX TODO XXX
+        case FactorBlock():
+            regex = ReStar(ReAnyChar())  # XXX TODO XXX
+        case AggregatorBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX
         case FunctionBlock():
             regex = ReStar(ReAnyChar())  # XXX TODO XXX

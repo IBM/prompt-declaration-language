@@ -1,9 +1,11 @@
 description: Hello world showing call to Python code
+defs:
+  name:
+    lang: python
+    code: 
+      |
+      import random
+      import string
+      result = random.choice(string.ascii_lowercase)
 text:
-- "Hello, "
-- lang: python
-  code: 
-    |
-    import random
-    import string
-    result = random.choice(string.ascii_lowercase)
+- "Hello, ${ name}!"

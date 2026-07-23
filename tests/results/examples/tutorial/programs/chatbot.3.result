@@ -1,0 +1,25 @@
+What is APR?APR stands for Annual Percentage Rate. It's a measure of the annual cost of borrowing money, expressed as a percentage rate. This includes not only the interest you pay on your loan but also any fees associated with obtaining that loan. 
+
+Here are some key points about APR:
+
+1. **Includes Fees**: Unlike simple interest rates, which typically don't include fees, APR takes these into account. This makes it a more accurate representation of what you'll actually pay over the course of a year for borrowing money.
+
+2. **For All Loans**: It applies to all types of loans, including mortgages, auto loans, personal loans, and credit cards.
+
+3. **Used for Comparison**: Lenders are required by law in many cases to disclose the APR when advertising loan rates. This allows consumers to compare different loan offers more easily on a like-to-like basis.
+
+4. **Longer Term Loans**: For longer-term loans, the APR is usually lower than for shorter terms because the total interest paid over the life of the loan is spread out over many months or years.
+
+5. **Variable vs. Fixed Rates**: The APR can vary depending on whether the rate is fixed (stays the same throughout the loan term) or variable (changes based on market conditions).
+
+To calculate your monthly payment for a loan, you would typically use the formula:
+
+`M = P [ i(1 + i)^n ] / [(1 + i)^n – 1]`
+
+Where:
+- `M` is the monthly payment amount.
+- `P` is the principal (the total amount of money borrowed).
+- `i` is the monthly interest rate (annual interest rate divided by 12).
+- `n` is the number of months in the loan term.
+
+This formula gives you the monthly payment, but to find the APR, you would need additional information about the loan's fees and terms, as these are not included in this calculation.yes

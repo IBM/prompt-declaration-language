@@ -11,17 +11,24 @@ from examples.optimizer.mbpp_dataset import MBPPDataset
 from examples.optimizer.mbpp_evaluator import MBPPEvaluator
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.pdl_optimizer import PDLOptimizer
+from pdl.pdl import InterpreterConfig
+from pdl.pdl_scheduler import create_event_loop_thread
+
+_LOOP = create_event_loop_thread()
 
 
 def test_gsm8k_cot():
     pattern = "cot"
     num_demonstrations = 3
     config = OptimizationConfig(
-        benchmark="gsm8k",
-        initial_test_set_size=1,
+        pdl_path="tests/data/optimizer_gsm8k.pdl",
+        dataset="gsm8k",
+        demonstration_columns=["question", "reasoning", "answer"],
+        instance_columns=["question", "reasoning"],
+        groundtruth_column="answer",
+        initial_validation_set_size=1,
         max_test_set_size=1,
         num_candidates=5,
-        num_demonstrations=num_demonstrations,
         parallelism=1,
         shuffle_test=False,
         test_set_name="test",
@@ -348,13 +355,17 @@ def test_gsm8k_cot():
             "test": Dataset.from_list(gsm8k["test"]),
         },
     )
+
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
-        pdl_path=Path("tests/data/optimizer_gsm8k.pdl"),
         dataset=gsm8k,
         trial_thread=Gsm8kEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -375,11 +386,14 @@ def test_gsm8k_cot():
 
 def run_optimizer_gsm8k(pattern, num_demonstrations=0):
     config = OptimizationConfig(
-        benchmark="gsm8k",
-        initial_test_set_size=1,
+        pdl_path="tests/data/optimizer_gsm8k.pdl",
+        dataset="gsm8k",
+        demonstration_columns=["question", "reasoning", "answer"],
+        instance_columns=["question", "reasoning"],
+        groundtruth_column="answer",
+        initial_validation_set_size=1,
         max_test_set_size=1,
         num_candidates=1,
-        num_demonstrations=num_demonstrations,
         parallelism=1,
         shuffle_test=False,
         test_set_name="test",
@@ -707,13 +721,17 @@ def run_optimizer_gsm8k(pattern, num_demonstrations=0):
             "test": Dataset.from_list(gsm8k["test"]),
         },
     )
+
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
-        pdl_path=Path("examples/optimizer/gsm8k.pdl"),
         dataset=gsm8k,
         trial_thread=Gsm8kEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -724,11 +742,22 @@ def run_optimizer_gsm8k(pattern, num_demonstrations=0):
 
 def run_optimizer_fever(pattern, num_demonstrations=0):
     config = OptimizationConfig(
-        benchmark="fever",
-        initial_test_set_size=1,
+        pdl_path="examples/optimizer/fever.pdl",
+        dataset="fever",
+        demonstration_columns=[
+            "question",
+            "reasoning",
+            "reasoning",
+            "traj_keys",
+            "traj_values",
+            "rewoo_traj_keys",
+            "rewoo_traj_values",
+        ],
+        instance_columns=["claim"],
+        groundtruth_column="label",
+        initial_validation_set_size=1,
         max_test_set_size=1,
         num_candidates=1,
-        num_demonstrations=num_demonstrations,
         parallelism=1,
         shuffle_test=False,
         test_set_name="test",
@@ -1063,13 +1092,16 @@ def run_optimizer_fever(pattern, num_demonstrations=0):
         },
     )
 
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
-        pdl_path=Path("examples/optimizer/fever.pdl"),
         dataset=fever,  # pyright: ignore
         trial_thread=FEVEREvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()
@@ -1080,11 +1112,18 @@ def run_optimizer_fever(pattern, num_demonstrations=0):
 
 def run_optimizer_mbpp(pattern, num_demonstrations=0):
     config = OptimizationConfig(
-        benchmark="mbpp",
-        initial_test_set_size=1,
+        pdl_path="examples/optimizer/mbpp.pdl",
+        dataset="mbpp",
+        demonstration_columns=[
+            "prompt",
+            "traj_keys",
+            "traj_values",
+        ],
+        instance_columns=["claim"],
+        groundtruth_column="canonical_solution",
+        initial_validation_set_size=1,
         max_test_set_size=1,
         num_candidates=1,
-        num_demonstrations=num_demonstrations,
         parallelism=1,
         shuffle_test=False,
         test_set_name="test",
@@ -1102,13 +1141,16 @@ def run_optimizer_mbpp(pattern, num_demonstrations=0):
         "../prompt-declaration-language-merge/var/mbpp_trajectified",
     )
 
+    pdl_config = InterpreterConfig()
+    pdl_config["event_loop"] = _LOOP
+
     optim = PDLOptimizer(
-        pdl_path=Path("examples/optimizer/mbpp.pdl"),
         dataset=mbpp_dataset,  # pyright: ignore
         trial_thread=MBPPEvaluator,
         yield_output=True,
         experiment_path=Path("test_experiments"),
         config=config,
+        pdl_config=pdl_config,
     )
 
     result = optim.run()

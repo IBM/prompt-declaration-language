@@ -1,7 +1,7 @@
 description: Parse a block output using a regex
 defs:
   output:
-    model: ollama_chat/granite3.2:2b
+    model: ollama_chat/granite4:micro
     parameters:
       temperature: 0
     input: Write a Python function that perform the addition of two numbers.

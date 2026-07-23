@@ -5,7 +5,7 @@ text:
   def: data
   contribute: []
   spec: { questions: [string], answers: [object] }
-- model: watsonx_text/ibm/granite-20b-code-instruct
+- model: watsonx/ibm/granite-20b-code-instruct
   def: model_output
   spec: {bob: integer, "carol": string}
   input: 

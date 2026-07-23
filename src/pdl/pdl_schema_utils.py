@@ -1,6 +1,6 @@
 import sys
 import warnings
-from typing import Any, Optional
+from typing import Any
 
 from .pdl_ast import (
     EnumPdlType,
@@ -119,7 +119,7 @@ def get_json_schema_object(
 
 def get_json_schema(
     params: dict[str, PdlTypeType], additional_properties
-) -> Optional[dict[str, Any]]:
+) -> dict[str, Any] | None:
     try:
         result = pdltype_to_jsonschema(
             ObjectPdlType.model_validate({"object": params}), additional_properties

@@ -15,26 +15,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12', '3.13']
+        python-version: ['3.11', '3.12', '3.14']
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+    - name: Set up Python environment
+      uses: ./.github/actions/setup-python-env
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Cache pip
-      uses: actions/cache@v4
-      with:
-        # This path is specific to Ubuntu
-        path: ${{ env.pythonLocation }}
-        # Look to see if there is a cache hit for the setup file
-        key: ${{ runner.os }}-pip-new3-${{ env.pythonLocation }}-${{ hashFiles('setup.py') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-new3
-          ${{ runner.os }}-new3
-    - name: Install dependencies
-      run: pip install --upgrade --upgrade-strategy eager .[all]
+        runner-os: ${{ runner.os }}
     - name: pip list packages
       run: pip list
     - name: show pip dependencies

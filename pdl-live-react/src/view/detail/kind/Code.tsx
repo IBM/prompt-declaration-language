@@ -1,14 +1,12 @@
 import Group from "../Group"
 
 import Code from "../../code/Code"
-import { isArgs, extractCode } from "../../../helpers"
+import { isArgs, extractCode, CodeBlock } from "../../../helpers"
 
 export default function CodeItems({
   block,
 }: {
-  block:
-    | import("../../../pdl_ast").ArgsBlock
-    | import("../../../pdl_ast").CodeBlock
+  block: import("../../../pdl_ast").ArgsBlock | CodeBlock
 }) {
   const { lang } = block
   const code = isArgs(block) ? block.args.join(" ") : extractCode(block)

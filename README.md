@@ -31,6 +31,12 @@ To install the `pdl` command line tool:
 pip install prompt-declaration-language
 ```
 
+## What's New
+
+Check out <b>AutoPDL</b>, PDL's prompt optimizer tool [Spiess et al. (2025)](https://openreview.net/forum?id=CAeISyE3aR)! AutoPDL can be used to optimize any part of a PDL program. This includes few-shots examples and textual prompts, but also prompting patterns. It outputs an optimized PDL program with optimal values.
+
+For a tutorial on how to use AutoPDL, see [AutoPDL](https://ibm.github.io/prompt-declaration-language/autopdl/)
+
 ## Example Program: A Basic LLM Call
 
 <img src="docs/assets/pdl-ui-3.png" width="500" align="right" alt="PDL GUI"/>
@@ -225,6 +231,9 @@ See the [contribution guidelines](https://ibm.github.io/prompt-declaration-langu
 
 ## References
 
-- [PDL Schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json)
 - [arXiv Paper](http://arxiv.org/abs/2410.19135)
+- [AutoPDL Paper](https://openreview.net/pdf?id=CAeISyE3aR) (AutoML 25)
+- [Compliance Agent paper](https://openreview.net/pdf?id=c3PxSjfUYZ) (PRAL@ICML 25)
+- [PPDL paper](https://openreview.net/pdf?id=37hqMR7Cbx) (ICML 26)
+- [PDL Schema](https://github.com/IBM/prompt-declaration-language/blob/main/src/pdl/pdl-schema.json)
 

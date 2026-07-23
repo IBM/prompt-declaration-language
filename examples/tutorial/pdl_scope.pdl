@@ -1,0 +1,13 @@
+description: Demonstrating the pdl_scope variable
+defs:
+  greeting: Hello
+  name: World
+text:
+- |
+  ${ pdl_scope["greeting"]}, ${ pdl_scope["name"] }!
+  Available variables in scope:
+- for:
+    key: ${ pdl_scope.keys() }
+  repeat:
+    text: |
+      - ${ key }

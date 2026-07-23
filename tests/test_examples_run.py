@@ -4,14 +4,13 @@ import pathlib
 import random
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import yaml
 from pytest import CaptureFixture, MonkeyPatch
 
 from pdl import pdl
-from pdl.pdl_ast import ScopeType
-from pdl.pdl_lazy import PdlDict
+from pdl.pdl_interpreter_state import ScopeType
 from pdl.pdl_parser import PDLParseError
 
 EXAMPLES_RUN_CONFIG_FILE = os.getenv(
@@ -58,6 +57,11 @@ class ExpectedResult:
 
     results: List[str] | None = None
     error_code: ExecutionErrorCode | None = None
+    # When True, any successful execution is accepted regardless of its output.
+    # Used for inherently non-deterministic programs (e.g. agentic loops that
+    # call an LLM and/or live services) whose exact output cannot be pinned down
+    # but which should still run without error.
+    any_result: bool = False
 
     def compare_to_execution(self, execution_result: ExecutionResult) -> bool:
         """
@@ -67,6 +71,10 @@ class ExpectedResult:
         # ExecutionErrorCode codes must match
         if execution_result.error_code != self.error_code:
             return False
+
+        # For non-deterministic programs we only require a successful run
+        if self.any_result:
+            return True
 
         # Check if parse or runtime error
         if self.error_code == ExecutionErrorCode.PARSE_ERROR:
@@ -104,6 +112,7 @@ class FailedResults:
     wrong_results: Dict[str, str] = field(default_factory=lambda: {})
     unexpected_parse_error: Dict[str, str] = field(default_factory=lambda: {})
     unexpected_runtime_error: Dict[str, str] = field(default_factory=lambda: {})
+    wrong_replay_results: Dict[str, str] = field(default_factory=lambda: {})
 
 
 # pylint: disable=too-many-instance-attributes
@@ -126,11 +135,14 @@ class ExamplesRun:
         self.update_results: bool = False
 
         # File manipulation
-        self.check = [str(f) for f in pathlib.Path(".").glob("**/*.pdl")]
+        self.check = [str(f) for f in sorted(pathlib.Path(".").glob("**/*.pdl"))]
         self.skip: List[str] = []
         self.with_inputs: Dict[str, InputsType] = {}
         self.expected_parse_error: List[str] = []
         self.expected_runtime_error: List[str] = []
+        # Files that are run but whose exact output is not checked, only that
+        # they execute without error (inherently non-deterministic programs).
+        self.unstable_result: List[str] = []
 
         # Load content from EXAMPLES_RUN_FILE
         with open(EXAMPLES_RUN_CONFIG_FILE, "r", encoding="utf-8") as file:
@@ -145,6 +157,7 @@ class ExamplesRun:
             self.skip = content["skip"]
             self.expected_parse_error = content["expected_parse_error"]
             self.expected_runtime_error = content["expected_runtime_error"]
+            self.unstable_result = content.get("unstable_result") or []
 
             for filename, inputs_type in content["with_inputs"].items():
                 stdin, scope = None, None
@@ -153,7 +166,7 @@ class ExamplesRun:
                 if "scope" in inputs_type:
                     scope = inputs_type["scope"]
                 self.with_inputs[filename] = InputsType(
-                    stdin=stdin, scope=PdlDict(scope) if scope is not None else None
+                    stdin=stdin, scope=ScopeType(scope) if scope is not None else None
                 )
 
         # Inits expected results
@@ -161,7 +174,9 @@ class ExamplesRun:
         self.__collect_expected_results()
 
         # Inits execution results for each PDL file
-        self.execution_results: Dict[str, ExecutionResult] = {}
+        self.execution_results: Dict[
+            str, Tuple[ExecutionResult, ExecutionResult | None]
+        ] = {}
 
         # Init failed results
         self.failed_results = FailedResults()
@@ -181,6 +196,9 @@ class ExamplesRun:
                 expected_result.error_code = ExecutionErrorCode.PARSE_ERROR
             elif file in self.expected_runtime_error:
                 expected_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
+            elif file in self.unstable_result:
+                expected_result.error_code = ExecutionErrorCode.NO_ERROR
+                expected_result.any_result = True
             else:
 
                 # Collect possible results
@@ -199,15 +217,13 @@ class ExamplesRun:
 
             self.expected_results[file] = expected_result
 
-    def __execute_file(self, pdl_file_name: str) -> None:
+    def __execute_and_replay_file(self, pdl_file_name: str) -> None:
         """
         Tests the result of a single file and returns the result output and the error code
         """
 
-        exec_result = ExecutionResult()
-
         pdl_file_path = pathlib.Path(pdl_file_name)
-        scope: ScopeType = PdlDict({})
+        scope: ScopeType = ScopeType({})
 
         # Patch with inputs
         if pdl_file_name in self.with_inputs:
@@ -217,13 +233,28 @@ class ExamplesRun:
             if inputs.scope is not None:
                 scope = inputs.scope
 
+        exec_result, output = self.__execute_file(pdl_file_path, scope, replay={})
+
+        if output is not None:
+            replay_result, _ = self.__execute_file(
+                pdl_file_path, scope, replay=output["replay"]
+            )
+        else:
+            replay_result = None
+
+        self.execution_results[pdl_file_name] = exec_result, replay_result
+
+    def __execute_file(self, pdl_file_path, scope, replay):
+        exec_result = ExecutionResult()
+        output = None
+        random.seed(11)
         try:
             # Execute file
             output = pdl.exec_file(
                 pdl_file_path,
                 scope=scope,
                 output="all",
-                config=pdl.InterpreterConfig(batch=0),
+                config=pdl.InterpreterConfig(batch=1, replay=replay),
             )
 
             exec_result.result = str(output["result"])
@@ -235,8 +266,7 @@ class ExamplesRun:
         except Exception as exc:
             exec_result.result = str(exc)
             exec_result.error_code = ExecutionErrorCode.RUNTIME_ERROR
-
-        self.execution_results[pdl_file_name] = exec_result
+        return exec_result, output
 
     def populate_exec_result_for_checks(self) -> None:
         """
@@ -245,7 +275,7 @@ class ExamplesRun:
 
         for file in self.check:
             if file not in self.skip:
-                self.__execute_file(file)
+                self.__execute_and_replay_file(file)
 
     def validate_expected_and_actual(self) -> None:
         """
@@ -256,11 +286,12 @@ class ExamplesRun:
         wrong_result: Dict[str, str] = {}
         unexpected_parse_error: Dict[str, str] = {}
         unexpected_runtime_error: Dict[str, str] = {}
+        wrong_replay_result: Dict[str, str] = {}
 
         for file in self.check:
             if file not in self.skip:
                 expected_result = self.expected_results[file]
-                actual_result = self.execution_results[file]
+                actual_result, replay_result = self.execution_results[file]
                 match = expected_result.compare_to_execution(actual_result)
 
                 if not match:
@@ -274,7 +305,14 @@ class ExamplesRun:
                         if actual_result.result is not None:
                             wrong_result[file] = actual_result.result
 
+                if replay_result is not None:
+                    match_replay = expected_result.compare_to_execution(replay_result)
+                    if not match_replay:
+                        if replay_result.result is not None:
+                            wrong_replay_result[file] = replay_result.result
+
         self.failed_results.wrong_results = wrong_result
+        self.failed_results.wrong_replay_results = wrong_replay_result
         self.failed_results.unexpected_parse_error = unexpected_parse_error
         self.failed_results.unexpected_runtime_error = unexpected_runtime_error
 
@@ -308,7 +346,6 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     Runs the test
     """
 
-    random.seed(11)
     background = ExamplesRun(monkeypatch)
 
     background.populate_exec_result_for_checks()
@@ -347,6 +384,16 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
             f"Actual result (copy everything below this line):\n✂️ ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
         )
 
+    # Print the actual results for wrong replay results
+    for file, actual in background.failed_results.wrong_replay_results.items():
+        print(
+            "\n============================================================================"
+        )
+        print(f"File that produced wrong REPLAY result: {file}")
+        print(
+            f"Replay result:\n ------------------------------------------------------------\n{actual}\n-------------------------------------------------------------"
+        )
+
     assert (
         len(background.failed_results.unexpected_parse_error) == 0
     ), f"Unexpected parse error: {background.failed_results.unexpected_parse_error}"
@@ -356,3 +403,6 @@ def test_example_runs(capsys: CaptureFixture[str], monkeypatch: MonkeyPatch) -> 
     assert (
         len(background.failed_results.wrong_results) == 0
     ), f"Wrong results: {background.failed_results.wrong_results}"
+    assert (
+        len(background.failed_results.wrong_replay_results) == 0
+    ), f"Wrong replay results: {background.failed_results.wrong_results}"

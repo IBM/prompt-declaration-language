@@ -1,6 +1,7 @@
 from typing import Callable, Sequence
 
 from .pdl_ast import (
+    AggregatorBlock,
     ArrayBlock,
     Block,
     BlockType,
@@ -10,6 +11,7 @@ from .pdl_ast import (
     EmptyBlock,
     ErrorBlock,
     ExpressionType,
+    FactorBlock,
     FunctionBlock,
     GetBlock,
     GraniteioModelBlock,
@@ -17,6 +19,7 @@ from .pdl_ast import (
     IfBlock,
     ImportBlock,
     IncludeBlock,
+    JinjaCodeBlock,
     LastOfBlock,
     LitellmModelBlock,
     MapBlock,
@@ -25,10 +28,12 @@ from .pdl_ast import (
     MessageBlock,
     ModelBlock,
     ObjectBlock,
+    OpenaiModelBlock,
     PdlParser,
     ReadBlock,
     RegexParser,
     RepeatBlock,
+    SequenceBlock,
     TextBlock,
 )
 
@@ -52,6 +57,9 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             pass
         case DataBlock():
             pass
+        case SequenceBlock():
+            for b in block.sequence:
+                f(b)
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks
@@ -101,6 +109,10 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
         case ImportBlock():
             if block.pdl__trace is not None:
                 f(block.pdl__trace)
+        case FactorBlock():
+            pass
+        case AggregatorBlock():
+            pass
         case EmptyBlock():
             pass
         case _:
@@ -158,12 +170,25 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
             block.input = f.f_block(block.input)
             if block.parameters is not None:
                 block.parameters = f.f_expr(block.parameters)
+        case OpenaiModelBlock():
+            block.model = f.f_expr(block.model)
+            block.input = f.f_block(block.input)
+            if block.parameters is not None:
+                block.parameters = f.f_expr(block.parameters)
         case CodeBlock():
             block.code = f.f_block(block.code)
+            if block.scope is not None:
+                block.scope = f.f_expr(block.scope)
+            match block:
+                case JinjaCodeBlock():
+                    if block.parameters is not None:
+                        block.parameters = f.f_expr(block.parameters)
         case GetBlock():
             pass
         case DataBlock():
             block.data = f.f_expr(block.data)
+        case SequenceBlock():
+            block.sequence = [f.f_block(b) for b in block.sequence]
         case TextBlock():
             if not isinstance(block.text, str) and isinstance(block.text, Sequence):
                 # is a list of blocks
@@ -181,6 +206,12 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 block.object = [f.f_block(b) for b in block.object]
         case MessageBlock():
             block.content = f.f_block(block.content)
+            if block.name is not None:
+                block.name = f.f_expr(block.name)
+            if block.tool_call_id is not None:
+                block.tool_call_id = f.f_expr(block.tool_call_id)
+            if block.tool_calls is not None:
+                block.tool_calls = f.f_expr(block.tool_calls)
         case IfBlock():
             block.condition = f.f_expr(block.condition)
             block.then = f.f_block(block.then)
@@ -213,6 +244,10 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
         case ImportBlock():
             if block.pdl__trace is not None:
                 block.pdl__trace = f.f_block(block.pdl__trace)
+        case FactorBlock():
+            pass
+        case AggregatorBlock():
+            pass
         case EmptyBlock():
             pass
         case _:

@@ -1,0 +1,44 @@
+defs:
+  max_tokens: 1024
+  model: ollama_chat/gpt-oss:20b
+  num_demonstrations:
+    data: 3
+  verify:
+    data: true
+  demonstrations:
+    data:
+    - input: Discibed in the media as "a witch-hunt", depsite the fact Sony setteled out of court with Hotz, the company's dogmy mentality in general brought many wrong widespread ill-feeling in the general public against it.
+      output: Described in the media as "a witch-hunt", despite the fact that Sony settled out of court with Hotz, the company's dogmatic mentality in general brought widespread ill-feeling from the general public against it.
+    - input: According to the UN office for humanitarain coordination (OCHA), most of the 3 million are currently hosted by countries in Latina America and Caribbean, accounting for about 2.4 million refugees and immigrants from Venezuela.
+      output: According to the UN office for humanitarian coordination (OCHA), most of the 3 million are currently hosted by countries in Latin America and the Caribbean, accounting for about 2.4 million refugees and migrants from Venezuela.
+    - input: To glad that you liked the looking, Kim!
+      output: Glad that you liked the look, Kim!
+lastOf:
+- |+
+  Here are examples of grammatically incorrect sentences and their corrected versions:
+
+- for:
+    example: ${ demonstrations }
+  repeat:
+    text: ${ example.input } -> ${ example.output }
+  join:
+    with: |2+
+
+
+- |+
+  Correct the following sentence:
+
+  ${ input }
+  Here's the corrected sentence:
+
+- def: response
+  model: ${ model }
+  parameters:
+    temperature: 0.0
+    max_tokens: ${ max_tokens }
+- if: ${ verify }
+  then:
+    lastOf:
+    - Do you think this was a correct answer? If not, generate a correct answer. Please only generate the corrected sentence with no other explanations.
+    - model: ${ model }
+  else: ${ response }

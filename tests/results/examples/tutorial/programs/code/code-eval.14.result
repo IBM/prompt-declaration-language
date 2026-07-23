@@ -1,0 +1,33 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the class `OffsetUtil`. This method takes a single parameter: `lastSourceOffset`, which is of type `String`.
+
+Here's an explanation of what this method does:
+
+1. The method first imports and uses a JSON mapper, presumably from a library like Jackson or Gson, to parse JSON strings into Java objects.
+
+2. It declares a variable `offsetMap` of type `Map<String, String>`. This is the map that will hold the deserialized data.
+
+3. The method then checks if `lastSourceOffset` is either null or an empty string. If it is, it initializes `offsetMap` as a new `HashMap<>`.
+
+4. If `lastSourceOffset` is not null and not an empty string, the method uses the JSON mapper to deserialize the `lastSourceOffset` string into a generic `Map`. The deserialized map is then assigned to `offsetMap`.
+
+5. Finally, it returns the `offsetMap`.
+
+In summary, this function takes in a serialized offset as a string, checks if it's null or empty, and either initializes an empty map or deserializes the input string into a map of strings. It uses JSON_MAPPER for deserialization which is likely a JSON mapper instance from a library like Jackson or Gson.
+
+This method is useful when you have offsets stored in a serialized format (like JSON) and need to convert them back into a Java Map object for further processing.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.2681318681318682

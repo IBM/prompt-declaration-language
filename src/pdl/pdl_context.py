@@ -20,6 +20,7 @@ from .pdl_lazy import PdlApply, PdlConst, PdlDict, PdlLazy, PdlList
 class SerializeMode(StrEnum):
     LITELLM = "litellm"
     GRANITEIO = "graniteio"
+    OPENAI = "openai"
 
 
 class PDLContext(ABC, Sequence):
@@ -179,4 +180,4 @@ def add_done_callback(
         case IndependentContext(context=c):
             p.context = PdlApply(f, c)
         case _:
-            assert False
+            assert False, f"Unexpected context type {type(p)}: {p}"

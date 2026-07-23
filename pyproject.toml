@@ -12,12 +12,14 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm>=1.66.0",
+  "litellm>=1.66.0, != 1.82.7, != 1.82.8",
   "openai>=1.66.1",
   "termcolor>=2,<4",
   "ipython>=8,<10",
   "json-repair~=0.35",
   "granite-io>=0.5,<0.6",
+  "matplotlib~=3.10",
+  "seaborn~=0.13",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -37,28 +39,28 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
   "pre-commit>=3,<5",
-  "pytest~=8.0",
+  "pytest~=9.0",
   "pydantic~=2.9"
 ]
 examples = [
-  "pymilvus~=2.5",
-  "langchain~=0.3",
-  "langchain-community~=0.3",
-  "pypdf~=5.2",
+  "pymilvus>=2.5,<4.0",
+  "langchain-text-splitters~=1.1",
+  "langchain-community~=0.4",
+  "pypdf~=6.0",
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "datasets>3,<5",
+  "datasets>3,<6",
   "sympy~=1.0",
-  "scikit-learn>=1.6.1,<1.8.0",
-  "faiss-cpu>=1.10,<1.12",
+  "scikit-learn>=1.6.1,<1.10.0",
+  "faiss-cpu>=1.14,<1.15",
   "funcy>=2",
   "evalplus>=0.3.1",
 ]
 docs = [
   "mkdocs~=1.0",
-  "mkdocstrings[python]~=0.0",
+  "mkdocstrings[python]~=1.0",
   "mkdocs-material~=9.0",
-  "pymdown-extensions~=10.0"
+  "pymdown-extensions>=10,<12"
 ]
 optimizer = [
   "rich>=14.0.0",
@@ -78,6 +80,8 @@ Issues = "https://github.com/IBM/prompt-declaration-language/issues"
 [project.scripts]
 pdl = "pdl.pdl:main"
 pdl-lint = "pdl.pdl_linter:run_linter"
+pdl-optimize = "pdl.optimize.pdl_optimizer:run_optimizer"
+pdl-infer = "pdl.pdl_infer:main"
 
 [tool.setuptools_scm]
 version_file = "src/pdl/_version.py"
@@ -86,7 +90,7 @@ version_file = "src/pdl/_version.py"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pdl = ["pdl-schema.json"]
+pdl = ["pdl-schema.json", "pdl_stlib.pdl"]
 
 [tool.pyright]
 include = ["src", "tests", "examples", "docs"]

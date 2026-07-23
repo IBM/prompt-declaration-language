@@ -38,7 +38,7 @@ repos:
         entry: pylint
         language: python
         types: [python]
-        additional_dependencies: ['pylint==3.3.0']
+        additional_dependencies: ['pylint==4.0.3']
         args:
           [
             "-rn", # Only display messages

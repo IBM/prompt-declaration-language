@@ -121,7 +121,7 @@ struct Interpreter<'a> {
 impl<'a> Interpreter<'a> {
     fn new(options: RunOptions<'a>) -> Self {
         let mut jinja_env = Environment::new();
-        // PDL uses custom variable delimeters, because {{ }} have pre-defined meaning in yaml
+        // PDL uses custom variable delimiters, because {{ }} have pre-defined meaning in yaml
         jinja_env.set_syntax(
             SyntaxConfig::builder()
                 .variable_delimiters("${", "}")

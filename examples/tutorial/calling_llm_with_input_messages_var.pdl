@@ -8,5 +8,5 @@ defs:
       content: Translate the word 'Hello' to French
 text:
 - "Hello\n"
-- model: ollama_chat/granite3.2:2b
+- model: ollama_chat/granite4:micro
   input: ${ prompt }

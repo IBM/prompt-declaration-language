@@ -1,6 +1,6 @@
 # pylint: disable=import-outside-toplevel
 from asyncio import AbstractEventLoop, run_coroutine_threadsafe
-from typing import Any, Optional
+from typing import Any
 
 from granite_io.types import ChatCompletionInputs
 
@@ -25,7 +25,7 @@ class GraniteioModel:
                 from granite_io import make_backend, make_io_processor
                 from granite_io.backend.base import Backend
 
-                model: Optional[str] = None
+                model: str | None = None
                 if processor.model is not None:
                     model = value_of_expr(processor.model)
                 backend = value_of_expr(processor.backend)
@@ -67,7 +67,7 @@ class GraniteioModel:
     @staticmethod
     def build_message(
         messages: ModelInput,
-        parameters: Optional[dict[str, Any]],
+        parameters: dict[str, Any] | None,
     ) -> ChatCompletionInputs:
         if parameters is None:
             parameters = {}

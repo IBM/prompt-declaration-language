@@ -5,7 +5,7 @@ from pdl.pdl_interpreter import PDLRuntimeError
 from pdl.pdl_lazy import PdlDict
 
 model_parser = {
-    "model": "watsonx_text/ibm/granite-20b-code-instruct",
+    "model": "watsonx/ibm/granite-20b-code-instruct",
     "spec": {"bob": "integer", "carol": "integer"},
     "input": {
         "text": [
@@ -172,3 +172,19 @@ def test_parser_case2():
     """
     result = exec_str(prog)
     assert result == ["1", "2", "3", "4"]
+
+
+def test_parser_csv():
+    csv_parser = """
+    text: |
+        1,Apple,Red
+        2,Orange,Orange
+        3,Banana,Yellow
+    parser: csv
+    """
+    result = exec_str(csv_parser)
+    assert result == [
+        ["1", "Apple", "Red"],
+        ["2", "Orange", "Orange"],
+        ["3", "Banana", "Yellow"],
+    ]

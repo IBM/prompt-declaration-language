@@ -139,8 +139,10 @@ export function childrenOf(block: NonScalarPdlBlock) {
         data.pdl__trace ?? data.pdl__result,
       ])
       .with({ kind: "import" }, (data) => [data.pdl__trace ?? data.pdl__result])
+      .with({ kind: "aggregator" }, () => [])
       .with({ kind: "function" }, () => [])
       .with({ kind: "call" }, (data) => [data.pdl__trace ?? data.pdl__result])
+      .with({ kind: "sequence" }, (data) => [data.sequence])
       .with({ kind: "text" }, (data) => [data.text])
       .with({ kind: "lastOf" }, (data) => [data.lastOf])
       .with({ kind: "array" }, (data) => [data.array])
@@ -151,6 +153,7 @@ export function childrenOf(block: NonScalarPdlBlock) {
       .with({ kind: "empty" }, (data) =>
         data.defs ? Object.values(data.defs) : [],
       )
+      .with({ kind: "factor" }, () => [])
       .with({ kind: "error" }, () => []) // TODO show errors in trace
       .with({ kind: P.nullish }, () => [])
       // @ts-expect-error: TODO

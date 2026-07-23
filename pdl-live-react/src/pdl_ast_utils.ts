@@ -46,7 +46,7 @@ export function map_block_children(
     new_block = { ...new_block, contribute }
   }
   new_block = match(new_block)
-    // .with(P.string, s => s)
+    .with(P.union(P.nullish, P.boolean, P.number, P.string), (v) => v)
     .with({ kind: "empty" }, (block) => block)
     .with({ kind: "function" }, (block) => {
       const return_ = f_block(block.return)
@@ -128,6 +128,10 @@ export function map_block_children(
     .with({ kind: "data" }, (block) => {
       const data = f_expr(block.data)
       return { ...block, data }
+    })
+    .with({ kind: "sequence" }, (block) => {
+      const sequence = block.sequence.map(f_block)
+      return { ...block, sequence: sequence }
     })
     .with({ kind: "text" }, (block) => {
       let text
@@ -216,6 +220,11 @@ export function map_block_children(
     })
     .with({ kind: "include" }, (block) => block)
     .with({ kind: "import" }, (block) => block)
+    .with({ kind: "aggregator" }, (block) => block)
+    .with({ kind: "factor" }, (block) => {
+      const factor = f_expr(block.factor)
+      return { ...block, factor }
+    })
     .with({ kind: P.nullish }, (block) => block)
     // @ts-expect-error: TODO
     .exhaustive()
@@ -266,6 +275,9 @@ export function iter_block_children(
     .with({ kind: "data" }, (block) => {
       if (block.data) f(block.data)
     })
+    .with({ kind: "sequence" }, (block) => {
+      block.sequence.forEach(f)
+    })
     .with({ kind: "text" }, (block) => {
       if (block.text instanceof Array) {
         block.text.forEach(f)
@@ -311,6 +323,10 @@ export function iter_block_children(
     .with({ kind: "read" }, () => {})
     .with({ kind: "include" }, () => {})
     .with({ kind: "import" }, () => {})
+    .with({ kind: "aggregator" }, () => {})
+    .with({ kind: "factor" }, (block) => {
+      if (block.factor) f(block.factor)
+    })
     .with({ kind: undefined }, () => {})
     // @ts-expect-error: TODO
     .exhaustive()

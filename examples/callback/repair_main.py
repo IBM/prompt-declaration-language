@@ -28,7 +28,7 @@ if __name__ == "__main__":
     )
     print("---- before call to PDL ----")
     pdl_output: PDLResult = pdl.pdl.exec_file(
-        "./repair_prompt.pdl", scope=cast(pdl.pdl.ScopeType, pdl_input)
+        "./repair_prompt.pdl", scope=cast(dict, pdl_input)
     )
     print("---- after return from PDL ----")
     print(pdl_output)

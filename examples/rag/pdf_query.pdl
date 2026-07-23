@@ -30,7 +30,7 @@ lastOf:
             #      print(f"MATCHING_PASSAGES='{MATCHING_PASSAGES}'")
             #      result = None
             CONCLUSION:
-              model: ollama_chat/granite3.2:2b
+              model: ollama_chat/granite4:micro
               input: >
                 Here is some information:
                 ${ MATCHING_PASSAGES }

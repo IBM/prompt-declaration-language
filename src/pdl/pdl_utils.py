@@ -6,6 +6,7 @@ from typing import Any, Generator, Generic, Sequence, TypeVar
 
 from .pdl_ast import (
     BlockType,
+    ContributeElement,
     ContributeTarget,
     ContributeValue,
     ExpressionType,
@@ -14,6 +15,15 @@ from .pdl_ast import (
     get_sampling_defaults,
 )
 from .pdl_dumper import as_json, block_to_dict
+from .pdl_lazy import PdlLazy
+
+RefT = TypeVar("RefT")
+
+
+class Ref(Generic[RefT]):
+    def __init__(self, ref: RefT):
+        self.ref = ref
+
 
 GeneratorWrapperYieldT = TypeVar("GeneratorWrapperYieldT")
 GeneratorWrapperSendT = TypeVar("GeneratorWrapperSendT")
@@ -55,6 +65,8 @@ async def to_async(value: ToAsyncT) -> ToAsyncT:
 
 
 def stringify(result):
+    if isinstance(result, PdlLazy):
+        result = result.result()
     if isinstance(result, str):
         s = result
     elif isinstance(result, FunctionBlock):
@@ -81,8 +93,8 @@ def value_of_expr(expr: ExpressionType[ValueOfExprT]) -> ValueOfExprT:
     return v  # type: ignore
 
 
-def replace_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]],
+def replace_contribute_value(  # TODO: remove
+    contribute: Sequence[ContributeElement],
     value: ContributeValue,
 ):
     ret = []
@@ -95,30 +107,37 @@ def replace_contribute_value(
     return ret
 
 
-def get_contribute_value(
-    contribute: Sequence[ContributeTarget | dict[str, ContributeValue]] | None,
+def get_contribute_context_value(
+    contribute: Sequence[ContributeElement] | None,
 ):
     if contribute is None:
         return None
     for item in contribute:
         if isinstance(item, dict) and isinstance(
-            item[ContributeTarget.CONTEXT], ContributeValue
+            item.get(ContributeTarget.CONTEXT), ContributeValue
         ):
             return item[ContributeTarget.CONTEXT].value
     return None
 
 
-def remove_none_values_from_message(message: dict) -> dict[str, Any]:
-    ret = {}
-    for key, value in message.items():
-        if key == "content":
-            ret[key] = value
-        if value is not None:
-            if isinstance(value, dict):
-                ret[key] = remove_none_values_from_message(value)
-            else:
-                ret[key] = value
-    return ret
+def message_post_processing(message: dict) -> dict[str, Any]:
+    if ("content" not in message) or (
+        "content" in message and message["content"] is None
+    ):
+        message["content"] = ""
+    return message
+    # ret = {}
+    # for key, value in message.items():
+    #     if key == "content" and value is not None:
+    #         ret[key] = value
+    #     if value is not None:
+    #         if isinstance(value, dict):
+    #             ret[key] = message_post_processing(value)
+    #         else:
+    #             ret[key] = value
+    # if "content" not in ret:
+    #     ret["content"] = ""
+    # return ret
 
 
 def apply_defaults(
@@ -202,20 +221,63 @@ def validate_pdl_model_defaults(model_defaults: list[dict[str, dict[str, Any]]])
             assert isinstance(glob_defaults, dict)
 
 
+def redact_secrets(data: Any, secrets: list[str]) -> Any:
+    """Recursively redact secrets from a data structure.
+
+    Args:
+        data: The data structure to redact (can be dict, list, str, or primitive).
+        secrets: List of secret strings to redact.
+
+    Returns:
+        A copy of the data structure with secrets replaced by '[REDACTED]'.
+    """
+    if not secrets:
+        return data
+
+    if isinstance(data, str):
+        s = data
+        for secret in secrets:
+            s = s.replace(secret, "[REDACTED]")
+        return s
+
+    if isinstance(data, dict):
+        return {k: redact_secrets(v, secrets) for k, v in data.items()}
+
+    if isinstance(data, list):
+        return [redact_secrets(item, secrets) for item in data]
+
+    # Primitives (int, float, bool, None) pass through unchanged
+    return data
+
+
 def write_trace(
     trace_file: str | Path,
     trace: BlockType,
+    secrets: list[str] | None = None,
 ):
     """Write the execution trace into a file.
 
     Args:
         trace_file:  File to save the execution trace.
         trace: Execution trace.
+        secrets: Optional list of secret strings to redact from the trace.
+                 Any string value containing a secret will be replaced with '[REDACTED]'.
     """
     try:
         d: Any = block_to_dict(trace, json_compatible=True)
         d = as_json(d)
+
+        # Redact secrets if provided
+        if secrets:
+            d = redact_secrets(d, secrets)
+
         with open(trace_file, "w", encoding="utf-8") as fp:
             json.dump(d, fp)
     except Exception as e:
         print(f"Failure generating the trace: {str(e)}", file=sys.stderr)
+
+
+class Resample(Exception):
+    def __init__(self, state, score):
+        self.state = state
+        self.score = score

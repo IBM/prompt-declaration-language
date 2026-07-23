@@ -7,8 +7,9 @@ from typing import Any
 from pdl.optimize.config_parser import OptimizationConfig
 from pdl.optimize.util import RETRY_COUNT, TrialOutput, console
 from pdl.pdl import InterpreterConfig, exec_program
-from pdl.pdl_ast import Program, ScopeType
+from pdl.pdl_ast import Program
 from pdl.pdl_interpreter import PDLRuntimeError
+from pdl.pdl_interpreter_state import ScopeType
 from pdl.pdl_lazy import PdlDict
 from pdl.pdl_location_utils import get_loc_string
 from pdl.pdl_parser import PDLParseError
@@ -27,6 +28,7 @@ class OptimizerEvaluator(Thread):
         timeout: int,
         yield_output: bool,
         config: OptimizationConfig,
+        pdl_config: InterpreterConfig,
         cwd: Path,
         answer_key: str = "answer",
     ) -> None:
@@ -40,15 +42,13 @@ class OptimizerEvaluator(Thread):
         self.yield_output = yield_output
         self.answer_key = answer_key
         self.config = config
+        self.pdl_config = pdl_config
         self.cwd = cwd
 
     def get_scope(self) -> ScopeType:
         raise NotImplementedError
 
-    def extract_answer(self, document: str) -> Any:
-        raise NotImplementedError
-
-    def answer_correct(self, document: str, answer: Any, truth: Any) -> bool:
+    def score(self, document: str, ground_truth: Any) -> float:
         raise NotImplementedError
 
     def run(  # type: ignore # noqa: C901
@@ -58,9 +58,8 @@ class OptimizerEvaluator(Thread):
         answer = None
         exception: PDLParseError | PDLRuntimeError | Exception | bool | None = None
         result = None
-        match = False
         truth = self.example[self.answer_key]
-        scope: PdlDict = PdlDict({})
+        scope: ScopeType = ScopeType({})
 
         retry = True
         tries = 0
@@ -68,6 +67,7 @@ class OptimizerEvaluator(Thread):
         end_time = None
         total_tokens = -1
         errored = False
+        score = 0.0
         while retry:
             if tries > 1:
                 console.log("RETRYING! ", tries)
@@ -78,6 +78,7 @@ class OptimizerEvaluator(Thread):
                     yield_result=self.yield_output,
                     yield_background=self.yield_output,
                     cwd=self.cwd,
+                    event_loop=self.pdl_config["event_loop"],  # type: ignore
                 )
                 scope = self.get_scope()
 
@@ -93,6 +94,12 @@ class OptimizerEvaluator(Thread):
 
                 if isinstance(document, str):
                     document = document.strip()
+                    if document:
+                        errored = False
+                        retry = False
+                    else:
+                        console.log("Empty document returned, retrying...")
+                    answer = document
                 else:
                     raise TypeError(
                         f"Expected document to be a string, got {type(document)}",
@@ -102,24 +109,10 @@ class OptimizerEvaluator(Thread):
                 runtime = end_time - start_time
                 console.log(f"Runtime took seconds: {runtime:.2f}")
 
-                errored = False
-                if errored:
-                    console.log("PDL error occured.")
-                else:
-                    answer = self.extract_answer(document)
-
-                    if answer is None:
-                        last_line = document.splitlines()[-1]
-                        console.log("Couldn't extract answer: ", last_line)
-
-                if answer is None or errored:
-                    retry = True
-
-                if answer is not None and not errored:
-                    retry = False
-
                 if tries >= RETRY_COUNT:
                     retry = False
+
+                score = float(self.score(document, truth))
             except PDLParseError as exc:
                 console.print_exception(show_locals=False)
                 errored = True
@@ -160,11 +153,9 @@ class OptimizerEvaluator(Thread):
         if errored and not exception:
             exception = errored
 
-        match = self.answer_correct(document, answer, truth)
-
         return TrialOutput(
             pdl_program=self.pdl_program,
-            correct=match,
+            score=score,
             exception=exception,
             scope=scope,
             pdl_result=result,

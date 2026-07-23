@@ -1,0 +1,38 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided Java function `deserializeOffsetMap` is part of the StreamSets Data Collector (DC) codebase in the `stagesupport` package within the `com.../OffsetUtil.java` file. This function is designed to deserialize a JSON string containing offsets into a `Map<String, String>` object. Here's an explanation of its purpose and functionality:
+
+1. **Purpose**: The primary goal of this method is to convert a JSON-formatted offset string (represented as `lastSourceOffset`) into a Java `Map` where keys are strings and values are also strings. This conversion allows for easier manipulation, storage, or further processing in the Data Collector application.
+
+2. **Parameters**:
+   - `lastSourceOffset`: A required parameter of type `String`, which is expected to contain JSON-formatted offset data.
+
+3. **Return Type**: The method returns a `Map<String, String>`. This means it will return a map where each key and value are strings.
+
+4. **Throws**:
+   - `IOException`: In case the JSON string cannot be parsed due to an I/O error (e.g., network issues).
+
+5. **Logic**:
+
+   - The method first checks if `lastSourceOffset` is null or empty (`if (lastSourceOffset == null || lastSourceOffset.isEmpty())`). If true, it initializes a new `HashMap<String, String>` called `offsetMap`.
+   - Otherwise, the function uses Jackson's JSON mapper (`JSON_MAPPER`) to deserialize the input string into a `Map<String, String>`. This is done with `JSON_MAPPER.readValue(lastSourceOffset, Map.class)`.
+
+   - The deserialization process converts the JSON string into a Java map, where each key-value pair in the JSON will become an entry in the resulting map.
+
+6. **Security Note**: `@SuppressWarnings("unchecked")` is used to suppress potential warnings about unchecked casts. This is because `JSON_MAPPER.readValue()` returns a `Map`, and there's no need for explicit type casting here, as Java's auto-boxing mechanism handles the conversion from JSON keys/values to `String`.
+
+In summary, this function serves as an adapter between JSON offset data (in string format) and a standard Java map structure. It ensures that any provided offsets can be easily accessed or manipulated within the Data Collector application.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.1991833030852994

@@ -1,0 +1,28 @@
+defs:
+  max_tokens: 1024
+lastOf:
+  - "Here are examples of grammatically incorrect sentences and their corrected versions:\n\n"
+  - for:
+      example: ${ demonstrations }
+    repeat:
+      text: "${ example.input } -> ${ example.output }"
+    join:
+      with: "\n\n"
+  - |+
+    Correct the following sentence:
+    
+    ${ input }
+    Here's the corrected sentence:
+
+  - model: ${ model }
+    def: response
+    parameters:
+      max_tokens: ${ max_tokens }
+      temperature: 0
+      
+  - if: ${ verify }
+    then:
+      lastOf:
+      - Do you think this was a correct answer? If not, generate a correct answer. Please only generate the corrected sentence with no other explanations.
+      - model: ${ model }
+    else: ${ response }

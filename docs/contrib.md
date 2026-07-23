@@ -101,7 +101,7 @@ pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-war
 
 A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
 
-When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specificially, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
+When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specifically, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
 
 Below is what the CI might look like if the results differ. If the results look reasonable, you should
 1. copy and paste the result for that file 

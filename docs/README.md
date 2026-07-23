@@ -20,10 +20,13 @@ PDL provides the following features:
 - Python SDK
 - Support for chat APIs and chat templates
 - Live Explorer, a UI tool for exploring traces and live programming
+- Probabilistic programming (PPDL): plug-and-play inference scaling via probabilistic inference
 
 The PDL interpreter takes a PDL program as input and generates data by executing its instructions (calling out to models, code, etc...).
 
 See below for a quick reference, followed by [installation notes](#interpreter-installation) and an [overview](#overview) of the language. A more detailed description of the language features can be found in this [tutorial](https://ibm.github.io/prompt-declaration-language/tutorial).
+
+PDL can also be used as a probabilistic programming language. See [PPDL](https://ibm.github.io/prompt-declaration-language/ppdl) for details.
 
 
 ## Quick Reference
@@ -35,7 +38,7 @@ See below for a quick reference, followed by [installation notes](#interpreter-i
 
 ## Interpreter Installation
 
-The interpreter has been tested with Python versions **3.11**, **3.12**, and **3.13**, on macOS and Linux. For Windows, please use WSL.
+The interpreter has been tested with Python versions **3.11**, **3.12**, and **3.14**, on macOS and Linux. For Windows, please use WSL.
 
 To install the requirements for `pdl`, execute the command:
 
@@ -186,7 +189,7 @@ text:
     decoding_method: sample
 ```
 
-Instead of providing `temparature: 0`, the user can write `decoding_method: greedy`, or choose `sample` as in the above exmample.
+Instead of providing `temperature: 0`, the user can write `decoding_method: greedy`, or choose `sample` as in the above example.
 
 
 The same example on Replicate:

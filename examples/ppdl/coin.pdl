@@ -1,0 +1,32 @@
+defs:
+  obs:
+    array: [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+  p:
+    model: ollama_chat/granite4:micro
+    parameters:
+      temperature: 1
+    input: Generate a number between 0 and 1 that represents the bias of a coin that might returns head (represented with the value 1) more often than tail (represented with the value 0). DO NOT GENERATE A PYTHON CODE, JUST ANSWER WITH THE NUMBER
+    parser: json
+    spec: number
+    fallback:
+      lastOf:
+      - factor: -1000
+      - data: 0.5
+lastOf:
+  - defs:
+     score:
+      lang: python
+      code: |
+        import math
+        # Calculate log probability of observing the data given p
+        log_prob = 0.0
+        for flip in obs:
+          if flip == 1:
+            # Probability of heads
+            log_prob += math.log(p) if p > 0 else -1000
+          else:
+            # Probability of tails
+            log_prob += math.log(1 - p) if p < 1 else -1000
+        result = log_prob
+    factor: ${score}
+  - ${p}
