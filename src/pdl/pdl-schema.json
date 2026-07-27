@@ -51,9 +51,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -197,9 +205,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -324,9 +340,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -568,9 +592,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -626,7 +658,7 @@
         "call": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "$ref": "#/$defs/FunctionBlock"
@@ -641,7 +673,7 @@
         "args": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -714,9 +746,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -826,7 +866,7 @@
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -893,9 +933,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -951,7 +999,7 @@
         "data": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1025,9 +1073,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -1151,9 +1207,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -1230,7 +1294,7 @@
         "expect": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -1242,7 +1306,7 @@
         "feedback": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "$ref": "#/$defs/FunctionBlock"
@@ -1292,7 +1356,7 @@
     "ExpressionBool": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
         },
         {
           "type": "boolean"
@@ -1305,7 +1369,7 @@
     "ExpressionDictStr": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
         },
         {
           "additionalProperties": true,
@@ -1316,10 +1380,49 @@
         }
       ]
     },
+    "ExpressionFloat": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExpressionFloatOrFloatFloat": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "ExpressionInt": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
         },
         {
           "type": "integer"
@@ -1332,7 +1435,7 @@
     "ExpressionList": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
         },
         {
           "items": {},
@@ -1346,7 +1449,7 @@
     "ExpressionStr": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
         },
         {
           "type": "string"
@@ -1404,9 +1507,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -1462,7 +1573,7 @@
         "factor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "number"
@@ -1510,7 +1621,7 @@
         "file": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -1522,7 +1633,7 @@
         "mode": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -1535,7 +1646,7 @@
         "encoding": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -1551,7 +1662,7 @@
         "prefix": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -1564,7 +1675,7 @@
         "suffix": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -1577,7 +1688,7 @@
         "flush": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "boolean"
@@ -1648,9 +1759,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -1796,9 +1915,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -1914,9 +2041,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2005,7 +2140,7 @@
               "$ref": "#/$defs/GraniteioProcessor"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -2018,7 +2153,7 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "additionalProperties": true,
@@ -2055,7 +2190,7 @@
         "backend": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -2126,9 +2261,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2255,9 +2398,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2386,9 +2537,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2512,9 +2671,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2647,9 +2814,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -2794,7 +2969,7 @@
         "reduce": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "type": "string"
@@ -2926,9 +3101,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -3051,9 +3234,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -3146,7 +3337,7 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "additionalProperties": true,
@@ -3577,7 +3768,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression_TypeVar_": {
+    "LocalizedExpression__ExpressionTypeT_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
@@ -3655,9 +3846,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -3720,7 +3919,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
                   },
                   {
                     "items": {},
@@ -3841,9 +4040,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -3903,7 +4110,7 @@
         "match": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {},
             {
@@ -4021,9 +4228,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -4160,9 +4375,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -4335,9 +4558,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -4430,7 +4661,7 @@
               "$ref": "#/$defs/OpenaiParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
             },
             {
               "additionalProperties": true,
@@ -4558,6 +4789,16 @@
       "anyOf": [
         {
           "$ref": "#/$defs/ExpressionDictStr"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OptionalExpressionFloat": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpressionFloat"
         },
         {
           "type": "null"
@@ -4816,9 +5057,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -5098,9 +5347,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -5227,9 +5484,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -5390,9 +5655,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -5455,7 +5728,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
+                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
                   },
                   {
                     "items": {},
@@ -5530,6 +5803,58 @@
       "title": "RepeatBlock",
       "type": "object"
     },
+    "RetryConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration of the `retry` field.",
+      "properties": {
+        "tries": {
+          "$ref": "#/$defs/ExpressionInt",
+          "default": -1
+        },
+        "exceptions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+            },
+            {
+              "type": "string"
+            },
+            {},
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "default": "Exception",
+          "title": "Exceptions"
+        },
+        "delay": {
+          "$ref": "#/$defs/ExpressionFloat",
+          "default": 0.0
+        },
+        "max_delay": {
+          "$ref": "#/$defs/OptionalExpressionFloat",
+          "default": null
+        },
+        "backoff": {
+          "$ref": "#/$defs/ExpressionFloat",
+          "default": 1.0
+        },
+        "jitter": {
+          "$ref": "#/$defs/ExpressionFloatOrFloatFloat",
+          "default": 0.0
+        }
+      },
+      "title": "RetryConfiguration",
+      "type": "object"
+    },
     "SequenceBlock": {
       "additionalProperties": false,
       "description": "Generalization of the `text`, `lastOf`, `array`, and `object` blocks combining a list of blocks with a `join` operator.",
@@ -5581,9 +5906,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",
@@ -5711,9 +6044,17 @@
           "description": "Block to execute in case of error.\n    "
         },
         "retry": {
-          "$ref": "#/$defs/OptionalInt",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OptionalInt"
+            },
+            {
+              "$ref": "#/$defs/RetryConfiguration"
+            }
+          ],
           "default": null,
-          "description": "The maximum number of times to retry when an error occurs within a block.\n    "
+          "description": "The maximum number of times to retry when an error occurs within a block.\n    ",
+          "title": "Retry"
         },
         "trace_error_on_retry": {
           "$ref": "#/$defs/OptionalBoolOrStr",

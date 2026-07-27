@@ -3,6 +3,8 @@
 import io
 from contextlib import redirect_stderr, redirect_stdout
 
+import pytest
+
 from pdl.pdl import exec_dict
 from pdl.pdl_ast import PDLRuntimeError
 
@@ -70,7 +72,7 @@ def test_retry_with_specific_exception_no_match():
             exception_raised = True
         err_msg = buf.getvalue()
 
-    # Should NOT see retry message since KeyError doesn't match ValueError
+    # Should NOT see retry message since RuntimeError doesn't match ValueError
     assert "[Retry" not in err_msg
     # Exception should be raised immediately
     assert exception_raised
@@ -135,7 +137,7 @@ def test_retry_with_exception_list_no_match():
     with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
         try:
             _ = exec_dict(data)
-        except TypeError:
+        except PDLRuntimeError:
             exception_raised = True
         err_msg = buf.getvalue()
 
@@ -268,6 +270,94 @@ def test_retry_with_fallback_and_exception_filter():
     # When exception doesn't match, it should go to fallback
     result = exec_dict(data)
     assert result == "fallback result"
+
+
+def test_fallback_is_executed_only_once():
+    """Test that the fallback is not re-executed for the remaining attempts."""
+    data = {
+        "description": "Test that the fallback runs once",
+        "text": [
+            {
+                "lang": "python",
+                "code": {
+                    "text": [
+                        "raise TypeError('test exception')\n",
+                        "result = 'success'",
+                    ]
+                },
+            },
+        ],
+        "retry": {
+            "tries": 3,
+            "exceptions": "ValueError",  # Does not match, so the fallback is used
+        },
+        "fallback": {
+            "text": "fallback result",
+        },
+    }
+
+    # `yield_result` streams the result of each executed block, so the fallback
+    # would show up once per attempt if it were executed more than once.
+    out_msg = ""
+    with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
+        result = exec_dict(data, config={"yield_result": True})
+        out_msg = buf.getvalue()
+
+    assert result == "fallback result"
+    assert out_msg.count("fallback result") == 1
+
+
+def test_retry_with_unknown_exception_name():
+    """Test that an exception name that cannot be resolved is reported."""
+    data = {
+        "description": "Test unknown exception name",
+        "text": [
+            {
+                "lang": "python",
+                "code": {"text": ["result = 'success'"]},
+            },
+        ],
+        "retry": {
+            "tries": 2,
+            "exceptions": "NoSuchExceptionName",
+        },
+    }
+
+    # The error is reported even though the block itself does not fail
+    with pytest.raises(PDLRuntimeError, match="Invalid exception"):
+        _ = exec_dict(data)
+
+
+def test_retry_with_exception_matching_python_class():
+    """Test that exceptions can be given as Python exception classes."""
+    data = {
+        "description": "Test exception given as a class",
+        "text": [
+            {
+                "lang": "python",
+                "code": {
+                    "text": [
+                        "raise ValueError('test exception')\n",
+                        "result = 'success'",
+                    ]
+                },
+            },
+        ],
+        "retry": {
+            "tries": 2,
+            "exceptions": "${ exceptions }",
+        },
+    }
+
+    err_msg = ""
+    with io.StringIO() as buf, redirect_stdout(buf), redirect_stderr(buf):
+        try:
+            _ = exec_dict(data, scope={"exceptions": ValueError})
+        except Exception:  # pylint: disable=broad-except
+            pass
+        err_msg = buf.getvalue()
+
+    assert "[Retry 1/2]" in err_msg
 
 
 # Made with Bob
