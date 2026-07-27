@@ -1,0 +1,48 @@
+Here is a simple Python function that computes the Fibonacci sequence up to n terms:
+
+```python
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+```
+
+This function starts with a list containing the first two Fibonacci numbers (0 and 1). It then enters a loop that continues until the length of the `fib_sequence` list is equal to `n`. In each iteration, it appends the sum of the last two elements in the sequence. Finally, it returns the first `n` terms of the Fibonacci sequence.
+
+Please note that this function will return an error if `n` is less than 1 because there are no Fibonacci numbers for n < 1.
+Find a random number between 1 and 20
+15
+Now computing fibonacci(15)
+
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+The result is: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]
+
+Explain what the above code does and what the result means
+
+The provided Python function `fibonacci(n)` generates a list of Fibonacci numbers up to the nth term. The Fibonacci sequence is a series of numbers where each number (after the first two) is the sum of the two preceding ones, usually starting with 0 and 1.
+
+Here's how the code works:
+
+- It initializes a list `fib_sequence` with the first two Fibonacci numbers: `[0, 1]`.
+- It enters a loop that continues until the length of `fib_sequence` equals `n`. In each iteration:
+  - The function calculates the next number in the sequence by adding the last two numbers (`fib_sequence[-1] + fib_sequence[-2]`) and appends this new number to the list.
+- Once the loop ends (i.e., when the length of `fib_sequence` is equal to `n`), it returns the first `n` terms of the Fibonacci sequence.
+
+In your case, you asked for 15 terms (`fibonacci(15)`). The function returned:
+
+```
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]
+```
+
+This list represents the first 15 numbers in the Fibonacci sequence. Each number is the sum of the two preceding ones:
+
+- The first term is `0`.
+- The second term is `1`.
+- From the third term onward, each term is the sum of the previous two terms (e.g., `1 + 1 = 2`, `1 + 2 = 3`, and so on).
+
+The sequence continues indefinitely, but for practical purposes, we often consider only a finite number of terms. In this case, you asked for the first 15 terms, which are listed above.

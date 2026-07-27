@@ -12,13 +12,14 @@ dependencies = [
   "jinja2~=3.0",
   "PyYAML~=6.0",
   "jsonschema~=4.0",
-  "litellm>=1.66.0",
+  "litellm>=1.66.0, != 1.82.7, != 1.82.8",
   "openai>=1.66.1",
   "termcolor>=2,<4",
   "ipython>=8,<10",
   "json-repair~=0.35",
   "granite-io>=0.5,<0.6",
   "matplotlib~=3.10",
+  "seaborn~=0.13",
 ]
 authors = [
   { name="Mandana Vaziri", email="mvaziri@us.ibm.com" },
@@ -42,16 +43,16 @@ dev = [
   "pydantic~=2.9"
 ]
 examples = [
-  "pymilvus~=2.5",
-  "langchain~=0.3",
-  "langchain-community~=0.3",
+  "pymilvus>=2.5,<4.0",
+  "langchain-text-splitters~=1.1",
+  "langchain-community~=0.4",
   "pypdf~=6.0",
   "wikipedia~=1.0",
   "textdistance~=4.0",
-  "datasets>3,<5",
+  "datasets>3,<6",
   "sympy~=1.0",
-  "scikit-learn>=1.6.1,<1.9.0",
-  "faiss-cpu>=1.13,<1.14",
+  "scikit-learn>=1.6.1,<1.10.0",
+  "faiss-cpu>=1.14,<1.15",
   "funcy>=2",
   "evalplus>=0.3.1",
 ]
@@ -59,7 +60,7 @@ docs = [
   "mkdocs~=1.0",
   "mkdocstrings[python]~=1.0",
   "mkdocs-material~=9.0",
-  "pymdown-extensions~=10.0"
+  "pymdown-extensions>=10,<12"
 ]
 optimizer = [
   "rich>=14.0.0",

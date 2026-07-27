@@ -11,6 +11,7 @@ defs:
       code: |
         import warnings, wikipedia
         warnings.simplefilter("ignore")
+        wikipedia.set_user_agent("PDL-react-demo/1.0 (https://github.com/IBM/prompt-declaration-language)")
         try:
           result = wikipedia.summary("${ topic }")
         except wikipedia.WikipediaException as e:

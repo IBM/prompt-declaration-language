@@ -1,0 +1,32 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the class `OffsetUtil`. This method takes a single parameter: `lastSourceOffset`, which is of type `String`.
+
+Here's an explanation of what this method does:
+
+1. The method first suppresses unchecked exceptions using `@SuppressWarnings("unchecked")`. This means that it will not throw any warnings related to unchecked or unsafe operations.
+
+2. It declares a variable `offsetMap` of type `Map<String, String>`, which is the data structure we expect to return from this function.
+
+3. The method then checks if `lastSourceOffset` is either null or an empty string using an `if` statement:
+   - If `lastSourceOffset` is null or an empty string, it initializes `offsetMap` as a new instance of `HashMap<>`, which is an implementation of the `Map<String, String>` interface.
+   
+   - If `lastSourceOffset` is not null and not an empty string, it uses the `JSON_MAPPER` object (presumably a JSON parsing utility) to deserialize the `lastSourceOffset` string into a generic `Map` instance. The deserialization process converts the JSON-formatted string into a Java Map with String keys and values.
+
+4. Finally, the method returns the `offsetMap`.
+
+In summary, this function takes an optional JSON-formatted string (`lastSourceOffset`) as input and returns a `Map<String, String>`. If no `lastSourceOffset` is provided or it's empty, it initializes an empty map. Otherwise, it deserializes the JSON string into a map using a JSON parsing utility (presumably `JSON_MAPPER`).
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.24479166666666663
