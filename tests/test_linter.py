@@ -21,7 +21,7 @@ from pdl.pdl_linter import (
     _setup_logging,
     run_linter,
 )
-from pdl.pdl_parser import PDLParseError
+from pdl.pdl_parser import PDLParseError, parse_str
 
 INVALID_PDL_FILE = Path("invalid.pdl")
 VALID_PDL_FILE = Path("valid.pdl")
@@ -84,7 +84,9 @@ def mock_parse_side_effect(file_path):
     if file_path == INVALID_PDL_FILE or file_path.name == INVALID_PDL_FILE.name:
         raise PDLParseError("Mocked parse error for invalid file")
     if file_path == VALID_PDL_FILE or file_path.name == VALID_PDL_FILE.name:
-        return (None, None)  # Simulate successful parse
+        # Simulate a successful parse by returning a real (Program, location)
+        # tuple so the linter can inspect the program (e.g. its code blocks).
+        return parse_str("text: Hello!")
     # Should not happen in this test if paths are correct
     raise FileNotFoundError(f"Unexpected file path in mock: {file_path}")
 
@@ -697,7 +699,7 @@ def test_run_linter_multiple_paths(
     def mock_parse_multi(file_path):
         if file_path == Path("invalid3.pdl"):
             raise PDLParseError("error")
-        return (None, None)
+        return parse_str("text: Hello!")
 
     with ChangeDir(project_root):
 
