@@ -126,10 +126,17 @@ def test_block_has_a_minimal_program(cls):
     assert cls.__name__ in MINIMAL_BLOCKS
 
 
-def test_every_block_class_is_in_the_union():
-    """A block that is not in `BlockType` cannot be parsed at all."""
-    assert set(TAGGED_BLOCKS) == set(BLOCK_CLASSES)
-    assert len(TAGGED_BLOCKS) == len(BLOCK_CLASSES), "two blocks share a tag"
+def test_union_is_the_expression_and_the_advanced_blocks():
+    """`BlockType` is `ExpressionBlock | AdvancedBlockType`.
+
+    It used to be spelled that way. Tagging it means writing its members out
+    one by one, so what the two spellings have in common is now a test: a
+    block missing from `BlockType` cannot be parsed at all, and one that is
+    only in `BlockType` is parsed but reaches nothing else.
+    """
+    members = all_members(DISPATCH)
+    assert set(members) == {ExpressionBlock, *BLOCK_CLASSES}
+    assert len(members) == len(BLOCK_CLASSES) + 1, "a block is in the union twice"
 
 
 def test_expressions_have_their_own_tag():
