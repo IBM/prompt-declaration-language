@@ -3,6 +3,7 @@
 disable=
     # Errors
     import-error,
+    no-name-in-module,
     # Warnings
     exec-used,
     unused-argument,
