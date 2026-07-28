@@ -1469,7 +1469,7 @@ class PDLException(Exception):
 
 
 class PDLRuntimeError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         loc: PdlLocationType | None = None,
@@ -1497,7 +1497,7 @@ class PDLRuntimeParserError(PDLRuntimeError):
 
 
 class PDLRuntimeProcessBlocksError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         blocks: list[BlockType],
