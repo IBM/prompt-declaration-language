@@ -658,7 +658,7 @@
         "call": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "$ref": "#/$defs/FunctionBlock"
@@ -673,7 +673,7 @@
         "args": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -866,7 +866,7 @@
         "value": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -999,7 +999,7 @@
         "data": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -1294,7 +1294,7 @@
         "expect": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -1306,7 +1306,7 @@
         "feedback": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "$ref": "#/$defs/FunctionBlock"
@@ -1356,7 +1356,7 @@
     "ExpressionBool": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "type": "boolean"
@@ -1369,7 +1369,7 @@
     "ExpressionDictStr": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "additionalProperties": true,
@@ -1383,7 +1383,7 @@
     "ExpressionFloat": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "type": "number"
@@ -1396,7 +1396,7 @@
     "ExpressionFloatOrFloatFloat": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "type": "number"
@@ -1422,7 +1422,7 @@
     "ExpressionInt": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "type": "integer"
@@ -1435,7 +1435,7 @@
     "ExpressionList": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "items": {},
@@ -1449,7 +1449,7 @@
     "ExpressionStr": {
       "anyOf": [
         {
-          "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+          "$ref": "#/$defs/LocalizedExpression_TypeVar_"
         },
         {
           "type": "string"
@@ -1573,7 +1573,7 @@
         "factor": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "number"
@@ -1621,7 +1621,7 @@
         "file": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -1633,7 +1633,7 @@
         "mode": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -1646,7 +1646,7 @@
         "encoding": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -1662,7 +1662,7 @@
         "prefix": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -1675,7 +1675,7 @@
         "suffix": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -1688,7 +1688,7 @@
         "flush": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "boolean"
@@ -2140,7 +2140,7 @@
               "$ref": "#/$defs/GraniteioProcessor"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -2153,7 +2153,7 @@
         "parameters": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "additionalProperties": true,
@@ -2190,7 +2190,7 @@
         "backend": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -2969,7 +2969,7 @@
         "reduce": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
@@ -3337,7 +3337,7 @@
               "$ref": "#/$defs/LitellmParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "additionalProperties": true,
@@ -3768,7 +3768,7 @@
       "title": "LitellmParameters",
       "type": "object"
     },
-    "LocalizedExpression__ExpressionTypeT_": {
+    "LocalizedExpression_TypeVar_": {
       "additionalProperties": false,
       "properties": {
         "pdl__expr": {
@@ -3919,7 +3919,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   },
                   {
                     "items": {},
@@ -4110,7 +4110,7 @@
         "match": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {},
             {
@@ -4661,7 +4661,7 @@
               "$ref": "#/$defs/OpenaiParameters"
             },
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "additionalProperties": true,
@@ -5728,7 +5728,7 @@
               "additionalProperties": {
                 "anyOf": [
                   {
-                    "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+                    "$ref": "#/$defs/LocalizedExpression_TypeVar_"
                   },
                   {
                     "items": {},
@@ -5814,7 +5814,7 @@
         "exceptions": {
           "anyOf": [
             {
-              "$ref": "#/$defs/LocalizedExpression__ExpressionTypeT_"
+              "$ref": "#/$defs/LocalizedExpression_TypeVar_"
             },
             {
               "type": "string"
