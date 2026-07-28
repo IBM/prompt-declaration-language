@@ -117,7 +117,9 @@ export type ContributeTarget = "result" | "context" | "stdout" | "stderr"
  */
 export type Contribute = ContributeElement[]
 export type ParserType =
-  ("json" | "jsonl" | "yaml" | "csv") | PdlParser | RegexParser
+  | ("json" | "jsonl" | "yaml" | "csv")
+  | PdlParser
+  | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
 /**
