@@ -421,7 +421,7 @@
       "type": "object"
     },
     "BlockType": {
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/$defs/ExpressionBlock"
         },
