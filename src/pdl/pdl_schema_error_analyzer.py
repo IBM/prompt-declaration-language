@@ -62,6 +62,27 @@ def get_non_null_type(schema):
     return None
 
 
+def object_alternatives(defs, schema, seen=None):
+    """Members of a union schema, following `$ref`s and unions nested in them.
+
+    `BlockType` is a union whose `model` and `code` members are themselves
+    unions, so the alternatives a block can be reported against are not all at
+    the same level.
+    """
+    seen = set() if seen is None else seen
+    for item in alternatives(schema) or []:
+        if "$ref" in item:
+            ref_string = item["$ref"].split("/")[2]
+            if ref_string in seen:
+                continue
+            seen.add(ref_string)
+            item = defs[ref_string]
+        if is_any_of(item):
+            yield from object_alternatives(defs, item, seen)
+        else:
+            yield item
+
+
 def match(ref_type, data):
     all_fields = ref_type.get("properties", {}).keys()
     intersection = list(set(data.keys()) & set(all_fields))
@@ -188,20 +209,11 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
         elif isinstance(data, dict):
             match_ref = {}
             highest_match = 0
-            for item in schema_alternatives:
-                field_matches = 0
-                if "type" in item and item["type"] == "object":
-                    field_matches = match(item, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = item
-                if "$ref" in item:
-                    ref_string = item["$ref"].split("/")[2]
-                    ref_type = defs[ref_string]
-                    field_matches = match(ref_type, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = ref_type
+            for item in object_alternatives(defs, schema):
+                field_matches = match(item, data)
+                if field_matches > highest_match:
+                    highest_match = field_matches
+                    match_ref = item
 
             if match_ref == {}:
                 ret.append(

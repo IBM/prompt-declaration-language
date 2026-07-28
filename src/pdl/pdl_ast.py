@@ -1407,115 +1407,154 @@ AdvancedBlockType: TypeAlias = LeafBlockType | StructuredBlockType
 """
 
 
-def _block_tag(v: Any) -> str:  # pylint: disable=too-many-return-statements
-    """Select the block class `v` should be validated against.
+EXPRESSION_TAG = "expression"
+"""Discriminator tag of the blocks that are plain expressions.
+
+`BlockKind` names the kinds of block that are objects; an expression block is
+a scalar, so it needs a tag of its own.
+"""
+
+ARGS_TAG = "args"
+"""Discriminator tag of `ArgsBlock`, which is a code block without a `lang`."""
+
+
+def _block_tag(v: Any) -> Any:
+    """Select the kind of block `v` should be validated against.
 
     Used as the discriminator of `BlockType`. Without it, Pydantic has to try
     every member of the union in turn, and since blocks nest, the cost of
     validating a program is exponential in its nesting depth.
 
-    Each block kind is identified by a field that only that kind has, which is
-    also the field that makes it required in its class definition. A block that
-    has none of them is an `EmptyBlock`.
+    A block dumped by `pdl_dumper` carries its `kind`. One written by hand does
+    not, so the kind is read off the field that only blocks of that kind have,
+    which is also the field that makes them required in their class definition.
+    A block with none of those fields is empty.
     """
     if not isinstance(v, dict):
-        if v is None or isinstance(v, (bool, int, float, str)):
-            return "expression"
-        return type(v).__name__  # already a block, revalidated against its class
-    if "platform" in v:
-        return _MODEL_PLATFORM_TAGS.get(_lower(v["platform"]), "LitellmModelBlock")
+        return getattr(v, "kind", EXPRESSION_TAG)  # an already parsed block
+    kind = v.get("kind")
+    if kind is not None:
+        return kind
+    for field, block_kind in _BLOCK_KIND_OF_FIELD:
+        if field in v:
+            return block_kind
+    return BlockKind.EMPTY
+
+
+def _model_block_tag(v: Any) -> Any:
+    """Select the platform of a model block. Discriminator of `ModelBlockType`."""
+    if not isinstance(v, dict):
+        return v.platform
+    platform = v.get("platform")
+    if platform is not None:
+        return _lower(platform)
     if "processor" in v:
-        return "GraniteioModelBlock"
-    if "model" in v:
-        return "LitellmModelBlock"
-    if "code" in v:
-        return _CODE_LANG_TAGS.get(_lower(v.get("lang")), "PythonCodeBlock")
-    for key, tag in _BLOCK_KEY_TAGS:
-        if key in v:
-            return tag
-    return "EmptyBlock"
+        return ModelPlatform.GRANITEIO
+    return ModelPlatform.LITELLM
+
+
+def _code_block_tag(v: Any) -> Any:
+    """Select the language of a code block. Discriminator of `CodeBlockType`."""
+    if not isinstance(v, dict):
+        return ARGS_TAG if isinstance(v, ArgsBlock) else v.lang
+    if "args" in v:
+        return ARGS_TAG
+    lang = _lower(v.get("lang"))
+    return "python" if lang is None else lang
 
 
 def _lower(value: Any) -> Any:
     return value.lower() if isinstance(value, str) else value
 
 
-_MODEL_PLATFORM_TAGS: dict[Any, str] = {
-    ModelPlatform.LITELLM: "LitellmModelBlock",
-    ModelPlatform.GRANITEIO: "GraniteioModelBlock",
-    ModelPlatform.OPENAI: "OpenaiModelBlock",
-}
-
-_CODE_LANG_TAGS: dict[Any, str] = {
-    "python": "PythonCodeBlock",
-    "ipython": "IPythonCodeBlock",
-    "jinja": "JinjaCodeBlock",
-    "pdl": "PdlCodeBlock",
-    "command": "CommandCodeBlock",
-}
-
-# The field that identifies each remaining block kind, in the order the
-# interpreter documents them. `args` comes after `call` because a `call` block
-# may also carry `args`.
-_BLOCK_KEY_TAGS = (
-    ("text", "TextBlock"),
-    ("lastOf", "LastOfBlock"),
-    ("array", "ArrayBlock"),
-    ("object", "ObjectBlock"),
-    ("sequence", "SequenceBlock"),
-    ("if", "IfBlock"),
-    ("match", "MatchBlock"),
-    ("repeat", "RepeatBlock"),
-    ("map", "MapBlock"),
-    ("include", "IncludeBlock"),
-    ("import", "ImportBlock"),
-    ("function", "FunctionBlock"),
-    ("call", "CallBlock"),
-    ("args", "ArgsBlock"),
-    ("get", "GetBlock"),
-    ("data", "DataBlock"),
-    ("content", "MessageBlock"),
-    ("read", "ReadBlock"),
-    ("factor", "FactorBlock"),
-    ("aggregator", "AggregatorBlock"),
-    ("program", "ErrorBlock"),
+# The field that identifies each kind of block written without an explicit
+# `kind`. `call` comes before `args` because a `call` block may also carry
+# `args`.
+_BLOCK_KIND_OF_FIELD: tuple[tuple[str, BlockKind], ...] = (
+    ("text", BlockKind.TEXT),
+    ("lastOf", BlockKind.LASTOF),
+    ("array", BlockKind.ARRAY),
+    ("object", BlockKind.OBJECT),
+    ("sequence", BlockKind.SEQUENCE),
+    ("if", BlockKind.IF),
+    ("match", BlockKind.MATCH),
+    ("repeat", BlockKind.REPEAT),
+    ("map", BlockKind.MAP),
+    ("include", BlockKind.INCLUDE),
+    ("import", BlockKind.IMPORT),
+    ("function", BlockKind.FUNCTION),
+    ("call", BlockKind.CALL),
+    ("model", BlockKind.MODEL),
+    ("processor", BlockKind.MODEL),
+    ("platform", BlockKind.MODEL),
+    ("code", BlockKind.CODE),
+    ("args", BlockKind.CODE),
+    ("get", BlockKind.GET),
+    ("data", BlockKind.DATA),
+    ("content", BlockKind.MESSAGE),
+    ("read", BlockKind.READ),
+    ("factor", BlockKind.FACTOR),
+    ("aggregator", BlockKind.AGGREGATOR),
+    ("program", BlockKind.ERROR),
 )
+
+ModelBlockType = TypeAliasType(
+    "ModelBlockType",
+    Annotated[
+        Union[
+            Annotated[LitellmModelBlock, Tag(ModelPlatform.LITELLM)],
+            Annotated[GraniteioModelBlock, Tag(ModelPlatform.GRANITEIO)],
+            Annotated[OpenaiModelBlock, Tag(ModelPlatform.OPENAI)],
+        ],
+        Discriminator(_model_block_tag),
+    ],
+)
+"""Model blocks, discriminated by their platform."""
+
+CodeBlockType = TypeAliasType(
+    "CodeBlockType",
+    Annotated[
+        Union[
+            Annotated[PythonCodeBlock, Tag("python")],
+            Annotated[IPythonCodeBlock, Tag("ipython")],
+            Annotated[JinjaCodeBlock, Tag("jinja")],
+            Annotated[PdlCodeBlock, Tag("pdl")],
+            Annotated[CommandCodeBlock, Tag("command")],
+            Annotated[ArgsBlock, Tag(ARGS_TAG)],
+        ],
+        Discriminator(_code_block_tag),
+    ],
+)
+"""Code blocks, discriminated by their language."""
 
 BlockType = TypeAliasType(
     "BlockType",
     Annotated[
         Union[
-            Annotated[ExpressionBlock, Tag("expression")],
-            Annotated[FunctionBlock, Tag("FunctionBlock")],
-            Annotated[CallBlock, Tag("CallBlock")],
-            Annotated[LitellmModelBlock, Tag("LitellmModelBlock")],
-            Annotated[GraniteioModelBlock, Tag("GraniteioModelBlock")],
-            Annotated[OpenaiModelBlock, Tag("OpenaiModelBlock")],
-            Annotated[PythonCodeBlock, Tag("PythonCodeBlock")],
-            Annotated[IPythonCodeBlock, Tag("IPythonCodeBlock")],
-            Annotated[JinjaCodeBlock, Tag("JinjaCodeBlock")],
-            Annotated[PdlCodeBlock, Tag("PdlCodeBlock")],
-            Annotated[CommandCodeBlock, Tag("CommandCodeBlock")],
-            Annotated[ArgsBlock, Tag("ArgsBlock")],
-            Annotated[GetBlock, Tag("GetBlock")],
-            Annotated[DataBlock, Tag("DataBlock")],
-            Annotated[MessageBlock, Tag("MessageBlock")],
-            Annotated[ReadBlock, Tag("ReadBlock")],
-            Annotated[FactorBlock, Tag("FactorBlock")],
-            Annotated[AggregatorBlock, Tag("AggregatorBlock")],
-            Annotated[ErrorBlock, Tag("ErrorBlock")],
-            Annotated[EmptyBlock, Tag("EmptyBlock")],
-            Annotated[SequenceBlock, Tag("SequenceBlock")],
-            Annotated[TextBlock, Tag("TextBlock")],
-            Annotated[LastOfBlock, Tag("LastOfBlock")],
-            Annotated[ArrayBlock, Tag("ArrayBlock")],
-            Annotated[ObjectBlock, Tag("ObjectBlock")],
-            Annotated[IfBlock, Tag("IfBlock")],
-            Annotated[MatchBlock, Tag("MatchBlock")],
-            Annotated[RepeatBlock, Tag("RepeatBlock")],
-            Annotated[MapBlock, Tag("MapBlock")],
-            Annotated[IncludeBlock, Tag("IncludeBlock")],
-            Annotated[ImportBlock, Tag("ImportBlock")],
+            Annotated[ExpressionBlock, Tag(EXPRESSION_TAG)],
+            Annotated[FunctionBlock, Tag(BlockKind.FUNCTION)],
+            Annotated[CallBlock, Tag(BlockKind.CALL)],
+            Annotated[ModelBlockType, Tag(BlockKind.MODEL)],
+            Annotated[CodeBlockType, Tag(BlockKind.CODE)],
+            Annotated[GetBlock, Tag(BlockKind.GET)],
+            Annotated[DataBlock, Tag(BlockKind.DATA)],
+            Annotated[MessageBlock, Tag(BlockKind.MESSAGE)],
+            Annotated[ReadBlock, Tag(BlockKind.READ)],
+            Annotated[FactorBlock, Tag(BlockKind.FACTOR)],
+            Annotated[AggregatorBlock, Tag(BlockKind.AGGREGATOR)],
+            Annotated[ErrorBlock, Tag(BlockKind.ERROR)],
+            Annotated[EmptyBlock, Tag(BlockKind.EMPTY)],
+            Annotated[SequenceBlock, Tag(BlockKind.SEQUENCE)],
+            Annotated[TextBlock, Tag(BlockKind.TEXT)],
+            Annotated[LastOfBlock, Tag(BlockKind.LASTOF)],
+            Annotated[ArrayBlock, Tag(BlockKind.ARRAY)],
+            Annotated[ObjectBlock, Tag(BlockKind.OBJECT)],
+            Annotated[IfBlock, Tag(BlockKind.IF)],
+            Annotated[MatchBlock, Tag(BlockKind.MATCH)],
+            Annotated[RepeatBlock, Tag(BlockKind.REPEAT)],
+            Annotated[MapBlock, Tag(BlockKind.MAP)],
+            Annotated[IncludeBlock, Tag(BlockKind.INCLUDE)],
+            Annotated[ImportBlock, Tag(BlockKind.IMPORT)],
         ],
         Discriminator(_block_tag),
     ],
