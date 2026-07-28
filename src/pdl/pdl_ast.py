@@ -1278,10 +1278,7 @@ class RepeatBlock(StructuredBlock):
     maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
-    join: JoinType = Field(
-        default_factory=JoinText,
-        json_schema_extra={"default": JoinText().model_dump(by_alias=True)},
-    )
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     # Field for internal use
@@ -1327,10 +1324,7 @@ class MapBlock(StructuredBlock):
     maxIterations: OptionalExpressionInt = None
     """Maximal number of iterations to perform.
     """
-    join: JoinType = Field(
-        default_factory=JoinText,
-        json_schema_extra={"default": JoinText().model_dump(by_alias=True)},
-    )
+    join: JoinType = JoinText()
     """Define how to combine the result of each iteration.
     """
     maxWorkers: OptionalInt = None
