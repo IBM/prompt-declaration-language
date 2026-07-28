@@ -1,0 +1,28 @@
+description: Retrying only on selected exceptions
+defs:
+  attempts:
+    lang: python
+    code:
+      |
+      import itertools
+      result = itertools.count(1)
+text:
+- lang: python
+  code:
+    |
+    attempt = next(attempts)
+    if attempt < 3:
+        raise ConnectionError(f"attempt {attempt}: service unavailable")
+    result = f"answered on attempt {attempt}"
+  retry:
+    tries: 5
+    exceptions: ConnectionError
+- "\n"
+- lang: python
+  code:
+    |
+    raise ValueError("malformed request")
+  retry:
+    tries: 5
+    exceptions: [ConnectionError, TimeoutError]
+  fallback: a ValueError is not retried

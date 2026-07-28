@@ -1118,6 +1118,103 @@ In general, `spec` definitions can be a subset of JSON schema, or use a shorthan
 Another example of type checking a list can be found [here](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/type_list.pdl).
 
 
+## Retrying on Errors
+
+Any block can be given a `retry` field. If the block raises an error, it is executed again, from
+scratch, as many times as the configuration allows. In its simplest form, `retry` is a number of
+retries ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/retry.pdl)).
+
+```yaml
+--8<-- "./examples/tutorial/retry.pdl"
+```
+
+The code block fails on its first two executions and succeeds on the third, so this program outputs:
+
+```
+answered on attempt 3
+```
+
+Retries come *in addition* to the initial execution: `retry: 5` allows six executions in total.
+Each retry is reported on standard error as `[Retry <i>/<tries>]`, together with the error that
+triggered it. If the block still fails after the last retry, the error is propagated, unless the
+block also has a `fallback` field, in which case the fallback is executed instead. Adding
+`trace_error_on_retry: true` appends each error to the background context, which is useful when
+the retried block is a model call that should be told about its previous mistake.
+
+### Retry configuration
+
+For finer control, `retry` can be an object with the following fields.
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `tries` | `-1` | Number of retries. `-1` means retry indefinitely. |
+| `exceptions` | `Exception` | Exception, or list of exceptions, that trigger a retry. |
+| `delay` | `0.0` | Number of seconds to wait before the first retry. |
+| `backoff` | `1.0` | Multiplier applied to the delay at each successive retry. |
+| `max_delay` | `null` | Upper bound on the delay. `null` means no bound. |
+| `jitter` | `0.0` | Extra seconds added to the delay, fixed if a number, drawn uniformly at random if a `[min, max]` pair. |
+
+Every field is an expression, so its value can be computed from the scope, for instance
+`tries: ${ max_attempts }`.
+
+### Retrying only on some errors
+
+By default, every error triggers a retry. This is rarely what we want: retrying a request that
+was rejected because it is malformed will only produce the same rejection again, while retrying
+a request that timed out has a good chance to succeed. The `exceptions` field restricts retries
+to the errors that are worth retrying; any other error is raised immediately, as if the block had
+no `retry` field ([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/retry_exceptions.pdl)).
+
+```yaml
+--8<-- "./examples/tutorial/retry_exceptions.pdl"
+```
+
+The first block is retried, because it raises a `ConnectionError`. The second one raises a
+`ValueError`, which is not in its list of exceptions, so it is not retried and its `fallback`
+runs at once. This program outputs:
+
+```
+answered on attempt 3
+a ValueError is not retried
+```
+
+An exception can be written either as the name of a Python builtin exception (`ValueError`,
+`TimeoutError`, ...) or as the name of a PDL exception (`PDLRuntimeError`,
+`PDLRuntimeParserError`, ...). To match against an exception that is neither, evaluate an
+expression that returns the class itself, for example `exceptions: ${ MyError }` where `MyError`
+was bound by a `defs` running Python code. An unknown name is reported as an error before the
+block is executed, not when it fails.
+
+PDL wraps the errors raised inside a program as they propagate, so the exception that reaches the
+`retry` field is usually not the one that was raised. Matching therefore also considers the whole
+chain of wrapped exceptions: `exceptions: ValueError` matches a `PDLRuntimeError` that was caused
+by a `ValueError`.
+
+### Waiting between retries
+
+Retrying a rate-limited service immediately tends to make matters worse. The `delay`, `backoff`,
+`max_delay` and `jitter` fields describe how long to wait before each retry
+([file](https://github.com/IBM/prompt-declaration-language//blob/main/examples/tutorial/retry_delay.pdl)).
+
+```yaml
+--8<-- "./examples/tutorial/retry_delay.pdl"
+```
+
+The delay before retry number `i` (counting from 0) is `delay * backoff ** i`, capped at
+`max_delay` when one is given, plus the jitter. In this program the waits are therefore
+approximately 0.1s, 0.2s and 0.3s: the third one would have been 0.4s, but `max_delay` caps it at
+0.3s. The jitter is drawn anew before each retry and is added after the cap, so it can push a
+delay slightly above `max_delay`; spreading the retries of concurrent programs like this avoids
+having them all come back at the same instant. This program outputs:
+
+```
+answered on attempt 4
+```
+
+The delays also apply to the retries triggered by the `expectations` field described in the
+[PPDL documentation](https://ibm.github.io/prompt-declaration-language/ppdl/).
+
+
 ## Python SDK
 
 PDL programs can be defined and called programmatically directly in Python.

@@ -5809,7 +5809,8 @@
       "properties": {
         "tries": {
           "$ref": "#/$defs/ExpressionInt",
-          "default": -1
+          "default": -1,
+          "description": "The maximum number of retries, in addition to the initial execution of the\nblock. default: -1 (infinite)."
         },
         "exceptions": {
           "anyOf": [
@@ -5833,23 +5834,28 @@
             }
           ],
           "default": "Exception",
+          "description": "An exception or a list of exceptions to catch.\nExceptions can be given either as Python exception classes or as their names.\nAny other exception is raised without retrying the block.",
           "title": "Exceptions"
         },
         "delay": {
           "$ref": "#/$defs/ExpressionFloat",
-          "default": 0.0
+          "default": 0.0,
+          "description": "Number of seconds to wait before the first retry.\n    "
         },
         "max_delay": {
           "$ref": "#/$defs/OptionalExpressionFloat",
-          "default": null
+          "default": null,
+          "description": "The maximum value of delay, applied before the jitter is added. default: None (no limit).\n    "
         },
         "backoff": {
           "$ref": "#/$defs/ExpressionFloat",
-          "default": 1.0
+          "default": 1.0,
+          "description": "Multiplier applied to delay between attempts.\n    "
         },
         "jitter": {
           "$ref": "#/$defs/ExpressionFloatOrFloatFloat",
-          "default": 0.0
+          "default": 0.0,
+          "description": "Extra seconds added to delay between attempts, fixed if a number, random if a range tuple (min, max).\n    "
         }
       },
       "title": "RetryConfiguration",

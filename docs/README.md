@@ -362,6 +362,7 @@ For more information see [here](https://github.com/IBM/prompt-declaration-langua
 
      - Validate model inputs/outputs
      - Include fallback logic
+     - Retry the errors that are worth retrying, and back off between attempts (see [Retrying on Errors](https://ibm.github.io/prompt-declaration-language/tutorial/#retrying-on-errors))
      - Log intermediate results
 
 3. **Performance**:
