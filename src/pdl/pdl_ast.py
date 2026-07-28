@@ -382,10 +382,11 @@ ContributeElement = TypeAliasType(
 class RetryConfiguration(BaseModel):
     """Configuration of the `retry` field."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
 
     tries: ExpressionInt = -1
-    """The maximum number of attempts. default: -1 (infinite).
+    """The maximum number of retries, in addition to the initial execution of the
+    block. default: -1 (infinite).
     """
 
     exceptions: ExpressionType[str | Type[Exception] | list[str | Type[Exception]]] = (
@@ -393,14 +394,15 @@ class RetryConfiguration(BaseModel):
     )
     """An exception or a list of exceptions to catch.
     Exceptions can be given either as Python exception classes or as their names.
+    Any other exception is raised without retrying the block.
     """
 
     delay: ExpressionFloat = 0.0
-    """Initial delay between attempts.
+    """Number of seconds to wait before the first retry.
     """
 
     max_delay: OptionalExpressionFloat = None
-    """The maximum value of delay. default: None (no limit).
+    """The maximum value of delay, applied before the jitter is added. default: None (no limit).
     """
 
     backoff: ExpressionFloat = 1.0

@@ -1396,11 +1396,31 @@ export interface RegexParser {
  * Configuration of the `retry` field.
  */
 export interface RetryConfiguration {
+  /**
+   * The maximum number of retries, in addition to the initial execution of the
+   * block. default: -1 (infinite).
+   */
   tries?: LocalizedExpression | number | string
   exceptions?: unknown
+  /**
+   * Number of seconds to wait before the first retry.
+   *
+   */
   delay?: LocalizedExpression | number | string
+  /**
+   * The maximum value of delay, applied before the jitter is added. default: None (no limit).
+   *
+   */
   max_delay?: ExpressionFloat | null
+  /**
+   * Multiplier applied to delay between attempts.
+   *
+   */
   backoff?: LocalizedExpression | number | string
+  /**
+   * Extra seconds added to delay between attempts, fixed if a number, random if a range tuple (min, max).
+   *
+   */
   jitter?: LocalizedExpression | number | [unknown, unknown] | string
 }
 export interface LocalizedExpression {
