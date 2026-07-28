@@ -86,6 +86,11 @@ CI runs exactly this.
   python -m src.pdl.pdl --schema > src/pdl/pdl-schema.json
   ```
 
+  **Regenerate with Python > 3.11** (3.12 or later). Python 3.11 emits a different schema, so a
+  file generated there will not match. CI reflects this: `build.yml` passes
+  `--ignore=tests/test_schema.py` on the 3.11 matrix entry and only checks the committed schema on
+  the newer versions.
+
 - **`pdl-live-react/src/pdl_ast.d.ts`** is generated from that schema. Regenerate with
   `npm run types` in `pdl-live-react/` when the AST changes.
 
