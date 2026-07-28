@@ -1,0 +1,23 @@
+description: Waiting between retries with exponential backoff
+defs:
+  attempts:
+    lang: python
+    code:
+      |
+      import itertools
+      result = itertools.count(1)
+text:
+- lang: python
+  code:
+    |
+    attempt = next(attempts)
+    if attempt < 4:
+        raise ConnectionError(f"attempt {attempt}: rate limited")
+    result = f"answered on attempt {attempt}"
+  retry:
+    tries: 6
+    exceptions: ConnectionError
+    delay: 0.1
+    backoff: 2
+    max_delay: 0.3
+    jitter: [0, 0.05]
