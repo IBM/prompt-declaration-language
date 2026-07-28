@@ -134,7 +134,16 @@ requires every one of them to parse (exceptions are listed in `EXPECTED_INVALID`
 
 - Commit messages follow Conventional Commits: `feat:`, `fix:`, `chore:`, `refactor:`, `ci:`,
   with an optional scope (`fix(deps):`, `fix(ci):`).
-- Document new language features in `docs/` (usually `docs/tutorial.md`) in the same PR.
+- **Every new language feature ships with an example.** A feature is not complete until there is a
+  runnable `.pdl` program demonstrating it. In the same PR:
+  1. Add the program under `examples/tutorial/` (named after the feature, e.g. `for_with.pdl`).
+  2. Embed it in `docs/tutorial.md` with an MkDocs snippet include —
+     `--8<-- "./examples/tutorial/<name>.pdl"` — alongside prose explaining the feature.
+  3. Add its expected output to `tests/results/`, and an entry in `tests/test_examples_run.yaml`
+     if it needs `stdin`/`scope` or must be skipped.
+
+  Features that don't fit the tutorial (optimizer, viewer, integrations) get their example in the
+  matching `examples/` subdirectory instead, but the example is still required.
 - Model calls in examples generally target `ollama/granite-*`; keep new examples runnable with a
   local Ollama unless there is a reason not to.
 - Blocks are Pydantic models — adding a field means updating `pdl_ast.py`, the interpreter, the
@@ -143,6 +152,8 @@ requires every one of them to parse (exceptions are listed in `EXPECTED_INVALID`
 ## Things that commonly go wrong
 
 - Editing `pdl_ast.py` without regenerating `pdl-schema.json` → `test_schema.py` fails.
+- Implementing a language feature without adding an example → the feature is undocumented and
+  untested end to end; reviewers will ask for it.
 - Adding an example without a `tests/results/` entry → nightly Run Examples fails.
 - Leaving `update_results: true` in `tests/test_examples_run.yaml` → the PR ships a live-updating
   test config.
