@@ -445,7 +445,7 @@
       "type": "object"
     },
     "BlockType": {
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/$defs/ExpressionBlock"
         },
@@ -456,31 +456,10 @@
           "$ref": "#/$defs/CallBlock"
         },
         {
-          "$ref": "#/$defs/LitellmModelBlock"
+          "$ref": "#/$defs/ModelBlockType"
         },
         {
-          "$ref": "#/$defs/GraniteioModelBlock"
-        },
-        {
-          "$ref": "#/$defs/OpenaiModelBlock"
-        },
-        {
-          "$ref": "#/$defs/PythonCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/IPythonCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/JinjaCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/PdlCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/CommandCodeBlock"
-        },
-        {
-          "$ref": "#/$defs/ArgsBlock"
+          "$ref": "#/$defs/CodeBlockType"
         },
         {
           "$ref": "#/$defs/GetBlock"
@@ -694,6 +673,28 @@
       ],
       "title": "CallBlock",
       "type": "object"
+    },
+    "CodeBlockType": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/IPythonCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/JinjaCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/PdlCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/CommandCodeBlock"
+        },
+        {
+          "$ref": "#/$defs/ArgsBlock"
+        }
+      ]
     },
     "CommandCodeBlock": {
       "additionalProperties": false,
@@ -4316,6 +4317,19 @@
       ],
       "title": "MessageBlock",
       "type": "object"
+    },
+    "ModelBlockType": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/LitellmModelBlock"
+        },
+        {
+          "$ref": "#/$defs/GraniteioModelBlock"
+        },
+        {
+          "$ref": "#/$defs/OpenaiModelBlock"
+        }
+      ]
     },
     "ModelInput": {
       "items": {

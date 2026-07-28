@@ -20,9 +20,11 @@ from pydantic import (
     BaseModel,
     BeforeValidator,
     ConfigDict,
+    Discriminator,
     Field,
     Json,
     RootModel,
+    Tag,
     TypeAdapter,
 )
 from typing_extensions import TypeAliasType
@@ -486,16 +488,20 @@ class Block(BaseModel):
     spec: PdlTypeType = None
     """Type specification of the result of the block.
     """
-    defs: dict[str, "BlockType"] = {}
+    defs: dict[str, "BlockType"] = Field(
+        default_factory=dict, json_schema_extra={"default": {}}
+    )
     """Set of definitions executed before the execution of the block.
     """
     def_: OptionalStr = Field(default=None, alias="def")
     """Name of the variable used to store the result of the execution of the block.
     """
-    contribute: Sequence[ContributeElement] = [
-        ContributeTarget.RESULT,
-        ContributeTarget.CONTEXT,
-    ]
+    contribute: Sequence[ContributeElement] = Field(
+        default_factory=lambda: [ContributeTarget.RESULT, ContributeTarget.CONTEXT],
+        json_schema_extra={
+            "default": [ContributeTarget.RESULT, ContributeTarget.CONTEXT]
+        },
+    )
     """Indicate if the block contributes to the result and background context.
     """
     parser: Annotated[OptionalParserType, BeforeValidator(_ensure_lower)] = None
@@ -509,7 +515,10 @@ class Block(BaseModel):
     trace_error_on_retry: OptionalBoolOrStr = None
     """Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
     """
-    expectations: ExpectationsType = []
+
+    expectations: ExpectationsType = Field(
+        default_factory=list, json_schema_extra={"default": []}
+    )
     """Specify any expectations that the result of the block must satisfy.
     """
     role: RoleType = None
@@ -518,7 +527,9 @@ class Block(BaseModel):
     but there may be other roles such as `available_tools`.
     """
     # Fields for internal use
-    pdl__context: OptionalModelInput = []
+    pdl__context: OptionalModelInput = Field(
+        default_factory=list, json_schema_extra={"default": []}
+    )
     """Current context."""
     pdl__id: OptionalStr = ""
     """Unique identifier for this block."""
@@ -1436,7 +1447,160 @@ StructuredBlockType: TypeAlias = (
 AdvancedBlockType: TypeAlias = LeafBlockType | StructuredBlockType
 """Different types of blocks with all their fields.
 """
-BlockType = TypeAliasType("BlockType", Union[ExpressionBlock, AdvancedBlockType])
+
+
+EXPRESSION_TAG = "expression"
+"""Discriminator tag of the blocks that are plain expressions.
+
+`BlockKind` names the kinds of block that are objects; an expression block is
+a scalar, so it needs a tag of its own.
+"""
+
+ARGS_TAG = "args"
+"""Discriminator tag of `ArgsBlock`, which is a code block without a `lang`."""
+
+
+def _block_tag(v: Any) -> Any:
+    """Select the kind of block `v` should be validated against.
+
+    Used as the discriminator of `BlockType`. Without it, Pydantic has to try
+    every member of the union in turn, and since blocks nest, the cost of
+    validating a program is exponential in its nesting depth.
+
+    A block dumped by `pdl_dumper` carries its `kind`. One written by hand does
+    not, so the kind is read off the field that only blocks of that kind have,
+    which is also the field that makes them required in their class definition.
+    A block with none of those fields is empty.
+    """
+    if not isinstance(v, dict):
+        return getattr(v, "kind", EXPRESSION_TAG)  # an already parsed block
+    kind = v.get("kind")
+    if kind is not None:
+        return kind
+    for field, block_kind in _BLOCK_KIND_OF_FIELD:
+        if field in v:
+            return block_kind
+    return BlockKind.EMPTY
+
+
+def _model_block_tag(v: Any) -> Any:
+    """Select the platform of a model block. Discriminator of `ModelBlockType`."""
+    if not isinstance(v, dict):
+        return v.platform
+    platform = v.get("platform")
+    if platform is not None:
+        return _lower(platform)
+    if "processor" in v:
+        return ModelPlatform.GRANITEIO
+    return ModelPlatform.LITELLM
+
+
+def _code_block_tag(v: Any) -> Any:
+    """Select the language of a code block. Discriminator of `CodeBlockType`."""
+    if not isinstance(v, dict):
+        return ARGS_TAG if isinstance(v, ArgsBlock) else v.lang
+    if "args" in v:
+        return ARGS_TAG
+    lang = _lower(v.get("lang"))
+    return "python" if lang is None else lang
+
+
+def _lower(value: Any) -> Any:
+    return value.lower() if isinstance(value, str) else value
+
+
+# The field that identifies each kind of block written without an explicit
+# `kind`. `call` comes before `args` because a `call` block may also carry
+# `args`.
+_BLOCK_KIND_OF_FIELD: tuple[tuple[str, BlockKind], ...] = (
+    ("text", BlockKind.TEXT),
+    ("lastOf", BlockKind.LASTOF),
+    ("array", BlockKind.ARRAY),
+    ("object", BlockKind.OBJECT),
+    ("sequence", BlockKind.SEQUENCE),
+    ("if", BlockKind.IF),
+    ("match", BlockKind.MATCH),
+    ("repeat", BlockKind.REPEAT),
+    ("map", BlockKind.MAP),
+    ("include", BlockKind.INCLUDE),
+    ("import", BlockKind.IMPORT),
+    ("function", BlockKind.FUNCTION),
+    ("call", BlockKind.CALL),
+    ("model", BlockKind.MODEL),
+    ("processor", BlockKind.MODEL),
+    ("platform", BlockKind.MODEL),
+    ("code", BlockKind.CODE),
+    ("args", BlockKind.CODE),
+    ("get", BlockKind.GET),
+    ("data", BlockKind.DATA),
+    ("content", BlockKind.MESSAGE),
+    ("read", BlockKind.READ),
+    ("factor", BlockKind.FACTOR),
+    ("aggregator", BlockKind.AGGREGATOR),
+    ("program", BlockKind.ERROR),
+)
+
+ModelBlockType = TypeAliasType(
+    "ModelBlockType",
+    Annotated[
+        Union[
+            Annotated[LitellmModelBlock, Tag(ModelPlatform.LITELLM)],
+            Annotated[GraniteioModelBlock, Tag(ModelPlatform.GRANITEIO)],
+            Annotated[OpenaiModelBlock, Tag(ModelPlatform.OPENAI)],
+        ],
+        Discriminator(_model_block_tag),
+    ],
+)
+"""Model blocks, discriminated by their platform."""
+
+CodeBlockType = TypeAliasType(
+    "CodeBlockType",
+    Annotated[
+        Union[
+            Annotated[PythonCodeBlock, Tag("python")],
+            Annotated[IPythonCodeBlock, Tag("ipython")],
+            Annotated[JinjaCodeBlock, Tag("jinja")],
+            Annotated[PdlCodeBlock, Tag("pdl")],
+            Annotated[CommandCodeBlock, Tag("command")],
+            Annotated[ArgsBlock, Tag(ARGS_TAG)],
+        ],
+        Discriminator(_code_block_tag),
+    ],
+)
+"""Code blocks, discriminated by their language."""
+
+BlockType = TypeAliasType(
+    "BlockType",
+    Annotated[
+        Union[
+            Annotated[ExpressionBlock, Tag(EXPRESSION_TAG)],
+            Annotated[FunctionBlock, Tag(BlockKind.FUNCTION)],
+            Annotated[CallBlock, Tag(BlockKind.CALL)],
+            Annotated[ModelBlockType, Tag(BlockKind.MODEL)],
+            Annotated[CodeBlockType, Tag(BlockKind.CODE)],
+            Annotated[GetBlock, Tag(BlockKind.GET)],
+            Annotated[DataBlock, Tag(BlockKind.DATA)],
+            Annotated[MessageBlock, Tag(BlockKind.MESSAGE)],
+            Annotated[ReadBlock, Tag(BlockKind.READ)],
+            Annotated[FactorBlock, Tag(BlockKind.FACTOR)],
+            Annotated[AggregatorBlock, Tag(BlockKind.AGGREGATOR)],
+            Annotated[ErrorBlock, Tag(BlockKind.ERROR)],
+            Annotated[EmptyBlock, Tag(BlockKind.EMPTY)],
+            Annotated[SequenceBlock, Tag(BlockKind.SEQUENCE)],
+            Annotated[TextBlock, Tag(BlockKind.TEXT)],
+            Annotated[LastOfBlock, Tag(BlockKind.LASTOF)],
+            Annotated[ArrayBlock, Tag(BlockKind.ARRAY)],
+            Annotated[ObjectBlock, Tag(BlockKind.OBJECT)],
+            Annotated[IfBlock, Tag(BlockKind.IF)],
+            Annotated[MatchBlock, Tag(BlockKind.MATCH)],
+            Annotated[RepeatBlock, Tag(BlockKind.REPEAT)],
+            Annotated[MapBlock, Tag(BlockKind.MAP)],
+            Annotated[IncludeBlock, Tag(BlockKind.INCLUDE)],
+            Annotated[ImportBlock, Tag(BlockKind.IMPORT)],
+        ],
+        Discriminator(_block_tag),
+    ],
+)
 """All kinds of blocks.
 """
 BlockOrBlocksType: TypeAlias = BlockType | list[BlockType]  # pyright: ignore

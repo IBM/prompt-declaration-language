@@ -37,26 +37,50 @@ def is_object(schema):
     return False
 
 
+def alternatives(schema):
+    """Members of a union schema, spelled either `anyOf` or `oneOf`."""
+    return schema.get("anyOf", schema.get("oneOf"))
+
+
 def is_any_of(schema):
-    if "anyOf" in schema:
-        return True
-    return False
+    return alternatives(schema) is not None
 
 
 def nullable(schema):
-    if "anyOf" in schema:
-        for item in schema["anyOf"]:
-            if "type" in item and item["type"] == "null":
-                return True
+    for item in alternatives(schema) or []:
+        if "type" in item and item["type"] == "null":
+            return True
     return False
 
 
 def get_non_null_type(schema):
-    if "anyOf" in schema and len(schema["anyOf"]) == 2:
-        for item in schema["anyOf"]:
+    items = alternatives(schema)
+    if items is not None and len(items) == 2:
+        for item in items:
             if "type" not in item or "type" in item and item["type"] != "null":
                 return item
     return None
+
+
+def object_alternatives(defs, schema, seen=None):
+    """Members of a union schema, following `$ref`s and unions nested in them.
+
+    `BlockType` is a union whose `model` and `code` members are themselves
+    unions, so the alternatives a block can be reported against are not all at
+    the same level.
+    """
+    seen = set() if seen is None else seen
+    for item in alternatives(schema) or []:
+        if "$ref" in item:
+            ref_string = item["$ref"].split("/")[2]
+            if ref_string in seen:
+                continue
+            seen.add(ref_string)
+            item = defs[ref_string]
+        if is_any_of(item):
+            yield from object_alternatives(defs, item, seen)
+        else:
+            yield item
 
 
 def match(ref_type, data):
@@ -143,13 +167,14 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
                     )
 
     elif is_any_of(schema):
-        if len(schema["anyOf"]) == 2 and nullable(schema):
+        schema_alternatives = alternatives(schema)
+        if len(schema_alternatives) == 2 and nullable(schema):
             ret += analyze_errors(defs, get_non_null_type(schema), data, loc)
 
         elif not isinstance(data, dict) and not isinstance(data, list):
             the_type = convert_to_json_type(type(data))
             the_type_exists = False
-            for item in schema["anyOf"]:
+            for item in schema_alternatives:
                 if item == {}:
                     the_type_exists = True
                 if "type" in item and item["type"] == the_type:
@@ -173,7 +198,7 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
 
         elif isinstance(data, list):
             found = None
-            for item in schema["anyOf"]:
+            for item in schema_alternatives:
                 if is_array(item):
                     found = item
             if found is not None:
@@ -184,20 +209,11 @@ def analyze_errors(defs, schema, data, loc: PdlLocationType) -> list[str]:  # no
         elif isinstance(data, dict):
             match_ref = {}
             highest_match = 0
-            for item in schema["anyOf"]:
-                field_matches = 0
-                if "type" in item and item["type"] == "object":
-                    field_matches = match(item, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = item
-                if "$ref" in item:
-                    ref_string = item["$ref"].split("/")[2]
-                    ref_type = defs[ref_string]
-                    field_matches = match(ref_type, data)
-                    if field_matches > highest_match:
-                        highest_match = field_matches
-                        match_ref = ref_type
+            for item in object_alternatives(defs, schema):
+                field_matches = match(item, data)
+                if field_matches > highest_match:
+                    highest_match = field_matches
+                    match_ref = item
 
             if match_ref == {}:
                 ret.append(

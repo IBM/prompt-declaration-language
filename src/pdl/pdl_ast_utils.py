@@ -2,6 +2,7 @@ from typing import Callable, Sequence
 
 from .pdl_ast import (
     AggregatorBlock,
+    ArgsBlock,
     ArrayBlock,
     Block,
     BlockType,
@@ -54,6 +55,8 @@ def iter_block_children(f: Callable[[BlockType], None], block: BlockType) -> Non
             f(block.input)
         case CodeBlock():
             f(block.code)
+        case ArgsBlock():
+            pass  # `args` holds expressions, not blocks
         case GetBlock():
             pass
         case DataBlock():
@@ -184,6 +187,8 @@ def map_block_children(f: MappedFunctions, block: BlockType) -> BlockType:
                 case JinjaCodeBlock():
                     if block.parameters is not None:
                         block.parameters = f.f_expr(block.parameters)
+        case ArgsBlock():
+            block.args = [f.f_expr(arg) for arg in block.args]
         case GetBlock():
             pass
         case DataBlock():
