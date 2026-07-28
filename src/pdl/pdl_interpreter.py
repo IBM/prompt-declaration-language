@@ -1,4 +1,5 @@
 # pylint: disable=import-outside-toplevel
+import builtins
 import csv
 import json
 import random
@@ -45,6 +46,7 @@ from jinja2.runtime import Undefined
 from pydantic import Field
 from pydantic.json_schema import SkipJsonSchema
 
+from . import pdl_ast
 from .pdl_ast import (
     AdvancedBlockType,
     AggregatorBlock,
@@ -526,6 +528,68 @@ def calculate_retry_delay(
     return float(delay)
 
 
+def resolve_exception_types(
+    exceptions: Any,
+    loc: PdlLocationType,
+) -> tuple[type[BaseException], ...]:
+    """Resolve the `exceptions` field of a retry configuration into exception classes.
+
+    Each exception can be given either as a Python exception class or as the
+    name of a builtin exception or of a PDL exception.
+
+    Args:
+        exceptions: A single exception or a list of exceptions.
+        loc: Location of the retry configuration, used to report errors.
+
+    Returns:
+        The exception classes to catch, as a tuple suitable for `isinstance`.
+    """
+    if isinstance(exceptions, (list, tuple)):
+        exception_list = list(exceptions)
+    else:
+        exception_list = [exceptions]
+
+    resolved: list[type[BaseException]] = []
+    for exception in exception_list:
+        if isinstance(exception, str):
+            candidate = getattr(builtins, exception, None)
+            if candidate is None:
+                candidate = getattr(pdl_ast, exception, None)
+        else:
+            candidate = exception
+        if not (isinstance(candidate, type) and issubclass(candidate, BaseException)):
+            raise PDLRuntimeError(
+                f"Invalid exception in the retry configuration: {exception!r}",
+                loc=loc,
+            )
+        resolved.append(candidate)
+    return tuple(resolved)
+
+
+def exception_matches(
+    exc: BaseException,
+    exception_types: tuple[type[BaseException], ...],
+) -> bool:
+    """Check whether an exception, or any exception it wraps, matches `exception_types`.
+
+    PDL wraps the exceptions raised by a program into `PDLRuntimeError`s as they
+    propagate, so the exception the user wrote in the retry configuration is
+    typically not the one caught here but one of its causes.
+    """
+    seen: set[int] = set()
+    todo: list[BaseException | None] = [exc]
+    while todo:
+        current = todo.pop()
+        if current is None or id(current) in seen:
+            continue
+        seen.add(id(current))
+        if isinstance(current, exception_types):
+            return True
+        todo.append(getattr(current, "source_exception", None))
+        todo.append(current.__cause__)
+    return False
+
+
 def process_advance_block_retry(  # noqa: C901
     state: InterpreterState,
     scope: ScopeType,
@@ -550,6 +614,7 @@ def process_advance_block_retry(  # noqa: C901
     # Extract and evaluate retry configuration
     retry_config = None
     evaluated_retry_config = None
+    retry_exception_types: tuple[type[BaseException], ...] | None = None
     if isinstance(block.retry, RetryConfiguration):
         # Evaluate each field of the retry configuration
         tries, tries_trace = process_expr(
@@ -575,6 +640,11 @@ def process_advance_block_retry(  # noqa: C901
         exceptions, exceptions_trace = process_expr(
             scope, block.retry.exceptions, append(loc, "retry.exceptions")
         )
+        # Resolve the exceptions eagerly so that an invalid exception is
+        # reported even if the block does not fail
+        retry_exception_types = resolve_exception_types(
+            exceptions, append(loc, "retry.exceptions")
+        )
 
         # Create evaluated retry configuration for use
         retry_config = RetryConfiguration(
@@ -582,8 +652,8 @@ def process_advance_block_retry(  # noqa: C901
             delay=delay,
             max_delay=max_delay,
             backoff=backoff,
-            jitter=jitter,
-            exceptions=exceptions,  # pyright: ignore
+            jitter=jitter,  # type: ignore[arg-type] # pyright: ignore
+            exceptions=exceptions,  # type: ignore[arg-type] # pyright: ignore
         )
 
         # Create traced retry configuration for saving in trace
@@ -592,8 +662,8 @@ def process_advance_block_retry(  # noqa: C901
             delay=delay_trace,
             max_delay=max_delay_trace,
             backoff=backoff_trace,
-            jitter=jitter_trace,
-            exceptions=exceptions_trace,
+            jitter=jitter_trace,  # type: ignore[arg-type] # pyright: ignore
+            exceptions=exceptions_trace,  # type: ignore[arg-type] # pyright: ignore
         )
 
         max_retry = tries
@@ -712,54 +782,10 @@ def process_advance_block_retry(  # noqa: C901
             raise exc from exc
         except Exception as exc:
             # Check if the exception matches the configured exception types
-            should_retry_exception = True
-            if retry_config is not None:
-                # Get the exception types to catch
-                exception_types = retry_config.exceptions
-
-                # Convert string names to actual exception classes
-                def resolve_exception_type(exc_type):
-                    if isinstance(exc_type, str):
-                        # Try to get the exception class from builtins
-                        try:
-                            return getattr(__builtins__, exc_type)
-                        except (AttributeError, TypeError):
-                            # If not in builtins, return Exception as fallback
-                            return Exception
-                    return exc_type
-
-                # Normalize to tuple for isinstance check
-                resolved_types: tuple[type[Exception], ...]
-                if isinstance(exception_types, list):
-                    resolved_list = [
-                        resolve_exception_type(e)
-                        for e in exception_types  # pylint: disable=not-an-iterable
-                    ]
-                    # Type assertion to help type checkers
-                    assert all(
-                        isinstance(t, type) and issubclass(t, Exception)
-                        for t in resolved_list
-                    ), "All resolved types must be Exception subclasses"
-                    resolved_types = tuple(resolved_list)  # type: ignore[assignment]
-                elif not isinstance(exception_types, tuple):
-                    resolved_single = resolve_exception_type(exception_types)
-                    assert isinstance(resolved_single, type) and issubclass(
-                        resolved_single, Exception
-                    ), "Resolved type must be an Exception subclass"
-                    resolved_types = (resolved_single,)  # type: ignore[assignment]
-                else:
-                    resolved_list = [
-                        resolve_exception_type(e)
-                        for e in exception_types  # pylint: disable=not-an-iterable
-                    ]
-                    assert all(
-                        isinstance(t, type) and issubclass(t, Exception)
-                        for t in resolved_list
-                    ), "All resolved types must be Exception subclasses"
-                    resolved_types = tuple(resolved_list)  # type: ignore[assignment]
-
-                # Check if the caught exception matches any of the specified types
-                should_retry_exception = isinstance(exc, resolved_types)
+            if retry_exception_types is None:
+                should_retry_exception = True
+            else:
+                should_retry_exception = exception_matches(exc, retry_exception_types)
 
             # Determine if we should retry based on exception match and retry availability
             do_retry = (
@@ -815,6 +841,8 @@ def process_advance_block_retry(  # noqa: C901
                     trace=trace,
                 )
                 result = lazy_apply(checker, result)
+            # The fallback has been executed, no need to try again
+            break
         trial_idx += 1
     state.score.ref += score
     return result, background, new_scope, trace
@@ -1726,6 +1754,7 @@ def process_blocks(  # pylint: disable=too-many-arguments,too-many-positional-ar
                 message=exc.message,
                 blocks=trace,
                 loc=exc.loc or new_loc,
+                source_exception=exc,
             ) from exc
     else:
         iteration_state = state.with_yield_result(

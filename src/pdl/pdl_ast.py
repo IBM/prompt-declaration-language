@@ -388,10 +388,11 @@ class RetryConfiguration(BaseModel):
     """The maximum number of attempts. default: -1 (infinite).
     """
 
-    exceptions: ExpressionType[str | Type[Exception] | list[Type[Exception]]] = (
+    exceptions: ExpressionType[str | Type[Exception] | list[str | Type[Exception]]] = (
         "Exception"
     )
     """An exception or a list of exceptions to catch.
+    Exceptions can be given either as Python exception classes or as their names.
     """
 
     delay: ExpressionFloat = 0.0
@@ -1468,7 +1469,7 @@ class PDLException(Exception):
 
 
 class PDLRuntimeError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         loc: PdlLocationType | None = None,
@@ -1496,18 +1497,23 @@ class PDLRuntimeParserError(PDLRuntimeError):
 
 
 class PDLRuntimeProcessBlocksError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         blocks: list[BlockType],
         loc: PdlLocationType | None = None,
         fallback: OptionalAny = None,
+        source_exception: BaseException | None = None,
     ):
         super().__init__(message)
         self.loc = loc
         self.blocks = blocks
         self.fallback = fallback
         self.message = message
+        if source_exception is not None:
+            if hasattr(source_exception, "source_exception"):
+                source_exception = source_exception.source_exception  # pyright: ignore
+        self.source_exception = source_exception
 
 
 # Default model parameter constants
