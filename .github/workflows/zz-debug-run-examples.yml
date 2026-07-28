@@ -1,0 +1,30 @@
+---
+# TEMPORARY: reproduces the nightly "Run examples" workload on this branch.
+# Delete before merging.
+name: DEBUG run examples
+
+on:
+  push:
+    branches:
+      - claude/run-examples-action-fix-hc9cjn
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Execution tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.14']
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/run-examples
+        with:
+          python-version: ${{ matrix.python-version }}
+          runner-os: ${{ runner.os }}
+          repository: ${{ github.repository }}
+          head-ref: ${{ github.ref_name }}
+          token: ${{ github.token }}
+          update-results: 'false'
+          check: '[]'
