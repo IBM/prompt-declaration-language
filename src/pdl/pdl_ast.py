@@ -1280,7 +1280,7 @@ class RepeatBlock(StructuredBlock):
     """
     join: JoinType = Field(
         default_factory=JoinText,
-        json_schema_extra={"default": {"as": "text", "with": ""}},
+        json_schema_extra={"default": JoinText().model_dump(by_alias=True)},
     )
     """Define how to combine the result of each iteration.
     """
@@ -1329,7 +1329,7 @@ class MapBlock(StructuredBlock):
     """
     join: JoinType = Field(
         default_factory=JoinText,
-        json_schema_extra={"default": {"as": "text", "with": ""}},
+        json_schema_extra={"default": JoinText().model_dump(by_alias=True)},
     )
     """Define how to combine the result of each iteration.
     """
