@@ -118,12 +118,19 @@ The suite has two halves:
 - `skip:` — files never run.
 - `with_inputs:` — files needing `stdin` lines and/or an initial `scope`.
 - `expected_parse_error:` / `expected_runtime_error:` — files that are supposed to fail.
+- `unstable_result:` — files whose output is not compared, only required to run without error.
 - `update_results: true` — regenerate expected outputs into `tests/results/`. **Always set it back
   to `false` before opening a PR.**
 
 Expected outputs live at `tests/results/<path/to/file>.<i>.result`. Because model output varies with
 Python version and OS, multiple `<i>` variants may be accepted; when CI reports a mismatch that
 looks reasonable, add a new file with the next `<i>`.
+
+Programs that end with a free-form model response are **not** result-checked — the model rewords its
+answer on every run even at `temperature: 0` with a fixed `seed`, so no set of variants converges.
+List those under `unstable_result:` and give them no `.result` file. Keep exact matching for
+deterministic outputs (code, data, control flow, parsers, short constrained model answers). A file
+that needs a new variant on every run belongs in `unstable_result:`.
 
 Adding or moving any `.pdl` file affects two tests: `test_examples_parse.py` globs `**/*.pdl` and
 requires every one of them to parse (exceptions are listed in `EXPECTED_INVALID`), and

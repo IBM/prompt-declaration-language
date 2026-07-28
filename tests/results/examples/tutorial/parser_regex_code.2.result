@@ -1,2 +1,0 @@
-result = add_two_numbers(5, 3)
-print(result)  # Outputs: 8

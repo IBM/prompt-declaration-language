@@ -101,11 +101,15 @@ pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-war
 
 A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
 
-When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specifically, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
+Programs whose output embeds free-form model text are not checked with exact string matching at all: the model produces slightly different wording on every run, even at `temperature: 0` with a fixed `seed`, so no finite set of expected outputs can ever match. Those programs are listed under `unstable_result` in `tests/test_examples_run.yaml`; they are still executed on every run, and the test fails if they raise a parse or runtime error, but their output is not compared. If you add an example that ends with a free-form model response, add it to `unstable_result` instead of recording an expected output. Exact matching is kept for programs with a deterministic output — code blocks, data, control flow, parsers, and short constrained model answers.
+
+When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specifically, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If a result-checked file varies, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
 
 Below is what the CI might look like if the results differ. If the results look reasonable, you should
 1. copy and paste the result for that file 
 2. create a new file in `tests/results` in the format of `tests/results/<path/to/file>.<i>.result` where `<i>` should be incremented from the highest number of `<i>.result` in the folder
+
+If a file keeps producing a new variant on every run, that is the signal that its output is not deterministic; move it to `unstable_result` and delete its `.result` files rather than accumulating more variants.
 
 If the test fails, look for something similar like the following:
 ```

@@ -17,13 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.head_ref }}
+          # github.head_ref is only set for pull_request events; on a schedule
+          # or a manual dispatch it is empty, which would silently test the
+          # default branch instead of the ref the run was started from.
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: ./.github/actions/run-examples
         with:
           python-version: ${{ matrix.python-version }}
           runner-os: ${{ runner.os }}
           repository: ${{ github.repository }}
-          head-ref: ${{ github.head_ref }}
+          head-ref: ${{ github.head_ref || github.ref_name }}
           token: ${{ github.token }}
           update-results: 'false'
           check: '[]'   # Empty list means run against all PDL programs
