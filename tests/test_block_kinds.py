@@ -83,6 +83,7 @@ def dispatcher(annotated: Any) -> Dispatcher:
     """
     union, *metadata = get_args(annotated)
     tag_of = next(m.discriminator for m in metadata if isinstance(m, Discriminator))
+    assert not isinstance(tag_of, str), "blocks are discriminated by a function"
     members: dict[Any, Any] = {}
     for member in get_args(union):
         assert get_origin(member) is Annotated, f"{member} is a member without a tag"
