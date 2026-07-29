@@ -1,0 +1,3 @@
+Out of 1400 participants, 400 passed the test. What percentage is that?
+[{"name": "calc", "arguments": {"expr": "(400 / 1400) * 100"}}]
+28.57142857142857

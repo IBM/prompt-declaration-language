@@ -43,59 +43,11 @@ skip:
   - examples/prompt_library/gsm8k_prob_react.pdl
   - examples/test.pdl
 unstable_result:
-  - examples/aggregators/contribute_in_file.pdl
-  - examples/chatbot/chatbot.pdl
-  - examples/demo/10-sdg.pdl
-  - examples/demo/2-model-chaining.pdl
-  - examples/demo/3-def-use.pdl
-  - examples/demo/4-function.pdl
-  - examples/demo/5-code-eval.pdl
-  - examples/demo/6-code-json.pdl
-  - examples/demo/7-chatbot-roles.pdl
-  - examples/demo/8-tools.pdl
-  - examples/demo/9-react.pdl
   - examples/demos/react.pdl
-  - examples/fibonacci/fib.pdl
-  - examples/independent/independent.pdl
-  - examples/independent/independent_docs.pdl
-  - examples/independent/independent_for.pdl
-  - examples/independent/test.pdl
-  - examples/map-reduce/context_fork.pdl
-  - examples/openai/openai_basic.pdl
+  - examples/demo/9-react.pdl
+  - examples/react/react_demo.pdl
   - examples/ppdl/coin.pdl
   - examples/ppdl/hmm_nl_priors.pdl
-  - examples/ppdl/name_finder.pdl
-  - examples/prompt_library/gsm8k_cot.pdl
-  - examples/prompt_library/gsm8k_react.pdl
-  - examples/prompt_library/gsm8k_rewoo.pdl
-  - examples/react/react_demo.pdl
-  - examples/teacher/teacher.pdl
-  - examples/tools/calc.pdl
-  - examples/tools/search.pdl
-  - examples/tutorial/calling_llm_chaining.pdl
-  - examples/tutorial/calling_llm_with_input.pdl
-  - examples/tutorial/calling_llm_with_input_messages.pdl
-  - examples/tutorial/calling_llm_with_input_messages_var.pdl
-  - examples/tutorial/code_pdl.pdl
-  - examples/tutorial/defs.pdl
-  - examples/tutorial/function_call_in_jinja.pdl
-  - examples/tutorial/function_definition.pdl
-  - examples/tutorial/function_empty_context.pdl
-  - examples/tutorial/lastOf.pdl
-  - examples/tutorial/muting_block_output.pdl
-  - examples/tutorial/parser_regex_code.pdl
-  - examples/tutorial/pdl_usage.pdl
-  - examples/tutorial/programs/chatbot.pdl
-  - examples/tutorial/programs/code/code-eval.pdl
-  - examples/tutorial/programs/code/code-json.pdl
-  - examples/tutorial/programs/code/code.pdl
-  - examples/tutorial/programs/weather.pdl
-  - examples/tutorial/role.pdl
-  - examples/tutorial/structured_decoding.pdl
-  - examples/tutorial/type_checking.pdl
-  - pdl-live-react/src-tauri/tests/cli/model-input-array.pdl
-  - pdl-live-react/src-tauri/tests/cli/model-input-nested.pdl
-  - pdl-live-react/src-tauri/tests/cli/model-input-string.pdl
 
 with_inputs:
   examples/tutorial/programs/chatbot.pdl:
