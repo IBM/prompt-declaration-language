@@ -9,6 +9,9 @@ on:
       - claude/run-examples-action-fix-hc9cjn
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   tests:
     name: Execution tests
