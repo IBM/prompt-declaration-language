@@ -995,8 +995,8 @@ impl<'a> Interpreter<'a> {
         _state: &mut State,
         _input_messages: Vec<ChatMessage>,
     ) -> Result<(String, Option<PdlUsage>), PdlError> {
-        use async_openai::types::ChatCompletionRequestUserMessageArgs;
-        use async_openai::{Client, types::CreateChatCompletionRequestArgs};
+        use async_openai::types::chat::ChatCompletionRequestUserMessageArgs;
+        use async_openai::{Client, types::chat::CreateChatCompletionRequestArgs};
 
         let client = Client::new();
 

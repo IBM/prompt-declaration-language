@@ -122,8 +122,15 @@ The suite has two halves:
   to `false` before opening a PR.**
 
 Expected outputs live at `tests/results/<path/to/file>.<i>.result`. Because model output varies with
-Python version and OS, multiple `<i>` variants may be accepted; when CI reports a mismatch that
+the environment, multiple `<i>` variants may be accepted; when CI reports a mismatch that
 looks reasonable, add a new file with the next `<i>`.
+
+The variation is not random. Generation is greedy (`temperature: 0`, `seed: 0`) and reproducible
+byte for byte on a given runner; it differs between runners because llama.cpp picks its SIMD kernels
+from the CPU feature flags and the rounding differences flip the occasional token. The variants
+therefore track the CPU generations in the runner pool and converge after a few runs. The Ollama
+version and the model cache key are pinned in `.github/actions/ollama/action.yml`; changing either
+invalidates every recorded result.
 
 Adding or moving any `.pdl` file affects two tests: `test_examples_parse.py` globs `**/*.pdl` and
 requires every one of them to parse (exceptions are listed in `EXPECTED_INVALID`), and
