@@ -99,7 +99,9 @@ pytest --capture=tee-sys -rfE -s tests/test_examples_run.py --disable-pytest-war
 
 #### Opening a pull request
 
-A slight variation in the Python version and OS environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
+A slight variation in the environment can cause a different LLM response, thus Run Examples might fail because it uses exact string matching for PDL outputs.
+
+Concretely, the model is run greedily (`temperature: 0`, `seed: 0`) and its output is reproducible byte for byte on a given runner — repeated calls and Ollama restarts all agree. It differs between runners because llama.cpp selects its SIMD kernels from the CPU feature flags, and the resulting rounding differences flip the occasional token, after which the rest of the text diverges. So the accepted variants of a result correspond to the CPU generations in the GitHub runner pool: a handful per example, not an open-ended list. The Ollama version and the model digest are pinned in `.github/actions/ollama/action.yml` for the same reason — changing either invalidates every recorded result, so bump them deliberately and regenerate.
 
 When you open a pull request (PR) against the `main` branch, a series of status checks will be executed. Specifically, three Run Examples test will be initiated against the PDL files you have added and modified as part of the PR. If there's any variation, you should manually examine the results produced in the Github Actions environment, then copy and paste the results to a new file, and push another commit to your PR so the CI can pass. Be aware of whitespaces in between sentences. 
 

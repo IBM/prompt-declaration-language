@@ -29,5 +29,5 @@ jobs:
           repository: ${{ github.repository }}
           head-ref: ${{ github.ref_name }}
           token: ${{ github.token }}
-          update-results: 'true'
+          update-results: 'false'
           check: '[]'
