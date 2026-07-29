@@ -1,0 +1,47 @@
+Here is a simple Python function that computes the Fibonacci sequence up to n terms:
+
+```python
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+```
+
+This function starts with a list containing the first two Fibonacci numbers (0 and 1). It then enters a loop that continues until the length of the `fib_sequence` list is equal to `n`. In each iteration, it appends the sum of the last two elements in the list. Finally, it returns the first `n` terms of the sequence.
+
+Please note that this function will return an error if `n` is less than 1 because there are no Fibonacci numbers for n < 1.
+Find a random number between 1 and 20
+15
+Now computing fibonacci(15)
+
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+The result is: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]
+
+Explain what the above code does and what the result means
+
+The provided Python function `fibonacci(n)` generates a list of Fibonacci numbers up to the nth term. The Fibonacci sequence is a series of numbers where each number (after the first two) is the sum of the two preceding ones, often starting with 0 and 1.
+
+Here's a breakdown of how the code works:
+
+- **Initialization**: The function starts by initializing `fib_sequence` as a list containing the first two Fibonacci numbers: `[0, 1]`.
+
+- **Looping to Generate Sequence**: It then enters a loop that continues until the length of `fib_sequence` is equal to `n`. In each iteration of this loop:
+  - The sum of the last two elements in `fib_sequence` (which are at indices `-1` and `-2`, respectively) is calculated.
+  - This sum is appended to the end of `fib_sequence`.
+
+- **Returning Result**: Once the list has reached the desired length (`n`), the function returns this list, but only up to the nth term.
+
+When you call `fibonacci(15)`, it generates a Fibonacci sequence with 15 terms. The result `[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]` represents the first 15 numbers in this sequence.
+
+- **Interpretation of Result**: Each number in this list is a Fibonacci number. For example:
+  - The second term (index 1) is `1`, which is the sum of the first two terms (`0 + 1`).
+  - The third term (index 2) is also `1`.
+  - The fourth term (index 3) is `2`, and so on.
+- **Significance**: Fibonacci numbers have many applications in mathematics, computer science, and even appear in nature. They are often used to model growth processes, analyze algorithms, and more.
+
+In summary, the function generates a list of the first 15 Fibonacci numbers, which can be useful for various mathematical or computational purposes.
