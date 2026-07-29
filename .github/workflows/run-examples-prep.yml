@@ -1,6 +1,12 @@
 ---
 name: Run examples on modified PDL files
 on: [pull_request]
+
+# cancel any prior runs for this workflow and this PR (or branch)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     name: Execution tests
