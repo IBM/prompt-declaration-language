@@ -1,0 +1,31 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the Java class located at `stagesupport/src/main/java/com/.../OffsetUtil.java`. This method takes a single parameter: `lastSourceOffset`, which is of type `String`.
+
+Here's an explanation of what this method does:
+
+1. The method uses the `@SuppressWarnings("unchecked")` annotation to suppress warnings about unchecked operations.
+
+2. It declares a variable named `offsetMap` of type `Map<String, String>`. This map will store key-value pairs where both keys and values are strings.
+
+3. The method checks if the `lastSourceOffset` parameter is either `null` or an empty string (`""`). If it is, then it initializes the `offsetMap` variable with a new instance of `HashMap<>`, which is an implementation of the `Map<String, String>` interface.
+
+4. If the `lastSourceOffset` parameter is not null and not empty, the method uses the `JSON_MAPPER` object (presumably a JSON parsing utility) to deserialize the string into a generic `Map` instance using the `readValue` method. The deserialized map is then cast back to `Map<String, String>`.
+
+5. Finally, the method returns the `offsetMap`.
+
+In summary, this method takes an input string representing offsets in some format (likely JSON), and it attempts to deserialize that string into a `Map<String, String>`. If the input string is null or empty, it initializes an empty map instead.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.25588025659301494

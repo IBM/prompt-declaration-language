@@ -20,17 +20,27 @@ runs:
     # step) and cache that directory. Keeping everything owned by the runner user
     # avoids the cross-user permission/sandboxing issues that come with the
     # system-wide service.
+    #
+    # The cache key deliberately does NOT hash this file. The expected outputs
+    # in tests/results/ are tied to the exact model weights, so busting the
+    # model cache on every edit to this action would re-pull whatever
+    # `granite4:micro` points at that day and invalidate all of them.
     - name: Cache Ollama models
       uses: actions/cache@v5
       with:
         path: ~/.ollama/models
-        key: ollama-models-${{ runner.os }}-${{ hashFiles('.github/actions/ollama/action.yml') }}
+        key: ollama-models-${{ runner.os }}-granite4-micro-mxbai-embed-large-v1
         restore-keys: |
           ollama-models-${{ runner.os }}-
 
       # Set up Ollama
     - name: Install Ollama
       shell: bash
+      env:
+        # Pinned: a new Ollama release can change the inference kernels, which
+        # changes model output and invalidates every expected result. Bump this
+        # deliberately, expecting to regenerate tests/results/ with it.
+        OLLAMA_VERSION: '0.32.5'
       run: |
         curl -fsSL https://ollama.com/install.sh | sudo -E sh
 
@@ -107,3 +117,16 @@ runs:
         else
           echo "✅ All expected models are available."
         fi
+
+    # Model output is reproducible on a given runner but differs between runner
+    # CPU generations: llama.cpp picks its SIMD kernels from the CPU's feature
+    # flags, and the resulting rounding differences flip the occasional token.
+    # That is why tests/results/ holds several accepted variants per example.
+    # Log the fingerprint so a mismatch can be attributed to the model, the
+    # Ollama build, or the hardware.
+    - name: Log inference fingerprint
+      shell: bash
+      run: |
+        echo "ollama: $(ollama --version)"
+        ollama list
+        lscpu | grep -E "^Model name|^Vendor ID" || true
