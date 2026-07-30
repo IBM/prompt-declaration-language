@@ -1,7 +1,7 @@
 ---
-# TEMPORARY: (a) isolates whether the Python version changes model output on
-# identical hardware, and (b) records missing expected outputs for the full
-# nightly matrix. Delete before merging.
+# TEMPORARY: enumerates the distinct CPU/output classes in the runner pool and
+# records expected outputs for whichever class this run lands on.
+# Delete before merging.
 name: DEBUG matrix
 
 on:
@@ -14,47 +14,36 @@ permissions:
   contents: write
 
 jobs:
-  python-dimension:
-    name: Same machine, three Python versions
+  cpu-classes:
+    name: CPU class survey
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        replica: [1, 2, 3, 4, 5, 6, 7, 8]
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/ollama
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-      - uses: actions/setup-python@v6
+      - uses: ./.github/actions/setup-python-env
         with:
           python-version: '3.14'
-      - name: Run the same example under each interpreter
+          runner-os: ${{ runner.os }}
+      - name: Fingerprint this runner
         shell: bash
         run: |
           f=pdl-live-react/src-tauri/tests/cli/model-input-string.pdl
-          for v in 3.11 3.12 3.14; do
-            python$v -m venv "/tmp/venv$v"
-            "/tmp/venv$v/bin/pip" install -q -e . 2>&1 | tail -2
-            out=$("/tmp/venv$v/bin/pdl" "$f")
-            echo "=== python $v md5=$(printf '%s' "$out" | md5sum | cut -d' ' -f1)"
-            printf '%s\n' "$out" | head -c 200
-            echo
-          done
+          out=$(pdl "$f")
+          cpu=$(lscpu | sed -n 's/^Model name: *//p')
+          echo "CLASS md5=$(printf '%s' "$out" | md5sum | cut -d' ' -f1) cpu=$cpu"
 
   record:
     name: Execution tests
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 1   # serialize: each job pushes recorded results
-      matrix:
-        python-version: ['3.11', '3.12', '3.14']
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/run-examples
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.14'
           runner-os: ${{ runner.os }}
           repository: ${{ github.repository }}
           head-ref: ${{ github.ref_name }}
