@@ -1,7 +1,7 @@
 import datetime
 import json
 import re
-from typing import Any, Iterable, Mapping, Sequence, TypeAlias
+from typing import Any, Iterable, Iterator, Mapping, Sequence, TypeAlias
 
 import yaml
 from pydantic.main import BaseModel, IncEx
@@ -542,7 +542,12 @@ def as_json(value: Any) -> JsonType:
         return value
     if isinstance(value, dict):
         return {str(k): as_json(v) for k, v in value.items()}
-    if isinstance(value, Iterable):
+    # Iterators (generators, `itertools` counters, file handles, ...) are
+    # excluded: they are consumed by iterating over them, so expanding one here
+    # would mutate the state of the running program, and it would never
+    # terminate for an infinite iterator such as `itertools.count()`. They are
+    # rendered as a string by the last case.
+    if isinstance(value, Iterable) and not isinstance(value, Iterator):
         return [as_json(v) for v in value]
     if isinstance(value, Block):
         return as_json(block_to_dict(value, json_compatible=True))  # pyright: ignore
