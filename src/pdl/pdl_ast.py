@@ -10,6 +10,7 @@ from typing import (
     Generic,
     Literal,
     Optional,
+    Type,
     TypeAlias,
     TypeVar,
     Union,
@@ -150,6 +151,19 @@ ExpressionInt = TypeAliasType("ExpressionInt", ExpressionType[int])
 
 OptionalExpressionInt = TypeAliasType("OptionalExpressionInt", ExpressionInt | None)
 """Optional expression evaluating into an int."""
+
+ExpressionFloat = TypeAliasType("ExpressionFloat", ExpressionType[float])
+"""Expression evaluating into an float."""
+
+OptionalExpressionFloat = TypeAliasType(
+    "OptionalExpressionFloat", ExpressionFloat | None
+)
+"""Optional expression evaluating into an float."""
+
+ExpressionFloatOrFloatFloat = TypeAliasType(
+    "ExpressionFloatOrFloatFloat", ExpressionType[float | tuple[float, float]]
+)
+"""Expression evaluating into a pair of floats."""
 
 ExpressionBool = TypeAliasType("ExpressionBool", ExpressionType[bool])
 """Expression evaluating into a bool."""
@@ -367,6 +381,41 @@ ContributeElement = TypeAliasType(
 """Type of the contribute field."""
 
 
+class RetryConfiguration(BaseModel):
+    """Configuration of the `retry` field."""
+
+    model_config = ConfigDict(extra="forbid", use_attribute_docstrings=True)
+
+    tries: ExpressionInt = -1
+    """The maximum number of retries, in addition to the initial execution of the
+    block. default: -1 (infinite).
+    """
+
+    exceptions: ExpressionType[str | Type[Exception] | list[str | Type[Exception]]] = (
+        "Exception"
+    )
+    """An exception or a list of exceptions to catch.
+    Exceptions can be given either as Python exception classes or as their names.
+    Any other exception is raised without retrying the block.
+    """
+
+    delay: ExpressionFloat = 0.0
+    """Number of seconds to wait before the first retry.
+    """
+
+    max_delay: OptionalExpressionFloat = None
+    """The maximum value of delay, applied before the jitter is added. default: None (no limit).
+    """
+
+    backoff: ExpressionFloat = 1.0
+    """Multiplier applied to delay between attempts.
+    """
+
+    jitter: ExpressionFloatOrFloatFloat = 0.0
+    """Extra seconds added to delay between attempts, fixed if a number, random if a range tuple (min, max).
+    """
+
+
 class ExpectationType(BaseModel):
     """Single expectation definition."""
 
@@ -460,7 +509,7 @@ class Block(BaseModel):
     fallback: OptionalBlockType = None
     """Block to execute in case of error.
     """
-    retry: OptionalInt = None
+    retry: OptionalInt | RetryConfiguration = None
     """The maximum number of times to retry when an error occurs within a block.
     """
     trace_error_on_retry: OptionalBoolOrStr = None
@@ -472,7 +521,6 @@ class Block(BaseModel):
     )
     """Specify any expectations that the result of the block must satisfy.
     """
-
     role: RoleType = None
     """Role associated to the block and sub-blocks.
     Typical roles are `system`, `user`, and `assistant`,
@@ -1587,18 +1635,23 @@ class PDLException(Exception):
 
 
 class PDLRuntimeError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         loc: PdlLocationType | None = None,
         trace: BlockType | None = None,
         fallback: OptionalAny = None,
+        source_exception: BaseException | None = None,
     ):
         super().__init__(message)
         self.loc = loc
         self.pdl__trace = trace
         self.fallback = fallback
         self.message = message
+        if source_exception is not None:
+            if hasattr(source_exception, "source_exception"):
+                source_exception = source_exception.source_exception  # pyright: ignore
+        self.source_exception = source_exception
 
 
 class PDLRuntimeExpressionError(PDLRuntimeError):
@@ -1610,18 +1663,23 @@ class PDLRuntimeParserError(PDLRuntimeError):
 
 
 class PDLRuntimeProcessBlocksError(PDLException):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         message: str,
         blocks: list[BlockType],
         loc: PdlLocationType | None = None,
         fallback: OptionalAny = None,
+        source_exception: BaseException | None = None,
     ):
         super().__init__(message)
         self.loc = loc
         self.blocks = blocks
         self.fallback = fallback
         self.message = message
+        if source_exception is not None:
+            if hasattr(source_exception, "source_exception"):
+                source_exception = source_exception.source_exception  # pyright: ignore
+        self.source_exception = source_exception
 
 
 # Default model parameter constants

@@ -122,9 +122,16 @@ export type ParserType =
   | RegexParser
 export type Regex = string
 export type Mode = "search" | "match" | "fullmatch" | "split" | "findall"
-export type Feedback = LocalizedExpression | FunctionBlock | string | null
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry = OptionalInt | RetryConfiguration
+export type OptionalInt = number | null
 export type Path = string[]
 export type File = string
+export type ExpressionFloat = LocalizedExpression | number | string
+export type Feedback = LocalizedExpression | FunctionBlock | string | null
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -146,6 +153,11 @@ export type Call = LocalizedExpression | FunctionBlock | string
  */
 export type Contribute1 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry1 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -157,6 +169,11 @@ export type Kind1 = "model"
  *
  */
 export type Contribute2 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry2 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -170,6 +187,11 @@ export type Kind2 = "model"
  */
 export type Contribute3 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry3 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -181,6 +203,11 @@ export type Kind3 = "model"
  *
  */
 export type Contribute4 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry4 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -194,6 +221,11 @@ export type Kind4 = "code"
  */
 export type Contribute5 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry5 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -205,6 +237,11 @@ export type Kind5 = "code"
  *
  */
 export type Contribute6 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry6 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -218,6 +255,11 @@ export type Kind6 = "code"
  */
 export type Contribute7 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry7 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -230,6 +272,11 @@ export type Kind7 = "code"
  */
 export type Contribute8 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry8 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -241,6 +288,11 @@ export type Kind8 = "code"
  *
  */
 export type Contribute9 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry9 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -261,6 +313,11 @@ export type Args1 = ExpressionStr[]
  */
 export type Contribute10 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry10 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -276,6 +333,11 @@ export type Get = string
  *
  */
 export type Contribute11 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry11 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -293,6 +355,11 @@ export type Raw = boolean
  */
 export type Contribute12 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry12 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -304,6 +371,11 @@ export type Kind12 = "message"
  *
  */
 export type Contribute13 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry13 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -321,6 +393,11 @@ export type Multiline = boolean
  *
  */
 export type Contribute14 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry14 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -343,6 +420,11 @@ export type Resample = boolean
  *
  */
 export type Contribute15 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry15 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -389,6 +471,11 @@ export type Flush = LocalizedExpression | boolean | string
  */
 export type Contribute16 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry16 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -406,6 +493,11 @@ export type Msg = string
  */
 export type Contribute17 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry17 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -417,6 +509,11 @@ export type Kind17 = "empty"
  *
  */
 export type Contribute18 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry18 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -471,6 +568,11 @@ export type Reduce = LocalizedExpression | string
  */
 export type Contribute19 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry19 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -495,6 +597,11 @@ export type Text = BlockType | BlockType[]
  */
 export type Contribute20 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry20 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -518,6 +625,11 @@ export type Lastof = BlockType[]
  */
 export type Contribute21 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry21 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -540,6 +652,11 @@ export type Array = BlockType[]
  *
  */
 export type Contribute22 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry22 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -568,6 +685,11 @@ export type Object1 =
  */
 export type Contribute23 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry23 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -586,6 +708,11 @@ export type Kind23 = "if"
  *
  */
 export type Contribute24 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry24 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -624,6 +751,11 @@ export type With1 = MatchCase[]
  */
 export type Contribute25 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry25 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -649,6 +781,11 @@ export type For = {
  *
  */
 export type Contribute26 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry26 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -676,6 +813,11 @@ export type For1 = {
  */
 export type Contribute27 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry27 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -699,6 +841,11 @@ export type Include = string
  *
  */
 export type Contribute28 = ContributeElement[]
+/**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry28 = OptionalInt | RetryConfiguration
 /**
  * Specify any expectations that the result of the block must satisfy.
  *
@@ -862,6 +1009,11 @@ export type MaxRetries = number | string | null
  */
 export type Contribute29 = ContributeElement[]
 /**
+ * The maximum number of times to retry when an error occurs within a block.
+ *
+ */
+export type Retry29 = OptionalInt | RetryConfiguration
+/**
  * Specify any expectations that the result of the block must satisfy.
  *
  */
@@ -973,11 +1125,7 @@ export interface FunctionBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry29
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1135,11 +1283,7 @@ export interface CallBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1251,11 +1395,35 @@ export interface RegexParser {
   mode?: Mode
 }
 /**
- * Single expectation definition.
+ * Configuration of the `retry` field.
  */
-export interface ExpectationType {
-  expect: unknown
-  feedback?: Feedback
+export interface RetryConfiguration {
+  /**
+   * The maximum number of retries, in addition to the initial execution of the
+   * block. default: -1 (infinite).
+   */
+  tries?: LocalizedExpression | number | string
+  exceptions?: unknown
+  /**
+   * Number of seconds to wait before the first retry.
+   *
+   */
+  delay?: LocalizedExpression | number | string
+  /**
+   * The maximum value of delay, applied before the jitter is added. default: None (no limit).
+   *
+   */
+  max_delay?: ExpressionFloat | null
+  /**
+   * Multiplier applied to delay between attempts.
+   *
+   */
+  backoff?: LocalizedExpression | number | string
+  /**
+   * Extra seconds added to delay between attempts, fixed if a number, random if a range tuple (min, max).
+   *
+   */
+  jitter?: LocalizedExpression | number | [unknown, unknown] | string
 }
 export interface LocalizedExpression {
   pdl__expr: PdlExpr
@@ -1275,6 +1443,13 @@ export interface PdlLocationType {
 }
 export interface Table {
   [k: string]: number
+}
+/**
+ * Single expectation definition.
+ */
+export interface ExpectationType {
+  expect: unknown
+  feedback?: Feedback
 }
 /**
  * Internal data structure to record timing information in the trace.
@@ -1346,11 +1521,7 @@ export interface LitellmModelBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry1
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1500,11 +1671,7 @@ export interface GraniteioModelBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry2
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1655,11 +1822,7 @@ export interface OpenaiModelBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry3
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1818,11 +1981,7 @@ export interface PythonCodeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry4
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -1963,11 +2122,7 @@ export interface IPythonCodeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry5
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2109,11 +2264,7 @@ export interface JinjaCodeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry6
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2263,11 +2414,7 @@ export interface PdlCodeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry7
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2407,11 +2554,7 @@ export interface CommandCodeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry8
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2552,11 +2695,7 @@ export interface ArgsBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry9
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2651,11 +2790,7 @@ export interface GetBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry10
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2768,11 +2903,7 @@ export interface DataBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry11
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -2865,11 +2996,7 @@ export interface MessageBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry12
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3019,11 +3146,7 @@ export interface ReadBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry13
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3125,11 +3248,7 @@ export interface FactorBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry14
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3223,11 +3342,7 @@ export interface AggregatorBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry15
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3328,11 +3443,7 @@ export interface ErrorBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry16
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3460,11 +3571,7 @@ export interface EmptyBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry17
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3555,11 +3662,7 @@ export interface SequenceBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry18
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3689,11 +3792,7 @@ export interface TextBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry19
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3786,11 +3885,7 @@ export interface LastOfBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry20
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3883,11 +3978,7 @@ export interface ArrayBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry21
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -3980,11 +4071,7 @@ export interface ObjectBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry22
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4087,11 +4174,7 @@ export interface IfBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry23
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4246,11 +4329,7 @@ export interface MatchBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry24
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4409,11 +4488,7 @@ export interface RepeatBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry25
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4589,11 +4664,7 @@ export interface MapBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry26
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4743,11 +4814,7 @@ export interface IncludeBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry27
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *
@@ -4841,11 +4908,7 @@ export interface ImportBlock {
    *
    */
   fallback?: BlockType | null
-  /**
-   * The maximum number of times to retry when an error occurs within a block.
-   *
-   */
-  retry?: number | null
+  retry?: Retry28
   /**
    * Whether to add the errors while retrying to the trace. Set this to true to use retry feature for multiple LLM trials.
    *

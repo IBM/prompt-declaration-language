@@ -49,7 +49,10 @@ class OpenaiModel:
     @staticmethod
     def _get_client(config: dict[str, Any]):
         """Create and return an OpenAI client with the given configuration."""
-        from openai import OpenAI
+        # `openai` is an optional dependency, so it is not always resolvable by
+        # the linters. `import-error` is disabled globally in `pylintrc` for the
+        # same reason.
+        from openai import OpenAI  # pylint: disable=no-name-in-module
 
         return OpenAI(**config)
 
