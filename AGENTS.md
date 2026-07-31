@@ -127,7 +127,10 @@ looks reasonable, add a new file with the next `<i>`.
 
 The variation is not random. Generation is greedy (`temperature: 0`, `seed: 0`) and reproducible
 byte for byte on a given runner; it differs between runners because llama.cpp picks its SIMD kernels
-from the CPU feature flags and the rounding differences flip the occasional token. The variants
+from the CPU feature flags and the rounding differences flip the occasional token. The Python
+version has no effect at all — 3.11, 3.12 and 3.14 produce byte-identical output on one machine —
+so the three matrix jobs are three independent draws from the same CPU-class distribution, and a
+nightly is roughly three times as likely to hit an unrecorded class as a single run. The variants
 therefore track the CPU generations in the runner pool and converge after a few runs. The Ollama
 version and the model cache key are pinned in `.github/actions/ollama/action.yml`; changing either
 invalidates every recorded result.
