@@ -1,11 +1,19 @@
+import itertools
 import pathlib
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 
+from pdl.pdl import exec_str
 from pdl.pdl_ast import BlockType, IncludeBlock
 from pdl.pdl_ast_utils import iter_block_children
-from pdl.pdl_dumper import dump_program_exclude_internals, dump_yaml, program_to_dict
+from pdl.pdl_dumper import (
+    as_json,
+    dump_program_exclude_internals,
+    dump_yaml,
+    program_to_dict,
+)
 from pdl.pdl_parser import PDLParseError, parse_file, parse_str
+from pdl.pdl_utils import write_trace
 
 
 def has_include(block: BlockType) -> bool:
@@ -86,3 +94,50 @@ def test_dump_exclude_internals() -> None:
         # Consume the iterator so any exception raised in a worker propagates.
         for _ in executor.map(check, pathlib.Path(".").glob("**/*.pdl")):
             pass
+
+
+def test_as_json_does_not_expand_iterators() -> None:
+    """
+    An iterator is consumed by iterating over it, and may be infinite. `as_json`
+    must therefore render it as a string instead of expanding it into a list.
+    """
+
+    counter = itertools.count(1)
+    assert isinstance(as_json(counter), str)
+    # The counter has not been consumed
+    assert next(counter) == 1
+
+    generator = (i for i in range(3))
+    assert isinstance(as_json(generator), str)
+    assert list(generator) == [0, 1, 2]
+
+    # Concrete collections are still expanded
+    assert as_json([1, 2]) == [1, 2]
+    assert as_json((1, 2)) == [1, 2]
+    assert as_json({"a": 1}) == {"a": 1}
+
+
+ITERATOR_IN_SCOPE_PROGRAM = """
+defs:
+  counter:
+    lang: python
+    code: |
+      import itertools
+      result = itertools.count(1)
+text:
+- lang: python
+  code: result = str(next(counter))
+"""
+
+
+def test_write_trace_with_iterator_in_scope(tmp_path: pathlib.Path) -> None:
+    """
+    A program may store an iterator in a variable. Writing the trace used to
+    expand it, which never terminates for an infinite iterator.
+    """
+
+    output = exec_str(ITERATOR_IN_SCOPE_PROGRAM, output="all")
+    assert output["result"] == "1"
+    trace_file = tmp_path / "trace.json"
+    write_trace(trace_file, output["trace"])
+    assert trace_file.read_text(encoding="utf-8") != ""
