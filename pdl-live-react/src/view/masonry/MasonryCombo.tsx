@@ -214,6 +214,7 @@ export default function MasonryCombo({ value, setValue }: Props) {
           perPage={perPage}
           setPage={setPage}
           setPerPage={setPerPage}
+          setValue={setValue}
         />
       </PageSection>
       <PageSection
