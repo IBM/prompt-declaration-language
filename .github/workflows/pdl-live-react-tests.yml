@@ -24,9 +24,29 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+      - name: Refresh apt indexes
+        # The runner image preconfigures third-party apt repositories (Google
+        # Chrome, Microsoft) that intermittently serve indexes failing with
+        # "Hash Sum mismatch", which aborts `apt update` and therefore also
+        # `playwright install --with-deps`. None of them are needed here
+        # (Playwright downloads its own browsers), so drop them and start from
+        # a clean list cache.
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          sudo rm -rf /var/lib/apt/lists/*
+          for i in 1 2 3; do
+            if sudo apt-get update; then
+              exit 0
+            fi
+            echo "apt-get update failed (attempt $i), retrying..."
+            sudo rm -rf /var/lib/apt/lists/*
+            sleep $((i * 5))
+          done
+          exit 1
       - name: Install dependencies
         run: |
-          npm ci & sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core
+          npm ci & sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev patchelf at-spi2-core
           wait
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
