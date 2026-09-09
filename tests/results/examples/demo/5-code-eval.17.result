@@ -1,0 +1,38 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the Java class located at `stagesupport/src/main/java/com/.../OffsetUtil.java`. This method takes a single parameter: `lastSourceOffset`, which is of type `String`.
+
+Here's an explanation of what this method does:
+
+1. The method uses the `@SuppressWarnings("unchecked")` annotation to suppress unchecked warnings, indicating that it is aware of potential issues with casting.
+
+2. It declares a variable named `offsetMap` of type `Map<String, String>`, which will hold the deserialized data from the input string.
+
+3. The method checks if the `lastSourceOffset` parameter is either `null` or an empty string using the following condition:
+   ```java
+   if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {
+   ```
+   - If this condition is true, it means that there are no offsets to deserialize.
+   - In such a case, the method initializes `offsetMap` as an empty `HashMap<String, String>`.
+
+4. If the `lastSourceOffset` parameter is not `null` or an empty string, the method proceeds to deserialize the input string into a generic `Map` object using the `JSON_MAPPER.readValue(lastSourceOffset, Map.class)` statement.
+   - The `JSON_MAPPER` variable presumably refers to a JSON parsing library instance (e.g., Jackson's ObjectMapper).
+   - This line of code deserializes the JSON-formatted data from the input string into a generic `Map`.
+
+5. Finally, the method returns the `offsetMap`, which contains the deserialized offsets.
+
+In summary, this method takes an optional input parameter (`lastSourceOffset`) and attempts to deserialize it into a map with string keys and values. If no offset is provided or if the provided offset is empty, it initializes an empty map instead.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.2316448491747296
