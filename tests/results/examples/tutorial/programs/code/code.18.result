@@ -1,0 +1,29 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the Java class located at `stagesupport/src/main/java/com/.../OffsetUtil.java`. This method takes a single parameter: `lastSourceOffset`, which is of type `String`.
+
+Here's an explanation of what this method does:
+
+1. The method uses the `@SuppressWarnings("unchecked")` annotation to suppress warnings related to unchecked or unsafe operations. This means that it's aware of potential issues with casting, but these are being intentionally ignored for some reason.
+
+2. It declares a variable named `offsetMap`, which is of type `Map<String, String>`. This map will store the deserialized data from the input string.
+
+3. The method checks if the `lastSourceOffset` parameter is either `null` or an empty string using the conditions `lastSourceOffset == null || lastSourceOffset.isEmpty()`.
+
+4. If `lastSourceOffset` is `null` or an empty string, it initializes a new `HashMap<String, String>` and assigns it to the `offsetMap` variable.
+
+5. If `lastSourceOffset` is not `null` and not an empty string, the method uses the `JSON_MAPPER.readValue(lastSourceOffset, Map.class)` statement to deserialize the input string into a generic `Map`. The `JSON_MAPPER` object is likely a JSON parsing utility that converts JSON strings into Java objects. In this case, it's being used to convert the JSON string representation of a map into an actual `Map<String, String>`.
+
+6. Finally, the method returns the deserialized `offsetMap`.
+
+In summary, this method takes a string input representing a serialized map and attempts to deserialize it into a `Map<String, String>`. If the input is null or empty, it initializes an empty map instead.

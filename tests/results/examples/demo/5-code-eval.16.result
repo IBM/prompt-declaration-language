@@ -1,0 +1,31 @@
+
+@SuppressWarnings("unchecked")
+public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws IOException {
+  Map<String, String> offsetMap;
+  if (lastSourceOffset == null || lastSourceOffset.isEmpty()) {    
+    offsetMap = new HashMap<>();  
+  } else {
+    offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);  
+  }
+  return offsetMap;
+}
+
+The provided code is a static method named `deserializeOffsetMap` in the Java class located at `stagesupport/src/main/java/com/.../OffsetUtil.java`. This method's purpose is to deserialize a string representation of offsets into a map.
+
+Here's an explanation of the code:
+
+1. The method takes one parameter, `lastSourceOffset`, which is a string that represents the serialized offset data.
+2. It uses the `JSON_MAPPER` object for deserialization, which is likely a pre-configured instance of Jackson JSON Processor or similar library to handle JSON serialization and deserialization in Java.
+3. A static variable `offsetMap` of type `Map<String, String>` is declared but not initialized yet.
+4. The method checks if the `lastSourceOffset` parameter is either null or an empty string using the condition `if (lastSourceOffset == null || lastSourceOffset.isEmpty())`.
+   - If this condition is true, it initializes `offsetMap` as a new instance of `HashMap<String, String>`, which is an implementation of the `Map` interface in Java.
+5. If the `lastSourceOffset` parameter is not null or empty, the method deserializes the JSON string into a generic `Map` using the `JSON_MAPPER.readValue(lastSourceOffset, Map.class)` statement and assigns it to the `offsetMap`.
+6. Finally, the method returns the `offsetMap`.
+
+The `@SuppressWarnings("unchecked")` annotation is used to suppress unchecked warnings that may occur due to the use of raw types (`Map.class`) in the deserialization process.
+
+In summary, this code provides a way to deserialize offset data from a JSON string into a map. If no offsets are provided or if an empty string is given, it initializes an empty `HashMap<String, String>`.
+
+EVALUATION:
+The similarity (Levenshtein) between this answer and the ground truth is:
+0.23494687131050762

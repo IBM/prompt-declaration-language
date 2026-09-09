@@ -1,0 +1,50 @@
+Here is a simple Python function that computes the Fibonacci sequence up to n terms:
+
+```python
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+```
+
+This function starts with a list containing the first two Fibonacci numbers (0 and 1). It then enters a loop that continues until the length of the `fib_sequence` list is equal to `n`. In each iteration, it appends the sum of the last two elements in the list. Finally, it returns the first `n` terms of the sequence.
+
+Please note that this function will return an error if `n` is less than 1 because there are no Fibonacci numbers for n < 1.
+Find a random number between 1 and 20
+15
+Now computing fibonacci(15)
+
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    while len(fib_sequence) < n:
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence[:n]
+The result is: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]
+
+Explain what the above code does and what the result means
+
+The provided Python function `fibonacci(n)` computes the Fibonacci sequence up to `n` terms. The Fibonacci sequence is a series of numbers where each number (after the first two) is the sum of the two preceding ones, usually starting with 0 and 1.
+
+Here's a breakdown of how the code works:
+
+- It initializes a list `fib_sequence` with the first two Fibonacci numbers: `[0, 1]`.
+- The function then enters a loop that continues until the length of `fib_sequence` is equal to `n`. This ensures that we generate exactly `n` terms of the sequence.
+- In each iteration of the loop, it appends the sum of the last two elements in the list (`fib_sequence[-1] + fib_sequence[-2]`) to the end of the list. This is how new Fibonacci numbers are generated.
+- Finally, the function returns the first `n` terms of the sequence by slicing the list from the start up to index `n`.
+
+When you call `fibonacci(15)`, it computes and returns the first 15 terms of the Fibonacci sequence:
+
+```python
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377]
+```
+
+Each number in this list is a term in the Fibonacci sequence. The first two terms are always 0 and 1. Each subsequent term is the sum of the two preceding ones:
+
+- Term 3: `1` (0 + 1)
+- Term 4: `2` (1 + 1)
+- Term 5: `3` (1 + 2)
+- Term 6: `5` (2 + 3)
+- And so on...
+
+The result is a list of the first 15 numbers in this sequence, which starts with 0 and 1 and grows as each new term is the sum of the two previous terms.
