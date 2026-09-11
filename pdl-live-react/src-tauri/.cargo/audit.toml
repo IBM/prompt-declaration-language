@@ -1,0 +1,41 @@
+# Configuration for `cargo audit` (https://github.com/rustsec/rustsec).
+#
+# Run it from this directory:
+#
+#     cargo audit
+#
+# Every entry in `ignore` below must carry a justification and, where it
+# applies, the condition under which it can be removed again.
+
+[advisories]
+ignore = [
+    # RUSTSEC-2024-0429 / GHSA-wrw7-89jp-8q8g
+    # "Unsoundness in `Iterator` and `DoubleEndedIterator` impls for
+    # `glib::VariantStrIter`" (informational: unsound, not a vulnerability).
+    #
+    # Why it is not fixable by an upgrade:
+    #   The advisory is only patched in glib >= 0.20 (the fix also landed on
+    #   the 0.19 branch), but we cannot reach either version. glib is a
+    #   transitive, Linux-only dependency of the Tauri desktop app:
+    #
+    #       tauri -> wry/tao -> gtk 0.18 -> glib ^0.18
+    #
+    #   gtk3-rs 0.18 requires `glib ^0.18`, and 0.18.5 is the last 0.18
+    #   release, so no semver-compatible fixed version exists. The `gtk`
+    #   crate only moved off glib 0.18 in 0.19.0, and no released version of
+    #   `wry` or `tao` depends on `gtk` 0.19 yet, so every Tauri 2 app on
+    #   Linux currently resolves to glib 0.18.x.
+    #
+    # Why the impact here is nil:
+    #   The unsound code is `VariantStrIter::impl_get`, reachable only
+    #   through the public `glib::Variant::array_iter_str()` API. Neither
+    #   this crate nor any crate in the GTK/Tauri dependency tree (gio, gtk,
+    #   gdk, gdkx11, atk, pango, soup3, javascriptcore-rs, webkit2gtk,
+    #   libappindicator, tao, wry, tauri, muda, tray-icon) calls
+    #   `array_iter_str` or constructs a `VariantStrIter`, so the affected
+    #   functions are never instantiated in our builds.
+    #
+    # Remove this entry once `wry`/`tao` move to `gtk` >= 0.19 (glib >= 0.22)
+    # and a `cargo update` pulls glib >= 0.20 into Cargo.lock.
+    "RUSTSEC-2024-0429",
+]
