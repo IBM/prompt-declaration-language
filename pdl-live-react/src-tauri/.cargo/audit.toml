@@ -4,6 +4,9 @@
 #
 #     cargo audit
 #
+# CI runs the same command from this directory, see
+# .github/workflows/cargo-audit.yml.
+#
 # Every entry in `ignore` below must carry a justification and, where it
 # applies, the condition under which it can be removed again.
 
