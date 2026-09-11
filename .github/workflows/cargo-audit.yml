@@ -1,0 +1,64 @@
+name: Rust Dependency Audit
+
+# Checks the Tauri app's Cargo.lock against the RustSec advisory database.
+#
+# `cargo audit` fails the job on *vulnerabilities* only. Informational
+# advisories (unmaintained, unsound, yanked) are reported but do not fail the
+# build, since many of them have no fixed version to upgrade to. Advisories we
+# have deliberately accepted are listed, with justification, in
+# pdl-live-react/src-tauri/.cargo/audit.toml.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pdl-live-react/src-tauri/Cargo.toml'
+      - 'pdl-live-react/src-tauri/Cargo.lock'
+      - 'pdl-live-react/src-tauri/.cargo/audit.toml'
+      - '.github/workflows/cargo-audit.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'pdl-live-react/src-tauri/Cargo.toml'
+      - 'pdl-live-react/src-tauri/Cargo.lock'
+      - 'pdl-live-react/src-tauri/.cargo/audit.toml'
+      - '.github/workflows/cargo-audit.yml'
+  # Advisories are published without us touching the lockfile, so also check on
+  # a schedule rather than only when the dependencies change.
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+# cancel any prior runs for this workflow and this PR (or branch)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  cargo-audit:
+    name: Audit Rust dependencies
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # so that `cargo audit` picks up both Cargo.lock and .cargo/audit.toml
+        working-directory: ./pdl-live-react/src-tauri
+    steps:
+      - uses: actions/checkout@v6
+      # Building cargo-audit from source takes a few minutes, so cache the
+      # binary. The key rotates monthly so that we still pick up new releases of
+      # the tool itself; the advisory database is fetched fresh on every run.
+      - name: Compute cache key
+        id: cache-key
+        run: echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+      - name: Cache cargo-audit
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cargo-audit
+          key: cargo-audit-${{ runner.os }}-${{ steps.cache-key.outputs.month }}
+      - name: Install cargo-audit
+        run: which cargo-audit || cargo install cargo-audit --locked
+      - name: Audit
+        run: cargo audit
