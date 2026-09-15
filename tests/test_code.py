@@ -1,3 +1,6 @@
+import io
+from contextlib import redirect_stdout
+
 from pdl.pdl import exec_dict, exec_str
 from pdl.pdl_context import SerializeMode
 
@@ -48,6 +51,106 @@ def test_contribute_context():
             "pdl__defsite": "text.0.text.code",
         }
     ]
+
+
+def test_contribute_selective_context():
+    result = exec_str(
+        """
+text:
+- def: STEP
+  text: "FULL-RESULT-BODY"
+  contribute:
+    - result
+    - context:
+        value: "TINY-SUMMARY"
+- "end"
+""",
+        output="all",
+    )
+
+    assert result["result"] == "FULL-RESULT-BODYend"
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": "TINY-SUMMARY",
+            "pdl__defsite": "text.0.text",
+        },
+        {"role": "user", "content": "end", "pdl__defsite": "text.1.data"},
+    ]
+    contribution = result["trace"].text[0].contribute[1]["context"]
+    assert contribution.value.pdl__result == "TINY-SUMMARY"
+
+
+def test_contribute_selective_result():
+    result = exec_str(
+        """
+text: "FULL-RESULT-BODY"
+contribute:
+  - result:
+      value: "TINY-SUMMARY"
+""",
+        output="all",
+    )
+
+    assert result["result"] == "TINY-SUMMARY"
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == []
+    contribution = result["trace"].contribute[0]["result"]
+    assert contribution.value.pdl__result == "TINY-SUMMARY"
+
+
+def test_contribute_selective_values_are_streamed():
+    selective_result = """
+text: "FULL-RESULT-BODY"
+contribute:
+  - result:
+      value: "TINY-RESULT"
+"""
+    with io.StringIO() as stdout, redirect_stdout(stdout):
+        exec_str(selective_result, config={"yield_result": True})
+        result_output = stdout.getvalue()
+    assert result_output == "TINY-RESULT"
+
+    selective_context = """
+text: "FULL-RESULT-BODY"
+contribute:
+  - context:
+      value: "TINY-CONTEXT"
+"""
+    with io.StringIO() as stdout, redirect_stdout(stdout):
+        exec_str(selective_context, config={"yield_background": True})
+        context_output = stdout.getvalue()
+    assert "TINY-CONTEXT" in context_output
+    assert "FULL-RESULT-BODY" not in context_output
+
+
+def test_contribute_selective_value_to_named_aggregator(tmp_path):
+    log_file = tmp_path / "log.txt"
+    result = exec_str(
+        f"""
+defs:
+  log:
+    aggregator:
+      file: "{log_file.as_posix()}"
+text: "FULL-RESULT-BODY"
+contribute:
+  - result
+  - log:
+      value: "TINY-SUMMARY"
+  - context:
+      value: "TINY-CONTEXT"
+""",
+        output="all",
+    )
+
+    assert result["result"] == "FULL-RESULT-BODY"
+    assert result["scope"]["pdl_context"].serialize(SerializeMode.LITELLM) == [
+        {
+            "role": "user",
+            "content": "TINY-CONTEXT",
+            "pdl__defsite": "text",
+        }
+    ]
+    assert log_file.read_text(encoding="utf-8") == "TINY-SUMMARY\n"
 
 
 def test_contribute_false():
