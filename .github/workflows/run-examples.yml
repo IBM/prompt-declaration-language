@@ -6,6 +6,9 @@ on:
     - cron:  '0 1 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   tests:
     name: Execution tests
@@ -15,18 +18,17 @@ jobs:
       matrix:
         python-version: ['3.11', '3.12', '3.14']
     steps:
+      # This workflow only runs on schedule/workflow_dispatch, i.e. in the
+      # default-branch context that can write to the Actions cache. Only ever
+      # check out the ref the run was started from (never github.head_ref, which
+      # would be attacker-controlled PR code) to avoid cache poisoning.
       - uses: actions/checkout@v6
-        with:
-          # github.head_ref is only set for pull_request events; on a schedule
-          # or a manual dispatch it is empty, which would silently test the
-          # default branch instead of the ref the run was started from.
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: ./.github/actions/run-examples
         with:
           python-version: ${{ matrix.python-version }}
           runner-os: ${{ runner.os }}
           repository: ${{ github.repository }}
-          head-ref: ${{ github.head_ref || github.ref_name }}
+          head-ref: ${{ github.ref_name }}
           token: ${{ github.token }}
           update-results: 'false'
           check: '[]'   # Empty list means run against all PDL programs
