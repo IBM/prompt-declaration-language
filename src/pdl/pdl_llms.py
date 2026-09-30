@@ -2,7 +2,7 @@
 from asyncio import run_coroutine_threadsafe
 from os import environ
 from sys import stderr
-from typing import Any, Generator, TypeVar
+from typing import Any, Generator, TypeVar, cast
 
 import httpx
 from dotenv import load_dotenv
@@ -152,14 +152,17 @@ class LitellmModel:
         spec = block.spec
         if block.structuredDecoding:
             parameters = set_structured_decoding_parameters(spec, parameters)
-        from litellm import completion
+        from litellm import CustomStreamWrapper, completion
 
-        response = completion(
-            model=model_id,
-            messages=list(messages),
-            stream=True,
-            stream_options={"include_usage": True},
-            **parameters,
+        response = cast(
+            CustomStreamWrapper,
+            completion(
+                model=model_id,
+                messages=list(messages),
+                stream=True,
+                stream_options={"include_usage": True},
+                **parameters,
+            ),
         )
         result = []
         for chunk in response:
