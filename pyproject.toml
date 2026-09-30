@@ -52,7 +52,7 @@ examples = [
   "datasets>3,<6",
   "sympy~=1.0",
   "scikit-learn>=1.6.1,<1.10.0",
-  "faiss-cpu>=1.14,<1.15",
+  "faiss-cpu>=1.14,<1.16",
   "funcy>=2",
   "evalplus>=0.3.1",
 ]
