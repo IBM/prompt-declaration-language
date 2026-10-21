@@ -312,7 +312,7 @@ PdlTypeType = TypeAliasType(
 """Types."""
 
 # TypeAdapter for validating and parsing PDL type specifications
-pdl_type_adapter = TypeAdapter(PdlTypeType)
+pdl_type_adapter = TypeAdapter(PdlTypeType)  # pyright: ignore[reportArgumentType]
 
 
 class Parser(BaseModel):
