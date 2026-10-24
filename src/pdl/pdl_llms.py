@@ -154,6 +154,7 @@ class LitellmModel:
             parameters = set_structured_decoding_parameters(spec, parameters)
         from litellm import CustomStreamWrapper, completion
 
+        # With stream=True, the synchronous completion() returns a stream wrapper.
         response = cast(
             CustomStreamWrapper,
             completion(
