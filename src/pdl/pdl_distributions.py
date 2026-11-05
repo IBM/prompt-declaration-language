@@ -28,14 +28,22 @@ class Categorical(Generic[T]):
         """
         Create an equivalent distribution without duplicated values.
         """
-        res: dict[T, tuple[float, list]] = {}
+        values: list[T] = []
+        probs: list[float] = []
+        metadata: list[list[Any]] = []
         for v, w, m in zip(self.values, self.probs, self.metadata):
-            if v in res:
-                w_v, m_v = res[v]
-                res[v] = (w_v + w, m_v + m)
+            try:
+                i = values.index(v)
+            except ValueError:
+                values.append(v)
+                probs.append(w)
+                metadata.append(list(m))
             else:
-                res[v] = (w, m)
-        return Categorical([(v, np.log(w), m) for v, (w, m) in res.items()])
+                probs[i] += w
+                metadata[i] = metadata[i] + m
+        return Categorical(
+            [(v, np.log(w), m) for v, w, m in zip(values, probs, metadata)]
+        )
 
     def sample(self) -> T:
         u = rand.rand()
