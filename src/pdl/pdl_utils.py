@@ -93,31 +93,27 @@ def value_of_expr(expr: ExpressionType[ValueOfExprT]) -> ValueOfExprT:
     return v  # type: ignore
 
 
-def replace_contribute_value(  # TODO: remove
-    contribute: Sequence[ContributeElement],
-    value: ContributeValue,
-):
-    ret = []
-    for item in contribute:
-        if isinstance(item, dict) and isinstance(
-            item[ContributeTarget.CONTEXT], ContributeValue
-        ):
-            item = value
-        ret.append(item)
-    return ret
-
-
-def get_contribute_context_value(
+def get_contribute_value(
     contribute: Sequence[ContributeElement] | None,
-):
+    target: ContributeTarget,
+) -> ContributeValue | None:
     if contribute is None:
         return None
     for item in contribute:
-        if isinstance(item, dict) and isinstance(
-            item.get(ContributeTarget.CONTEXT), ContributeValue
-        ):
-            return item[ContributeTarget.CONTEXT].value
+        if isinstance(item, dict):
+            value = item.get(target)
+            if isinstance(value, ContributeValue):
+                return value
     return None
+
+
+def has_contribute_target(
+    contribute: Sequence[ContributeElement] | None,
+    target: ContributeTarget,
+) -> bool:
+    if contribute is None:
+        return False
+    return target in contribute or get_contribute_value(contribute, target) is not None
 
 
 def message_post_processing(message: dict) -> dict[str, Any]:

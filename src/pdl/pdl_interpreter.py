@@ -157,8 +157,8 @@ from .pdl_utils import (
     GeneratorWrapper,
     Resample,
     apply_defaults,
-    get_contribute_context_value,
-    replace_contribute_value,
+    get_contribute_value,
+    has_contribute_target,
     stringify,
     value_of_expr,
     write_trace,
@@ -466,14 +466,28 @@ def process_advanced_block(  # noqa: C901
         var = block.def_
         new_scope = new_scope | PdlDict({var: result})
     new_scope, trace = process_contribute(trace, result, new_scope, loc)
-    if ContributeTarget.CONTEXT.value not in block.contribute:
+    context_value = get_contribute_value(trace.contribute, ContributeTarget.CONTEXT)
+    if not has_contribute_target(block.contribute, ContributeTarget.CONTEXT):
         background = DependentContext([])
-    else:
-        contribute_value, trace = process_contribute_context(trace, new_scope, loc)
-        if contribute_value is not None:
-            background = DependentContext([contribute_value])
-    if ContributeTarget.RESULT.value not in block.contribute:
+    elif context_value is not None:
+        background = SingletonContext(
+            PdlDict(
+                {
+                    "role": state.role,
+                    "content": PdlConst(value_of_expr(context_value.value)),
+                    "pdl__defsite": block.pdl__id,
+                }
+            )
+        )
+        if state.yield_background:
+            yield_background(background)
+    result_value = get_contribute_value(trace.contribute, ContributeTarget.RESULT)
+    if not has_contribute_target(block.contribute, ContributeTarget.RESULT):
         result = PdlConst("")
+    elif result_value is not None:
+        result = PdlConst(value_of_expr(result_value.value))
+        if state.yield_result:
+            yield_result(result.result(), block.kind)
     return result, background, new_scope, trace
 
 
@@ -604,7 +618,7 @@ def process_advance_block_retry(  # noqa: C901
     init_state = state
     state = state.with_yield_result(
         state.yield_result
-        and ContributeTarget.RESULT.value in block.contribute
+        and ContributeTarget.RESULT in block.contribute
         and block.parser is None
     )
     state = state.with_yield_background(
@@ -849,11 +863,7 @@ def process_advance_block_retry(  # noqa: C901
 
 
 def context_in_contribute(block: AdvancedBlockType) -> bool:
-    if ContributeTarget.CONTEXT.value in block.contribute:
-        return True
-    if get_contribute_context_value(block.contribute) is not None:
-        return True
-    return False
+    return ContributeTarget.CONTEXT in block.contribute
 
 
 ResultWithTypeCheckingT = TypeVar("ResultWithTypeCheckingT")
@@ -1805,36 +1815,6 @@ def combine_results(join_type: JoinType, results: list[PdlLazy[Any]]):
     return result
 
 
-BlockTypeTVarProcessContributeOld = TypeVar(
-    "BlockTypeTVarProcessContributeOld", bound=AdvancedBlockType
-)
-
-
-def process_contribute_context(
-    block: BlockTypeTVarProcessContributeOld, scope: ScopeType, loc: PdlLocationType
-) -> tuple[Any, BlockTypeTVarProcessContributeOld]:
-    result: list[ContributeElement]
-    value_trace: LocalizedExpression[list[ContributeElement]]
-    value = get_contribute_context_value(block.contribute)
-    if value is None:
-        return None, block
-    loc = append(loc, "contribute")
-    try:
-        result, value_trace = process_expr(scope, value, loc)
-    except PDLRuntimeExpressionError as exc:
-        raise PDLRuntimeError(
-            exc.message,
-            loc=exc.loc or loc,
-            trace=ErrorBlock(msg=exc.message, pdl__location=loc, program=block),
-            source_exception=exc,
-        ) from exc
-    replace = replace_contribute_value(
-        block.contribute, ContributeValue(value=value_trace)
-    )
-    trace = block.model_copy(update={"contribute": replace})
-    return result, trace
-
-
 BlockTypeTVarProcessContribute = TypeVar(
     "BlockTypeTVarProcessContribute", bound=AdvancedBlockType
 )
@@ -1890,6 +1870,11 @@ def process_contribution(
                     source_exception=exc,
                 ) from exc
             elem = {target: ContributeValue(value=value_trace)}
+            if target in (
+                ContributeTarget.RESULT,
+                ContributeTarget.CONTEXT,
+            ):
+                return scope, elem
         case _:
             msg = "Contributions are expected to be strings or dictionaries of length 1 but got {elem}"
             raise PDLRuntimeError(
