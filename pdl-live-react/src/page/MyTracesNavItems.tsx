@@ -43,7 +43,7 @@ export default function MyTracesNavItems({
           const id = "/my/" + encodeURIComponent(title)
           return (
             <NavItem key={filename} itemId={id} isActive={activeItem === id}>
-              <Link to={id + hash}>
+              <Link to={id + hash + "?traceFile=" + filename}>
                 <Stack>
                   {title}
                   <StackItem className="pdl-duration">

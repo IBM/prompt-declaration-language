@@ -17,6 +17,7 @@ export default function PageBreadcrumbs({
   breadcrumb2,
 }: PageBreadcrumbProps) {
   const [searchParams] = useSearchParams()
+  searchParams.delete("traceFile")
   const s = searchParams.toString()
   const search = s.length > 0 ? "?" + s : ""
   const renderHome = useCallback(

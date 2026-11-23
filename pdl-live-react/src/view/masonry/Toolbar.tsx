@@ -3,7 +3,7 @@ import { Toolbar, ToolbarGroup, ToolbarContent } from "@patternfly/react-core"
 import DarkModeToggle from "../../page/DarkModeToggle"
 import ToolbarPaginator from "./ToolbarPaginator"
 import ToolbarSMLToggle from "./ToolbarSMLToggle"
-import ToolbarReplayButton from "./ToolbarReplayButton"
+import ToolbarReloadButton from "./ToolbarReloadButton"
 import ToolbarShowSourceButton from "./ToolbarShowSourceButton"
 
 import { isNonScalarPdlBlock } from "../../helpers"
@@ -19,6 +19,8 @@ export type Props = import("./ToolbarPaginator").Props & {
 
   sml: SML
   setSML(sml: SML): void
+
+  setValue(value: string): void
 }
 
 export default function MasonryToolbar({
@@ -33,12 +35,13 @@ export default function MasonryToolbar({
   perPage,
   setPage,
   setPerPage,
+  setValue,
 }: Props) {
   return (
     <Toolbar className="pdl-masonry-toolbar">
       <ToolbarContent>
         <ToolbarGroup variant="action-group-plain">
-          <ToolbarReplayButton run={run} isRunning={isRunning} />
+          <ToolbarReloadButton setValue={setValue} />
         </ToolbarGroup>
         <ToolbarGroup align={alignEnd} variant="action-group">
           <ToolbarPaginator
