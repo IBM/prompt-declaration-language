@@ -3759,7 +3759,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_norway",
- "sha2 0.11.0",
+ "sha2 0.11.2",
  "tauri",
  "tauri-build",
  "tauri-plugin-cli",
@@ -5386,9 +5386,9 @@ dependencies = [
 
 [[package]]
 name = "sha2"
-version = "0.11.0"
+version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "446ba717509524cb3f22f17ecc096f10f4822d76ab5c0b9822c5f9c284e825f4"
+checksum = "5b0e5c7d67bc53f435386b2130fdc900488c5703770f6d8a4633060e34288a27"
 dependencies = [
  "cfg-if",
  "cpufeatures 0.3.0",
